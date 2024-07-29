@@ -4,11 +4,11 @@ collection: teaching
 type: "Math course notes"
 permalink: /teaching/NYU_math_course_notes
 venue: "NYU Courant"
-date: 2020-09-01
+date: 2021-09-01
 location: "New York, NY"
 ---
 
-These are my handwritten notes in OneNote format. Note that there may be mandarin or French symbols.
+These are my handwritten notes in OneNote format. Note that there may be Mandarin or French symbols.
 
 MATH-UA 262 Ordinary Differential Equations (2021 Fall)
 ======
