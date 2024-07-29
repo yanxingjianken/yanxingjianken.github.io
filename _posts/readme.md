@@ -1,6 +1,6 @@
 ---
 title: ''
-date: 
+date: 9999-12-31
 permalink: /posts/readme/
 tags:
 ---
