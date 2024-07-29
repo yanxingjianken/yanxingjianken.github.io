@@ -8,6 +8,12 @@ redirect_from:
 ---
 
 {% include base_path %}
+
+<!-- Brief Disclaimer -->
+<div class="disclaimer">
+  <p>Please be aware this section is only intended for bilingual (English-Mandarin) readers and solely contains recreational materials. Please also note that the views and opinions expressed in these blog posts do not necessarily reflect the personal views of the author(s).</p>
+</div>
+
 {% capture written_year %}'None'{% endcapture %}
 {% for post in site.posts %}
   {% capture year %}{{ post.date | date: '%Y' }}{% endcapture %}
