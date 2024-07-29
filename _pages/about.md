@@ -11,7 +11,7 @@ I am a first-year PhD student in Atmosphere Science at the [EAPS](https://eaps.m
 
 I am interested in climate and atmospheric dynamics with mathematical approaches. I appreciate methodologies in applied mathematics and (geophysical) fluid dynamics via both numerical PDE and data-driven AI perspectives. 
 
-You can download my [CV here](https://drive.google.com/file/d/1ZuHjNCG1InV6L3hSWqsZ5ZyNkW5TWBSt/view?usp=sharing) ([CV in Mandarin Chinese](https://drive.google.com/file/d/1Zm1bIT1K_Lw1771rQDv438BcVtIH70_d/view?usp=sharing)).
+### You can download my [CV here](Ken_s_CV.pdf) ([Mandarin Version](CV_mandarin.pdf)).
 
 Fun facts: I love all kinds of food - from homemade to fine dining, and I played for NYU Shanghai on a nationwide <a href="https://hearthstone.blizzard.com/en-us/battlegrounds/">Hearthstone</a> tournament in 2021.
 
