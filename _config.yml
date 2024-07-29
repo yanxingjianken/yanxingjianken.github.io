@@ -24,9 +24,9 @@ author:
   avatar           : "profile.jpg"
   name             : "Xingjian (Ken) Yan"
   pronouns         : # example: "she/her"  
-  bio              : "PhD Student in Atmosphere Science"
+  bio              : "PhD Student in Atmosphere Science at MIT"
   location         : "Cambridge, MA"
-  employer         : "MIT"
+  employer         : #"MIT"
   uri              : # URL
   email            : "x_yan@mit.edu" 
 
