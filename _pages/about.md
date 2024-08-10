@@ -16,7 +16,7 @@ I am interested in climate and atmospheric dynamics with mathematical approaches
 
 Fun facts: 
 
-I love all kinds of food - from [homemade](/_food/homemade.md) to [fine dining](/_food/fine_dining.md).
+I love all kinds of food - from [homemade](/_food/homemade.html) to [fine dining](/_food/fine_dining.html).
 
 I played for NYU Shanghai on a nationwide Hearthstone tournament in 2021, and still am an active <a href="https://hearthstone.blizzard.com/en-us/battlegrounds/">Hearthstone Battleground</a> player.
 
