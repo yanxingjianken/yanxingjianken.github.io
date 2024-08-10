@@ -1,0 +1,18 @@
+---
+layout: archive
+title: "Homemade"
+permalink: /homemade/
+author_profile: true
+---
+
+{% include base_path %}
+
+{% assign homemade_pages = site.static_files | where: "path", "/_food/home" %}
+
+{% for file in homemade_pages %}
+  {% if file.extname == ".html" %}
+    <div class="post">
+      <a href="{{ file.path | relative_url }}">{{ file.name | capitalize }}</a>
+    </div>
+  {% endif %}
+{% endfor %}
