@@ -18,7 +18,8 @@ Fun facts:
 
 I love all kinds of food - from [homemade](https://yanxingjianken.github.io/_food/homemade.html) to [fine dining](https://yanxingjianken.github.io/_food/fine_dining.html).
 
-I played for NYU Shanghai on a nationwide Hearthstone tournament in 2021, and still am an active <a href="https://hearthstone.blizzard.com/en-us/battlegrounds/">Hearthstone Battleground</a> player.
+
+I competed for NYU Shanghai in a nationwide Hearthstone tournament in China in 2021, and still am an active <a href="https://hearthstone.blizzard.com/en-us/battlegrounds/">Hearthstone Battleground</a> player.
 
 I'm also a level 10 <a href="https://www.youtube.com/watch?v=TZBNk-cTkV4&list=PLu7a4wgbVOVPveGmnrh6HAscW-CiZD5CD&index=4&ab_channel=KenYan">Chinese bamboo flute performer</a>.
 
