@@ -18,9 +18,22 @@ jobs:
     - name: Update last updated time
       run: |
         DATE=$(date +"%B %Y")
+        echo "Updating 'Last Updated:' to $DATE"
         sed -i "s/^Last Updated:.*$/Last Updated: $DATE/" _pages/about.md
-        
+        echo "Modified file content:"
+        cat _pages/about.md
+
+    - name: Check for changes
+      run: |
+        if git diff --quiet; then
+          echo "No changes detected, skipping commit."
+          exit 0
+        else
+          echo "Changes detected, committing..."
+        fi
+
     - name: Commit and push changes
+      if: success()
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
