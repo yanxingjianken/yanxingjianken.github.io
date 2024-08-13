@@ -24,16 +24,16 @@ jobs:
         cat _pages/about.md
 
     - name: Check for changes
+      id: changes
       run: |
         if git diff --quiet; then
-          echo "No changes detected, skipping commit."
-          exit 0
+          echo "::set-output name=changes_detected::false"
         else
-          echo "Changes detected, committing..."
+          echo "::set-output name=changes_detected::true"
         fi
 
     - name: Commit and push changes
-      if: success()
+      if: steps.changes.outputs.changes_detected == 'true'
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
