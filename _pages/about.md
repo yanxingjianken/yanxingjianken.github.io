@@ -22,7 +22,7 @@ ___
 
 My gym hours sit between 11pm to 2am.
 
-I love all kinds of food - from [homemade](https://yanxingjianken.github.io/_food/homemade.html) to [fine dining](https://yanxingjianken.github.io/_food/fine_dining.html).
+I love all kinds of food - from [homemade](https://docs.google.com/presentation/d/1HI1wSVz2_OTsHDeCHw588J2NPk_1lnLLhZz9yXQLzkk/edit?usp=sharing) to [fine dining](https://docs.google.com/presentation/d/1MkS_8FjDAC8YF36vI4oHA-Ww5XbS5BFHpBBz1LpHyWA/edit?usp=sharing).
 
 I competed for NYU Shanghai in a nationwide Hearthstone tournament in China in 2021, and still am an active <a href="https://hearthstone.blizzard.com/en-us/battlegrounds/">Hearthstone Battleground</a> player.
 
