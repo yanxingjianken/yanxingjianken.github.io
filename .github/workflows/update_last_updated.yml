@@ -1,0 +1,29 @@
+name: Update Last Updated Time
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+jobs:
+  update-last-updated:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Update last updated time
+      run: |
+        DATE=$(date +"%B %Y")
+        sed -i "s/^Last Updated:.*$/Last Updated: $DATE/" _pages/about.md
+        
+    - name: Commit and push changes
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git add _pages/about.md
+        git commit -m "Update last updated time"
+        git push
