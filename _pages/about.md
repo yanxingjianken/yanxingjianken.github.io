@@ -7,7 +7,7 @@ redirect_from:
   - /about.html
 ---
           
-I am a first-year PhD student in Atmosphere Science at the [EAPS](https://eaps.mit.edu/) department of [Massachusetts Institute of Technology](https://www.mit.edu/), advised by [Talia Tamarin-Brodsky](https://taliatamarin.wixsite.com/taliatamarin). I obtained my Bachelor's degree in Mathematics from the [Courant Institute](https://cims.nyu.edu/dynamic/) of [New York University](https://www.nyu.edu/). I also received a minor in French Studies from [NYU College of Art and Science](https://as.nyu.edu/departments/french.html) and am a member of [Pi Delta Phi](https://www.pideltaphi.org/).
+I am a first-year PhD student in Atmosphere Science at the [EAPS](https://eaps.mit.edu/) department of [Massachusetts Institute of Technology](https://www.mit.edu/), advised by [Talia Tamarin-Brodsky](https://taliatamarin.wixsite.com/taliatamarin). My office is at 54-1623A. I obtained my Bachelor's degree in Mathematics from the [Courant Institute](https://cims.nyu.edu/dynamic/) of [New York University](https://www.nyu.edu/). I also received a minor in French Studies from [NYU College of Art and Science](https://as.nyu.edu/departments/french.html) and am a member of [Pi Delta Phi](https://www.pideltaphi.org/).
 
 I have previously matriculated at [Sidwell Friends School](https://www.sidwell.edu), [High School Affiliated to Fudan University](https://www.fdfz.cn/), and [Shanghai World Foreign Language Academy](https://www.wflms.cn/site/site2/index.html). I am originally from [Shanghai, China](https://yanxingjianken.github.io/A_Midsummer_Shanghai_Dream/). 
 
@@ -29,6 +29,8 @@ I competed for NYU Shanghai in a nationwide Hearthstone tournament in China in 2
 I'm also a level 10 <a href="https://www.youtube.com/watch?v=TZBNk-cTkV4&list=PLu7a4wgbVOVPveGmnrh6HAscW-CiZD5CD&index=4&ab_channel=KenYan">Chinese bamboo flute performer</a>.
 
 I used to compete in high school varsity level <a href="https://www.maxpreps.com/dc/washington/sidwell-friends-quakers/athletes/ken-yang/bio/?careerid=2sgg78rlkmpff">American football</a> and <a href="https://www.swimcloud.com/swimmer/1034462/">swimming and diving</a>.
+
+
 
 
 Last Updated: August 2024
