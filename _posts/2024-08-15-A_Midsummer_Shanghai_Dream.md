@@ -23,7 +23,7 @@ Each city has its own cultured attitude: Beijing turns regal and discerning in t
 And then there’s Shanghai — where sophistication dances with everyday simplicity, an effortless rhythm unique to this city, as known as “qiang diao” (腔调).
 
 
-Should you be lucky enough to savor real Shanghai cuisine, you won’t find caviar or black truffles, nor dishes crafted for Michelin stars. Instead, the allure lies in simplicity, in the everyday—yet bound by stringent, almost ritualistic rules.
+Should you be lucky enough to savor some real Shanghai cuisine, you won’t find caviar or black truffles, nor dishes crafted for Michelin stars. Instead, the allure lies in simplicity, in the everyday—yet bound by stringent, almost ritualistic rules.
 [Xiaolongbao](https://en.wikipedia.org/wiki/Xiaolongbao), a delicate steamed bun filled with crab and pork, will enchant you with its first bite. But for the true locals, only the [golden-claw crabs](https://en.chinaculture.org/focus/focus/2010expo_en/2010-04/22/content_377509.htm) 
 from Yangcheng Lake will suffice — and yes, we can tell the difference. Another seemingly humble yet intricate dish is [Yanduxian](https://en.wikipedia.org/wiki/Yanduxian), a pork soup enriched with bamboo shoots and tofu. 
 The bamboo shoots must come from the tender tips of the first spring growth, and again, we know the difference.
@@ -44,7 +44,7 @@ By night, Shanghai awakens. One of the safest cities in the world, it invites yo
 And if you’re seeking the world’s finest bars, you’ll find them at [Flair](https://www.tripadvisor.com/Restaurant_Review-g308272-d2257238-Reviews-Flair_Rooftop-Shanghai.html) and [Speaklow](https://www.theworlds50best.com/discovery/Establishments/China/Shanghai/Speak-Low.html), both internationally renowned.
 
 
-But Shanghai’s real treasure lies in its people—the true citizens. It’s not about their education or wealth, but their attitude, their unmistakable charisma, something words can barely capture. 
+But Shanghai’s real treasure lies in its people — the true citizens. It’s not about their education or wealth, but their attitude, their unmistakable charisma, something words can barely capture. 
 Engage with just one or two locals who proudly claim they are from Shanghai, and you’ll begin to understand the ineffable charm of this city.
 
 
