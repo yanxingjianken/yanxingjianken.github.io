@@ -32,15 +32,15 @@ In Shanghai, it’s the mastery of the ordinary that creates something extraordi
 
 
 Some might reduce Shanghai to a skyline of glass towers or dismiss its people as meticulous food critics. But in doing so, they overlook the city’s true heart — its  ["Hai pai" (海派)](https://en.wikipedia.org/wiki/Haipai) culture, 
-the rich blend of East and West that shaped the city in the early 20th century. Imagine the Renaissance in a modern Chinese context: it gave rise to artists like [Chang Dai-chien](https://en.wikipedia.org/wiki/Chang_Dai-chien) and [Fengzikai](https://en.wikipedia.org/wiki/Feng_Zikai), 
+the rich blend of East and West that shaped the city in the early 20th century. Imagine the Renaissance in a modern Chinese context: it gave rise to artists like [Chang Dai-chien](https://en.wikipedia.org/wiki/Chang_Dai-chien) and [Feng Zikai](https://en.wikipedia.org/wiki/Feng_Zikai), 
 and cultivated the city’s own language: [Shanghainese](https://en.wikipedia.org/wiki/Shanghainese). 
-Just as Saint Petersburg wouldn’t be the same without Pushkin, or London without Shakespeare, Shanghainese would be little more than a dry, utilitarian script—like coding in Python—without the literary grace bestowed upon it by [Eileen Chang](https://en.wikipedia.org/wiki/Eileen_Chang). 
+Just as Saint Petersburg wouldn’t be the same without Pushkin, or London without Shakespeare, Shanghainese would be little more than a dry, utilitarian script — like coding in Python — without the literary grace bestowed upon it by [Eileen Chang](https://en.wikipedia.org/wiki/Eileen_Chang). 
 Her works draped the language in a wistful elegance, painting complex relationships against the harsh backdrop of history, where love and death seemed to falter under its relentless weight. 
 Today, Shanghainese continues to evolve, from [Zhou Libo](https://en.wikipedia.org/wiki/Zhou_Libo_(comedian))‘s comedic wit to the stunning visuals of [Blossoms Shanghai](https://en.wikipedia.org/wiki/Blossoms_Shanghai).
 
 
 By night, Shanghai awakens. One of the safest cities in the world, it invites you to wander its streets well past midnight, when the true energy of the city begins to hum. The clubs pulse with life, 
-[Haidilao hotpot](https://en.wikipedia.org/wiki/Haidilao) simmers at its peak, and the streets fill with those out for a late-night stroll—what we call "轧马路" (yà mǎ lù). 
+[Haidilao hotpot](https://en.wikipedia.org/wiki/Haidilao) simmers at its peak, and the streets fill with those out for a late night stroll — what we call "轧马路" (yà mǎ lù). 
 And if you’re seeking the world’s finest bars, you’ll find them at [Flair](https://www.tripadvisor.com/Restaurant_Review-g308272-d2257238-Reviews-Flair_Rooftop-Shanghai.html) and [Speaklow](https://www.theworlds50best.com/discovery/Establishments/China/Shanghai/Speak-Low.html), both internationally renowned.
 
 
