@@ -1,7 +1,7 @@
 ---
 title: 'A Midsummer Shanghai Dream'
 date: 2024-08-15
-permalink: /posts/2024/04/blog-post-1/
+permalink: /posts/2024/08/blog-post-1/
 tags:
 ---
 
