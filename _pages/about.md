@@ -28,7 +28,7 @@ I competed for NYU Shanghai in a nationwide Hearthstone tournament in China in 2
 
 I'm also a level 10 <a href="https://www.youtube.com/watch?v=TZBNk-cTkV4&list=PLu7a4wgbVOVPveGmnrh6HAscW-CiZD5CD&index=4&ab_channel=KenYan">Chinese bamboo flute performer</a>.
 
-I used to compete in high school varsity level <a href="https://www.maxpreps.com/dc/washington/sidwell-friends-quakers/athletes/ken-yang/bio/?careerid=2sgg78rlkmpff">American football</a> and <a href="https://www.swimcloud.com/swimmer/1034462/">swimming and diving</a>.
+I used to compete in high school varsity level <a href="https://www.maxpreps.com/dc/washington/sidwell-friends-quakers/athletes/ken-yang/bio/?careerid=2sgg78rlkmpff">American football</a> and <a href="https://www.swimcloud.com/swimmer/1034462/">swimming and diving</a>. I've joined the [EAPS Airballs](https://www.imleagues.com/spa/team/zzz1207783344738140160/home) basketball team in 2024 September.
 
 
 
