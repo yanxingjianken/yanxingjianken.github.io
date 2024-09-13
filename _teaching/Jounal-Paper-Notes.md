@@ -8,11 +8,11 @@ date: 2024-09-01
 location: "Cambridge, MA"
 ---
 
-These are my journal paper reading notes in OneNote format. Click on the paper name to open the notebook.
+These are my journal paper reading notes. Click on the paper name to open the notebook.
 
-### [Watt-Meyer et al, 2023. Neural Network Parameterization of Subgrid-Scale Physics](https://1drv.ms/o/s!AjZWUdNTd1V4gq0_U7It0xR9w07KEw?e=gsfRhz)
+### [Watt-Meyer et al., 2023. Neural Network Parameterization of Subgrid-Scale Physics (link invalid)](https://1drv.ms/o/s!AjZWUdNTd1V4gq0_U7It0xR9w07KEw?e=gsfRhz)
 
-### [12.818 Atmos Data & Large-scale Dynam (2024 Fall)](https://1drv.ms/o/s!AjZWUdNTd1V4gq1HgRo2Xm7trRjTSg?e=Mztns1)
+### [Sigman et al., 2010. Ocean and Glacial Cycles in Atm CO2](https://docs.google.com/presentation/d/1-f4bDENVhaduYE7rjPMxn_OiOUy-KgFE/edit?usp=sharing&ouid=116465514317596629476&rtpof=true&sd=true1)
 
 
 
