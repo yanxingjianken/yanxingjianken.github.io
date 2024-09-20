@@ -2,10 +2,10 @@
 title: "Traffic Bottlenecks: Predicting Atmospheric Blocking with a Diminishing Flow Capacity"
 collection: publications
 permalink: /publication/2024-09-13
-excerpt: 'Based on NH18 to define LWA flux exceedance events, predictors of blocking onset in the traffic jam theory. A downstream reduction in flow capacity is ubiquitous for both exceedance and blocking events: lane closures favor traffic jams. Blocks are co-located with exceedance events in space but not in time, limiting the utility of the traffic jam theory for prediction.'
+excerpt: "Using NH18 to define LWA flux exceedance events, this paper explores predictors of blocking onset in the traffic jam theory. A downstream reduction in flow capacity is common for both exceedance and blocking events, similar to how lane closures favor traffic jams. Blocks are co-located with exceedance events in space but not in time, limiting the predictive utility of the traffic jam theory."
 date: 2024-09-13
-venue: 'Geophysical Research Letters'
-slidesurl: 'https://www.canva.com/design/DAGMU17YRDs/Af52taUe9CCBt959ivc7CQ/view?utm_content=DAGMU17YRDs&utm_campaign=designshare&utm_medium=link&utm_source=editor'
-paperurl: 'https://onepetro.org/ISOPEIOPEC/proceedings-abstract/ISOPE24/All-ISOPE24/546712'
-citation: 'Yan, Xingjian,.'
+venue: "Geophysical Research Letters"
+slidesurl: "https://www.canva.com/design/DAGMU17YRDs/Af52taUe9CCBt959ivc7CQ/view?utm_content=DAGMU17YRDs&utm_campaign=designshare&utm_medium=link&utm_source=editor"
+paperurl: "https://doi.org/10.1029/2024GL111035"
+citation: "Yan, X., Wang, L., Gerber, E. P., Castañeda, V., & Ho, K. Y. (2024). Traffic bottlenecks: Predicting atmospheric blocking with a diminishing flow capacity. Geophysical Research Letters, 51, e2024GL111035. https://doi.org/10.1029/2024GL111035"
 ---
