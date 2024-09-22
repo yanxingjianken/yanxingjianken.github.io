@@ -15,9 +15,9 @@ I am interested in [climate](https://eaps.mit.edu/reseach-concentrations/climate
 
 Currently, I'm working on uncovering the relationship among blocking events, Rossby wave breaking events, and different weather regimes. Stay tuned!
 
-### Scientists and academicians: You can download my [CV here](Ken_s_CV.pdf) ([Mandarin Chinese Version](CV_mandarin.pdf)).
+### Scientists and academicians: You can view my [CV here](https://www.overleaf.com/read/sypjtgcdtnqb#3846ad).
 
-### HR and Headhunters: You can download my [One-Page Resume here](https://www.overleaf.com/read/btytsbptfytw#0dfa4c).
+### HR and headhunters: You can view my [One-Page Resume here](https://www.overleaf.com/read/btytsbptfytw#0dfa4c) ([Mandarin Chinese Version](https://www.overleaf.com/read/csdmbvxkngxt#812fd7)).
 
 Post-graduation, I am interested in industrial positions of (but not limited to): Quantitative Research Scientist in Quantitative Finance; Research Scientist in Earth or Climate Science (AI, Energy, or Aerospace sectors); Extreme Weather Event Prediction Scientist in hazard / causality reinsurance and catastrophe bonds; Research / Consulting in Climate Finance and Policy.
 
