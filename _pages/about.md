@@ -13,7 +13,13 @@ I have previously matriculated at [Sidwell Friends School](https://www.sidwell.e
 
 I am interested in [climate](https://eaps.mit.edu/reseach-concentrations/climate/) and [atmospheric dynamics](https://eaps.mit.edu/academic-programs/atmospheres-oceans-and-climate/) with mathematical approaches. I appreciate methodologies in applied mathematics and (geophysical) fluid dynamics via both numerical PDE and data-driven AI perspectives. I'm particularly interested in predicting extreme events on [the S2S timescale](https://wpo.noaa.gov/s2s/), which is also on the edge between weather and climate. I have investigated in [atmospheric blockings](https://yanxingjianken.github.io/portfolio/996blocking/) and [tsunami waves](https://yanxingjianken.github.io/portfolio/997solitary_wave/), and I'm open to learn more, especially on how such hazardous events evolve under global warming and anthropogenic forcings.
 
-### You can download my [CV here](Ken_s_CV.pdf) ([Mandarin Chinese Version](CV_mandarin.pdf)).
+Currently, I'm working on uncovering the relationship among blocking events, Rossby wave breaking events, and different weather regimes. Stay tuned!
+
+### Scientists and academicians: You can download my [CV here](Ken_s_CV.pdf) ([Mandarin Chinese Version](CV_mandarin.pdf)).
+
+### HR and Headhunters: You can download my [One-Page Resume here](https://www.overleaf.com/read/btytsbptfytw#0dfa4c).
+
+Post-graduation, I am interested in industrial positions of (but not limited to): Quantitative Research Scientist in Quantitative Finance; Research Scientist in Earth or Climate Science (AI, Energy, or Aerospace sectors); Extreme Weather Event Prediction Scientist in hazard / causality reinsurance or catastrophe bond derivatives; Research / Consulting in Climate Finance and Policy Making.
 
 ___
 
