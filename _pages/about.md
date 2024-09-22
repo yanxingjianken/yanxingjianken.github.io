@@ -19,7 +19,7 @@ Currently, I'm working on uncovering the relationship among blocking events, Ros
 
 ### HR and Headhunters: You can download my [One-Page Resume here](https://www.overleaf.com/read/btytsbptfytw#0dfa4c).
 
-Post-graduation, I am interested in industrial positions of (but not limited to): Quantitative Research Scientist in Quantitative Finance; Research Scientist in Earth or Climate Science (AI, Energy, or Aerospace sectors); Extreme Weather Event Prediction Scientist in hazard / causality reinsurance or catastrophe bond derivatives; Research / Consulting in Climate Finance and Policy Making.
+Post-graduation, I am interested in industrial positions of (but not limited to): Quantitative Research Scientist in Quantitative Finance; Research Scientist in Earth or Climate Science (AI, Energy, or Aerospace sectors); Extreme Weather Event Prediction Scientist in hazard / causality reinsurance and catastrophe bonds; Research / Consulting in Climate Finance and Policy.
 
 ___
 
