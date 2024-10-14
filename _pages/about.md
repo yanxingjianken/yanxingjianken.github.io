@@ -12,7 +12,7 @@ ___
 
 ## A quick note on mental well-being:
 
-### We are living in a beautiful world, and everyone deserves to appreciate such beauty, including YOU. If you are feeling down or having a few screws loosened, please don't hesitate to reach out to me ([(202)372-6367](tel:2023726367), [WeChat](https://yanxingjianken.github.io/images/wechat.jpg)) — or seek help from (988)[https://988lifeline.org/].
+### We are living in a beautiful world, and everyone deserves to appreciate such beauty, including YOU. If you are feeling down or having a few screws loosened, please don't hesitate to reach out to me at ([(202)372-6367](tel:2023726367), or [WeChat for Mandarin Chinese speakers](https://yanxingjianken.github.io/images/wechat.jpg)) — or seek help from (988)[https://988lifeline.org/].
 
 ___
 
