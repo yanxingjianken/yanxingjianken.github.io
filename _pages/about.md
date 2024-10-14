@@ -7,6 +7,15 @@ redirect_from:
   - /about.html
 ---
           
+___
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/5tz69p7tJuGPeMGwNTxYuV?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+
+## A quick note on mental well-being:
+
+### We are living in a beautiful world, and everyone deserves to appreciate such beauty, including YOU. If you are feeling down or having a few screws loosened, please don't hesitate to reach out to me ([(202)372-6367](tel:2023726367), [WeChat](images/wechat.jpg)) — or seek help from (988)[https://988lifeline.org/].
+
+___
+
 I am a first-year PhD student in Atmosphere Science at the [EAPS](https://eaps.mit.edu/) department of [Massachusetts Institute of Technology](https://www.mit.edu/), advised by [Talia Tamarin-Brodsky](https://taliatamarin.wixsite.com/taliatamarin). My office is at 54-1623A. I obtained my Bachelor's degree in Mathematics from the [Courant Institute](https://cims.nyu.edu/dynamic/) of [New York University](https://www.nyu.edu/). I also received a minor in French Studies from [NYU College of Art and Science](https://as.nyu.edu/departments/french.html) and am a member of [Pi Delta Phi](https://www.pideltaphi.org/).
 
 I have previously matriculated at [Sidwell Friends School](https://www.sidwell.edu), [High School Affiliated to Fudan University](https://www.fdfz.cn/), and [Shanghai World Foreign Language Academy](https://www.wflms.cn/site/site2/index.html). I am originally from [Shanghai, China](https://yanxingjianken.github.io/posts/2024/08/blog-post-1/). 
@@ -39,4 +48,4 @@ I used to compete in high school varsity level <a href="https://www.maxpreps.com
 
 
 
-Last Updated: October 2024
+Last Updated: September 2024
