@@ -10,7 +10,7 @@ redirect_from:
 ### A quick note on mental well-being:
 <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/5tz69p7tJuGPeMGwNTxYuV?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
 
-Hey my friendly visitor: just fyi we are living in a beautiful world, and everyone deserves to appreciate such beauty, including you. Hope you are having a good time here!
+Hey my friendly visitor(s): just fyi we are living in a beautiful world, and everyone deserves to appreciate such beauty, including you. Hope you are having a good time here!
 
 No matter where, and no matter when, if you are feeling down/broken, or just having a few screws loosened, please don't hesitate to reach out to me at [(202)372-6367](tel:2023726367) (for English speakers), or [WeChat](https://yanxingjianken.github.io/images/wechat.jpg) (for Mandarin Chinese speakers)!
 
