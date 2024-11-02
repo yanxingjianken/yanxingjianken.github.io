@@ -6,16 +6,6 @@ redirect_from:
   - /about/
   - /about.html
 ---          
-
-### A quick note on mental well-being:
-<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/5tz69p7tJuGPeMGwNTxYuV?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-
-Hey my friendly visitor(s): just fyi we are living in a beautiful world, and everyone deserves to appreciate such beauty, including you. Hope you are having a good time here!
-
-No matter where, and no matter when, if you are feeling down/broken, or just having a few screws loosened, please don't hesitate to reach out to me at [(202)372-6367](tel:2023726367) (for English speakers), or [WeChat](https://yanxingjianken.github.io/images/wechat.jpg) (for Mandarin Chinese speakers)!
-
-There's also support available from the [988](https://988lifeline.org/) center (and [MIT mental health](https://health.mit.edu/services/mental-health-counseling) for MIT affiliates).
-
 ___
 
 ### Bio
@@ -50,6 +40,20 @@ I competed for NYU Shanghai in a nationwide Hearthstone tournament in China in 2
 I'm also a level 10 <a href="https://www.youtube.com/watch?v=TZBNk-cTkV4&list=PLu7a4wgbVOVPveGmnrh6HAscW-CiZD5CD&index=4&ab_channel=KenYan">Chinese bamboo flute performer</a>.
 
 I used to compete in high school varsity level <a href="https://www.maxpreps.com/dc/washington/sidwell-friends-quakers/athletes/ken-yang/bio/?careerid=2sgg78rlkmpff">American football</a> and <a href="https://www.swimcloud.com/swimmer/1034462/">swimming and diving</a>. I've joined the [EAPS Airballs](https://www.imleagues.com/spa/team/zzz1207783344738140160/home) basketball team in 2024 September.
+
+___
+
+### A quick note on mental well-being:
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/5tz69p7tJuGPeMGwNTxYuV?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+
+Hey my friendly visitor(s): just fyi we are living in a beautiful world, and everyone deserves to appreciate such beauty, including you. Hope you are having a good time here!
+
+No matter where, and no matter when, if you are feeling down/broken, or just having a few screws loosened, please don't hesitate to reach out to me at [(202)372-6367](tel:2023726367) (for English speakers), or [WeChat](https://yanxingjianken.github.io/images/wechat.jpg) (for Mandarin Chinese speakers)!
+
+There's also support available from the [988](https://988lifeline.org/) center (and [MIT mental health](https://health.mit.edu/services/mental-health-counseling) for MIT affiliates).
+
+
+
 
 
 
