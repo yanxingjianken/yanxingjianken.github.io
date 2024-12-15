@@ -58,4 +58,4 @@ There's also support available from the [988](https://988lifeline.org/) center (
 
 
 
-Last Updated: November 2024
+Last Updated: December 2024
