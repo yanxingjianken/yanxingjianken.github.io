@@ -35,7 +35,7 @@ My gym hours sit between 11pm to 2am.
 
 I love all kinds of food - from [homemade](https://docs.google.com/presentation/d/1HI1wSVz2_OTsHDeCHw588J2NPk_1lnLLhZz9yXQLzkk/edit?usp=sharing) to [fine dining](https://docs.google.com/presentation/d/1MkS_8FjDAC8YF36vI4oHA-Ww5XbS5BFHpBBz1LpHyWA/edit?usp=sharing).
 
-I competed for NYU Shanghai in a nationwide Hearthstone tournament in China in 2021, and still am an active <a href="https://hearthstone.blizzard.com/en-us/battlegrounds/">Hearthstone Battleground</a> player.
+I competed for NYU Shanghai in a nationwide Hearthstone tournament in China in 2021, and still am an active <a href="https://hearthstone.blizzard.com/en-us/battlegrounds/">Hearthstone Battleground</a> player. You can find my latest ranking at this <a href="https://hearthstone.blizzard.com/en-us/community/leaderboards/?region=US&leaderboardId=battlegrounds&seasonId=13&page=353">leaderboard</a>.
 
 I'm also a level 10 <a href="https://www.youtube.com/watch?v=TZBNk-cTkV4&list=PLu7a4wgbVOVPveGmnrh6HAscW-CiZD5CD&index=4&ab_channel=KenYan">Chinese bamboo flute performer</a>.
 
