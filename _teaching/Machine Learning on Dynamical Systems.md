@@ -15,6 +15,6 @@ Loading using Google Colab is recommended.
 
 ### [L0 vs L1 Problem: Particle Tracking in Non-Gaussian Flow. Hungarian Algo (L0 Method), and Sinkhorn Algo (Doubly Stochastic)](https://drive.google.com/file/d/1S8aK6yxHOrB6KGC70uqun5TD6wbFwoJ1/view?usp=sharing)
 
-### [Subset Problem: What to do when nonlinear functional mapping is expensive? (Resampling and mapping approximation, to identify most damaging cyclones from massive input features)](https://colab.research.google.com/drive/1JIthPVkOei6DWFemKd0ZphxuljEVayyW?usp=sharing)
+### [Subset Selection Problem: What to do when nonlinear functional mapping is expensive? (Resampling and mapping approximation, to identify most damaging cyclones from massive input features)](https://colab.research.google.com/drive/1JIthPVkOei6DWFemKd0ZphxuljEVayyW?usp=sharing)
 
 
