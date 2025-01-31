@@ -7,6 +7,7 @@ venue: "MIT EAPS"
 date: 2024-09-01
 location: "Cambridge, MA"
 ---
+**This page has stopped updating**
 
 These are my journal paper reading notes. Click on the paper name to open the notebook.
 
