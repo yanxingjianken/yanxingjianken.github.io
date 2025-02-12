@@ -8,7 +8,7 @@ date: 2024-09-01
 location: "Cambridge, MA"
 ---
 
-These are my handwritten notes in OneNote format. Note that there may be Mandarin symbols. Click on the course name to open the notebook.
+These are my handwritten notes in OneNote format. Note that there may be Mandarin symbols. Click on the course name to open the notebook. Some of them had accessibility issues due to OneNote school account reasons; feel free to email me for a copy of such notes.
 
 ### [12.800 Fluid Dynamics of the Atmosphere and Ocean (2024 Fall)](https://1drv.ms/o/s!AjZWUdNTd1V4gq0_U7It0xR9w07KEw?e=gsfRhz)
 
