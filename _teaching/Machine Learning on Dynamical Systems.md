@@ -17,4 +17,5 @@ Loading using Google Colab is recommended.
 
 ### [Subset Selection Problem: What to do when nonlinear functional mapping is expensive? (Resampling and mapping approximation, to identify most damaging cyclones from massive input features)](https://colab.research.google.com/drive/1JIthPVkOei6DWFemKd0ZphxuljEVayyW?usp=sharing)
 
+### [Sparse Recovery: How to identify particles with spike in wavelength spectra, convoluted and added by noises, as siganls received in telescopes? Retrieving 4 particles from a 1000by1000 space and identify their weight!](https://colab.research.google.com/drive/1EXrucdL-V_WH3sdnk6Wwl1BV0m4ge5ZK?usp=sharing)
 
