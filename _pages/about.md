@@ -48,7 +48,10 @@ ___
 
 Hey my friendly visitor(s): just fyi we are living in a beautiful world, and everyone deserves to appreciate such beauty, including you. Hope you are having a good time here!
 
-No matter where, and no matter when, if you are feeling down/broken, or just having a few screws loosened, please don't hesitate to reach out to me at [(202)372-6367](tel:2023726367) (for English speakers), or [WeChat](https://yanxingjianken.github.io/images/wechat.jpg) (for Mandarin Chinese speakers)!
+No matter where, and no matter when, if you are feeling down/broken, or just having a few screws loosened, please don't hesitate to reach out to anyone whom you trust for help.
+
+<!-- me at [(202)372-6367](tel:2023726367) (for English speakers), or [WeChat](https://yanxingjianken.github.io/images/wechat.jpg) (for Mandarin Chinese speakers)! 
+!-->
 
 There's also support available from the [988](https://988lifeline.org/) center (and [MIT mental health](https://health.mit.edu/services/mental-health-counseling) for MIT affiliates).
 
