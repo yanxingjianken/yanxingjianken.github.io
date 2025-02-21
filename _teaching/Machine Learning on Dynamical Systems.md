@@ -19,3 +19,9 @@ Loading using Google Colab is recommended.
 
 ### [Sparse Recovery: How to identify particles with spike in wavelength spectra, convoluted and added by noises, as siganls received in telescopes? Retrieving 4 particles from a 1000by1000 space and identify their weight!](https://colab.research.google.com/drive/1EXrucdL-V_WH3sdnk6Wwl1BV0m4ge5ZK?usp=sharing)
 
+Meanwhile, Sai has some preferred naming of the above psets, which I've also included their correspodent Sai-standard names:
+
+- L0 vs L1 Problem: Correspodent Problem
+- Subset Selection Problem: Where's Waldo
+- Sparse Recovery: All mixed up
+- Earthquake Sourcing: Boom!
