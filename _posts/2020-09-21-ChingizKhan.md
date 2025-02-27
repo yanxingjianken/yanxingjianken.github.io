@@ -1,9 +1,36 @@
 ---
+title: '成吉思汗'
+date: 2020-09-21
+permalink: /posts/2020/09/blog-post-1/
+tags:
+---
+
+你们说，要是成吉思汗发现了，八百年后，居然有一个math major的nyu学生天天读他的史诗、读他的家谱、读他睡了多少女人抢了多少东西，连数学考试都不准备了，就天天看蒙古人抢老婆的历史记载；他会不会感动的活过来啊？
+
+凌晨的网课总是令人忽感饥饿。
+
+倏尔决定从数学的苦海中站起身来去冰箱里翻找吃的。
+
+脑中袭来的——不是轻松感——而是一阵萦绕着赤都忽勒挬阔和沼兀列歹的蒙古铁骑组成的、沧桑的、厚重感。
+
+我找到了一些切好的哈密瓜，端着这半碗半盘的盛器往房间走，却又想起没有拿叉子。
+
+于是我转身折回厨房，忽然从窗口飘进一阵风。
+
+一阵凉爽的，裹挟着深邃的悠扬感的秋风，带着些许落叶的腐味，清幽而又略显沉重，卷走了脑中的莱布尼茨，又匪夷所思般轻易地带走了不可一世的成吉思汗。
+
+我忽然又笃信了:成吉思汗死于一个秋日，一个凌晨的秋日。
+
+<img src='/images/chigizKhan.jpg' style='max-width: 60%; height: auto;'>
+
+<!---
+---
 title: '摘抄'
 date: 2021-04-27
 permalink: /posts/2021/04/blog-post-1/
 tags:
 ---
+2021-04-27-论挫折.md
 
 要正直、勇敢、卓越。[我们的征途终将是星辰大海](https://www.amazon.com/dp/B0BRKVSVTM?ref=KC_GS_GB_US)
 
@@ -18,6 +45,7 @@ title: '论挫折'
 与其说他人即地狱，不如承认自我即地狱。
 -->
 
+<!---
 ___
 
 "Ne marche pas devant moi, je ne suivrai peut-être pas. Ne marche pas derrière moi, je ne te guiderai peut-être pas. Marche juste à côté de moi et sois mon ami."
@@ -46,7 +74,7 @@ ___
 —— [萨特](https://site.douban.com/246410/widget/notes/17752067/note/433543768/)
 
 
-
+-->
 
 
 
