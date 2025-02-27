@@ -12,9 +12,9 @@ These are my handwritten notes in OneNote format. Note that there may be Mandari
 
 ### [12.800 Fluid Dynamics of the Atmosphere and Ocean (2024 Fall)](https://1drv.ms/o/s!AjZWUdNTd1V4gq0_U7It0xR9w07KEw?e=gsfRhz)
 
-### [12.810 Atmosphere Dynamics (2025 Spring)](https://nyu0-my.sharepoint.com/:o:/g/personal/xy2077_nyu_edu/EknDbC2SF1dMr_zz-EaVngQBK6y2OnT9oab9S-Al8Rq4LA?e=Gz5kXv)
+### [12.810 Atmosphere Dynamics (2025 Spring)](https://1drv.ms/o/c/1eaa79e252a5e09b/Ek8M0m1vniFGt3W-R532HosBq_vsc4Jm8U2KZGusoVcIiw?e=7ncho6)
 
-### [12.815 Radiation Convection (2025 Spring)](https://nyu0-my.sharepoint.com/:o:/g/personal/xy2077_nyu_edu/ErNHeN9R3iJEpVsQKSKSb_8BdH-CHeT-YXnGxU8xSpyk7A?e=ugClrN)
+### [12.815 Radiation Convection (2025 Spring)](https://1drv.ms/o/c/1eaa79e252a5e09b/Evl0HnW2oEZKkPl0CYLqZGsBXhxc5wS0BKIhy2VSqeEP5A?e=9exd1Z)
 
 ### [12.818 Atmos Data & Large-scale Dynam (2024 Fall)](https://1drv.ms/o/s!AjZWUdNTd1V4gq1HgRo2Xm7trRjTSg?e=Mztns1)
 
