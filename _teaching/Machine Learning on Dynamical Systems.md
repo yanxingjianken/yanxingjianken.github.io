@@ -21,6 +21,9 @@ Loading using Google Colab is recommended.
 
 ### [Earthquake Sourcing: How to identify source location and onset time for multiple earthqukes (with spurious noises like local ppl stamping on the groud!)](https://colab.research.google.com/drive/1kTmrBh5s_eMqY0nIrPF6gHS3Y7I09v61?usp=sharing)
 
+### [Simplest Regression: Can we get accurate polynomial coefficients? Vandermonde matrix, multicolinearity problem](https://colab.research.google.com/drive/1j9INii85vboQ91cyDQCt04NkxVumMWns?usp=sharing)
+
+---
 
 Meanwhile, Sai has some preferred naming of the above psets, which I've also included their correspodent Sai-standard names:
 
