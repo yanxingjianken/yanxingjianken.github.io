@@ -25,7 +25,7 @@ Loading using Google Colab is recommended.
 
 ---
 
-Meanwhile, Sai has some preferred naming of the above psets, which I've also included their correspodent Sai-standard names:
+Meanwhile, Sai has some preferred naming of the above psets, which I've also included here:
 
 - L0 vs L1 Problem: Correspodent Problem
 - Subset Selection Problem: Where's Waldo
