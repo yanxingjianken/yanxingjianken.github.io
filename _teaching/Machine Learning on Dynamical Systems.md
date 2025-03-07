@@ -23,6 +23,8 @@ Loading using Google Colab is recommended.
 
 ### [Simplest Regression: Can we get accurate polynomial coefficients? Vandermonde matrix, multicolinearity problem](https://colab.research.google.com/drive/1j9INii85vboQ91cyDQCt04NkxVumMWns?usp=sharing)
 
+### [Quadratic Programming and Gaussian Belief Propagation: revisit nodes correspondence](https://colab.research.google.com/drive/1cUxbVqLHp0NTcAAWYlXIyEYajkCAClVQ?usp=sharing)
+
 ---
 
 Meanwhile, Sai has some preferred naming of the above psets, which I've also included here:
