@@ -24,7 +24,7 @@ Instead, the [CDO command line interface](http://www.idris.fr/media/ada/cdo.pdf)
 
 ## Convert from hybrid model levels (1-137) to pressure levels
 1. cd to your desired path where input and output files are (will be) located.
-2. cdo ml2pl 90000,85000,80000,75000,70000,65000,60000,55000,50000,45000,40000,35000,30000,25000,20000,15000,10000 1998_pt_lapse.grib 1998_pt_lapse_ml.nc
+2. cdo ml2pl,90000,85000,80000,75000,70000,65000,60000,55000,50000,45000,40000,35000,30000,25000,20000,15000,10000 1998_pt_lapse.grib 1998_pt_lapse_ml.nc
 
 ## Convert from spherical harmonics coord to gridded resolution
 1. Convert from "reduced Gaussian" to "regular Gaussian": 
