@@ -28,7 +28,7 @@ Instead, the [CDO command line interface](http://www.idris.fr/media/ada/cdo.pdf)
 ## Convert from spherical harmonics coord to gridded resolution
 1. Convert from "reduced Gaussian" to "regular Gaussian": 
 cdo setgridtype,regular T639_19980915_19980930_330isentropic_pv.grib T639_19980915_19980930_330isentropic_pv_gauss.grib
-2. cdo invertlat in out: cdo -f nc -sp2gpl /mnt/c/Users/yanxi/Downloads/T639_19980915_19980930_330isentropic_uvvo.grib /mnt/c/Users/yanxi/Downloads/T639_19980915_19980930_330isentropic_uvvo_gauss.nc![image](https://github.com/user-attachments/assets/4d7b6d82-c673-4802-a5df-7ed7fd5c0794)
+2. cdo invertlat in out: cdo -f nc -sp2gpl /mnt/c/Users/yanxi/Downloads/T639_19980915_19980930_330isentropic_uvvo.grib /mnt/c/Users/yanxi/Downloads/T639_19980915_19980930_330isentropic_uvvo_gauss.nc
 3. cdo merge T639_19980915_19980930_330isentropic_pv.nc T639
 _19980915_19980930_330isentropic_uvvo_gauss.nc T639_19980915_19980930_330isentropic_concat.nc
 
