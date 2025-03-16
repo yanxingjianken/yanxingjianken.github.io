@@ -19,7 +19,8 @@ Instead, the [CDO command line interface](http://www.idris.fr/media/ada/cdo.pdf)
 1. For Windows users, install Ubuntu from the microsoft store, then proceed to step 2.
 2. For Linux users, module load your conda setup via module load anaconda, or, for MIT Engaging users, use: module load miniforge/24.3.0-0.
 3. Create a conda env with specifying the desired installed package: conda create -n ncl_stable -c conda-forge ncl
-4. Follow the conda forge commannds in [this link](https://bairdlangenbrunner.github.io/python-for-climate-scientists/conda/setting-up-conda-environments.html) or the [offical tutorial](https://www.ncl.ucar.edu/Download/conda.shtml) 
+4. Follow the conda forge commannds in [this link](https://bairdlangenbrunner.github.io/python-for-climate-scientists/conda/setting-up-conda-environments.html) or the [offical tutorial](https://www.ncl.ucar.edu/Download/conda.shtml)
+5. The conda forge for cdo may not be working, so you can try [the Max-Plack Institut link](https://code.mpimet.mpg.de/projects/cdo/wiki/Anaconda) here.
 
 ## Convert from hybrid model levels (1-137) to pressure levels
 1. cd to your desired path where input and output files are (will be) located.
