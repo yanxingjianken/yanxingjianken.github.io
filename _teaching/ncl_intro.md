@@ -3,14 +3,14 @@ title: "Intro to NCL (on HPC and PC)"
 collection: notes
 type: "misc."
 permalink: /teaching/into2ncl
-venue: "MIT EAPS"
+venue: "misc."
 date: 2025-03-16
 location: "Cambridge, MA"
 ---
 
 This is a quick intro to how to use NCL to process raw grib files downloaded from ECMWF using MARS api requests.
 
-A quick reminder is that the official ECMWF python script for converting from model level hybrid scales to height / pressure levels 
+An IMPORTANT reminder is that the official ECMWF python script for converting from model level hybrid scales to height / pressure levels 
 has significant errors and runs very slowly. See the forum [link](https://forum.ecmwf.int/t/bugs-in-era5-complete-reanalysis-cds-conversion-python-scripts/10696) for details.
 
 Instead, the [CDO command line interface](http://www.idris.fr/media/ada/cdo.pdf) of the ml2pl and ml2hl functions would come to rescue!
