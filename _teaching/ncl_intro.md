@@ -31,6 +31,8 @@ Something to notice is that ml2pl function may not work well on date ranges cont
 2. chmod +x convert_grib_files.sh
 3. dos2unix convert_grib_files.sh
 4. ./convert_grib_files.sh
+5. you should see something like ![image](https://github.com/user-attachments/assets/03eef26e-add5-4ae1-874b-7d37fe0cd45e)
+
 
 ## Convert from spherical harmonics coord to gridded resolution
 1. Convert from "reduced Gaussian" to "regular Gaussian": 
