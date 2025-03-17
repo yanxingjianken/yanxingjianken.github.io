@@ -15,7 +15,7 @@ has significant errors and runs very slowly. See the forum [link](https://forum.
 
 Instead, the [CDO command line interface](http://www.idris.fr/media/ada/cdo.pdf) of the ml2pl and ml2hl functions would come to rescue!
 
-## Install NCl and CDO the conda env
+## Install NCl and CDO in the conda env
 1. For Windows users, install Ubuntu from the microsoft store, then proceed to step 2.
 2. For Linux users, module load your conda setup via module load anaconda, or, for MIT Engaging users, use: module load miniforge/24.3.0-0.
 3. Create a conda env with specifying the desired installed package: conda create -n ncl_stable -c conda-forge ncl
