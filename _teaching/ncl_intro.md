@@ -26,6 +26,12 @@ Instead, the [CDO command line interface](http://www.idris.fr/media/ada/cdo.pdf)
 1. cd to your desired path where input and output files are (will be) located.
 2. cdo ml2pl,90000,85000,80000,75000,70000,65000,60000,55000,50000,45000,40000,35000,30000,25000,20000,15000,10000 1998_pt_lapse.grib 1998_pt_lapse_pl.grib
 
+Something to notice is that ml2pl function may not work well on date ranges containing more than 2 time stamps, so it would be better to [download the raw data **in daily segment**](https://colab.research.google.com/drive/1ugiWBGnX5VypfHle1PuOJgWs9PHV2Ood?usp=sharing), and then use [a batch process scirpt](https://colab.research.google.com/drive/12CvdhawhnsKMBHQBNRZ-x2tjl0N5vALI?usp=sharing) to convert.
+1. download raw data and load the above sh script
+2. chmod +x convert_grib_files.sh
+3. dos2unix convert_grib_files.sh
+4. ./convert_grib_files.sh
+
 ## Convert from spherical harmonics coord to gridded resolution
 1. Convert from "reduced Gaussian" to "regular Gaussian": 
 cdo setgridtype,regular T639_19980915_19980930_330isentropic_pv.grib T639_19980915_19980930_330isentropic_pv_gauss.grib
