@@ -8,7 +8,7 @@ date: 2025-03-16
 location: "Cambridge, MA"
 ---
 
-This is a quick intro to how to use NCL to process raw grib files downloaded from ECMWF using MARS api requests.
+This is a quick intro on how to use NCL to process raw grib files downloaded from ECMWF using MARS api requests.
 
 An IMPORTANT reminder is that the official ECMWF python script for converting from model level hybrid scales to height / pressure levels 
 has significant errors and runs very slowly. See the forum [link](https://forum.ecmwf.int/t/bugs-in-era5-complete-reanalysis-cds-conversion-python-scripts/10696) for details.
