@@ -15,6 +15,8 @@ has significant errors and runs very slowly. See the forum [link](https://forum.
 
 Instead, the [CDO command line interface](http://www.idris.fr/media/ada/cdo.pdf) of the ml2pl and ml2hl functions would come to rescue!
 
+---
+
 ## Install NCl and CDO in the conda env
 1. For Windows users, install Ubuntu from the microsoft store, then proceed to step 2.
 2. For Linux users, module load your conda setup via module load anaconda, or, for MIT Engaging users, use: module load miniforge/24.3.0-0.
@@ -23,6 +25,7 @@ Instead, the [CDO command line interface](http://www.idris.fr/media/ada/cdo.pdf)
 5. If the above is not working, try following the conda forge commannds in [this link](https://bairdlangenbrunner.github.io/python-for-climate-scientists/conda/setting-up-conda-environments.html) or the [offical tutorial](https://www.ncl.ucar.edu/Download/conda.shtml)
 6. The conda forge for cdo may not be working, so you can try [the Max-Plack Institut link](https://code.mpimet.mpg.de/projects/cdo/wiki/Anaconda) here, if your HPC supports docker...
 
+---
 
 ## Convert from hybrid model levels (1-137) to pressure levels
 1. cd to your desired path where input and output files are (will be) located.
@@ -34,7 +37,38 @@ Something to notice is that ml2pl function may not work well on date ranges cont
 3. dos2unix convert_grib_files.sh
 4. ./convert_grib_files.sh
 5. you should see something like ![image](https://github.com/user-attachments/assets/03eef26e-add5-4ae1-874b-7d37fe0cd45e)
+6. To concat the daily grib into a monthly grib, use regex cdo command: cat 1998-09-*_pressure_level_pt_lapse.grib > 1998-09_pressure_level_pt_lapse.grib
 
+---
+
+## Convert from fc data type (time + step; init + lead) to an data type (time; valid_time)
+Do the following in python, *GIVEN YOU HAVE DOWNLOADED STEP IN 3/6/9/12*:
+#### 1) Rename coords
+ds_pl = ds_pl.rename(time="init_time", step="lead_time")
+
+#### 2) Stack over (init_time, lead_time)
+ds_pl_stacked = ds_pl.stack(time_step=("init_time", "lead_time"))
+
+#### 3) Assign a new 'time' coordinate from 'valid_time'
+new_time = ds_pl_stacked["valid_time"].values.ravel()
+
+ds_pl_stacked = ds_pl_stacked.assign_coords(
+    time=("time_step", new_time)
+)
+
+#### 4) Swap out the stacked dimension so that everything is indexed by new time
+ds_pl_stacked = ds_pl_stacked.swap_dims({"time_step": "time"})
+
+#### 5) (Optional) drop 'valid_time' and tidy up
+ds_pl_stacked = ds_pl_stacked.drop_vars("valid_time")
+ds_pl_stacked = ds_pl_stacked.sortby("time")
+
+ds_pl_stacked['longitude'] = ((ds_pl_stacked['longitude'] + 180) % 360) - 180
+ds_pl_stacked = ds_pl_stacked.sortby('longitude') 
+
+ds_pl_stacked
+
+---
 
 ## Convert from spherical harmonics coord to gridded resolution
 1. Convert from "reduced Gaussian" to "regular Gaussian": 
@@ -43,8 +77,12 @@ cdo setgridtype,regular T639_19980915_19980930_330isentropic_pv.grib T639_199809
 3. cdo merge T639_19980915_19980930_330isentropic_pv.nc T639
 _19980915_19980930_330isentropic_uvvo_gauss.nc T639_19980915_19980930_330isentropic_concat.nc
 
+---
+
 ## Spatial Derivatives
 Please email Ken for code.
+
+---
 
 ## Mean-Perturbation Decompositions
 Please email Ken for code.
