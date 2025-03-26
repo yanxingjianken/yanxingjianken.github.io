@@ -37,12 +37,12 @@ Something to notice is that ml2pl function may not work well on date ranges cont
 3. dos2unix convert_grib_files.sh
 4. ./convert_grib_files.sh
 5. you should see something like ![image](https://github.com/user-attachments/assets/03eef26e-add5-4ae1-874b-7d37fe0cd45e)
-6. To concat the daily grib into a monthly grib, use regex cdo command: cat 1998-09-*_pressure_level_pt_lapse.grib > 1998-09_pressure_level_pt_lapse.grib
+6. To [concat](https://confluence.ecmwf.int/display/CKB/How+to+merge+multiple+GRIB+or+NetCDF+files) the daily grib into a monthly grib, use regex cdo command: cat 1998-09-*_pressure_level_pt_lapse.grib > 1998-09_pressure_level_pt_lapse.grib
 
 ---
 
 ## Convert from fc data type (time + step; init + lead) to an data type (time; valid_time)
-Do the following in python, *GIVEN YOU HAVE DOWNLOADED STEP IN 3/6/9/12*:
+Do the following in a python jupyter notebook, *GIVEN YOU HAVE DOWNLOADED STEP IN 3/6/9/12*:
 #### 1) Rename coords
 ds_pl = ds_pl.rename(time="init_time", step="lead_time")
 
@@ -63,6 +63,7 @@ ds_pl_stacked = ds_pl_stacked.swap_dims({"time_step": "time"})
 ds_pl_stacked = ds_pl_stacked.drop_vars("valid_time")
 ds_pl_stacked = ds_pl_stacked.sortby("time")
 
+#### 6) (Optional) Change from 0 - 360 to -180 to 180 to put Euro-Atlantic in the middle
 ds_pl_stacked['longitude'] = ((ds_pl_stacked['longitude'] + 180) % 360) - 180
 ds_pl_stacked = ds_pl_stacked.sortby('longitude') 
 
