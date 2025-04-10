@@ -34,7 +34,7 @@ Partial results are used in 12.810 Atm. Dynm. taught by Paul for my final projec
 │   ├── global_means.npy
 │   └── global_stds.npy
 └── fourcastnetv2-small.grib     # Output forecast file
-10. Turns out not to be free! See [post](https://github.com/google/weather-tools/issues/35).. Yikes!
+10. Turns out not to be free! See [post](https://github.com/google/weather-tools/issues/35) and [issue](https://github.com/ecmwf-lab/ai-models-fourcastnetv2/issues/1)... Yikes!
 11. call command: ai-models fourcastnetv2-small \
   --date 2023-10-01 \
   --time 00:00 \
