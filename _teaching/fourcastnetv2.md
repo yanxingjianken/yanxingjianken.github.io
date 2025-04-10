@@ -14,18 +14,14 @@ Partial results are used in 12.810 Atm. Dynm. taught by Paul for my final projec
 ---
 
 ## Install packages and set up the conda env (MIT Dolma Cluster)
-1. module load apps/miniconda/3.6
-2. conda create -n fourcastnetv2 -c conda-forge python=3.10 -y
-3. source activate fourcastnetv2
-4. pip install ai-models ai-models-fourcastnetv2
-5. Make dir of where you want to store the weights and climatology files: mkdir -p /net/flood/data/users/x_yan/fourcastnetv2/assets
-6. Follow [link](https://confluence.ecmwf.int/display/WEBAPI/Access+MARS) to get MARS access
-7. Download data by running: ai-models --download-assets fourcastnetv2-small \
-
-   --path /net/flood/data/users/x_yan/fourcastnetv2 \
-
-   --assets-sub-directory
-9. Make file .ecmwfapirc, add {
+1. Read ECMWF [ai-models documentation](https://github.com/ecmwf-lab/ai-models)
+2. module load apps/miniconda/3.6
+3. conda create -n fourcastnetv2 -c conda-forge python=3.10 -y
+4. source activate fourcastnetv2
+5. pip install ai-models ai-models-fourcastnetv2
+6. Make dir of where you want to store the weights and climatology files: mkdir -p /net/flood/data/users/x_yan/fourcastnetv2/assets
+7. Follow [link](https://confluence.ecmwf.int/display/WEBAPI/Access+MARS) to get MARS access
+8. Make file .ecmwfapirc, add {
 
    "url"   : "https://api.ecmwf.int/v1",
 
@@ -34,6 +30,11 @@ Partial results are used in 12.810 Atm. Dynm. taught by Paul for my final projec
    "email" : "xxxxxxxxx"
 }
 
+9. Download data by running: ai-models --download-assets fourcastnetv2-small \
+
+   --path /net/flood/data/users/x_yan/fourcastnetv2 \
+
+   --assets-sub-directory
 10. /net/flood/data/users/x_yan/fourcastnetv2/
 
 ├── assets/
