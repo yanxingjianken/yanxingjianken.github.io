@@ -10,7 +10,7 @@ location: "Cambridge, MA"
 
 This is a quick intro on how to use run the fourcastnetv2 ai model from ecmwf [instructions](https://github.com/ecmwf-lab/ai-models-fourcastnetv2).
 
-Partial results are used in my final project for 12.810 Atm. Dynm. (taught by [Paul O'Gorman](https://pog.mit.edu/))
+Partial results are used in my final project for 12.810 Atm. Dynm. (2025 Spring, taught by [Paul O'Gorman](https://pog.mit.edu/))
 
 # Are AI Weather Forecasts Respecting Atmosphere Dynamics?
 
@@ -18,7 +18,7 @@ Partial results are used in my final project for 12.810 Atm. Dynm. (taught by [P
 
 **As of April 10th, 2025**
 
-For non-commerical usage of ECMWF open accounts, the service/MARS will not be available, which means the **most recent 30 day reanalysis** will not be available, and the configuration of "/.ecmwfapirc" file would lead to errors of not being authorized. Issues have been encountered in [post](https://github.com/google/weather-tools/issues/35) and [issue](https://github.com/ecmwf-lab/ai-models-fourcastnetv2/issues/1)...
+For non-commerical usage of ECMWF open accounts, the service/MARS will not be available, which means the **most recent 30 day reanalysis will NOT be available**, and the configuration of "/.ecmwfapirc" file would thus lead to errors of not being authorized. Issues have been encountered in [post](https://github.com/google/weather-tools/issues/35) and [issue](https://github.com/ecmwf-lab/ai-models-fourcastnetv2/issues/1)...
 
 Instead, the resolution is to use *copernicus CDS* open access data, which requires a "/.cdsapirc" file that you can find api instructions [here](https://cds.climate.copernicus.eu/how-to-api).
 
