@@ -2,7 +2,7 @@
 title: "Run Your Own AI Weather Model"
 collection: notes
 type: "misc."
-permalink: /teaching/fourcastnetv2
+permalink: /teaching/ai-weather-models
 venue: "misc."
 date: 2025-04-10
 location: "Cambridge, MA"
@@ -75,7 +75,7 @@ Instead, the solution is to use *copernicus CDS* open access data, which require
 13. ai-models --input cds --date 20250110 --time 0000 --lead-time 48 panguweather
 14. **As of April 11, 2025**, the panguweather could only be run on CPU due to ONNX issues, such that each step takes around 4 minutes to run on a CPU, rather than seconds on a GPU; see details [here](https://github.com/ecmwf-lab/ai-models). The solution of conda env with cuda-toolkit is not helpful. ![image](https://github.com/user-attachments/assets/b89e54b5-2407-4374-8f48-aa3c01b7a462)
 
-### Below is a 48-lead time, 6-hourly forecast comparison btwn Pangu (upper row) vs. FourCastNetv2 (lower row)
+### Below is a 48-lead time, 6-hourly forecast comparison btwn Pangu (upper row) vs. FourCastNetv2 (lower row), evaluated at init. (same), 24 hr, & 48 hr 
 1. Geopotential Height z500 ![image](https://github.com/user-attachments/assets/e56231e5-45e2-498f-b383-ddfcdb2e3b68) ![image](https://github.com/user-attachments/assets/ce4bb831-3851-4067-a5a9-0144db84e9ed)
 2. Temperature T500 ![image](https://github.com/user-attachments/assets/7fa2b40e-36a4-4be4-bab6-2f7153591ef1) ![image](https://github.com/user-attachments/assets/6b38c8f6-2ede-4536-8182-5091ba256c83)
 3. Zonal wind u500 ![image](https://github.com/user-attachments/assets/6abd8cf6-1694-4b06-b749-a0bf1f992796) ![image](https://github.com/user-attachments/assets/7ffb22ce-cef0-434c-b309-5ea146ffbe3c)
