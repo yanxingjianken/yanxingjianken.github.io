@@ -73,7 +73,7 @@ Instead, the solution is to use *copernicus CDS* open access data, which require
 11. Modify the model.py as above section
 12. cd to dir to run models (Example: cd /home/x_yan/ai_weather_models/fourcastnetv2-small, or cd /home/x_yan/ai_weather_models/panguweather)
 13. ai-models --input cds --date 20250110 --time 0000 --lead-time 48 panguweather
-14. **As of April 11, 2025**, the panguweather could only be run on CPU due to ONNX issues, such that each step takes around 20 minutes to run on a CPU, rather than seconds on a GPU; see details [here](https://github.com/ecmwf-lab/ai-models). The solution of conda env with cuda-toolkit is not helpful. ![image](https://github.com/user-attachments/assets/b89e54b5-2407-4374-8f48-aa3c01b7a462)
+14. **As of April 11, 2025**, the panguweather could only be run on CPU due to ONNX issues, such that each step takes around 4 minutes to run on a CPU, rather than seconds on a GPU; see details [here](https://github.com/ecmwf-lab/ai-models). The solution of conda env with cuda-toolkit is not helpful. ![image](https://github.com/user-attachments/assets/b89e54b5-2407-4374-8f48-aa3c01b7a462)
 
 
 
