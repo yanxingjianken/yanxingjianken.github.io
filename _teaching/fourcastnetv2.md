@@ -24,7 +24,7 @@ Instead, the resolution is to use *copernicus CDS* open access data, which requi
 
 ---
 
-## Tutorials on running your own ai weather forecasts! 
+## Tutorials on running your own 10-day, 6-hourly **AI weather forecast**! 
 
 ### HPC setup and conda env demonstration for MIT Dolma Cluster
 1. Read ECMWF [ai-models documentation](https://github.com/ecmwf-lab/ai-models)
@@ -50,9 +50,13 @@ Instead, the resolution is to use *copernicus CDS* open access data, which requi
 ### Interpret Results
 1. Load the jupyter notebook from [link](https://colab.research.google.com/drive/1ieWTYO1lcaMRNH4CulRoQWXlF3o5gdAM?usp=sharing).
 2. The forecast grib file is divided into surface and pressure-level data
-3. Sample intial data loks look ![image](https://github.com/user-attachments/assets/053e390c-ae0b-4368-9501-a0dee4940000)
+3. Sample intial, 5day, and 10 day data visualizes as![image](https://github.com/user-attachments/assets/2e535fb1-8137-4d5f-b724-8374744286e5)![image](https://github.com/user-attachments/assets/4deea4d4-3cbe-44d4-89c4-6c7f6977ed21)![image](https://github.com/user-attachments/assets/15a31807-d9c5-42b2-a798-3b508d519060)![image](https://github.com/user-attachments/assets/e70b305b-fe09-4510-b04f-17265fa7dab4)![image](https://github.com/user-attachments/assets/ee09b66e-d203-4161-9972-1d5c4d504c7c)![image](https://github.com/user-attachments/assets/64444222-136a-4d7e-8884-76c9d623f013)
 
-4. Sample forcasts look like ![image](https://github.com/user-attachments/assets/569621bd-0ca4-4a6b-9178-174616987539)
+
+
+
+
+
 
 
 
