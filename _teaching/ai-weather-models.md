@@ -14,7 +14,7 @@ Partial results are used in my final project for 12.810 Atm. Dynm. (2025 Spring,
 
 # Are AI Weather Forecasts Respecting Atmosphere Dynamics?
 
-[Presentation slides and write-ups will be avialable in 2025 summer]
+[Presentation slides and write-ups will be available in 2025 summer]
 
 **As of April 10th, 2025**
 
@@ -47,7 +47,7 @@ Instead, the solution is to use *copernicus CDS* open access data, which require
 12. (fourcastnetv2) x_yan@dolma:~$ cd fourcastnetv2-small/
 13. When using CDS option, modify when using PyTorch > 2.6: (i)cd to your model.py path: cd /home/x_yan/.conda/envs/fourcastnetv2/lib/python3.10/site-packages/ai_models_fourcastnetv2/, (ii) open model.py, (iii) change line 146 checkpoint = torch.load(checkpoint_file, map_location=self.device) into checkpoint = torch.load(checkpoint_file, map_location=self.device, weights_only=False)
 14. (fourcastnetv2) x_yan@dolma:~/fourcastnetv2-small$ ai-models --input cds --date 20230110 --time 0000 fourcastnetv2-small
-15. *Optional* Other params could be --date 2023-10-01 \ --time 00:00 \ --lead-time 24h \ --path /net/flood/data/users/x_yan/fourcastnetv2 \ --assets-sub-directory \ --input cds \ --output file
+15. (*Optional*) Other params - notice lead-time has unit of 1 hour - could be --date 2023-10-01 \ --time 00:00 \ --lead-time 24h \ --path /net/flood/data/users/x_yan/fourcastnetv2 \ --assets-sub-directory \ --input cds \ --output file
 16. Output forecast file would be in the same folder named fourcastnetv2-small.grib
 17. Enjoy! ![image](https://github.com/user-attachments/assets/05f03439-124c-404b-9741-80e426c7edc7)
 
