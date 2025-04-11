@@ -8,7 +8,7 @@ date: 2025-04-10
 location: "Cambridge, MA"
 ---
 
-This is a quick intro on how to use run the fourcastnetv2 ai model from ecmwf [instructions](https://github.com/ecmwf-lab/ai-models-fourcastnetv2).
+This is a quick intro on how to use run the fourcastnetv2 and pangu ai model from ecmwf [instructions](https://github.com/ecmwf-lab/ai-models-fourcastnetv2).
 
 Partial results are used in my final project for 12.810 Atm. Dynm. (2025 Spring, taught by [Paul O'Gorman](https://pog.mit.edu/))
 
@@ -20,11 +20,15 @@ Partial results are used in my final project for 12.810 Atm. Dynm. (2025 Spring,
 
 For non-commerical usage of ECMWF open accounts, the service/MARS will not be available, which means the **most recent 30 day reanalysis will NOT be available**, and the configuration of "/.ecmwfapirc" file would thus lead to errors of not being authorized. Issues have been encountered in [post](https://github.com/google/weather-tools/issues/35) and [issue](https://github.com/ecmwf-lab/ai-models-fourcastnetv2/issues/1)...
 
-Instead, the resolution is to use *copernicus CDS* open access data, which requires a "/.cdsapirc" file that you can find api instructions [here](https://cds.climate.copernicus.eu/how-to-api).
+Instead, the solution is to use *copernicus CDS* open access data, which requires a "/.cdsapirc" file that you can find api instructions [here](https://cds.climate.copernicus.eu/how-to-api).
 
 ---
 
 ## Tutorials on running your own 10-day, 6-hourly **AI weather forecast**! 
+
+---
+
+## Single Model: FourCastNetv2-small
 
 ### HPC setup and conda env demonstration for MIT Dolma Cluster
 1. Read ECMWF [ai-models documentation](https://github.com/ecmwf-lab/ai-models)
@@ -54,6 +58,22 @@ Instead, the resolution is to use *copernicus CDS* open access data, which requi
 
 
 
+--- 
+## Multiple Models: FourCastNetv2-small & Panguweather
+1. module load apps/miniconda/3.6
+2. conda create -n ai-weather -c conda-forge python=3.10 -y
+3. source activate ai-weather
+4. Check your available nvaa cuda version by: conda search -c nvidia cudatoolkit
+5. conda install -c "nvidia/label/cuda-11.7.0" \    cudatoolkit=11.7.0 \     cudnn=8.9.5
+6. pip install onnxruntime-gpu==1.17.1
+7. conda install -c "nvidia/label/cuda-11.7.0" cuda-nvcc
+8. Check nvcc --version
+9. pip install     ai-models     ai-models-fourcastnetv2     ai-models-panguweather
+10. ai-models --download-assets --assets <some-directory> <model-name>
+11. Modify the model.py as above section
+12. cd to dir to run models (Example: cd /home/x_yan/ai_weather_models/fourcastnetv2-small, or cd /home/x_yan/ai_weather_models/panguweather)
+13. ai-models --input cds --date 20250110 --time 0000 --lead-time 48 panguweather
+14. **As of April 11, 2025**, the panguweather could only be run on CPU due to ONNX issues, such that each step takes around 20 minutes to run on a CPU, rather than seconds on a GPU; see details [here](https://github.com/ecmwf-lab/ai-models). The solution of conda env with cuda-toolkit is not helpful. ![image](https://github.com/user-attachments/assets/b89e54b5-2407-4374-8f48-aa3c01b7a462)
 
 
 
