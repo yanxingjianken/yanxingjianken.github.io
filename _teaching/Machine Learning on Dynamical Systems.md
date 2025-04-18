@@ -27,6 +27,8 @@ Loading using Google Colab is recommended.
 
 ### [Gaussian Belief Propagation under a Bayesian viewpoint](https://colab.research.google.com/drive/1Z8abJuUg4y2SRAofLWjHi9CzD9L7QpZN?usp=sharing)
 
+### [Regularization: Ridge, Lasso, Tikhonov, Ivanov, Morozov, Mixed-Integer Quadratic Programming (MIQP), Mixed-Integer Linear Programming (MILP), GUROBI]
+
 ---
 
 Meanwhile, Sai has some preferred naming of the above psets, which I've also included here:
