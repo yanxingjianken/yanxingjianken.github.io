@@ -86,6 +86,60 @@ Instead, the solution is to use *copernicus CDS* open access data, which require
 3. Zonal wind u500 ![image](https://github.com/user-attachments/assets/6abd8cf6-1694-4b06-b749-a0bf1f992796) ![image](https://github.com/user-attachments/assets/7ffb22ce-cef0-434c-b309-5ea146ffbe3c)
 4. Merdional wind v500 ![image](https://github.com/user-attachments/assets/d6d87906-ddbb-40f1-bc28-ee2a5e6b6bdc) ![image](https://github.com/user-attachments/assets/9df6bc5f-f777-4265-99fb-28319b999165)
 
+---
+
+## Latest Fix for CUDA 12.2 - use MIT Engaging instead!
+# 1. Load Miniconda module (HPC-specific)
+module load miniforge/24.3.0-0
+
+# 2. Create Conda environment
+conda create -n ai-weather -c conda-forge python=3.10 -y
+
+# 3. Activate environment
+conda activate ai-weather 
+
+# 4. Install CUDA 12.1 toolkit + cuDNN 9.1.1.17 (confirmed available via conda search -c nvidia cudnn)
+conda install -c nvidia/label/cuda-12.6 cuda-toolkit=12.6 -y
+conda install -c nvidia cudnn=9.3.0.75=cuda12.6* -y
+#                └─ note the =cuda12.6* build string
+
+# 5. Install ONNX Runtime with GPU support
+pip install onnxruntime-gpu==1.17.1
+
+# 6. Install ECMWF AI model packages
+pip install cdsapi ai-models ai-models-fourcastnetv2 ai-models-panguweather 
+
+# 7. Download model weights & statistics
+ai-models --download-assets --assets /home/x_yan/12.810/ai_models fourcastnetv2-small
+ai-models --download-assets --assets /home/x_yan/12.810/ai_models panguweather
+
+# 8. Verifiation
+python -c "import onnxruntime as ort; print('ONNX device:', ort.get_device())"
+nvcc --version
+
+# 9. Request GPU
+salloc -N 1 -c 32 --mem=64G --gres=gpu:1 -t 12:00:00 -p mit_preemptable
+
+# 10. cd to model path
+cd /home/x_yan/ai_weather_models/panguweather
+
+# 11. Run job sample
+ai-models \
+  --input cds \
+  --date 20241005 \
+  --time 0000 \
+  --lead-time 144 \
+  --output file \
+  --path /home/x_yan/ai_weather_models/results/001_20241005_panguweather.grib \
+  panguweather
+
+
+# Supp: Register the environment as a kernel
+pip install ipykernel
+python -m ipykernel install --user --name=ai-weather
+
+
+
 
 
 
