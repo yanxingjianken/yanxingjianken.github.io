@@ -29,6 +29,8 @@ Loading using Google Colab is recommended.
 
 ### [Regularization: Ridge, Lasso, Tikhonov, Ivanov, Morozov, Mixed-Integer Quadratic Programming (MIQP), Mixed-Integer Linear Programming (MILP), GUROBI]
 
+### [Proof that each MLQP corresponds to a unique MILP (vice versa)!]
+
 ---
 
 Meanwhile, Sai has some preferred naming of the above psets, which I've also included here:
@@ -37,3 +39,4 @@ Meanwhile, Sai has some preferred naming of the above psets, which I've also inc
 - Subset Selection Problem: Where's Waldo
 - Sparse Recovery: All mixed up
 - Earthquake Sourcing: Boom!
+- MIQP ~ MILP, Paper by Zhu et al., 2020 PNAS
