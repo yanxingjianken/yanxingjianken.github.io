@@ -39,4 +39,4 @@ Meanwhile, Sai has some preferred naming of the above psets, which I've also inc
 - Subset Selection Problem: Where's Waldo
 - Sparse Recovery: All mixed up
 - Earthquake Sourcing: Boom!
-- MIQP ~ MILP, Paper by Zhu et al., 2020 PNAS
+- MIQP ~ MILP, Paper by [Zhu et al., 2020 PNAS](https://www.pnas.org/doi/10.1073/pnas.2014241117)
