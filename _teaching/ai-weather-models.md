@@ -88,7 +88,7 @@ Instead, the solution is to use *copernicus CDS* open access data, which require
 
 ---
 
-## Latest Fix for CUDA 12.2 - use MIT Engaging instead!
+## Latest Fix for CUDA 12.2 - use MIT Engaging instead (no good)!
 #### 1. Load Miniconda module (HPC-specific)
 module load miniforge/24.3.0-0
 
@@ -102,8 +102,6 @@ conda activate ai-weather
 conda install -c nvidia/label/cuda-12.6 cuda-toolkit=12.6 -y
 
 conda install -c nvidia cudnn=9.3.0.75=cuda12.6* -y
-
-                └─ note the =cuda12.6* build string
 
 #### 5. Install ONNX Runtime with GPU support
 pip install \
