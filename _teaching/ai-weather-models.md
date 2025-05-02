@@ -89,52 +89,68 @@ Instead, the solution is to use *copernicus CDS* open access data, which require
 ---
 
 ## Latest Fix for CUDA 12.2 - use MIT Engaging instead!
-# 1. Load Miniconda module (HPC-specific)
+#### 1. Load Miniconda module (HPC-specific)
 module load miniforge/24.3.0-0
 
-# 2. Create Conda environment
+#### 2. Create Conda environment
 conda create -n ai-weather -c conda-forge python=3.10 -y
 
-# 3. Activate environment
+#### 3. Activate environment
 conda activate ai-weather 
 
-# 4. Install CUDA 12.1 toolkit + cuDNN 9.1.1.17 (confirmed available via conda search -c nvidia cudnn)
+#### 4. Install CUDA 12.1 toolkit + cuDNN 9.1.1.17 (confirmed available via conda search -c nvidia cudnn)
 conda install -c nvidia/label/cuda-12.6 cuda-toolkit=12.6 -y
+
 conda install -c nvidia cudnn=9.3.0.75=cuda12.6* -y
-#                └─ note the =cuda12.6* build string
 
-# 5. Install ONNX Runtime with GPU support
-pip install onnxruntime-gpu==1.17.1
+                └─ note the =cuda12.6* build string
 
-# 6. Install ECMWF AI model packages
+#### 5. Install ONNX Runtime with GPU support
+pip install \
+  https://huggingface.co/onnxruntime/onnxruntime/releases/download/v1.17.1/onnxruntime_gpu-1.17.1-cp310-cp310-linux_x86_64.whl
+
+#### 6. Install ECMWF AI model packages
 pip install cdsapi ai-models ai-models-fourcastnetv2 ai-models-panguweather 
 
-# 7. Download model weights & statistics
+#### 7. Download model weights & statistics
 ai-models --download-assets --assets /home/x_yan/12.810/ai_models fourcastnetv2-small
+
 ai-models --download-assets --assets /home/x_yan/12.810/ai_models panguweather
 
-# 8. Verifiation
+modify: /home/x_yan/.local/lib/python3.10/site-packages/ai_models_fourcastnetv2/model.py
+
+#### 8. Verifiation
 python -c "import onnxruntime as ort; print('ONNX device:', ort.get_device())"
+
 nvcc --version
 
-# 9. Request GPU
+#### 9. Request GPU
 salloc -N 1 -c 32 --mem=64G --gres=gpu:1 -t 12:00:00 -p mit_preemptable
 
-# 10. cd to model path
-cd /home/x_yan/ai_weather_models/panguweather
+#### 10. cd to model path
+cd /home/x_yan/12.810/ai_models
 
-# 11. Run job sample
+#### 11. Run job sample
 ai-models \
   --input cds \
   --date 20241005 \
   --time 0000 \
   --lead-time 144 \
   --output file \
-  --path /home/x_yan/ai_weather_models/results/001_20241005_panguweather.grib \
+  --path /home/x_yan/12.810/ai_models/results/000_20241005_panguweather.grib \
   panguweather
 
+#### 12. Run batch sample
+conda activate ai-weather
+salloc -N 1 -c 32 --mem=64G --gres=gpu:1 -t 12:00:00 -p mit_preemptable
+load the .sh file [here](https://colab.research.google.com/drive/12V4xD5B2SCpMtfbUe_NShnMEkyKka5sH?usp=sharing)
+chmod +x run_forecasts.sh
+./run_forecasts.sh
+you should see 
+![image](https://github.com/user-attachments/assets/b19dc2cf-332c-4348-9e10-63c4e4c6aa22)
 
-# Supp: Register the environment as a kernel
+
+#### Supp: Register the environment as a kernel
 pip install ipykernel
 python -m ipykernel install --user --name=ai-weather
 
