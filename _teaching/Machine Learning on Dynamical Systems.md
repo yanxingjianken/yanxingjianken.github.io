@@ -29,7 +29,7 @@ Loading using Google Colab is recommended.
 
 ### [Regularization: Ridge, Lasso, Tikhonov, Ivanov, Morozov, Mixed-Integer Quadratic Programming (MIQP), Mixed-Integer Linear Programming (MILP), GUROBI]
 
-### [Proof that each MLQP corresponds to a unique MILP (vice versa)!]
+### [Proof that each MLQP corresponds to a unique MILP (vice versa). Fortet (compact) linearization](https://colab.research.google.com/drive/1TL8uYGcGp1EzninOdolbwFtZJ4TYGWHE?usp=sharing)
 
 ---
 
