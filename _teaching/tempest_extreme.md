@@ -33,6 +33,12 @@ The following tutorial uses stellar-amd node of GFDL and runs on the X-Shield 20
 
 ![image](https://github.com/user-attachments/assets/97be3fbd-cde0-43d9-9fca-e280d686d4f0)
 
+The xsh24 model also has several temperature tendecy terms, and here's a quick note:
+1. shallow convection is called 'tendency_of_air_temperature_due_to_shallow_convection_coarse_C3072_1440x720'
+2. deep convection is called 't_dt_gfdlmp_coarse_C3072_1440x720', mp = micro-physics
+3. temperature tendecy 't_dt_phys_coarse_C3072_1440x720' includes both radiation and shallow convection
+4. More to search up from tendency_of_air_temperature_due_to....!
+
 ![image](https://github.com/user-attachments/assets/ebc546a6-f480-4b4b-9e1b-648324c326d9)
 
 
