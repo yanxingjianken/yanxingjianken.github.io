@@ -23,7 +23,7 @@ Note: Performance comparison assessments of results compared to blocking trackin
 The following tutorial uses stellar-amd node of GFDL and runs on the X-Shield 2024 data that is not published yet.
 
 1. Go get env yml file "environment_coleman.yml" located [in this repo](https://github.com/cjgliddon/hackathon25_blocking/tree/main/tempest_extreme)
-2. module load anaconda3/2024.10 and install the yml file to get conda env tempest_extreme
+2. module load anaconda3/2024.10 and install the yml file to get conda env tempest_extreme: conda env create --name tempest_extreme --file=environment_coleman.yml
 3. conda install -c conda-forge nco (also register as ipykernel, optional)
 4. Go to /scratch/cimes/xy4043/tutorial and get all files
 5. chmod +x stitch_nodes_3hrly_anticyclone.sh (and all other 3 sh files)
