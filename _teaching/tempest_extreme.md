@@ -8,7 +8,7 @@ date: 2025-05-14
 location: "Princeton, NJ"
 ---
 
-Some takeways from the 2025 Princeton GFDL Hackathon, a tracking algo!
+Some takeways from the 2025 Princeton GFDL Hackathon, esp. on tempest extreme, a tracking algo.
 
 ---
 
@@ -16,9 +16,9 @@ The amazing group of hk25-blocking worked jointly on identifying blocking (persi
 Members include [Dr. Gan Zhang](https://climas.illinois.edu/directory/profile/gzhang13) from UIUC, [Dr. Mingyu Park](https://mingyupark.scholar.princeton.edu/) from Princeton, [Yanjun Hu](https://scholar.google.com/citations?user=YIl2UewAAAAJ&hl=zh-CN) from Purdue, [Coleman Gliddon](https://cjgliddon.github.io/) from MIT, and me.
 
 A tool to track any features that depart from neighboring points (say, cyclones on surface pressure, or anticyclones on z500 isobaric level, etc.) could be using
-this tool of [Tempest Extreme](), and here's a quick tutorial.
+this tool of [Tempest Extreme](https://gmd.copernicus.org/articles/14/5023/2021/), and here's a quick tutorial.
 
-Note: Performance comparison assessments of results compared to blocking tracking algo [ConTrack]() is also done by Minyu.
+Note: Performance comparison assessments of results compared to blocking tracking algo [ConTrack](https://github.com/steidani/ConTrack) is also done by Minyu.
 
 The following tutorial uses stellar-amd node of GFDL and runs on the X-Shield 2024 data that is not published yet.
 
