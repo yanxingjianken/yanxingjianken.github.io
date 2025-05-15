@@ -33,4 +33,7 @@ The following tutorial uses stellar-amd node of GFDL and runs on the X-Shield 20
 
 ![image](https://github.com/user-attachments/assets/97be3fbd-cde0-43d9-9fca-e280d686d4f0)
 
+![image](https://github.com/user-attachments/assets/ebc546a6-f480-4b4b-9e1b-648324c326d9)
+
+
 
