@@ -9,8 +9,10 @@ location: "Princeton, NJ"
 ---
 
 Some takeways from the 2025 Princeton GFDL Hackathon, a tracking algo!
+
 ---
-The azaming group of hk25-blocking worked jointly on identifying blocking (persistent mid/high latitude anticyclones) and extratropical cyclones. 
+
+The amazing group of hk25-blocking worked jointly on identifying blocking (persistent mid/high latitude anticyclones) and extratropical cyclones. 
 Members include [Dr. Gan Zhang](https://climas.illinois.edu/directory/profile/gzhang13) from UIUC, [Dr. Mingyu Park](https://mingyupark.scholar.princeton.edu/) from Princeton, [Yanjun Hu](https://scholar.google.com/citations?user=YIl2UewAAAAJ&hl=zh-CN) from Purdue, [Coleman Gliddon](https://cjgliddon.github.io/) from MIT, and me.
 
 A tool to track any features that depart from neighboring points (say, cyclones on surface pressure, or anticyclones on z500 isobaric level, etc.) could be using
