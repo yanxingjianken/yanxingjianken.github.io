@@ -20,8 +20,8 @@ this tool of [Tempest Extreme](https://gmd.copernicus.org/articles/14/5023/2021/
 
 ---
 
-1. xsh24 surface cyclone tracking (200 Pa increase outward within 6 degs) [downloadable from /scratch/cimes/xy4043/tracks]
-2. xsh24 z500 anticyclone tracking (10 m z500 decrease outward within 6 degs) [downloadable from /scratch/cimes/xy4043/tracks]
+1. xsh24 surface cyclone tracking (200 Pa increase outward within 6 degs) [GFDL downloadable from /scratch/cimes/xy4043/tracks]
+2. xsh24 z500 anticyclone tracking (10 m z500 decrease outward within 6 degs) [GFDL downloadable from /scratch/cimes/xy4043/tracks]
 3. ERA5 z500 anticyclone tracking (1990-2020) (10 m z500 decrease outward within 6 degs) [link](https://drive.google.com/file/d/1xRmgEvVNLUCzKgLYXIICqBztefmYb6gs/view?usp=sharing)
 4. Filtered Euro-Atlantic ERA5 z500 anticyclone tracking (1990-2020) [link](https://drive.google.com/file/d/1GcURsA59RdJqnkb_LyJ4Ms7PD4LiWezP/view?usp=sharing)
 
