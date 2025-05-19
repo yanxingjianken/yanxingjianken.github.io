@@ -18,11 +18,16 @@ Members include [Dr. Gan Zhang](https://climas.illinois.edu/directory/profile/gz
 A tool to track any features that depart from neighboring points (say, cyclones on surface pressure, or anticyclones on z500 isobaric level, etc.) could be using
 this tool of [Tempest Extreme](https://gmd.copernicus.org/articles/14/5023/2021/), results can be downloaded from here:
 
-1. xsh24 surface cyclone tracking (200 Pa increase outward within 6 degs) [raw csv link](https://drive.google.com/file/d/1w9IJb7SIOEB--zS1Wm0p1NHC-B4rdBII/view?usp=sharing), [reformatted csv link]()
-2. xsh24 z500 anticyclone tracking (10 m z500 decrease outward within 6 degs)[raw csv link](), [reformatted csv link]()
-3. ERA5 z500 anticyclone tracking (1990-2020) (10 m z500 decrease outward within 6 degs) [link](https://drive.google.com/file/d/1xRmgEvVNLUCzKgLYXIICqBztefmYb6gs/view?usp=sharing)
+---
 
-...and here's a quick tutorial on how to use:
+1. xsh24 surface cyclone tracking (200 Pa increase outward within 6 degs) [downloadable from /scratch/cimes/xy4043/tracks]
+2. xsh24 z500 anticyclone tracking (10 m z500 decrease outward within 6 degs) [downloadable from /scratch/cimes/xy4043/tracks]
+3. ERA5 z500 anticyclone tracking (1990-2020) (10 m z500 decrease outward within 6 degs) [link](https://drive.google.com/file/d/1xRmgEvVNLUCzKgLYXIICqBztefmYb6gs/view?usp=sharing)
+4. Filtered Euro-Atlantic ERA5 z500 anticyclone tracking (1990-2020) [link](https://drive.google.com/file/d/1GcURsA59RdJqnkb_LyJ4Ms7PD4LiWezP/view?usp=sharing)
+
+---
+
+...and here's a quick tutorial on how to use the tool:
 
 (Note: Performance comparison assessments of results compared to blocking tracking algo [ConTrack](https://github.com/steidani/ConTrack) is also done by Mingyu.)
 
