@@ -30,13 +30,14 @@ The following tutorial uses stellar-amd node of GFDL and runs on the X-Shield 20
 
 1. Go get env yml file "environment_coleman.yml" located [in this repo](https://github.com/cjgliddon/hackathon25_blocking/tree/main/tempest_extreme)
 2. module load anaconda3/2024.10 and install the yml file to get conda env tempest_extreme: conda env create --name tempest_extreme --file=environment_coleman.yml
-3. conda install -c conda-forge nco (also register as ipykernel, optional)
-4. Also conda install cdo for ERA5 geopotential height tracking
-5. Go to /scratch/cimes/xy4043/tutorial and get all .sh files (or visit the hackathon blocking group [repo](https://github.com/cjgliddon/hackathon25_blocking))
-6. chmod +x stitch_nodes_3hrly_anticyclone.sh (and all other 3 sh files)
-7. run  ./detect_node_anticyclone.sh 
-8. run  ./stitch_nodes_3hrly_anticyclone.sh
-9. The results (raw, and reformatted csv) are in /scratch/cimes/xy4043/tracks/
+3. (2025-05-19 Update) the latest .yml with nco and cdo installed could be found [here](https://github.com/cjgliddon/hackathon25_blocking/blob/main/tempest_extreme/tempest_env.yml).
+4. conda install -c conda-forge nco (also register as ipykernel, optional)
+5. Also conda install cdo for ERA5 geopotential height tracking
+6. Go to /scratch/cimes/xy4043/tutorial and get all .sh files (or visit the hackathon blocking group [repo](https://github.com/cjgliddon/hackathon25_blocking))
+7. chmod +x stitch_nodes_3hrly_anticyclone.sh (and all other 3 sh files)
+8. run  ./detect_node_anticyclone.sh 
+9. run  ./stitch_nodes_3hrly_anticyclone.sh
+10. The results (raw, and reformatted csv) are in /scratch/cimes/xy4043/tracks/
 
 ![image](https://github.com/user-attachments/assets/97be3fbd-cde0-43d9-9fca-e280d686d4f0)
 
