@@ -40,3 +40,6 @@ Meanwhile, Sai has some preferred naming of the above psets, which I've also inc
 - Sparse Recovery: All mixed up
 - Earthquake Sourcing: Boom!
 - MIQP ~ MILP, Paper by [Zhu et al., 2020 PNAS](https://www.pnas.org/doi/10.1073/pnas.2014241117)
+
+![image](https://github.com/user-attachments/assets/5902780d-25d9-4b4e-9b6d-71b2cba42d87)
+
