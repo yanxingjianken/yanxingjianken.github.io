@@ -35,7 +35,7 @@ ___
 
 - I love all kinds of food - from [homemade](https://docs.google.com/presentation/d/1HI1wSVz2_OTsHDeCHw588J2NPk_1lnLLhZz9yXQLzkk/edit?usp=sharing) to [fine dining](https://docs.google.com/presentation/d/1MkS_8FjDAC8YF36vI4oHA-Ww5XbS5BFHpBBz1LpHyWA/edit?usp=sharing).
   
-- I am a member of MIT WxChallenge team, which competes in a collegiate [weather forecast tournament](http://www.wxchallenge.com/index.php); we just won a team [championship (2024-25)](http://synoptic.mit.edu/miscellaneous/fc-team/)!
+- I am a member of MIT WxChallenge team, which competes in a collegiate [weather forecast tournament](http://www.wxchallenge.com/index.php); we just won a team [championship (2024-25)](http://synoptic.mit.edu/miscellaneous/fc-team/)! My usr_id = eggtrt.
 
 - I represented NYU Shanghai in a nationwide Hearthstone tournament in China in 2021, and still am an active <a href="https://hearthstone.blizzard.com/en-us/battlegrounds/">Hearthstone Battleground</a> player. You can find my US ranking at the <a href="https://hearthstone.blizzard.com/en-us/community/leaderboards/?region=US&leaderboardId=battlegrounds&seasonId=14&page=169">official learderboard</a> for id = hirondelle (<a href="https://hearthstone.blizzard.com/en-us/community/leaderboards/?region=US&leaderboardId=battlegrounds&seasonId=13&page=353">season 8</a>), (<a href="https://hearthstone.blizzard.com/en-us/community/leaderboards/?region=US&leaderboardId=battlegrounds&seasonId=14&page=169">season 9</a>).
 
