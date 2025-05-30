@@ -31,6 +31,8 @@ Loading using Google Colab is recommended.
 
 ### [Proof that each MLQP corresponds to a unique MILP (vice versa). Fortet (compact) linearization](https://colab.research.google.com/drive/1TL8uYGcGp1EzninOdolbwFtZJ4TYGWHE?usp=sharing)
 
+### [Generative Adversarial Networks, & Conditional Gaussian Process Notes](https://www.overleaf.com/read/zjmncnpvckbm#473de2)
+
 ---
 
 Meanwhile, Sai has some preferred naming of the above psets, which I've also included here:
@@ -40,6 +42,7 @@ Meanwhile, Sai has some preferred naming of the above psets, which I've also inc
 - Sparse Recovery: All mixed up
 - Earthquake Sourcing: Boom!
 - MIQP ~ MILP, Paper by [Zhu et al., 2020 PNAS](https://www.pnas.org/doi/10.1073/pnas.2014241117)
+- Downscaling, Paper by [Saha and Ravela, 2024](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2023MS003860)
 
 ![image](https://github.com/user-attachments/assets/5902780d-25d9-4b4e-9b6d-71b2cba42d87)
 
