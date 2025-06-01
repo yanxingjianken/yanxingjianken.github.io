@@ -10,7 +10,7 @@ ___
 
 ### Bio
 
-I am a first-year PhD student in Atmosphere Science at the [EAPS](https://eaps.mit.edu/) department of [Massachusetts Institute of Technology](https://www.mit.edu/), advised by [Talia Tamarin-Brodsky](https://taliatamarin.wixsite.com/taliatamarin). My office is at 54-1623A. I obtained my Bachelor's degree in Mathematics from the [Courant Institute](https://cims.nyu.edu/dynamic/) of [New York University](https://www.nyu.edu/). I also received a minor in French Studies from [NYU College of Art and Science](https://as.nyu.edu/departments/french.html) and am a member of [Pi Delta Phi](https://www.pideltaphi.org/).
+I am a second-year PhD student in Atmosphere Science at the [EAPS](https://eaps.mit.edu/) department of [Massachusetts Institute of Technology](https://www.mit.edu/), advised by [Talia Tamarin-Brodsky](https://taliatamarin.wixsite.com/taliatamarin). My office is at 54-1623A. I obtained my Bachelor's degree in Mathematics from the [Courant Institute](https://cims.nyu.edu/dynamic/) of [New York University](https://www.nyu.edu/). I also received a minor in French Studies from [NYU College of Art and Science](https://as.nyu.edu/departments/french.html) and am a member of [Pi Delta Phi](https://www.pideltaphi.org/).
 
 I have previously matriculated at [Sidwell Friends School](https://www.sidwell.edu), [High School Affiliated to Fudan University](https://www.fdfz.cn/), and [Shanghai World Foreign Language Academy](https://www.wflms.cn/site/site2/index.html). I am originally from [Shanghai, China](https://yanxingjianken.github.io/posts/2024/08/blog-post-1/). 
 
@@ -20,7 +20,7 @@ Currently, I'm working on uncovering the relationship among blocking events, Ros
 
 ### Scientists and academicians: You can view my [CV here](https://www.overleaf.com/read/sypjtgcdtnqb#3846ad).
 
-I'm open to post-doc, fellowship, and professorship opportunities.
+I'm open to post-doc, fellowship, and professorship opportunities. I will be a Thomas C. Desmond Fellow from Sep. 2025 to May 2026.
 
 ### HR and headhunters: You can view my [One-Page Resume here](https://www.overleaf.com/read/btytsbptfytw#0dfa4c) ([Mandarin Chinese Version](https://www.overleaf.com/read/csdmbvxkngxt#812fd7)).
 
