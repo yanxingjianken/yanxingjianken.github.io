@@ -21,6 +21,12 @@ This page is under construction...
 
 ### Calendar-date mean
 
+### zonal mean of time mean
+
+## Propagation-Intensification decomposition
+
+Metho: See [TK17 Appendix B](https://journals.ametsoc.org/view/journals/atsc/74/2/jas-d-16-0122.1.xml?tab_body=pdf)
+
 ## High-low frequency decomposition
 ### Lanczos Filtering
 When we need to separate fast-evovling field (such as synoptic cyclones) from (quasi-)stationary fields (such as slowly varying Rossby Waves), we could either do a FFT and 
