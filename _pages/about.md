@@ -20,7 +20,7 @@ Currently, I'm working on uncovering the relationship among blocking events, Ros
 
 ### Scientists and academicians: You can view my [CV here](https://www.overleaf.com/read/sypjtgcdtnqb#3846ad).
 
-I'm open to post-doc, fellowship, and professorship opportunities. I will be a Thomas C. Desmond Fellow from Sep. 2025 to May 2026.
+I'm open to fellowship opportunities. I will be a Thomas C. Desmond Fellow from Sep. 2025 to May 2026.
 
 ### HR and headhunters: You can view my [One-Page Resume here](https://www.overleaf.com/read/btytsbptfytw#0dfa4c) ([Mandarin Chinese Version](https://www.overleaf.com/read/csdmbvxkngxt#812fd7)).
 
