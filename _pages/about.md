@@ -24,7 +24,7 @@ I'm open to fellowship opportunities. I will be a Thomas C. Desmond Fellow from 
 
 ### HR and headhunters: You can view my [One-Page Resume here](https://www.overleaf.com/read/btytsbptfytw#0dfa4c) ([Mandarin Chinese Version](https://www.overleaf.com/read/csdmbvxkngxt#812fd7)).
 
-Post-graduation, I am interested in industrial positions of (but not limited to): Quantitative Research Scientist in Quantitative Finance; Research Scientist in Earth or Climate Science (AI, Energy, or Aerospace sectors); Extreme Weather Event Prediction Scientist in hazard / causality reinsurance and catastrophe bonds; Research / Consulting in Climate Finance and Policy.
+Post-graduation, I am interested in industrial positions of (but not limited to): Quantitative Research in Quantitative Finance (Energy / Commodity Trading); Research Scientist in Earth or Climate Science (AI, Energy, or Aerospace sectors); Extreme Weather Event Prediction Scientist in hazard / causality reinsurance and catastrophe bonds; Research / Consulting in Climate Finance and Policy.
 
 ___
 
