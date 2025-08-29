@@ -14,4 +14,6 @@ Some useful HPC commands
 
 1. htop: check CPU usages
 2.  ps -u "$USER" -o pid,ppid,%cpu,%mem,etime,cmd --sort=-%cpu | head -n 11: top 11 CPU occupying commands by you
+3.  download a zip file: wget https://www2.mmm.ucar.edu/projects/mpas/real/cfsr.2010102300.tar.gz
+4.  unzip a file: tar xf cfsr.2010102300.tar.gz
 
