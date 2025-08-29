@@ -60,9 +60,10 @@ Takes a while!
 3. ncl plot_terrain.ncl
 
 ---
+### Some One-Click Checks for Debuggings
 
 1) Sanity env (same as before)
-./smoke.sh 
+./smoke.sh [download here](https://colab.research.google.com/drive/14iSte7UEvKfrQqAuW10ky1kI8TcXRsFH?usp=sharing)
 
 2) Run
 mpirun -n 1 ./init_atmosphere_model |& tee run.log
