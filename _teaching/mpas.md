@@ -24,5 +24,10 @@ mpirun -n 1 ./init_atmosphere_model |& tee run.log
 5) Quick skim for issues
 grep -E "Bootstrapping|filename template|CFSR|CRITICAL|ERROR" log.init_atmosphere.0000.out
 
+6) Original Settings to namelist.init_atmosphere
+
+<img width="457" height="255" alt="image" src="https://github.com/user-attachments/assets/e96adb81-c8c1-4b98-a57f-401fc8c41f3e" />
+
+
 
 
