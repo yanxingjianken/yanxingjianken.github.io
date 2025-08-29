@@ -37,6 +37,19 @@ make -j$(nproc) gfortran CORE=init_atmosphere AUTOCLEAN=true \
 
 4) ./init_atmosphere_model
 
+When it runs, whatever loaded will be highlighted in green in VSCode
+<img width="2190" height="1168" alt="image" src="https://github.com/user-attachments/assets/5048d8d5-6e10-4c57-8c9d-9522b9ba2e92" />
+
+
+5) mpiexec -n 32 ./atmosphere_model
+
+---
+
+### Visualize
+
+1. cp /net/flood/data2/users/x_yan/mpas/mpas_tutorial_anamitra/ncl_scripts/plot_terrain.ncl .
+2. setenv FNAME x1.10242.static.nc
+3. ncl plot_terrain.ncl
 
 ---
 
