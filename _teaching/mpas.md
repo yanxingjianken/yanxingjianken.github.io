@@ -50,6 +50,7 @@ Takes a while!
 
 
 5) mpiexec -n 32 ./atmosphere_model
+6) ncl supercell.ncl
 
 ---
 
