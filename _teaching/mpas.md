@@ -19,7 +19,14 @@ cd /net/flood/data2/users/x_yan/mpas/MPAS-Model
 ./smoke.sh 
 
 2) make -j4 gfortran CORE=init_atmosphere PRECISION=single AUTOCLEAN=true
-3) Always set autoclean!
+3) Always set autoclean! # Good minimal incantation (equivalent to what worked)
+make -j$(nproc) gfortran CORE=init_atmosphere AUTOCLEAN=true \
+  FC=mpif90 CC=mpicc CXX=mpicxx \
+  FFLAGS="-O3 -ffree-line-length-none -fconvert=big-endian -ffree-form -mcmodel=large" \
+  CFLAGS="-O3 -mcmodel=large" \
+  CXXFLAGS="-O3 -mcmodel=large" \
+  LDFLAGS="-O3 -mcmodel=large"
+
 
 4) Run
 mpirun -n 1 ./init_atmosphere_model |& tee run.log
