@@ -17,6 +17,7 @@ cd /net/flood/data2/users/x_yan/mpas/MPAS-Model
 
 
 1) make -j4 gfortran CORE=init_atmosphere PRECISION=single AUTOCLEAN=true
+
 1-1) Always set autoclean! # Good minimal incantation (equivalent to what worked)
 make -j$(nproc) gfortran CORE=init_atmosphere AUTOCLEAN=true \
   FC=mpif90 CC=mpicc CXX=mpicxx \
@@ -28,6 +29,7 @@ make -j$(nproc) gfortran CORE=init_atmosphere AUTOCLEAN=true \
 2) make clean CORE=atmosphere
    
 3) make -j4 gfortran CORE=atmosphere PRECISION=single
+
 3-1) make -j$(nproc) gfortran CORE=atmosphere PRECISION=single \
   FC=mpif90 CC=mpicc CXX=mpicxx \
   FFLAGS="-O3 -ffree-line-length-none -fconvert=big-endian -ffree-form -mcmodel=large" \
