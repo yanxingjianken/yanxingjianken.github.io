@@ -39,7 +39,7 @@ make -j$(nproc) gfortran CORE=init_atmosphere AUTOCLEAN=true \
 
 4) ./init_atmosphere_model
 
-When it runs, whatever loaded will be highlighted in green in VSCode
+Takes a while!
 <img width="2190" height="1168" alt="image" src="https://github.com/user-attachments/assets/5048d8d5-6e10-4c57-8c9d-9522b9ba2e92" />
 
 
