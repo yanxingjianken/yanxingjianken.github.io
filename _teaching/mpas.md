@@ -12,11 +12,17 @@ Notes for building everything MPAS from [this tutorial](https://www2.mmm.ucar.ed
 
 ### Start:
 0) Activate env & go to your run dir
+
 source activate mpas_toolchain
+
 cd /net/flood/data2/users/x_yan/mpas/MPAS-Model
 
+1) Always remember to download [input grids and files](https://www2.mmm.ucar.edu/projects/mpas/site/downloads.html)
 
-1) make -j4 gfortran CORE=init_atmosphere PRECISION=single AUTOCLEAN=true
+Get the right mpas_static dir:
+<img width="1140" height="369" alt="image" src="https://github.com/user-attachments/assets/88c79783-98f3-4399-b74f-71149ac8247a" />
+
+2) make -j4 gfortran CORE=init_atmosphere PRECISION=single AUTOCLEAN=true
 
 1-1) Always set autoclean! # Good minimal incantation (equivalent to what worked)
 make -j$(nproc) gfortran CORE=init_atmosphere AUTOCLEAN=true \
