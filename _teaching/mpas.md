@@ -18,6 +18,9 @@ cd /net/flood/data2/users/x_yan/mpas/MPAS-Model
 1) Sanity env (same as before)
 ./smoke.sh 
 
+2) make -j4 gfortran CORE=init_atmosphere PRECISION=single AUTOCLEAN=true
+3) Always set autoclean!
+
 4) Run
 mpirun -n 1 ./init_atmosphere_model |& tee run.log
 
