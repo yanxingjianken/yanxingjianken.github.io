@@ -12,8 +12,19 @@ Some useful HPC commands
 
 ---
 
-1. htop: check CPU usages
-2.  ps -u "$USER" -o pid,ppid,%cpu,%mem,etime,cmd --sort=-%cpu | head -n 11: top 11 CPU occupying commands by you
-3.  download a zip file: wget https://www2.mmm.ucar.edu/projects/mpas/real/cfsr.2010102300.tar.gz
-4.  unzip a file: tar xf cfsr.2010102300.tar.gz
+## check CPU usages - live view
+1. htop
+2. top -p 78309
+
+## top 11 CPU occupying tasks, or single event checks:
+1. ps -u "$USER" -o pid,ppid,%cpu,%mem,etime,cmd --sort=-%cpu | head -n 11:
+2. Basic status snapshot: ps -p 78309 -o pid,ppid,sid,tty,stat,%cpu,%mem,etime,cmd
+
+## Download and Unzip
+1. download a zip file: wget https://www2.mmm.ucar.edu/projects/mpas/real/cfsr.2010102300.tar.gz
+2. unzip a file: tar xf cfsr.2010102300.tar.gz
+
+## Close your VSCode and go home without task being stopped
+1. nohup "$(command -v python)" -u download_era5_pressure_levels.py   > logs/era5_$(date +%F_%H%M).log 2>&1 & echo $! > era5.pid
+2. disown
 
