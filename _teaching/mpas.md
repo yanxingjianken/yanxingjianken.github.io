@@ -51,6 +51,13 @@ Takes a while!
 
 5) mpiexec -n 32 ./atmosphere_model
 6) ncl supercell.ncl
+7) cd /net/flood/data2/users/x_yan/mpas/MPAS-Model/convert_mpas
+
+export LD_LIBRARY_PATH="$CONDA_PREFIX/lib:${LD_LIBRARY_PATH:-}"
+
+chmod +x ./convert_mpas
+
+./convert_mpas /net/flood/data2/users/x_yan/mpas/MPAS-Model/x1.10242.grid.nc /net/flood/data2/users/x_yan/mpas/MPAS-Model/diag.2010-10-28_00.00.00.nc
 
 ---
 
