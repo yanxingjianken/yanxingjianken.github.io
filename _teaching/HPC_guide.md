@@ -14,7 +14,8 @@ Some useful HPC commands
 
 ## check CPU usages - live view
 1. htop
-2. top -p 78309
+2. top -u "$USER"
+3. top -p 78309
 
 ## top 11 CPU occupying tasks, or single event checks:
 1. ps -u "$USER" -o pid,ppid,%cpu,%mem,etime,cmd --sort=-%cpu | head -n 11:
