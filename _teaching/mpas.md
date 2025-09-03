@@ -59,6 +59,8 @@ chmod +x ./convert_mpas
 
 ./convert_mpas /net/flood/data2/users/x_yan/mpas/MPAS-Model/x1.10242.grid.nc /net/flood/data2/users/x_yan/mpas/MPAS-Model/diag.2010-10-28_00.00.00.nc
 
+8) (mpas_toolchain) x_yan@dolma:/net/flood/data2/users/x_yan/mpas/MPAS-Model/convert_mpas$ ./convert_mpas /net/flood/data2/users/x_yan/mpas/MPAS-Model/x1.10242.grid.nc /net/flood/data2/users/x_yan/mpas/MPAS-Model/history.*.nc
+
 ---
 
 ### Visualize
