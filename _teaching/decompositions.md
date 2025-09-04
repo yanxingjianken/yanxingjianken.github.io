@@ -39,4 +39,7 @@ When we need to decompose a 2D wind field into rotating part (div-free) and a ir
 
 Method: See this [link](https://github.com/Xunius/py_helmholtz/blob/master/helmholtz.py)
 
+## Quickly wrap 0-360 data to 180
+ds = ds.assign_coords(longitude=((ds.longitude + 180) % 360) - 180).sortby("longitude")
+
 
