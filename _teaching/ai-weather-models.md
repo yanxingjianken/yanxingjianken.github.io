@@ -56,7 +56,7 @@ pip install ai-models-panguweather
 
 pip install ai-models-fourcastnet
 
-pip install ai-models-graphcast  # Install details at https://github.com/ecmwf-lab/ai-models-graphcast
+(Not fixed) pip install ai-models-graphcast  # Install details at https://github.com/ecmwf-lab/ai-models-graphcast
 
 pip install ai-models-fourcastnetv2
 
