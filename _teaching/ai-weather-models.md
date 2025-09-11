@@ -10,6 +10,8 @@ location: "Cambridge, MA"
 
 This is a quick intro on how to use run the fourcastnetv2 and pangu ai model from ecmwf [instructions](https://github.com/ecmwf-lab/ai-models-fourcastnetv2).
 
+Update 2025-Sep-11: Also added fourcastnet0.1 from ECMWF and Microsoft [Aurora](https://microsoft.github.io/aurora/usage.html). 
+
 Partial results are used in my final project for 12.810 Atm. Dynm. (2025 Spring, taught by [Paul O'Gorman](https://pog.mit.edu/))
 
 # Are AI Weather Forecasts Respecting Atmosphere Dynamics?
@@ -58,11 +60,15 @@ pip install ai-models-graphcast  # Install details at https://github.com/ecmwf-l
 
 pip install ai-models-fourcastnetv2
 
+pip install ai-models-aurora
+
 pip install --extra-index-url https://download.pytorch.org/whl/cu124 torch torchvision torchaudio
 
 pip install tensorflow
 
 pip install onnxruntime-gpu --upgrade
+
+(Not Fixed) pip install "jax[cpu]" dm-haiku
 
 Now you should have CUDA 12.4 CUDNN 9.8, ONNX 1.22
 <img width="1050" height="699" alt="image" src="https://github.com/user-attachments/assets/e52fad1f-e3f0-469f-909d-999e6bc89819" />
@@ -73,9 +79,6 @@ Now you should have CUDA 12.4 CUDNN 9.8, ONNX 1.22
 
 
 ### Correct MARS to CDS
-##### backup first
-cp -a ~/.local/lib/python3.10/site-packages/ai_models/inputs/mars.py \
-      ~/.local/lib/python3.10/site-packages/ai_models/inputs/mars.py.bak
 
 ##### replace the source "mars" -> "cds" for all load helpers
 sed -i 's/from_source("mars"/from_source("cds"/g' \
@@ -93,6 +96,11 @@ ai-models --download-assets --assets /pool001/x_yan/ai_model_assets/graphcast/ g
 
 ai-models --download-assets --assets /pool001/x_yan/ai_model_assets/fourcastnetv2-small/ fourcastnetv2-small
 
+mkdir -p /pool001/x_yan/ai_model_assets/aurora
+wget -O /pool001/x_yan/ai_model_assets/aurora/aurora-0.1-static.pickle \
+  https://huggingface.co/microsoft/aurora/resolve/main/aurora-0.1-static.pickle
+
+
 
 it is NORMAL to see the following
 <img width="1134" height="120" alt="image" src="https://github.com/user-attachments/assets/b20191bf-27bc-4011-b159-4c33ef1bcc26" />
@@ -104,7 +112,8 @@ usage: ai-models --help
 #### Customizable input
 ai-models --file <some-grib-file> <model-name>
 
-#### Sample
+#### Sample - copy in code mode at [https://github.com/yanxingjianken/yanxingjianken.github.io/edit/master/_teaching/ai-weather-models.md](https://github.com/yanxingjianken/yanxingjianken.github.io/edit/master/_teaching/ai-weather-models.md)
+
 ai-models \
   --assets /pool001/x_yan/ai_model_assets \
   --assets-sub-directory \
@@ -129,11 +138,18 @@ ai-models \
   --input cds \
   --date 20230110 --time 0000 --lead-time 120 \
   --output file \
-  --path /pool001/x_yan/ai_model_assets/panguweather/fc_20230110T0000_+120h.grib \
+  --path /pool001/x_yan/ai_model_assets/fourcastnet0.1/fc_20230110T0000_+120h.grib \
   fourcastnet
 
-  
-pip install microsoft-aurora
+
+ai-models \
+  --assets /pool001/x_yan/ai_model_assets \
+  --assets-sub-directory \
+  --input cds \
+  --date 20230110 --time 0000 --lead-time 120 \
+  --output file \
+  --path /pool001/x_yan/ai_model_assets/aurora/fc_20230110T0000_+120h.grib \
+  aurora
 
 ---
 ## Tutorials on running your own 10-day, 6-hourly **AI weather forecast**! (on MIT Dolma)
