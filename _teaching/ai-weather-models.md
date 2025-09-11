@@ -29,7 +29,85 @@ Instead, the solution is to use *copernicus CDS* open access data, which require
 
 ---
 
-## Tutorials on running your own 10-day, 6-hourly **AI weather forecast**! 
+## Tutorials on running your own 5-day, 6-hourly **AI weather forecast**! (on MIT Engaging)
+
+### Allocate node and Conda Env
+salloc -N1 -c2 --mem=4G -t 6:00:00 -p mit_normal_gpu --gres=gpu:1
+<img width="3762" height="756" alt="image" src="https://github.com/user-attachments/assets/0f04e930-b937-45f3-81a4-36ea07b962e8" />
+
+
+module purge
+
+module load StdEnv gcc/12.2.0 miniforge/24.3.0-0 cuda/12.4.0 cudnn/9.8.0.87-cuda12
+
+conda create -n ai-ml12 python=3.10 -y
+
+conda activate ai-ml12
+
+### Installations
+pip install ai-models
+
+pip install ai-models-panguweather
+
+pip install ai-models-fourcastnet
+
+pip install ai-models-graphcast  # Install details at https://github.com/ecmwf-lab/ai-models-graphcast
+
+pip install ai-models-fourcastnetv2
+
+pip install --extra-index-url https://download.pytorch.org/whl/cu124 torch torchvision torchaudio
+
+pip install tensorflow
+
+<img width="717" height="216" alt="image" src="https://github.com/user-attachments/assets/2a2ddb84-0104-4dba-bcf1-95b3710ef889" />
+
+### Correct MARS to CDS
+##### backup first
+cp -a ~/.local/lib/python3.10/site-packages/ai_models/inputs/mars.py \
+      ~/.local/lib/python3.10/site-packages/ai_models/inputs/mars.py.bak
+
+##### replace the source "mars" -> "cds" for all load helpers
+sed -i 's/from_source("mars"/from_source("cds"/g' \
+  ~/.local/lib/python3.10/site-packages/ai_models/inputs/mars.py
+
+
+### Download assets
+#### format: ai-models --download-assets --assets <some-directory> <model-name>
+
+ai-models --download-assets --assets /pool001/x_yan/ai_model_assets/panguweather/ panguweather
+
+ai-models --download-assets --assets /pool001/x_yan/ai_model_assets/fourcastnet/ fourcastnet
+
+ai-models --download-assets --assets /pool001/x_yan/ai_model_assets/graphcast/ graphcast
+
+ai-models --download-assets --assets /pool001/x_yan/ai_model_assets/fourcastnetv2-small/ fourcastnetv2-small
+
+
+it is NORMAL to see the following
+<img width="1134" height="120" alt="image" src="https://github.com/user-attachments/assets/b20191bf-27bc-4011-b159-4c33ef1bcc26" />
+
+
+### Run Predictions!
+usage: ai-models --help
+
+#### Customizable input
+ai-models --file <some-grib-file> <model-name>
+
+#### Sample
+ai-models \
+  --assets /pool001/x_yan/ai_model_assets \
+  --assets-sub-directory \
+  --input cds \
+  --date 20230110 --time 0000 --lead-time 120 \
+  --path /pool001/x_yan/ai_model_assets/fourcastnetv2-small/ \
+  --output file \
+  fourcastnetv2-small
+
+  
+pip install microsoft-aurora
+
+---
+## Tutorials on running your own 10-day, 6-hourly **AI weather forecast**! (on MIT Dolma)
 
 ---
 
