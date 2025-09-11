@@ -59,9 +59,13 @@ pip install --extra-index-url https://download.pytorch.org/whl/cu124 torch torch
 
 pip install tensorflow
 
-(Optional) pip install onnxruntime
+pip install onnxruntime-gpu --upgrade
 
-<img width="717" height="216" alt="image" src="https://github.com/user-attachments/assets/2a2ddb84-0104-4dba-bcf1-95b3710ef889" />
+Now you should have CUDA 12.4 CUDNN 9.8, ONNX 1.22
+<img width="1050" height="699" alt="image" src="https://github.com/user-attachments/assets/e52fad1f-e3f0-469f-909d-999e6bc89819" />
+<img width="588" height="72" alt="image" src="https://github.com/user-attachments/assets/aaf68962-f3d4-48dd-abb4-2012b10c1547" />
+
+
 
 ### Correct MARS to CDS
 ##### backup first
@@ -78,7 +82,7 @@ sed -i 's/from_source("mars"/from_source("cds"/g' \
 
 ai-models --download-assets --assets /pool001/x_yan/ai_model_assets/panguweather/ panguweather
 
-ai-models --download-assets --assets /pool001/x_yan/ai_model_assets/fourcastnet/ fourcastnet
+ai-models --download-assets --assets /pool001/x_yan/ai_model_assets/fourcastnet0.1/ fourcastnet
 
 ai-models --download-assets --assets /pool001/x_yan/ai_model_assets/graphcast/ graphcast
 
@@ -113,6 +117,15 @@ ai-models \
   --output file \
   --path /pool001/x_yan/ai_model_assets/panguweather/fc_20230110T0000_+120h.grib \
   panguweather
+
+ai-models \
+  --assets /pool001/x_yan/ai_model_assets \
+  --assets-sub-directory \
+  --input cds \
+  --date 20230110 --time 0000 --lead-time 120 \
+  --output file \
+  --path /pool001/x_yan/ai_model_assets/panguweather/fc_20230110T0000_+120h.grib \
+  fourcastnet
 
   
 pip install microsoft-aurora
