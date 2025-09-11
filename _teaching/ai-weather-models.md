@@ -4,15 +4,15 @@ collection: notes
 type: "misc."
 permalink: /teaching/ai-weather-models
 venue: "misc."
-date: 2025-04-10
+date: 2025-09-11
 location: "Cambridge, MA"
 ---
 
 This is a quick intro on how to use run the fourcastnetv2 and pangu ai model from ecmwf [instructions](https://github.com/ecmwf-lab/ai-models-fourcastnetv2).
 
-Update 2025-Sep-11: Also added fourcastnet0.1 from ECMWF and Microsoft [Aurora](https://microsoft.github.io/aurora/usage.html). 
+Update 2025-Sep-11: Also added fourcastnet0.1 from ECMWF and Microsoft [Aurora](https://microsoft.github.io/aurora/usage.html). GraphCast is still not working well.
 
-Partial results are used in my final project for 12.810 Atm. Dynm. (2025 Spring, taught by [Paul O'Gorman](https://pog.mit.edu/))
+Partial results are used in my final project for MIT Course 12.810 Atm. Dynm. (2025 Spring, taught by [Paul O'Gorman](https://pog.mit.edu/))
 
 # Are AI Weather Forecasts Respecting Atmosphere Dynamics?
 
@@ -35,6 +35,8 @@ Instead, the solution is to use *copernicus CDS* open access data, which require
 
 ### Allocate node and Conda Env
 salloc -N1 -c2 --mem=4G -t 6:00:00 -p mit_normal_gpu --gres=gpu:1
+
+make sure you see both cuda/12.4.0 and cudnn/9.8.0.87-cuda12
 <img width="3762" height="756" alt="image" src="https://github.com/user-attachments/assets/0f04e930-b937-45f3-81a4-36ea07b962e8" />
 
 
@@ -46,7 +48,7 @@ conda create -n ai-ml12 python=3.10 -y
 
 conda activate ai-ml12
 
-#### add the correct cuDNN lib dir
+#### (IMPORTANT) add the correct cuDNN lib dir
 export LD_LIBRARY_PATH="$CUDNN_HOME/lib:$LD_LIBRARY_PATH"
 
 ### Installations
@@ -66,7 +68,7 @@ pip install --extra-index-url https://download.pytorch.org/whl/cu124 torch torch
 
 pip install tensorflow
 
-pip install onnxruntime-gpu --upgrade
+(Necessary for Pangu GPU) pip install onnxruntime-gpu --upgrade
 
 (Not working) pip install "jax[cpu]" dm-haiku
 
@@ -77,13 +79,11 @@ Now you should have CUDA 12.4 CUDNN 9.8, ONNX 1.22
 
 
 
-
 ### Correct MARS to CDS
 
 ##### replace the source "mars" -> "cds" for all load helpers
 sed -i 's/from_source("mars"/from_source("cds"/g' \
   ~/.local/lib/python3.10/site-packages/ai_models/inputs/mars.py
-
 
 
 ### Download assets for Aurora (auto-download has bugs for Aurora)
@@ -93,17 +93,15 @@ wget -O /pool001/x_yan/ai_model_assets/aurora/aurora-0.1-static.pickle \
   https://huggingface.co/microsoft/aurora/resolve/main/aurora-0.1-static.pickle
 
 
-it is NORMAL to see the following
+it is NORMAL to see the following when not specifying CDS
 <img width="1134" height="120" alt="image" src="https://github.com/user-attachments/assets/b20191bf-27bc-4011-b159-4c33ef1bcc26" />
 
 
 ### Run Predictions!
 usage: ai-models --help
 
-#### Customizable input
-ai-models --file <some-grib-file> <model-name>
 
-#### Sample - copy in code mode at [https://github.com/yanxingjianken/yanxingjianken.github.io/edit/master/_teaching/ai-weather-models.md](https://github.com/yanxingjianken/yanxingjianken.github.io/edit/master/_teaching/ai-weather-models.md)
+#### Sample Prediction starting at 2023-Jan-10th 00UTC (copy in code mode [here](https://github.com/yanxingjianken/yanxingjianken.github.io/edit/master/_teaching/ai-weather-models.md))
 
 ai-models \
   --download-assets \
@@ -145,6 +143,34 @@ ai-models \
   --output file \
   --path /pool001/x_yan/ai_model_assets/aurora/fc_20230110T0000_+120h.grib \
   aurora
+
+#### Customizable input
+ai-models --file <some-grib-file> <model-name>
+
+
+### Results
+#### Pangu (0.25 Resolution)
+<img width="1152" height="714" alt="image" src="https://github.com/user-attachments/assets/bb6da627-5e02-4d51-aaca-e45b5bad0841" />
+<img width="957" height="768" alt="image" src="https://github.com/user-attachments/assets/6c56036b-a81f-495c-bb0e-56991b71e122" />
+
+#### FourCastNetv2 (0.25 Resolution)
+<img width="1143" height="609" alt="image" src="https://github.com/user-attachments/assets/823676e5-28d6-4e0f-99ff-633e8d741d6c" />
+<img width="933" height="738" alt="image" src="https://github.com/user-attachments/assets/8b5f1fb7-7910-4a7a-9935-451751c21c54" />
+
+
+#### FourCastNet (0.25 Resolution)
+<img width="1146" height="786" alt="image" src="https://github.com/user-attachments/assets/97436c92-a690-4529-98c5-51cf352468aa" />
+<img width="918" height="762" alt="image" src="https://github.com/user-attachments/assets/961b3d75-dd55-4742-911b-81dfe06c3994" />
+
+
+#### Aurora (0.1 Resolution)
+<img width="1179" height="756" alt="image" src="https://github.com/user-attachments/assets/855476d2-3a49-418c-a33a-59bf55344365" />
+<img width="969" height="776" alt="image" src="https://github.com/user-attachments/assets/5598a479-0d36-4e22-97db-520c135cca86" />
+
+
+
+
+---
 
 ### If you don't want to redownload assets for each time, simply delete --download-assets command
 ### If you want to download assets first without making predictions, simply do:
