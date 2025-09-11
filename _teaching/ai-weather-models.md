@@ -31,149 +31,149 @@ Instead, the solution is to use *copernicus CDS* open access data, which require
 
 ---
 
-## Tutorials on running your own 5-day, 6-hourly **AI weather forecast**! (on MIT Engaging)
+# Tutorials on running your own 5-day, 6-hourly **AI weather forecast**! (on MIT Engaging)
 
-### Allocate node and Module and Conda Env
+## Allocate node and Modules + Conda Env
+
+```bash
 salloc -N1 -c2 --mem=4G -t 6:00:00 -p mit_normal_gpu --gres=gpu:1
+```
 
-make sure you see both cuda/12.4.0 and cudnn/9.8.0.87-cuda12 being available.
+Make sure you see both `cuda/12.4.0` and `cudnn/9.8.0.87-cuda12` available (via `module avail`).
 <img width="3762" height="756" alt="image" src="https://github.com/user-attachments/assets/0f04e930-b937-45f3-81a4-36ea07b962e8" />
 
 
+```bash
 module purge
-
 module load StdEnv gcc/12.2.0 miniforge/24.3.0-0 cuda/12.4.0 cudnn/9.8.0.87-cuda12
+```
 
+```bash
 conda create -n ai-ml12 python=3.10 -y
-
 conda activate ai-ml12
+```
 
-#### (IMPORTANT) add the correct cuDNN lib dir
+### (IMPORTANT) add the correct cuDNN lib dir
+```bash
 export LD_LIBRARY_PATH="$CUDNN_HOME/lib:$LD_LIBRARY_PATH"
+```
 
-#### (Optional): keep pip inside env (not ~/.local)
+### (Optional) keep pip inside env (not ~/.local)
+
+```bash
 export PYTHONNOUSERSITE=1
+```
 
-### Installations
+## Installations
+
+```bash
 pip install ai-models
-
 pip install ai-models-panguweather
-
 pip install ai-models-fourcastnet
+```
 
-(Not working) pip install ai-models-graphcast  # Install from https://github.com/ecmwf-lab/ai-models-graphcast
+~~`pip install ai-models-graphcast  # Install from https://github.com/ecmwf-lab/ai-models-graphcast`~~
 
+
+```bash
 pip install ai-models-fourcastnetv2
-
 pip install ai-models-aurora
-
 pip install --extra-index-url https://download.pytorch.org/whl/cu124 torch torchvision torchaudio
-
 pip install tensorflow
+# Necessary for Pangu GPU
+pip install onnxruntime-gpu --upgrade
+```
 
-(Necessary for Pangu GPU) pip install onnxruntime-gpu --upgrade
+~~`pip install "jax[cpu]" dm-haiku`~~
 
-(Not working) pip install "jax[cpu]" dm-haiku
-
-Now you should have CUDA 12.4 CUDNN 9.8, ONNX 1.22
+Now you should have CUDA 12.4, cuDNN 9.8, ONNX Runtime 1.22.
 <img width="1050" height="699" alt="image" src="https://github.com/user-attachments/assets/e52fad1f-e3f0-469f-909d-999e6bc89819" />
 <img width="588" height="72" alt="image" src="https://github.com/user-attachments/assets/aaf68962-f3d4-48dd-abb4-2012b10c1547" />
 <img width="1149" height="243" alt="image" src="https://github.com/user-attachments/assets/9d78ab63-068f-4202-b719-039bcb0c6103" />
 
 
 
-### Correct MARS to CDS
+## Correct MARS to CDS
 
-##### replace the source "mars" -> "cds" for all load helpers - if installed in conda site-packages not ./local, change dir accordingly
-sed -i 's/from_source("mars"/from_source("cds"/g' \
-  ~/.local/lib/python3.10/site-packages/ai_models/inputs/mars.py
+### replace the source "mars" -> "cds" for all load helpers - if installed in conda site-packages not ./local, change dir accordingly
+
+```bash
+cp -a ~/.local/lib/python3.10/site-packages/ai_models/inputs/mars.py       ~/.local/lib/python3.10/site-packages/ai_models/inputs/mars.py.bak
+
+sed -i 's/from_source("mars"/from_source("cds"/g'   ~/.local/lib/python3.10/site-packages/ai_models/inputs/mars.py
+```
 
 
-### Download assets for Aurora (auto-download has bugs for Aurora)
-mkdir -p /pool001/x_yan/ai_model_assets/fourcastnet0.1  
-
-mkdir -p /pool001/x_yan/ai_model_assets/fourcastnetv2-small  
-
-mkdir -p /pool001/x_yan/ai_model_assets/graphcast  
-
+## Download assets for (auto-download has bugs for Aurora)
+```bash
+mkdir -p /pool001/x_yan/ai_model_assets/fourcastnet0.1
+mkdir -p /pool001/x_yan/ai_model_assets/fourcastnetv2-small
+mkdir -p /pool001/x_yan/ai_model_assets/graphcast
 mkdir -p /pool001/x_yan/ai_model_assets/panguweather
-
 mkdir -p /pool001/x_yan/ai_model_assets/aurora
-
-wget -O /pool001/x_yan/ai_model_assets/aurora/aurora-0.1-static.pickle \
-  https://huggingface.co/microsoft/aurora/resolve/main/aurora-0.1-static.pickle
+```
 
 
-it is NORMAL to see the following when not specifying CDS
+```bash
+wget -O /pool001/x_yan/ai_model_assets/aurora/aurora-0.1-static.pickle   https://huggingface.co/microsoft/aurora/resolve/main/aurora-0.1-static.pickle
+```
+
+It is **NORMAL** to see messages about MARS when not specifying CDS.
 <img width="1134" height="120" alt="image" src="https://github.com/user-attachments/assets/b20191bf-27bc-4011-b159-4c33ef1bcc26" />
 
 
-### Run Predictions!
-usage: ai-models --help
+## Run Predictions!
+Documentation:
 
-#### Sample Prediction starting at 2023-Jan-10th 00UTC (copy in code mode [here](https://github.com/yanxingjianken/yanxingjianken.github.io/edit/master/_teaching/ai-weather-models.md))
-
-ai-models \
-  --download-assets \
-  --assets /pool001/x_yan/ai_model_assets \
-  --assets-sub-directory \
-  --input cds \
-  --date 20230110 --time 0000 --lead-time 120 \
-  --output file \
-  --path /pool001/x_yan/ai_model_assets/fourcastnetv2-small/fc_20230110T0000_+120h.grib \
-  fourcastnetv2-small
+```bash
+ai-models --help
+```
 
 
-ai-models \
-  --download-assets \
-  --assets /pool001/x_yan/ai_model_assets \
-  --assets-sub-directory \
-  --input cds \
-  --date 20230110 --time 0000 --lead-time 120 \
-  --output file \
-  --path /pool001/x_yan/ai_model_assets/panguweather/fc_20230110T0000_+120h.grib \
-  panguweather
+### Sample Prediction starting at 2023-Jan-10th 00UTC 
 
-ai-models \
-  --download-assets \
-  --assets /pool001/x_yan/ai_model_assets \
-  --assets-sub-directory \
-  --input cds \
-  --date 20230110 --time 0000 --lead-time 120 \
-  --output file \
-  --path /pool001/x_yan/ai_model_assets/fourcastnet0.1/fc_20230110T0000_+120h.grib \
-  fourcastnet
+fourcastnetv2-small
+```bash
+ai-models   --download-assets   --assets /pool001/x_yan/ai_model_assets   --assets-sub-directory   --input cds   --date 20230110 --time 0000 --lead-time 120   --output file   --path /pool001/x_yan/ai_model_assets/fourcastnetv2-small/fc_20230110T0000_+120h.grib   fourcastnetv2-small
+```
 
+Pangu
+```bash
+ai-models   --download-assets   --assets /pool001/x_yan/ai_model_assets   --assets-sub-directory   --input cds   --date 20230110 --time 0000 --lead-time 120   --output file   --path /pool001/x_yan/ai_model_assets/panguweather/fc_20230110T0000_+120h.grib   panguweather
+```
 
-ai-models \
-  --assets /pool001/x_yan/ai_model_assets \
-  --assets-sub-directory \
-  --input cds \
-  --date 20230110 --time 0000 --lead-time 120 \
-  --output file \
-  --path /pool001/x_yan/ai_model_assets/aurora/fc_20230110T0000_+120h.grib \
-  aurora
+fourcastnet
+```bash
+ai-models   --download-assets   --assets /pool001/x_yan/ai_model_assets   --assets-sub-directory   --input cds   --date 20230110 --time 0000 --lead-time 120   --output file   --path /pool001/x_yan/ai_model_assets/fourcastnet0.1/fc_20230110T0000_+120h.grib   fourcastnet
+```
 
-#### Customizable input
+Aurora
+```bash
+ai-models   --assets /pool001/x_yan/ai_model_assets   --assets-sub-directory   --input cds   --date 20230110 --time 0000 --lead-time 120   --output file   --path /pool001/x_yan/ai_model_assets/aurora/fc_20230110T0000_+120h.grib   aurora
+```
+
+### Customizable input
+```bash
 ai-models --file <some-grib-file> <model-name>
+```
 
 
-### Results
-#### Pangu (0.25 Resolution)
+## Results
+### Pangu (0.25 Resolution)
 <img width="1152" height="714" alt="image" src="https://github.com/user-attachments/assets/bb6da627-5e02-4d51-aaca-e45b5bad0841" />
 <img width="957" height="768" alt="image" src="https://github.com/user-attachments/assets/6c56036b-a81f-495c-bb0e-56991b71e122" />
 
-#### FourCastNetv2 (0.25 Resolution)
+### FourCastNetv2 (0.25 Resolution)
 <img width="1143" height="609" alt="image" src="https://github.com/user-attachments/assets/823676e5-28d6-4e0f-99ff-633e8d741d6c" />
 <img width="933" height="738" alt="image" src="https://github.com/user-attachments/assets/8b5f1fb7-7910-4a7a-9935-451751c21c54" />
 
 
-#### FourCastNet (0.25 Resolution)
+### FourCastNet (0.25 Resolution)
 <img width="1146" height="786" alt="image" src="https://github.com/user-attachments/assets/97436c92-a690-4529-98c5-51cf352468aa" />
 <img width="918" height="762" alt="image" src="https://github.com/user-attachments/assets/961b3d75-dd55-4742-911b-81dfe06c3994" />
 
 
-#### Aurora (0.1 Resolution)
+### Aurora (0.1 Resolution)
 <img width="1179" height="756" alt="image" src="https://github.com/user-attachments/assets/855476d2-3a49-418c-a33a-59bf55344365" />
 <img width="969" height="776" alt="image" src="https://github.com/user-attachments/assets/5598a479-0d36-4e22-97db-520c135cca86" />
 
@@ -186,6 +186,7 @@ ai-models --file <some-grib-file> <model-name>
 ### If you want to download assets first without making predictions, simply do:
 #### format: ai-models --download-assets --assets <some-directory> <model-name>
 
+```bash
 ai-models --download-assets --assets /pool001/x_yan/ai_model_assets/panguweather/ panguweather
 
 ai-models --download-assets --assets /pool001/x_yan/ai_model_assets/fourcastnet0.1/ fourcastnet
@@ -193,9 +194,10 @@ ai-models --download-assets --assets /pool001/x_yan/ai_model_assets/fourcastnet0
 ai-models --download-assets --assets /pool001/x_yan/ai_model_assets/graphcast/ graphcast
 
 ai-models --download-assets --assets /pool001/x_yan/ai_model_assets/fourcastnetv2-small/ fourcastnetv2-small
+```
 
 ---
-## Tutorials on running your own 10-day, 6-hourly **AI weather forecast**! (on MIT Dolma)
+# Tutorials on running your own 10-day, 6-hourly **AI weather forecast**! (on MIT Dolma)
 
 ---
 
