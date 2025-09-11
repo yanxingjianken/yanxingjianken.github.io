@@ -8,11 +8,11 @@ date: 2025-09-11
 location: "Cambridge, MA"
 ---
 
-This is a quick intro on how to use run the fourcastnetv2 and pangu ai model from ecmwf [instructions](https://github.com/ecmwf-lab/ai-models-fourcastnetv2).
+This is a quick intro on how to use run the (Nvidia) fourcastnetv2 and (Huawei) pangu AI model from ecmwf-plugin [instructions](https://github.com/ecmwf-lab/ai-models-fourcastnetv2).
 
-Update 2025-Sep-11: Also added fourcastnet0.1 from ECMWF and Microsoft [Aurora](https://microsoft.github.io/aurora/usage.html). GraphCast is still not working well.
+Update 2025-Sep-11: Also added fourcastnet0.1 from ECMWF and (Microsoft) [Aurora](https://microsoft.github.io/aurora/usage.html). (Google) GraphCast is still not working well due to compatibility issues with [JAX](https://docs.jax.dev/en/latest/notebooks/thinking_in_jax.html).
 
-Partial results are used in my final project for MIT Course 12.810 Atm. Dynm. (2025 Spring, taught by [Paul O'Gorman](https://pog.mit.edu/))
+Partial results are used in my final project for MIT Course 12.810 Atm. Dynm. (2025 Spring, taught by [Paul O'Gorman](https://pog.mit.edu/)) titled:
 
 # Are AI Weather Forecasts Respecting Atmosphere Dynamics?
 
@@ -33,10 +33,10 @@ Instead, the solution is to use *copernicus CDS* open access data, which require
 
 ## Tutorials on running your own 5-day, 6-hourly **AI weather forecast**! (on MIT Engaging)
 
-### Allocate node and Conda Env
+### Allocate node and Module and Conda Env
 salloc -N1 -c2 --mem=4G -t 6:00:00 -p mit_normal_gpu --gres=gpu:1
 
-make sure you see both cuda/12.4.0 and cudnn/9.8.0.87-cuda12
+make sure you see both cuda/12.4.0 and cudnn/9.8.0.87-cuda12 being available.
 <img width="3762" height="756" alt="image" src="https://github.com/user-attachments/assets/0f04e930-b937-45f3-81a4-36ea07b962e8" />
 
 
