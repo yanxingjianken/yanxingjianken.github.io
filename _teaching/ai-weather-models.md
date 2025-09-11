@@ -59,6 +59,8 @@ pip install --extra-index-url https://download.pytorch.org/whl/cu124 torch torch
 
 pip install tensorflow
 
+(Optional) pip install onnxruntime
+
 <img width="717" height="216" alt="image" src="https://github.com/user-attachments/assets/2a2ddb84-0104-4dba-bcf1-95b3710ef889" />
 
 ### Correct MARS to CDS
@@ -99,9 +101,18 @@ ai-models \
   --assets-sub-directory \
   --input cds \
   --date 20230110 --time 0000 --lead-time 120 \
-  --path /pool001/x_yan/ai_model_assets/fourcastnetv2-small/ \
   --output file \
+  --path /pool001/x_yan/ai_model_assets/fourcastnetv2-small/fc_20230110T0000_+120h.grib \
   fourcastnetv2-small
+
+ai-models \
+  --assets /pool001/x_yan/ai_model_assets \
+  --assets-sub-directory \
+  --input cds \
+  --date 20230110 --time 0000 --lead-time 120 \
+  --output file \
+  --path /pool001/x_yan/ai_model_assets/panguweather/fc_20230110T0000_+120h.grib \
+  panguweather
 
   
 pip install microsoft-aurora
