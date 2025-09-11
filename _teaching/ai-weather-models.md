@@ -56,7 +56,7 @@ pip install ai-models-panguweather
 
 pip install ai-models-fourcastnet
 
-(Not fixed) pip install ai-models-graphcast  # Install details at https://github.com/ecmwf-lab/ai-models-graphcast
+(Not working) pip install ai-models-graphcast  # Install from https://github.com/ecmwf-lab/ai-models-graphcast
 
 pip install ai-models-fourcastnetv2
 
@@ -68,7 +68,7 @@ pip install tensorflow
 
 pip install onnxruntime-gpu --upgrade
 
-(Not Fixed) pip install "jax[cpu]" dm-haiku
+(Not working) pip install "jax[cpu]" dm-haiku
 
 Now you should have CUDA 12.4 CUDNN 9.8, ONNX 1.22
 <img width="1050" height="699" alt="image" src="https://github.com/user-attachments/assets/e52fad1f-e3f0-469f-909d-999e6bc89819" />
@@ -85,21 +85,12 @@ sed -i 's/from_source("mars"/from_source("cds"/g' \
   ~/.local/lib/python3.10/site-packages/ai_models/inputs/mars.py
 
 
-### Download assets
-#### format: ai-models --download-assets --assets <some-directory> <model-name>
 
-ai-models --download-assets --assets /pool001/x_yan/ai_model_assets/panguweather/ panguweather
-
-ai-models --download-assets --assets /pool001/x_yan/ai_model_assets/fourcastnet0.1/ fourcastnet
-
-ai-models --download-assets --assets /pool001/x_yan/ai_model_assets/graphcast/ graphcast
-
-ai-models --download-assets --assets /pool001/x_yan/ai_model_assets/fourcastnetv2-small/ fourcastnetv2-small
+### Download assets for Aurora (auto-download has bugs for Aurora)
 
 mkdir -p /pool001/x_yan/ai_model_assets/aurora
 wget -O /pool001/x_yan/ai_model_assets/aurora/aurora-0.1-static.pickle \
   https://huggingface.co/microsoft/aurora/resolve/main/aurora-0.1-static.pickle
-
 
 
 it is NORMAL to see the following
@@ -115,6 +106,7 @@ ai-models --file <some-grib-file> <model-name>
 #### Sample - copy in code mode at [https://github.com/yanxingjianken/yanxingjianken.github.io/edit/master/_teaching/ai-weather-models.md](https://github.com/yanxingjianken/yanxingjianken.github.io/edit/master/_teaching/ai-weather-models.md)
 
 ai-models \
+  --download-assets \
   --assets /pool001/x_yan/ai_model_assets \
   --assets-sub-directory \
   --input cds \
@@ -123,7 +115,9 @@ ai-models \
   --path /pool001/x_yan/ai_model_assets/fourcastnetv2-small/fc_20230110T0000_+120h.grib \
   fourcastnetv2-small
 
+
 ai-models \
+  --download-assets \
   --assets /pool001/x_yan/ai_model_assets \
   --assets-sub-directory \
   --input cds \
@@ -133,6 +127,7 @@ ai-models \
   panguweather
 
 ai-models \
+  --download-assets \
   --assets /pool001/x_yan/ai_model_assets \
   --assets-sub-directory \
   --input cds \
@@ -150,6 +145,18 @@ ai-models \
   --output file \
   --path /pool001/x_yan/ai_model_assets/aurora/fc_20230110T0000_+120h.grib \
   aurora
+
+### If you don't want to redownload assets for each time, simply delete --download-assets command
+### If you want to download assets first without making predictions, simply do:
+#### format: ai-models --download-assets --assets <some-directory> <model-name>
+
+ai-models --download-assets --assets /pool001/x_yan/ai_model_assets/panguweather/ panguweather
+
+ai-models --download-assets --assets /pool001/x_yan/ai_model_assets/fourcastnet0.1/ fourcastnet
+
+ai-models --download-assets --assets /pool001/x_yan/ai_model_assets/graphcast/ graphcast
+
+ai-models --download-assets --assets /pool001/x_yan/ai_model_assets/fourcastnetv2-small/ fourcastnetv2-small
 
 ---
 ## Tutorials on running your own 10-day, 6-hourly **AI weather forecast**! (on MIT Dolma)
