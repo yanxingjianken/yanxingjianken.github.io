@@ -51,6 +51,9 @@ conda activate ai-ml12
 #### (IMPORTANT) add the correct cuDNN lib dir
 export LD_LIBRARY_PATH="$CUDNN_HOME/lib:$LD_LIBRARY_PATH"
 
+#### (Optional): keep pip inside env (not ~/.local)
+export PYTHONNOUSERSITE=1
+
 ### Installations
 pip install ai-models
 
@@ -81,14 +84,22 @@ Now you should have CUDA 12.4 CUDNN 9.8, ONNX 1.22
 
 ### Correct MARS to CDS
 
-##### replace the source "mars" -> "cds" for all load helpers
+##### replace the source "mars" -> "cds" for all load helpers - if installed in conda site-packages not ./local, change dir accordingly
 sed -i 's/from_source("mars"/from_source("cds"/g' \
   ~/.local/lib/python3.10/site-packages/ai_models/inputs/mars.py
 
 
 ### Download assets for Aurora (auto-download has bugs for Aurora)
+mkdir -p /pool001/x_yan/ai_model_assets/fourcastnet0.1  
+
+mkdir -p /pool001/x_yan/ai_model_assets/fourcastnetv2-small  
+
+mkdir -p /pool001/x_yan/ai_model_assets/graphcast  
+
+mkdir -p /pool001/x_yan/ai_model_assets/panguweather
 
 mkdir -p /pool001/x_yan/ai_model_assets/aurora
+
 wget -O /pool001/x_yan/ai_model_assets/aurora/aurora-0.1-static.pickle \
   https://huggingface.co/microsoft/aurora/resolve/main/aurora-0.1-static.pickle
 
@@ -99,7 +110,6 @@ it is NORMAL to see the following when not specifying CDS
 
 ### Run Predictions!
 usage: ai-models --help
-
 
 #### Sample Prediction starting at 2023-Jan-10th 00UTC (copy in code mode [here](https://github.com/yanxingjianken/yanxingjianken.github.io/edit/master/_teaching/ai-weather-models.md))
 
