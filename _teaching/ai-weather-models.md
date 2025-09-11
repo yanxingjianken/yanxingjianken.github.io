@@ -44,6 +44,9 @@ conda create -n ai-ml12 python=3.10 -y
 
 conda activate ai-ml12
 
+#### add the correct cuDNN lib dir
+export LD_LIBRARY_PATH="$CUDNN_HOME/lib:$LD_LIBRARY_PATH"
+
 ### Installations
 pip install ai-models
 
@@ -64,6 +67,8 @@ pip install onnxruntime-gpu --upgrade
 Now you should have CUDA 12.4 CUDNN 9.8, ONNX 1.22
 <img width="1050" height="699" alt="image" src="https://github.com/user-attachments/assets/e52fad1f-e3f0-469f-909d-999e6bc89819" />
 <img width="588" height="72" alt="image" src="https://github.com/user-attachments/assets/aaf68962-f3d4-48dd-abb4-2012b10c1547" />
+<img width="1149" height="243" alt="image" src="https://github.com/user-attachments/assets/9d78ab63-068f-4202-b719-039bcb0c6103" />
+
 
 
 
