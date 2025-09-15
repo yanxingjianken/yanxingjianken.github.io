@@ -49,3 +49,36 @@ wget https://www2.mmm.ucar.edu/projects/mpas/real/cfsr.2010102300.tar.gz
    disown
    ```
 
+#### Another example
+```bash
+chmod +x blocking_clim_detect.sh
+LOGDIR="/net/flood/data/users/x_yan/isobaric_era5/tracking_tmppp"
+mkdir -p "$LOGDIR"
+LOG="${LOGDIR}/blocking_clim_detect_$(date +%F_%H%M%S).log"
+nohup bash -lc '
+  source ~/.bashrc
+  source activate tempest_extreme_new
+  export OMP_NUM_THREADS=1
+  nice -n 10 ionice -c2 -n7 ./blocking_clim_detect.sh
+' > "$LOG" 2>&1 & echo $! > "${LOG}.pid" && disown
+```
+#### To Watch progress 
+```bash
+tail -f "$LOG"
+# or only show warnings/errors:
+tail -f "$LOG" | egrep -i 'error|warn|fail|missing'
+
+# Check if running
+ps -fp "$(cat "${LOG}.pid")"
+```
+
+#### To stop
+```bash
+PID=$(cat "${LOG}.pid")
+PGID=$(ps -o pgid= -p "$PID" | tr -d ' ')
+# TERM first, then KILL if needed:
+kill -TERM -"$PGID" 2>/dev/null || kill -TERM "$PID"
+sleep 5
+kill -KILL -"$PGID" 2>/dev/null || true
+```
+
