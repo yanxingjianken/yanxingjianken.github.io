@@ -63,4 +63,53 @@ The xsh24 model also has several temperature tendecy terms, and here's a quick n
 ![image](https://github.com/user-attachments/assets/ebc546a6-f480-4b4b-9e1b-648324c326d9)
 
 
+### Misc. Notes
+#### Multiple track constraints
+```bash
+# Extract Nodes from ERA5 Data
+extract_nodes(){
+    local yr=$1
+    local mth=$2
+
+    # Prepare list of input files
+    [ ! -e files_$yr$mth.tmp ] || rm files_$yr$mth.tmp
+    msl_file=$parent_folder/era5_msl_${yr}_${mth}.nc
+    u10_file=$parent_folder/era5_u10_${yr}_${mth}.nc
+    v10_file=$parent_folder/era5_v10_${yr}_${mth}.nc
+    t_file=$parent_folder/ta_day_FGOALS-f3-H_hist-1950_r1i1p1f1_gr_${yr}${mth}01-${yr}${mth}$(cal $mth $yr | awk 'NF {DAYS = $NF}; END {print DAYS}').nc
+    echo -e "${t_file};${msl_file};${u10_file};${v10_file}" >> files_$yr$mth.tmp
+
+    # Output file
+    node_file=$save_folder/${yr}${mth}
+
+    # Detect Nodes
+    /home/anamitra/cyclone_tracks/trackers/tempestextremes/bin/DetectNodes \
+        --in_data_list files_$yr$mth.tmp \
+        --out $node_file \
+        --timestride 6 \
+        --searchbymin psl \
+        --closedcontourcmd "psl,200.0,5.5,0;ta(50000Pa),-0.4,8.0,1.1" \
+        --mergedist 6.0 \
+        --outputcmd  "psl,min,0;_VECMAG(uas,vas),max,2" \
+        --latname lat --lonname lon
+    
+    # Cleanup
+    rm files_$yr$mth.tmp
+}
+```
+
+#### Multiple Stitch Constraints
+```bash
+/glade/work/anamitra/tempestextremes/bin/StitchNodes \
+        --in_list nodeslist.tmp \
+        --out tracks/ERA5_TempestExtremes.csv \
+        --in_fmt "lon,lat,slp,zs,wind10" \
+        --range 8.0 \
+        --mintime "54h" \
+        --maxgap "24h" \
+        --threshold "wind10,>=,10.0,10;lat,<=,50.0,10;lat,>=,-50.0,10;zs,<=,150.0,10" \
+        --out_file_format "csv"
+```
+
+
 
