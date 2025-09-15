@@ -1,4 +1,4 @@
----
+0---
 title: "HPC Quick Notes"
 collection: notes
 type: "misc."
@@ -59,7 +59,7 @@ nohup bash -lc '
   source ~/.bashrc
   source activate tempest_extreme_new
   export OMP_NUM_THREADS=1
-  nice -n 10 ionice -c2 -n7 ./blocking_clim_detect.sh
+  ./blocking_clim_detect.sh
 ' > "$LOG" 2>&1 & echo $! > "${LOG}.pid" && disown
 ```
 #### To Watch progress 
@@ -82,3 +82,36 @@ sleep 5
 kill -KILL -"$PGID" 2>/dev/null || true
 ```
 
+## Another way is to submit a batch job
+### To see resource name
+```bash
+sinfo -o "%P %l %D %N %f %G"
+```
+#### Sample blocking_clim_detect.sbatch
+```bash
+#!/usr/bin/env bash
+#SBATCH -J blocking_clim_detect
+#SBATCH -o /net/flood/data/users/x_yan/isobaric_era5/tracking_tmppp/slurm-%j.out
+#SBATCH -e /net/flood/data/users/x_yan/isobaric_era5/tracking_tmppp/slurm-%j.err
+#SBATCH -t 24:00:00                 # walltime
+#SBATCH -p standard                 # partition/queue name
+#SBATCH --cpus-per-task=16          # match the NPROC
+#SBATCH --mem=32G                   # adjust
+#SBATCH --mail-type=END,FAIL        # optional
+#SBATCH --mail-user=x_yan@mit.edu
+
+set -euo pipefail
+source ~/.bashrc
+source activate tempest_extreme_new
+
+# Let the script pick up SLURM's CPU count automatically
+export OMP_NUM_THREADS=1
+export NPROC=${SLURM_CPUS_PER_TASK:-16}
+
+# Optionally make I/O nicer to shared filesystems
+export IONICE="ionice -c2 -n7"
+export NICE="nice -n 10"
+
+# Run
+$NICE $IONICE ./blocking_clim_detect.sh
+```
