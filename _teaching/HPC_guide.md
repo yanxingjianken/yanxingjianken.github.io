@@ -14,7 +14,7 @@ Some useful HPC commands
 
 ## check CPU usages - live view
 1. ```bash
-   htop
+   htop 
    ```
 2. ```bash
    top -u "$USER"
