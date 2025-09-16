@@ -20,6 +20,10 @@ These are my handwritten notes in OneNote format. Note that there may be Mandari
 
 ### [12.842 Climate Science (2024 Fall)](https://1drv.ms/o/s!AjZWUdNTd1V4gq1D3g4nEcxw6RbsLw?e=rzTcJW)
 
+### [12.843 Large-scale Atm Ocean Dynam (2025 Fall)](https://1drv.ms/o/c/1eaa79e252a5e09b/EoDIKU4ubYlMhqNM-TYZOaUBV8OU7hNGQxEyFAZQNRXJfA?e=ZIpZ3Z)
+
 ### [12.900 First-Year Seminar (2024 Fall)](https://1drv.ms/o/s!AjZWUdNTd1V4gq1Lmy9eIQ02J5QaKw?e=vQEwyI)
+
+
 
 
