@@ -48,6 +48,19 @@ wget https://www2.mmm.ucar.edu/projects/mpas/real/cfsr.2010102300.tar.gz
 2. ```bash
    disown
    ```
+#### Another exmaple
+
+```bash
+mkdir -p logs
+
+# Launch (own session/process-group) and save PID
+nohup setsid python -u step2_compute_tendency_terms.py \
+  > logs/step2.out 2>&1 & echo $! > logs/step2.pid
+
+# To kill:
+PGID=$(ps -o pgid= -p "$(cat logs/step2.pid)" | tr -d ' ')
+kill -TERM -"$PGID"
+```
 
 #### Another example
 ```bash
