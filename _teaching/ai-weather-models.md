@@ -198,31 +198,27 @@ ai-models --download-assets --assets /orcd/pool/006/x_yan/ai_model_assets/fourca
 
 ---
 # Run AI Forecast Ensembles (Fourcastnet v2)
+Following Nvidia's [tutorial](https://catalog.ngc.nvidia.com/orgs/nvidia/teams/modulus/models/modulus_fcnv2_sm?version=v0.2)
 ```bash
 module purge
 module load StdEnv gcc/12.2.0 miniforge/24.3.0-0 cuda/12.4.0 cudnn/9.8.0.87-cuda12
 
-conda create -y -n e2mip python=3.10
-conda activate e2mip
+export LD_LIBRARY_PATH="$CUDNN_HOME/lib:$LD_LIBRARY_PATH"
 
-conda install xarray numpy scipy netCDF4 matplotlib
+conda create --name earth2mip python=3.10
+conda activate earth2mip
 
-# Install ipykernel (if not already installed)
-pip install ipykernel
-
-# Register the environment as a kernel
-python -m ipykernel install --user --name=earth-2_mip
-```
-
-Following Nvidia's [tutorial](https://catalog.ngc.nvidia.com/orgs/nvidia/teams/modulus/models/modulus_fcnv2_sm?version=v0.2)
-```bash
 git clone https://github.com/NVIDIA/earth2mip.git
-cd earth2mip && pip install . && cd ..
-wget -c https://api.ngc.nvidia.com/v2/models/nvidia/modulus/modulus_fcnv2_sm/versions/v0.2/files/fcnv2_sm.zip
-unzip -o fcnv2_sm.zip
-cd fcnv2_sm
-python simple_inference.py
+cd earth2mip
+
+pip install .
+
+pip install ipykernel
+python -m ipykernel install --user --name=earth2mip-kernel
+
 ```
+
+
 
 
 ---
