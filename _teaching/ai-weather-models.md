@@ -106,16 +106,16 @@ sed -i 's/from_source("mars"/from_source("cds"/g'   ~/.local/lib/python3.10/site
 
 ## Download assets for (auto-download has bugs for Aurora)
 ```bash
-mkdir -p /pool001/x_yan/ai_model_assets/fourcastnet0.1
-mkdir -p /pool001/x_yan/ai_model_assets/fourcastnetv2-small
-mkdir -p /pool001/x_yan/ai_model_assets/graphcast
-mkdir -p /pool001/x_yan/ai_model_assets/panguweather
-mkdir -p /pool001/x_yan/ai_model_assets/aurora
+mkdir -p /orcd/pool/006/x_yan/ai_model_assets/fourcastnet0.1
+mkdir -p /orcd/pool/006/x_yan/ai_model_assets/fourcastnetv2-small
+mkdir -p /orcd/pool/006/x_yan/ai_model_assets/graphcast
+mkdir -p /orcd/pool/006/x_yan/ai_model_assets/panguweather
+mkdir -p /orcd/pool/006/x_yan/ai_model_assets/aurora
 ```
 
 
 ```bash
-wget -O /pool001/x_yan/ai_model_assets/aurora/aurora-0.1-static.pickle   https://huggingface.co/microsoft/aurora/resolve/main/aurora-0.1-static.pickle
+wget -O /orcd/pool/006/x_yan/ai_model_assets/aurora/aurora-0.1-static.pickle   https://huggingface.co/microsoft/aurora/resolve/main/aurora-0.1-static.pickle
 ```
 
 It is **NORMAL** to see messages about MARS when not specifying CDS.
@@ -134,22 +134,22 @@ ai-models --help
 
 fourcastnetv2-small
 ```bash
-ai-models   --download-assets   --assets /pool001/x_yan/ai_model_assets   --assets-sub-directory   --input cds   --date 20230110 --time 0000 --lead-time 120   --output file   --path /pool001/x_yan/ai_model_assets/fourcastnetv2-small/fc_20230110T0000_+120h.grib   fourcastnetv2-small
+ai-models   --download-assets   --assets /orcd/pool/006/x_yan/ai_model_assets   --assets-sub-directory   --input cds   --date 20230110 --time 0000 --lead-time 120   --output file   --path /orcd/pool/006/x_yan/ai_model_assets/fourcastnetv2-small/fc_20230110T0000_+120h.grib   fourcastnetv2-small
 ```
 
 Pangu
 ```bash
-ai-models   --download-assets   --assets /pool001/x_yan/ai_model_assets   --assets-sub-directory   --input cds   --date 20230110 --time 0000 --lead-time 120   --output file   --path /pool001/x_yan/ai_model_assets/panguweather/fc_20230110T0000_+120h.grib   panguweather
+ai-models   --download-assets   --assets /orcd/pool/006/x_yan/ai_model_assets   --assets-sub-directory   --input cds   --date 20230110 --time 0000 --lead-time 120   --output file   --path /orcd/pool/006/x_yan/ai_model_assets/panguweather/fc_20230110T0000_+120h.grib   panguweather
 ```
 
 fourcastnet
 ```bash
-ai-models   --download-assets   --assets /pool001/x_yan/ai_model_assets   --assets-sub-directory   --input cds   --date 20230110 --time 0000 --lead-time 120   --output file   --path /pool001/x_yan/ai_model_assets/fourcastnet0.1/fc_20230110T0000_+120h.grib   fourcastnet
+ai-models   --download-assets   --assets /orcd/pool/006/x_yan/ai_model_assets   --assets-sub-directory   --input cds   --date 20230110 --time 0000 --lead-time 120   --output file   --path /orcd/pool/006/x_yan/ai_model_assets/fourcastnet0.1/fc_20230110T0000_+120h.grib   fourcastnet
 ```
 
 Aurora
 ```bash
-ai-models   --assets /pool001/x_yan/ai_model_assets   --assets-sub-directory   --input cds   --date 20230110 --time 0000 --lead-time 120   --output file   --path /pool001/x_yan/ai_model_assets/aurora/fc_20230110T0000_+120h.grib   aurora
+ai-models   --assets /orcd/pool/006/x_yan/ai_model_assets   --assets-sub-directory   --input cds   --date 20230110 --time 0000 --lead-time 120   --output file   --path /orcd/pool/006/x_yan/ai_model_assets/aurora/fc_20230110T0000_+120h.grib   aurora
 ```
 
 ### Customizable input
@@ -187,13 +187,13 @@ ai-models --file <some-grib-file> <model-name>
 #### format: ai-models --download-assets --assets <some-directory> <model-name>
 
 ```bash
-ai-models --download-assets --assets /pool001/x_yan/ai_model_assets/panguweather/ panguweather
+ai-models --download-assets --assets /orcd/pool/006/x_yan/ai_model_assets/panguweather/ panguweather
 
-ai-models --download-assets --assets /pool001/x_yan/ai_model_assets/fourcastnet0.1/ fourcastnet
+ai-models --download-assets --assets /orcd/pool/006/x_yan/ai_model_assets/fourcastnet0.1/ fourcastnet
 
-ai-models --download-assets --assets /pool001/x_yan/ai_model_assets/graphcast/ graphcast
+ai-models --download-assets --assets /orcd/pool/006/x_yan/ai_model_assets/graphcast/ graphcast
 
-ai-models --download-assets --assets /pool001/x_yan/ai_model_assets/fourcastnetv2-small/ fourcastnetv2-small
+ai-models --download-assets --assets /orcd/pool/006/x_yan/ai_model_assets/fourcastnetv2-small/ fourcastnetv2-small
 ```
 
 ---
