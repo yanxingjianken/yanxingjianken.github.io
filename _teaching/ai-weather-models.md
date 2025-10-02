@@ -30,6 +30,7 @@ For non-commerical usage of ECMWF open accounts, the service/MARS will not be av
 Instead, the solution is to use *copernicus CDS* open access data, which requires a "/.cdsapirc" file that you can find api instructions [here](https://cds.climate.copernicus.eu/how-to-api).
 
 **As of Oct. 1st, 2025**
+
 ECMWF has made IFS, AIFS, and AIFS-Ensemble data open access via [ECMWF Data Store](https://data.ecmwf.int/forecasts/) with [tutorial here](https://pypi.org/project/ecmwf-opendata/). Users could directly download 0.25 degree resolution, 10-day, 6 hourly forecast in grib format, with vertical levels available in 'soilLayer', 'isobaricInhPa', 'heightAboveGround', 'surface', 'lowCloudLayer', 'mediumCloudLayer', 'highCloudLayer', 'entireAtmosphere', and 'meanSea'.
 
 ---
