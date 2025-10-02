@@ -201,6 +201,15 @@ ai-models --download-assets --assets /orcd/pool/006/x_yan/ai_model_assets/fourca
 ```
 
 ---
+# Run with IFS/AIFS Data, Perturbation Ens Run
+
+```bash
+pip install ecmwf-opendata
+conda install wgrib2
+conda install cdo
+```
+
+---
 # Run AI Forecast Ensembles (Fourcastnet v2)
 Following Nvidia's [tutorial](https://catalog.ngc.nvidia.com/orgs/nvidia/teams/modulus/models/modulus_fcnv2_sm?version=v0.2)
 ```bash
