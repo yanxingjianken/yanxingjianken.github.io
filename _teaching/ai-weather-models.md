@@ -206,7 +206,40 @@ ai-models --download-assets --assets /orcd/pool/006/x_yan/ai_model_assets/fourca
 ```bash
 pip install ecmwf-opendata
 conda install wgrib2
-conda install cdo
+conda install cdo, pandas
+
+./make_ic_ensemble.sh
+
+for m in 1 2 3 4; do
+  ai-models \
+    --assets /orcd/pool/006/x_yan/ai_model_assets --assets-sub-directory \
+    --input file --file "/orcd/pool/006/x_yan/aifs/ic_20251002060000_m${m}.grib2" \
+    --date 20251002 --time 0600 --lead-time 120 \
+    --output file \
+    --path "/orcd/pool/006/x_yan/ai_model_assets/aurora/fc_20251002T0600_+120h_m${m}.grib" \
+    aurora
+done
+
+for m in 1 2 3 4; do
+  ai-models \
+    --assets /orcd/pool/006/x_yan/ai_model_assets --assets-sub-directory \
+    --file "/orcd/pool/006/x_yan/aifs/ic_20251002060000_m${m}.grib2" \
+    --lead-time 120 \
+    --output file \
+    --path "/orcd/pool/006/x_yan/ai_model_assets/aurora/fc_20251002T0600_+120h_m${m}.grib" \
+    aurora
+done
+
+for m in 1 2 3 4; do
+  ai-models \
+    --assets /orcd/pool/006/x_yan/ai_model_assets --assets-sub-directory \
+    --file "/orcd/pool/006/x_yan/aifs/data_m${m}.grib2" \
+    --output file \
+    --path "/orcd/pool/006/x_yan/ai_model_assets/aurora/fc_20251002T0600_+120h_m${m}.grib" \
+    fourcastnetv2-small
+done
+
+
 ```
 
 ---
