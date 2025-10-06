@@ -46,6 +46,8 @@ salloc -N1 -c2 --mem=4G -t 6:00:00 -p mit_normal_gpu --gres=gpu:1
 Make sure you see both `cuda/12.4.0` and `cudnn/9.8.0.87-cuda12` available (via `module avail`).
 <img width="3762" height="756" alt="image" src="https://github.com/user-attachments/assets/0f04e930-b937-45f3-81a4-36ea07b962e8" />
 
+## TL;DR - Use one-click .sh file [here](https://drive.google.com/file/d/1zRFCd00pfOI5jOM_tpBUNIJsv8hNCetw/view?usp=sharing)
+
 
 ```bash
 module purge
