@@ -1,7 +1,7 @@
 ---
 title: "CorrDiff Notes"
 collection: modeling
-type: "Notes for Running CorrDiff on DOlma"
+type: "Notes for Running CorrDiff on Dolma"
 permalink: /teaching/CorrDiff
 venue: "MIT EAPS"
 date: 2025-10-14
