@@ -68,9 +68,14 @@ python train.py --config-name=config_training_hrrr_mini_regression.yaml \
   ++dataset.stats_path="$STATS"
 
 # (Later) Train diffusion
-REG_CKPT="/net/flood/data2/users/x_yan/physicsnemo/examples/weather/corrdiff/checkpoints_regression/checkpoint.0.5120.pt"
+# pick the latest regression module archive
+REG_MDLUS=$(ls -1t checkpoints_regression/UNet.*.mdlus | head -n1)
+echo "$REG_MDLUS"
+# e.g. /net/flood/.../corrdiff/checkpoints_regression/UNet.0.2000128.mdlus
+
+# then launch diffusion with the .mdlus
 python train.py --config-name=config_training_hrrr_mini_diffusion.yaml \
-  ++training.io.regression_checkpoint_path="$REG_CKPT" \
+  ++training.io.regression_checkpoint_path="$REG_MDLUS" \
   ++dataset.data_path="$DATA" \
   ++dataset.stats_path="$STATS"
 
