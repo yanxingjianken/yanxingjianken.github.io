@@ -119,8 +119,14 @@ convert_mpas PR.init.nc diag*nc
 # or
 /net/flood/data2/users/x_yan/mpas_toolchain/convert_mpas/convert_mpas history.2014-09-15_00.00.00.nc
 ```
+---
 
-Side stuff on HPC without setenv - use export
+### Prepare LENS2 to GFS-like IC inputs
+Use [pywinter](https://pywinter.readthedocs.io/en/latest/#id6) and [cam-se-regrid](https://ncar.github.io/esds/posts/2023/cam-se-analysis/)
+
+---
+
+### Side stuff on HPC without setenv - use export
 ```bash
 cp /net/flood/data2/users/x_yan/mpas_toolchain/mpas_tutorial/ncl_scripts/mesh_resolution.ncl .
 export FNAME=/net/flood/data2/users/x_yan/mpas_runs/240-48km_variable/PR.grid.nc
