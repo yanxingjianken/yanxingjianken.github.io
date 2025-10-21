@@ -104,7 +104,8 @@ cp /net/flood/data2/users/x_yan/mpas_toolchain/mpas/stream_list.atmosphere.* .
 
 ln -s /net/flood/data2/users/x_yan/mpas_toolchain/meshes/x20.835586.graph.info.part.64 .
 
-mpiexec -n 4 ./atmosphere_model
+## if running in parallel, needs to match the grid decomposition file prefix
+mpiexec -n 64 ./atmosphere_model
 ```
 
 Finally we visualize by convert to lat-lon grid - outputnamde latlon.nc
