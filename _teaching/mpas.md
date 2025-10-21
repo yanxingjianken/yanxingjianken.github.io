@@ -10,81 +10,103 @@ location: "Cambridge, MA"
 
 Notes for building everything MPAS from [this tutorial](https://www2.mmm.ucar.edu/projects/mpas/tutorial/Boulder2019/index.html).
 
-### Start:
-0) Activate env & go to your run dir
 
-source activate mpas_toolchain
+```bash
+module load apps/miniconda/3.6 
+micromamba activate mpas_toolchain
 
-cd /net/flood/data2/users/x_yan/mpas/MPAS-Model
+## Setups
+link to model: /net/flood/data2/users/x_yan/mpas_toolchain/mpas
+different meshes (60-3km being x20): /net/flood/data2/users/x_yan/mpas_toolchain/meshes
+convert to lat-lon toolbox: /net/flood/data2/users/x_yan/mpas_toolchain/convert_mpas
+create init mesh: /net/flood/data2/users/x_yan/mpas_toolchain/MPAS-Tools/mesh_tools/grid_rotate
+WPS_GEOG is at: /net/flood/data2/users/x_yan/WPS_ncar
 
-1) Always remember to download [input grids and files](https://www2.mmm.ucar.edu/projects/mpas/site/downloads.html)
+```
 
-Get the right mpas_static dir:
-<img width="1140" height="369" alt="image" src="https://github.com/user-attachments/assets/88c79783-98f3-4399-b74f-71149ac8247a" />
+We get the static Puerto Rico Mesh right
+```bash
+# 1) Copy and link
+mkdir /net/flood/data2/users/x_yan/mpas_runs/240-48km_variable
+cd /net/flood/data2/users/x_yan/mpas_runs/240-48km_variable
+ln -s /net/flood/data2/users/x_yan/mpas_toolchain/meshes/x20.835586.grid.nc .
+cp /net/flood/data2/users/x_yan/mpas_toolchain/MPAS-Tools/mesh_tools/grid_rotate/namelist.input .
 
-2) make -j4 gfortran CORE=init_atmosphere PRECISION=single AUTOCLEAN=true
+# 2) Rewrite a minimal, clean namelist with a final newline + blank line
+cat > namelist.input << 'EOF'
+&input
+  config_original_latitude_degrees  = 0.0
+  config_original_longitude_degrees = 0.0
+  config_new_latitude_degrees       = 18.25
+  config_new_longitude_degrees      = -66.50
+  config_birdseye_rotation_counter_clockwise_degrees = 0.0
+/
+ 
+EOF
 
-1-1) Always set autoclean! # Good minimal incantation (equivalent to what worked)
-make -j$(nproc) gfortran CORE=init_atmosphere AUTOCLEAN=true \
-  FC=mpif90 CC=mpicc CXX=mpicxx \
-  FFLAGS="-O3 -ffree-line-length-none -fconvert=big-endian -ffree-form -mcmodel=large" \
-  CFLAGS="-O3 -mcmodel=large" \
-  CXXFLAGS="-O3 -mcmodel=large" \
-  LDFLAGS="-O3 -mcmodel=large"
+# 3) Ensure Unix line endings (harmless if already OK)
+dos2unix namelist.input 2>/dev/null || true
 
-2) make clean CORE=atmosphere
-   
-3) make -j4 gfortran CORE=atmosphere PRECISION=single
+# 4) Verify that the last line is truly blank (there should be output here)
+tail -n 2 -v namelist.input
 
-3-1) make -j$(nproc) gfortran CORE=atmosphere PRECISION=single \
-  FC=mpif90 CC=mpicc CXX=mpicxx \
-  FFLAGS="-O3 -ffree-line-length-none -fconvert=big-endian -ffree-form -mcmodel=large" \
-  CFLAGS="-O3 -mcmodel=large" \
-  CXXFLAGS="-O3 -mcmodel=large" \
-  LDFLAGS="-O3 -mcmodel=large"
+# 5) Run the rotation
+grid_rotate x20.835586.grid.nc PR.grid.nc
+```
+We should see /net/flood/data2/users/x_yan/mpas_runs/240-48km_variable/PR.grid.nc
 
-4) ./init_atmosphere_model
+Then we do [3.2 Static, terrestrial field processing](https://www2.mmm.ucar.edu/projects/mpas/tutorial/Boulder2019/index.html)
+```bash
+ln -s /net/flood/data2/users/x_yan/mpas_toolchain/mpas/init_atmosphere_model .
+cp /net/flood/data2/users/x_yan/mpas_toolchain/mpas/namelist.init_atmosphere .
+cp /net/flood/data2/users/x_yan/mpas_toolchain/mpas/streams.init_atmosphere .
 
-Takes a while!
-<img width="2190" height="1168" alt="image" src="https://github.com/user-attachments/assets/5048d8d5-6e10-4c57-8c9d-9522b9ba2e92" />
+## CHANGE the 2 files copied!
+
+./init_atmosphere_model
+
+```
+
+Then we Interpolating real-data initial conditions as in section 3.4
+```bash
+ln -s /net/flood/data2/users/x_yan/mpas_toolchain/mpas_tutorial/met_data/GFS:2014-09-10_00 .
+
+## CHANGE namelist.init_atmosphere
+## CHANGE streams.init_atmosphere
+
+./init_atmosphere_model
+
+```
+Then we Integrate as in section 3.5
+```bash
+ln -s /net/flood/data2/users/x_yan/mpas_toolchain/mpas/atmosphere_model . 
+ln -s /net/flood/data2/users/x_yan/mpas_toolchain/mpas/src/core_atmosphere/physics/physics_wrf/files/* .
+
+cp /net/flood/data2/users/x_yan/mpas_toolchain/mpas/namelist.atmosphere .
+cp /net/flood/data2/users/x_yan/mpas_toolchain/mpas/streams.atmosphere .
+cp /net/flood/data2/users/x_yan/mpas_toolchain/mpas/stream_list.atmosphere.* .
+
+## CHANGE namelist.atmosphere -
+## config_dt — the model timestep (delta-t) in seconds.
+## config_len_disp — the length-scale for explicit horizontal diffusion, in meters.
+
+ln -s /net/flood/data2/users/x_yan/mpas_toolchain/meshes/x20.835586.graph.info.part.64 .
+
+mpiexec -n 4 ./atmosphere_model
+```
+
+Finally we visualize by convert to lat-lon grid - outputnamde latlon.nc
+
+```bash
+
+convert_mpas history.2014-09-15_00.00.00.nc
+
+# or
+/net/flood/data2/users/x_yan/mpas_toolchain/convert_mpas/convert_mpas history.2014-09-15_00.00.00.nc
+```
 
 
-5) mpiexec -n 32 ./atmosphere_model
-6) ncl supercell.ncl
-7) cd /net/flood/data2/users/x_yan/mpas/MPAS-Model/convert_mpas
 
-export LD_LIBRARY_PATH="$CONDA_PREFIX/lib:${LD_LIBRARY_PATH:-}"
-
-chmod +x ./convert_mpas
-
-./convert_mpas /net/flood/data2/users/x_yan/mpas/MPAS-Model/x1.10242.grid.nc /net/flood/data2/users/x_yan/mpas/MPAS-Model/diag.2010-10-28_00.00.00.nc
-
-8) (mpas_toolchain) x_yan@dolma:/net/flood/data2/users/x_yan/mpas/MPAS-Model/convert_mpas$ ./convert_mpas /net/flood/data2/users/x_yan/mpas/MPAS-Model/x1.10242.grid.nc /net/flood/data2/users/x_yan/mpas/MPAS-Model/history.*.nc
-
----
-
-### Visualize
-
-1. cp /net/flood/data2/users/x_yan/mpas/mpas_tutorial_anamitra/ncl_scripts/plot_terrain.ncl .
-2. setenv FNAME x1.10242.static.nc
-3. ncl plot_terrain.ncl
-
----
-### Some One-Click Checks for Debuggings
-
-1) Sanity env (same as before)
-./smoke.sh [download here](https://colab.research.google.com/drive/14iSte7UEvKfrQqAuW10ky1kI8TcXRsFH?usp=sharing)
-
-2) Run
-mpirun -n 1 ./init_atmosphere_model |& tee run.log
-
-3) Quick skim for issues
-grep -E "Bootstrapping|filename template|CFSR|CRITICAL|ERROR" log.init_atmosphere.0000.out
-
-4) Original Settings to namelist.init_atmosphere
-
-<img width="457" height="255" alt="image" src="https://github.com/user-attachments/assets/e96adb81-c8c1-4b98-a57f-401fc8c41f3e" />
-<img width="733" height="361" alt="image" src="https://github.com/user-attachments/assets/6f70e25b-ae23-41a6-b4f4-2d1574a8c214" />
 
 
 
