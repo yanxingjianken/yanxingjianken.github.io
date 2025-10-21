@@ -114,6 +114,8 @@ Finally we visualize by convert to lat-lon grid - outputnamde latlon.nc
 
 convert_mpas history.2014-09-15_00.00.00.nc
 
+convert_mpas PR.init.nc diag*nc
+
 # or
 /net/flood/data2/users/x_yan/mpas_toolchain/convert_mpas/convert_mpas history.2014-09-15_00.00.00.nc
 ```
