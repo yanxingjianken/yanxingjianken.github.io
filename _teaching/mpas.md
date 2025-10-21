@@ -54,6 +54,8 @@ tail -n 2 -v namelist.input
 grid_rotate x20.835586.grid.nc PR.grid.nc
 ```
 We should see /net/flood/data2/users/x_yan/mpas_runs/240-48km_variable/PR.grid.nc
+<img width="1256" height="786" alt="569ed333871385abbc73cf47c1745ce8" src="https://github.com/user-attachments/assets/91457428-1157-42e9-8a0a-6f8ae8cf0fb3" />
+
 
 Then we do [3.2 Static, terrestrial field processing](https://www2.mmm.ucar.edu/projects/mpas/tutorial/Boulder2019/index.html)
 ```bash
@@ -103,6 +105,13 @@ convert_mpas history.2014-09-15_00.00.00.nc
 
 # or
 /net/flood/data2/users/x_yan/mpas_toolchain/convert_mpas/convert_mpas history.2014-09-15_00.00.00.nc
+```
+
+Side stuff on HPC without setenv - use export
+```bash
+cp /net/flood/data2/users/x_yan/mpas_toolchain/mpas_tutorial/ncl_scripts/mesh_resolution.ncl .
+export FNAME=/net/flood/data2/users/x_yan/mpas_runs/240-48km_variable/PR.grid.nc
+ncl mesh_resolution.ncl
 ```
 
 
