@@ -64,6 +64,16 @@ cp /net/flood/data2/users/x_yan/mpas_toolchain/mpas/namelist.init_atmosphere .
 cp /net/flood/data2/users/x_yan/mpas_toolchain/mpas/streams.init_atmosphere .
 
 ## CHANGE the 2 files copied!
+'''
+In namelist.init_atmosphere, for nhyd_model - config_init_case
+2 = ideal baroclinic wave
+4 = ideal squall line
+5 = ideal supercell
+6 = ideal mountain wave
+7 = real-data initialization
+8 = surface update file creation (like sst_update=1 in WRF)
+9 = lateral boundary conditions
+'''
 
 ./init_atmosphere_model
 
