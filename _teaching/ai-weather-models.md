@@ -203,7 +203,7 @@ ai-models --download-assets --assets /orcd/pool/006/x_yan/ai_model_assets/fourca
 ```
 
 ---
-# Run with IFS/AIFS Data, Perturbation Ens Run
+# Run with IFS/AIFS Data, Perturbation Ens Run (Not Working rn) - Please refer to Earth2MIP [Tutorial](https://nvidia.github.io/earth2mip/examples/01_ensemble_inference.html) instead
 
 ```bash
 pip install ecmwf-opendata
