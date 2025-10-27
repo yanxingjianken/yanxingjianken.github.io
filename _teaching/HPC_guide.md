@@ -12,6 +12,21 @@ Some useful HPC commands
 
 ---
 
+## Conda info & Interpreters
+```bash
+# Conda sees envs:
+ /home/software/apps/miniconda/miniconda-3.6/bin/conda info --envs
+
+# Kernels map to real interpreters:
+python3 - <<'PY'
+import json,glob,os
+root=os.path.expanduser("~/.local/share/jupyter/kernels")
+for kd in sorted(glob.glob(os.path.join(root,"*"))):
+    j=json.load(open(os.path.join(kd,"kernel.json")))
+    print(f"{os.path.basename(kd):25s} -> {j['argv'][0]}")
+PY
+```
+
 ## check CPU usages - live view
 1. ```bash
    htop 
