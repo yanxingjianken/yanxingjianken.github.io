@@ -124,6 +124,31 @@ convert_mpas PR.init.nc diag*nc
 ### Prepare LENS2 to GFS-like IC inputs
 Use [pywinter](https://pywinter.readthedocs.io/en/latest/#id6) and [cam-se-regrid](https://ncar.github.io/esds/posts/2023/cam-se-analysis/)
 
+TL; DR: We run 2 scripts: 
+```bash
+/glade/u/home/kenyan/mpas_lens/process_ihesp_data.csh
+/glade/u/home/kenyan/mpas_lens/run_editnc.pbs # or, /glade/u/home/kenyan/mpas_lens/run_intmd.pbs
+
+# Submit by
+qsub ~/mpas_lens/01_stage_ihesp.pbs
+
+# We should see in /glade/derecho/scratch/kenyan/iHESP_stage/2001-04-30_06Z/:
+atmos_ta.nc     atmos_hus.nc   atmos_ua.nc   atmos_va.nc
+atmos_z3.nc     atmos_ps.nc    atmos_base.nc
+atmos_tos_1.nc  atmos_ts_1.nc  atmos_snw_1.nc atmos_ps2.nc
+atmos_tsl_1.nc  atmos_mrlsl_1.nc
+atmos_zsfc.nc -> (symlink to invariant)
+atmos_lmask.nc -> (symlink to invariant)
+
+# Then
+qsub ~/mpas_lens/02_write_intermediate.pbs
+
+# Should see
+/glade/derecho/scratch/kenyan/MPAS/intermediate/iHESP/mem2/2001/FILE:2001-04-30_06
+
+
+```
+
 ---
 
 ### Side stuff on HPC without setenv - use export
