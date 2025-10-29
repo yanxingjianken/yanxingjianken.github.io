@@ -130,7 +130,7 @@ TL; DR: We run 2 scripts:
 /glade/u/home/kenyan/mpas_lens/run_editnc.pbs # or, /glade/u/home/kenyan/mpas_lens/run_intmd.pbs
 
 # Submit by
-qsub ~/mpas_lens/01_stage_ihesp.pbs
+qsub /glade/u/home/kenyan/mpas_lens/run_process.pbs
 
 # We should see in /glade/derecho/scratch/kenyan/iHESP_stage/2001-04-30_06Z/:
 atmos_ta.nc     atmos_hus.nc   atmos_ua.nc   atmos_va.nc
@@ -141,7 +141,7 @@ atmos_zsfc.nc -> (symlink to invariant)
 atmos_lmask.nc -> (symlink to invariant)
 
 # Then
-qsub ~/mpas_lens/02_write_intermediate.pbs
+qsub /glade/u/home/kenyan/mpas_lens/run_editnc.pbs
 
 # Should see
 /glade/derecho/scratch/kenyan/MPAS/intermediate/iHESP/mem2/2001/FILE:2001-04-30_06
