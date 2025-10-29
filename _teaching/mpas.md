@@ -13,7 +13,6 @@ Notes for building everything MPAS from [this tutorial](https://www2.mmm.ucar.ed
 ## Allocate Rescource
 ```bash
 qsub -I -l select=1:ncpus=32:mem=128GB -q main -l walltime=8:00:00 -A <Project id>
-qsub -I -l select=1:ncpus=16:mem=64GB -q develop -l walltime=5:00:00 -A P48500028
 ```
 
 ## Run
