@@ -147,6 +147,9 @@ qsub /glade/u/home/kenyan/mpas_lens/run_editnc.pbs
 /glade/derecho/scratch/kenyan/MPAS/intermediate/iHESP/mem2/2001/FILE:2001-04-30_06
 
 
+# To Watch:
+qstat -u $USER   
+
 ```
 
 ---
