@@ -129,6 +129,10 @@ convert_mpas PR.init.nc diag*nc
 ### Prepare LENS2 to GFS-like IC inputs
 Use [pywinter](https://pywinter.readthedocs.io/en/latest/#id6) and [cam-se-regrid](https://ncar.github.io/esds/posts/2023/cam-se-analysis/)
 
+What we need:
+<img width="719" height="369" alt="image" src="https://github.com/user-attachments/assets/a84586de-bd39-471b-8010-6473b66bb37c" />
+
+
 TL; DR: We run 2 scripts: 
 ```bash
 /glade/u/home/kenyan/mpas_lens/process_ihesp_data.csh
