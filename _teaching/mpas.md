@@ -40,6 +40,7 @@ Currently Loaded Modules:
   Where:
    S:  Module is Sticky, requires --force to unload or purge
 ```
+On Dolma
 ```bash
 module load apps/miniconda/3.6 
 micromamba activate mpas_toolchain
