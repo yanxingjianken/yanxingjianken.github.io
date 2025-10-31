@@ -10,6 +10,9 @@ location: "Cambridge, MA"
 
 Notes for building everything MPAS from [this tutorial](https://www2.mmm.ucar.edu/projects/mpas/tutorial/Boulder2019/index.html).
 
+## TL;DR
+[Slide Show here!](https://docs.google.com/presentation/d/195VkSwTUJrdwDYuSByEvev7b5TyzoMqF/edit?usp=sharing&ouid=116465514317596629476&rtpof=true&sd=true)
+
 ## Allocate Rescource
 ```bash
 qsub -I -l select=1:ncpus=32:mem=128GB -q main -l walltime=8:00:00 -A <Project id>
