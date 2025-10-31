@@ -16,6 +16,27 @@ qsub -I -l select=1:ncpus=32:mem=128GB -q main -l walltime=8:00:00 -A <Project i
 ```
 
 ## Run
+On Derecho
+```bash
+kenyan@dec2435:~> module swap intel gcc/12.4.0
+
+Due to MODULEPATH changes, the following have been reloaded:
+  1) cray-mpich/8.1.29     2) hdf5/1.12.3     3) ncarcompilers/1.0.0     4) netcdf/4.9.2
+
+kenyan@dec2435:~> module unload netcdf 
+
+
+kenyan@dec2435:~> module load   hdf5-mpi/1.12.3 netcdf-mpi/4.9.3 parallel-netcdf/1.14.0 parallelio/2.6.6
+kenyan@dec2435:~> module load cdo ncl ncview
+kenyan@dec2435:~> module list
+
+Currently Loaded Modules:
+  1) ncarenv/24.12 (S)   3) gcc/12.4.0            5) libfabric/1.15.2.0   7) hdf5-mpi/1.12.3    9) parallel-netcdf/1.14.0  11) cdo/2.4.4  13) ncview/2.1.9
+  2) craype/2.7.31       4) ncarcompilers/1.0.0   6) cray-mpich/8.1.29    8) netcdf-mpi/4.9.3  10) parallelio/2.6.6        12) ncl/6.6.2
+
+  Where:
+   S:  Module is Sticky, requires --force to unload or purge
+```
 ```bash
 module load apps/miniconda/3.6 
 micromamba activate mpas_toolchain
