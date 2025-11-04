@@ -160,11 +160,9 @@ What we need:
 
 TL; DR: We run 2 scripts: 
 ```bash
+## On Derecho, run
 /glade/u/home/kenyan/mpas_lens/process_ihesp_data.csh
-/glade/u/home/kenyan/mpas_lens/run_editnc.pbs # or, /glade/u/home/kenyan/mpas_lens/run_intmd.pbs
 
-# Submit by
-qsub /glade/u/home/kenyan/mpas_lens/run_process.pbs
 
 # We should see in /glade/derecho/scratch/kenyan/iHESP_stage/2001-04-30_06Z/:
 atmos_ta.nc     atmos_hus.nc   atmos_ua.nc   atmos_va.nc
@@ -174,12 +172,12 @@ atmos_tsl_1.nc  atmos_mrlsl_1.nc
 atmos_zsfc.nc -> (symlink to invariant)
 atmos_lmask.nc -> (symlink to invariant)
 
-# Then
-qsub /glade/u/home/kenyan/mpas_lens/run_editnc.pbs
+
+## On Dolma, run with pangeos3_ken (needs > 200 GB memory)
+/net/flood/data2/users/x_yan/mpas_lens/edit_nc_files.py
 
 # Should see
 /glade/derecho/scratch/kenyan/MPAS/intermediate/iHESP/mem2/2001/FILE:2001-04-30_06
-
 
 # To Watch:
 qstat -u $USER   
