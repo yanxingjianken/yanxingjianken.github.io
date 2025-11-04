@@ -163,18 +163,6 @@ ln -s /net/flood/data2/users/x_yan/mpas_toolchain/meshes/x20.835586.graph.info.p
 ## if running in parallel, needs to match the grid decomposition file prefix
 mpiexec -n 64 ./atmosphere_model
 ```
-
-Finally we visualize by convert to lat-lon grid - outputnamde latlon.nc
-
-```bash
-
-convert_mpas history.2014-09-15_00.00.00.nc
-
-convert_mpas PR.init.nc diag*nc
-
-# or
-/net/flood/data2/users/x_yan/mpas_toolchain/convert_mpas/convert_mpas history.2014-09-15_00.00.00.nc
-```
 ---
 
 ### Prepare LENS2 to GFS-like IC inputs
@@ -210,7 +198,23 @@ qstat -u $USER
 
 ```
 ---
-### Errors and Fixes
+## Postprocessing
+There is tutorial [here](https://www2.mmm.ucar.edu/projects/mpas/tutorial/Boulder2023/lectures/postproc_and_viz.pdf)
+Include the file “target_domain” to remap at smaller domain and finer resolution
+
+Visualize by convert to lat-lon grid - outputnamde latlon.nc
+
+```bash
+
+convert_mpas history.2014-09-15_00.00.00.nc
+
+convert_mpas PR.init.nc diag*nc
+
+# or
+/net/flood/data2/users/x_yan/mpas_toolchain/convert_mpas/convert_mpas history.2014-09-15_00.00.00.nc
+```
+---
+## Errors and Fixes
 
 #### Thompson microphysics tables for clouds
 ```bash
