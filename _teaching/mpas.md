@@ -225,7 +225,13 @@ cd /net/flood/data2/users/x_yan/mpas_toolchain/mpas
 ./build_tables
 
 # 2) put the generated tables in your run directory
-cp MP_THOMPSON_*.DBL /net/flood/data2/users/x_yan/mpas_runs/mimic_mem2_May_2001/
+cd /net/flood/data2/users/x_yan/mpas_runs/mimic_mem2_May_2001/
+
+# EITHER: make absolute symlinks
+ln -s /net/flood/data2/users/x_yan/mpas_toolchain/mpas/MP_THOMPSON_*.DBL .
+
+# OR: copy the actual files (bulletproof)
+cp -av /net/flood/data2/users/x_yan/mpas_toolchain/mpas/MP_THOMPSON_*.DBL .
 
 
 ```
