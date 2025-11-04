@@ -81,7 +81,7 @@ dos2unix namelist.input 2>/dev/null || true
 tail -n 2 -v namelist.input
 
 # 5) Run the rotation
-grid_rotate x20.835586.grid.nc PR.grid.nc
+/net/flood/data2/users/x_yan/mpas_toolchain/MPAS-Tools/mesh_tools/grid_rotate/grid_rotate x20.835586.grid.nc PR.static.nc
 ```
 We should see /net/flood/data2/users/x_yan/mpas_runs/240-48km_variable/PR.grid.nc
 <img width="1256" height="786" alt="569ed333871385abbc73cf47c1745ce8" src="https://github.com/user-attachments/assets/91457428-1157-42e9-8a0a-6f8ae8cf0fb3" />
@@ -103,6 +103,30 @@ In namelist.init_atmosphere, for nhyd_model - config_init_case
 7 = real-data initialization
 8 = surface update file creation (like sst_update=1 in WRF)
 9 = lateral boundary conditions
+
+
+
+&preproc_stages
+    config_static_interp = true
+    config_native_gwd_static = true
+    config_vertical_grid = false
+    config_met_interp = false
+    config_input_sst = false
+    config_frac_seaice = false
+/
+
+<immutable_stream name="input"
+                  type="input"
+                  filename_template="PR.static.nc"
+                  input_interval="initial_only" />
+
+<immutable_stream name="output"
+                  type="output"
+		  io_type="pnetcdf, cdsf5"
+                  filename_template="PR.init.nc"
+                  packages="initial_conds"
+                  output_interval="initial_only" />
+
 '''
 
 ./init_atmosphere_model
