@@ -209,6 +209,19 @@ atmos_lmask.nc -> (symlink to invariant)
 qstat -u $USER   
 
 ```
+---
+### Errors and Fixes
+
+#### Thompson microphysics tables for clouds
+```bash
+subroutine thompson_init: failure opening MP_THOMPSON_QRacrQG.DBL
+
+cd /net/flood/data2/users/x_yan/mpas_toolchain/mpas
+./build_tables
+
+
+```
+
 
 ---
 
