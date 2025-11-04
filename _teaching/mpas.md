@@ -81,7 +81,7 @@ dos2unix namelist.input 2>/dev/null || true
 tail -n 2 -v namelist.input
 
 # 5) Run the rotation
-/net/flood/data2/users/x_yan/mpas_toolchain/MPAS-Tools/mesh_tools/grid_rotate/grid_rotate x20.835586.grid.nc PR.static.nc
+/net/flood/data2/users/x_yan/mpas_toolchain/MPAS-Tools/mesh_tools/grid_rotate/grid_rotate x20.835586.grid.nc PR.grid.nc
 ```
 We should see /net/flood/data2/users/x_yan/mpas_runs/240-48km_variable/PR.grid.nc
 <img width="1256" height="786" alt="569ed333871385abbc73cf47c1745ce8" src="https://github.com/user-attachments/assets/91457428-1157-42e9-8a0a-6f8ae8cf0fb3" />
@@ -115,17 +115,7 @@ In namelist.init_atmosphere, for nhyd_model - config_init_case
     config_frac_seaice = false
 /
 
-<immutable_stream name="input"
-                  type="input"
-                  filename_template="PR.static.nc"
-                  input_interval="initial_only" />
 
-<immutable_stream name="output"
-                  type="output"
-		  io_type="pnetcdf, cdsf5"
-                  filename_template="PR.init.nc"
-                  packages="initial_conds"
-                  output_interval="initial_only" />
 
 '''
 
@@ -139,6 +129,18 @@ ln -s /net/flood/data2/users/x_yan/mpas_toolchain/mpas_tutorial/met_data/GFS:201
 
 ## CHANGE namelist.init_atmosphere
 ## CHANGE streams.init_atmosphere
+
+<immutable_stream name="input"
+                  type="input"
+                  filename_template="PR.static.nc"
+                  input_interval="initial_only" />
+
+<immutable_stream name="output"
+                  type="output"
+		  io_type="pnetcdf, cdsf5"
+                  filename_template="PR.init.nc"
+                  packages="initial_conds"
+                  output_interval="initial_only" />
 
 ./init_atmosphere_model
 
@@ -156,7 +158,7 @@ cp /net/flood/data2/users/x_yan/mpas_toolchain/mpas/stream_list.atmosphere.* .
 ## config_dt — the model timestep (delta-t) in seconds.
 ## config_len_disp — the length-scale for explicit horizontal diffusion, in meters.
 
-ln -s /net/flood/data2/users/x_yan/mpas_toolchain/meshes/x20.835586.graph.info.part.64 .
+ln -s /net/flood/data2/users/x_yan/mpas_toolchain/meshes/x20.835586.graph.info.part.240 .
 
 ## if running in parallel, needs to match the grid decomposition file prefix
 mpiexec -n 64 ./atmosphere_model
