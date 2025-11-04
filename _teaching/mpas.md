@@ -216,8 +216,12 @@ qstat -u $USER
 ```bash
 subroutine thompson_init: failure opening MP_THOMPSON_QRacrQG.DBL
 
+# 1) build the tables (writes MP_THOMPSON_* files in the CWD)
 cd /net/flood/data2/users/x_yan/mpas_toolchain/mpas
 ./build_tables
+
+# 2) put the generated tables in your run directory
+cp MP_THOMPSON_*.DBL /net/flood/data2/users/x_yan/mpas_runs/mimic_mem2_May_2001/
 
 
 ```
