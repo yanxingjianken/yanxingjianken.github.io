@@ -202,10 +202,36 @@ qstat -u $USER
 There is tutorial [here](https://www2.mmm.ucar.edu/projects/mpas/tutorial/Boulder2023/lectures/postproc_and_viz.pdf)
 Include the file “target_domain” to remap at smaller domain and finer resolution
 
+```bash
+By default, the diag files contain:
+
+RH, T, height, winds @ 200, 250, 500, 700, 850, 925 hPa CAPE, CIN, LCL, LFC, updraft helicity U10, V10, T2, Q2
+Simulated radar reflectivity PMSL
+Surface, 1 km AGL, 6 km AGL winds (various other 2-d fields)
+
+By default, the "history" files contain:
+q_v, q_c, q_r, ...
+theta
+zonal, meridional wind
+vertical velocity
+full pressure
+dry density
+accumulated rain (cumulus and microphysics)
+soil moisture, soil temperature
+(various other fields)
+Full mesh information (vertical and horizontal)
+```
+
 Visualize by convert to lat-lon grid - outputnamde latlon.nc
 
 ```bash
+cd /net/flood/data2/users/x_yan/mpas_runs/mimic_mem2_May_2001
 
+cp /net/flood/data2/users/x_yan/mpas_runs/mem2_1_May_2001_PR_60_3km_circ_12h/target_domain .
+
+/net/flood/data2/users/x_yan/mpas_toolchain/convert_mpas/convert_mpas history*nc
+
+# or
 convert_mpas history.2014-09-15_00.00.00.nc
 
 convert_mpas PR.init.nc diag*nc
