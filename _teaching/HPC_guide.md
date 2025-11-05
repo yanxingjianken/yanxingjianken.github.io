@@ -27,6 +27,11 @@ for kd in sorted(glob.glob(os.path.join(root,"*"))):
 PY
 ```
 
+## Activate conda env from micromamba
+```bash
+micromamba activate -p /net/flood/home/x_yan/.conda/envs/cdms
+```
+
 ## check CPU usages - live view
 1. ```bash
    htop 
