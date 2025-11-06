@@ -122,6 +122,12 @@ In namelist.init_atmosphere, for nhyd_model - config_init_case
 ./init_atmosphere_model
 
 ```
+We should be able to see the static field 
+```bash
+micromamba run -n ncl_66 bash -lc \
+'export FNAME="/net/flood/data2/users/x_yan/mpas_runs/240-48km_variable/PR.static.nc"; \
+ncl /net/flood/data2/users/x_yan/mpas_toolchain/mpas_tutorial/ncl_scripts/plot_terrain.ncl'
+```
 
 Then we Interpolating real-data initial conditions as in section 3.4
 ```bash
