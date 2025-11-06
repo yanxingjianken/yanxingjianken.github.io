@@ -128,6 +128,8 @@ micromamba run -n ncl_66 bash -lc \
 'export FNAME="/net/flood/data2/users/x_yan/mpas_runs/240-48km_variable/PR.static.nc"; \
 ncl /net/flood/data2/users/x_yan/mpas_toolchain/mpas_tutorial/ncl_scripts/plot_terrain.ncl'
 ```
+<img width="1385" height="798" alt="image" src="https://github.com/user-attachments/assets/49af8863-8f28-40e6-a6f8-f3b9451fba94" />
+
 
 Then we Interpolating real-data initial conditions as in section 3.4
 ```bash
@@ -176,6 +178,8 @@ micromamba run -n ncl_66 bash -lc \
 export FNAME="/net/flood/data2/users/x_yan/mpas_runs/mimic_mem2_May_2001/diag.2001-05-01_00.00.00.nc"; \
 ncl /net/flood/data2/users/x_yan/mpas_toolchain/mpas_tutorial/ncl_scripts/latlon_cells.ncl'
 ```
+<img width="885" height="510" alt="image" src="https://github.com/user-attachments/assets/29466da6-9f43-4017-b7b1-bf3df9e0fbe2" />
+
 ---
 
 ## Prepare LENS2 to GFS-like IC inputs
