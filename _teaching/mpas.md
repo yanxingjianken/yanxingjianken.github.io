@@ -164,14 +164,21 @@ cp /net/flood/data2/users/x_yan/mpas_toolchain/mpas/stream_list.atmosphere.* .
 ## config_dt — the model timestep (delta-t) in seconds.
 ## config_len_disp — the length-scale for explicit horizontal diffusion, in meters.
 
-ln -s /net/flood/data2/users/x_yan/mpas_toolchain/meshes/x20.835586.graph.info.part.240 .
+ln -s /net/flood/data2/users/x_yan/mpas_toolchain/meshes/x20.835586.graph.info.part.144 .
 
 ## if running in parallel, needs to match the grid decomposition file prefix
-mpiexec -n 64 ./atmosphere_model
+mpiexec -n 144 ./atmosphere_model
+```
+We should be able to see the output 
+```bash
+micromamba run -n ncl_66 bash -lc \
+'export GNAME="/net/flood/data2/users/x_yan/mpas_runs/mimic_mem2_May_2001/PR.init.nc"; \
+export FNAME="/net/flood/data2/users/x_yan/mpas_runs/mimic_mem2_May_2001/diag.2001-05-01_00.00.00.nc"; \
+ncl /net/flood/data2/users/x_yan/mpas_toolchain/mpas_tutorial/ncl_scripts/latlon_cells.ncl'
 ```
 ---
 
-### Prepare LENS2 to GFS-like IC inputs
+## Prepare LENS2 to GFS-like IC inputs
 Use [pywinter](https://pywinter.readthedocs.io/en/latest/#id6) and [cam-se-regrid](https://ncar.github.io/esds/posts/2023/cam-se-analysis/)
 
 What we need:
