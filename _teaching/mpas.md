@@ -291,6 +291,12 @@ module load apps/miniconda/3.6
 micromamba activate mpas_toolchain
 
 cd /net/flood/data2/users/x_yan/mpas_runs/mem2_2_Nov_2009_PR_60_3km_circ_12h
+
+### Get the intermediate files!
+
+# cp /net/flood/data2/users/x_yan/mpas_runs/erin_mimic_mem2_May_2001/PR.grid.nc .
+cp /net/flood/data2/users/x_yan/mpas_runs/erin_mimic_mem2_May_2001/PR.static.nc .
+
 ln -s /net/flood/data2/users/x_yan/mpas_toolchain/meshes/x20.835586.grid.nc .
 ln -s /net/flood/data2/users/x_yan/mpas_toolchain/meshes/x20.835586.graph.info.part.36 .
 
@@ -313,6 +319,10 @@ ln -s /net/flood/data2/users/x_yan/mpas_toolchain/mpas/MP_THOMPSON_*.DBL .
 
 ## if running in parallel, needs to match the grid decomposition file prefix
 mpiexec -n 144 ./atmosphere_model
+
+
+cp /net/flood/data2/users/x_yan/mpas_runs/erin_mem2_1_May_2001_PR_60_3km_circ_12h/target_domain .
+/net/flood/data2/users/x_yan/mpas_toolchain/convert_mpas/convert_mpas history*nc
 
 ```
 
