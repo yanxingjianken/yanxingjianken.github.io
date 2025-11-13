@@ -191,8 +191,13 @@ What we need:
 
 TL; DR: We run 2 scripts: 
 ```bash
-## On Derecho, run
+module load cdo ncl conda
+
+## On Derecho, run with pengeos3_ken
 /glade/u/home/kenyan/mpas_lens/process_ihesp_data.csh
+
+## run with wrm_im
+./run_intmd.sh
 
 
 # We should see in /glade/derecho/scratch/kenyan/iHESP_stage/2001-04-30_06Z/:
