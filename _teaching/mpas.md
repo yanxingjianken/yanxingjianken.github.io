@@ -320,6 +320,11 @@ ln -s /net/flood/data2/users/x_yan/mpas_toolchain/mpas/MP_THOMPSON_*.DBL .
 ## if running in parallel, needs to match the grid decomposition file prefix
 mpiexec -n 144 ./atmosphere_model
 
+### Or, try
+nohup mpiexec -n 144 ./atmosphere_model &
+disown
+
+
 
 cp /net/flood/data2/users/x_yan/mpas_runs/erin_mem2_1_May_2001_PR_60_3km_circ_12h/target_domain .
 /net/flood/data2/users/x_yan/mpas_toolchain/convert_mpas/convert_mpas history*nc
