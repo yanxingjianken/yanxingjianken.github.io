@@ -283,7 +283,38 @@ cp -av /net/flood/data2/users/x_yan/mpas_toolchain/mpas/MP_THOMPSON_*.DBL .
 
 
 ```
+---
+### Batch Processing
+Once we have the PR.static.nc ready
+```bash
+module load apps/miniconda/3.6 
+micromamba activate mpas_toolchain
 
+cd /net/flood/data2/users/x_yan/mpas_runs/mem2_2_Nov_2009_PR_60_3km_circ_12h
+ln -s /net/flood/data2/users/x_yan/mpas_toolchain/meshes/x20.835586.grid.nc .
+ln -s /net/flood/data2/users/x_yan/mpas_toolchain/meshes/x20.835586.graph.info.part.36 .
+
+ln -s /net/flood/data2/users/x_yan/mpas_toolchain/mpas/init_atmosphere_model .
+cp /net/flood/data2/users/x_yan/mpas_toolchain/mpas/namelist.init_atmosphere . # CHANGE TIME!!
+cp /net/flood/data2/users/x_yan/mpas_toolchain/mpas/streams.init_atmosphere .
+
+mpiexec -n 36 ./init_atmosphere_model # get PR.init.nc
+
+ln -s /net/flood/data2/users/x_yan/mpas_toolchain/mpas/atmosphere_model . 
+ln -s /net/flood/data2/users/x_yan/mpas_toolchain/mpas/src/core_atmosphere/physics/physics_wrf/files/* .
+
+cp /net/flood/data2/users/x_yan/mpas_toolchain/mpas/namelist.atmosphere . # CHANGE TIME!!
+cp /net/flood/data2/users/x_yan/mpas_toolchain/mpas/streams.atmosphere .
+cp /net/flood/data2/users/x_yan/mpas_toolchain/mpas/stream_list.atmosphere.* .
+
+ln -s /net/flood/data2/users/x_yan/mpas_toolchain/meshes/x20.835586.graph.info.part.144 .
+
+ln -s /net/flood/data2/users/x_yan/mpas_toolchain/mpas/MP_THOMPSON_*.DBL .
+
+## if running in parallel, needs to match the grid decomposition file prefix
+mpiexec -n 144 ./atmosphere_model
+
+```
 
 ---
 
