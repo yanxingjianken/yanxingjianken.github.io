@@ -18,7 +18,7 @@ I am interested in [climate](https://eaps.mit.edu/reseach-concentrations/climate
 
 Currently, I'm working on 2 projects:
 
-### Atmospheric blocking events - Quasi-staionarity, linkage to Rossby wave breakings, and an extension to the PV tendency framework. 
+### Atmospheric blocking events - Quasi-stationarity, linkage to Rossby wave breakings, and an extension to the PV tendency framework. 
 See my talk at [AMS AOFD 2026, Houston, TX](https://ams.confex.com/ams/106ANNUAL/meetingapp.cgi/Paper/466152)!
 
 ### ML Downscaling Methods for Extreme Precipitation in Puerto Rico, and their changes with climate. 
