@@ -24,6 +24,8 @@ See my talk at [AMS AOFD 2026, Houston, TX](https://ams.confex.com/ams/106ANNUAL
 ### ML Downscaling Methods for Extreme Precipitation in Puerto Rico, and their changes with climate. 
 See my talk at [AGU 2025, New Orleans, LA](https://agu.confex.com/agu/agu25/meetingapp.cgi/Paper/1880140)!
 
+___
+
 ### Scientists and academicians: You can view my [CV here](https://www.overleaf.com/read/sypjtgcdtnqb#3846ad).
 
 I'm open to fellowship opportunities. I will be a Thomas C. Desmond Fellow from Sep. 2025 to May 2026.
