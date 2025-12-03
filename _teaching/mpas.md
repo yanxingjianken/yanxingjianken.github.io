@@ -341,7 +341,7 @@ cd /net/flood/data2/users/x_yan/mpas_runs_coarse/mem2_2_Nov_2009_PR_60_3km_circ_
 
 ### Get the intermediate files!
 
-cp /net/flood/data2/users/x_yan/mpas_runs_coarse/mem2_2_Nov_2009_PR_60_3km_circ_12h/PR.static.nc .
+cp /net/flood/data2/users/x_yan/mpas_runs_coarse/static_file_generator/PR.static.nc .
 
 ln -s /net/flood/data2/users/x_yan/mpas_toolchain/meshes/x5.30210.grid.nc .
 ln -s /net/flood/data2/users/x_yan/mpas_toolchain/meshes/x5.30210.graph.info.part.12 .
@@ -367,7 +367,7 @@ disown
 
 
 
-cp /net/flood/data2/users/x_yan/mpas_runs/erin_mem2_1_May_2001_PR_60_3km_circ_12h/target_domain .
+cp /net/flood/data2/users/x_yan/mpas_runs_coarse/static_file_generator/target_domain .
 /net/flood/data2/users/x_yan/mpas_toolchain/convert_mpas/convert_mpas history*nc
 
 ```
