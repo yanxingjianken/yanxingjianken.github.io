@@ -347,7 +347,7 @@ ln -s /net/flood/data2/users/x_yan/mpas_toolchain/meshes/x5.30210.grid.nc .
 ln -s /net/flood/data2/users/x_yan/mpas_toolchain/meshes/x5.30210.graph.info.part.12 .
 
 ln -s /net/flood/data2/users/x_yan/mpas_toolchain/mpas/init_atmosphere_model .
-cp /net/flood/data2/users/x_yan/mpas_toolchain/mpas/namelist.init_atmosphere . # CHANGE TIME!!
+cp /net/flood/data2/users/x_yan/mpas_toolchain/mpas/namelist.init_atmosphere . # CHANGE TIME and x5.30210!!
 cp /net/flood/data2/users/x_yan/mpas_toolchain/mpas/streams.init_atmosphere .
 
 mpiexec -n 12 ./init_atmosphere_model # get PR.init.nc
@@ -355,7 +355,7 @@ mpiexec -n 12 ./init_atmosphere_model # get PR.init.nc
 ln -s /net/flood/data2/users/x_yan/mpas_toolchain/mpas/atmosphere_model . 
 ln -s /net/flood/data2/users/x_yan/mpas_toolchain/mpas/src/core_atmosphere/physics/physics_wrf/files/* .
 
-cp /net/flood/data2/users/x_yan/mpas_toolchain/mpas/namelist.atmosphere . # CHANGE TIME!!
+cp /net/flood/data2/users/x_yan/mpas_toolchain/mpas/namelist.atmosphere .  # CHANGE TIME, config_dt = 240.0, config_len_disp = 48000.0, config_pio_num_iotasks = 12, x5.30210.!!
 cp /net/flood/data2/users/x_yan/mpas_toolchain/mpas/streams.atmosphere .
 cp /net/flood/data2/users/x_yan/mpas_toolchain/mpas/stream_list.atmosphere.* .
 
