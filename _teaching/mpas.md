@@ -284,7 +284,7 @@ cp -av /net/flood/data2/users/x_yan/mpas_toolchain/mpas/MP_THOMPSON_*.DBL .
 
 ```
 ---
-### Batch Processing
+### Batch Processing - 3km High Res (60-3)
 Once we have the PR.static.nc ready
 ```bash
 module load apps/miniconda/3.6 
@@ -330,8 +330,50 @@ cp /net/flood/data2/users/x_yan/mpas_runs/erin_mem2_1_May_2001_PR_60_3km_circ_12
 /net/flood/data2/users/x_yan/mpas_toolchain/convert_mpas/convert_mpas history*nc
 
 ```
+---
+### Batch Processing - 48km Low Res (240-48)
+Once we have the PR.static.nc ready
+```bash
+module load apps/miniconda/3.6 
+micromamba activate mpas_toolchain
+
+cd /net/flood/data2/users/x_yan/mpas_runs_coarse/mem2_2_Nov_2009_PR_60_3km_circ_12h
+
+### Get the intermediate files!
+
+cp /net/flood/data2/users/x_yan/mpas_runs_coarse/mem2_2_Nov_2009_PR_60_3km_circ_12h/PR.static.nc .
+
+ln -s /net/flood/data2/users/x_yan/mpas_toolchain/meshes/x5.30210.grid.nc .
+ln -s /net/flood/data2/users/x_yan/mpas_toolchain/meshes/x5.30210.graph.info.part.12 .
+
+ln -s /net/flood/data2/users/x_yan/mpas_toolchain/mpas/init_atmosphere_model .
+cp /net/flood/data2/users/x_yan/mpas_toolchain/mpas/namelist.init_atmosphere . # CHANGE TIME!!
+cp /net/flood/data2/users/x_yan/mpas_toolchain/mpas/streams.init_atmosphere .
+
+mpiexec -n 12 ./init_atmosphere_model # get PR.init.nc
+
+ln -s /net/flood/data2/users/x_yan/mpas_toolchain/mpas/atmosphere_model . 
+ln -s /net/flood/data2/users/x_yan/mpas_toolchain/mpas/src/core_atmosphere/physics/physics_wrf/files/* .
+
+cp /net/flood/data2/users/x_yan/mpas_toolchain/mpas/namelist.atmosphere . # CHANGE TIME!!
+cp /net/flood/data2/users/x_yan/mpas_toolchain/mpas/streams.atmosphere .
+cp /net/flood/data2/users/x_yan/mpas_toolchain/mpas/stream_list.atmosphere.* .
+
+ln -s /net/flood/data2/users/x_yan/mpas_toolchain/mpas/MP_THOMPSON_*.DBL .
+
+
+nohup mpiexec -n 12 ./atmosphere_model &
+disown
+
+
+
+cp /net/flood/data2/users/x_yan/mpas_runs/erin_mem2_1_May_2001_PR_60_3km_circ_12h/target_domain .
+/net/flood/data2/users/x_yan/mpas_toolchain/convert_mpas/convert_mpas history*nc
+
+```
 
 ---
+
 
 ### Side stuff on HPC without setenv - use export
 ```bash
