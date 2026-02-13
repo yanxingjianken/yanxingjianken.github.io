@@ -1,6 +1,6 @@
 ---
 title: "Different Weather Forecasting Techniques"
-excerpt: "Coconut, NWP, AI, S2S Hindcasts, Data Assimilation"
+excerpt: "Coconut, NWP, AI, S2S Hindcasts, Data Assimilation<br/><img src='https://github.com/user-attachments/assets/2c8b59d6-994c-4cd8-a69b-d75b0c291b05' style='max-width: 60%; height: auto;'>"
 collection: portfolio
 ---
 
