@@ -86,10 +86,11 @@ If you're still experiencing issues:
 
 ## Specific File: `996_mid_freq_trading.html`
 
-Note: This file currently exists but is empty (contains only a newline). To add content:
+Note: This file now contains template content. To customize it:
 
 1. Open the file in your editor: `_portfolio/996_mid_freq_trading.html`
-2. Add content following the format of other portfolio files (see `997solitary_wave.html` as an example)
-3. Save the file
-4. Add, commit, and push as shown above
+2. Replace the placeholder text with your actual project content
+3. Follow the format of other portfolio files (see `997solitary_wave.html` or `998pmdt_cv.html` as examples)
+4. Save the file
+5. Add, commit, and push as shown above
 
