@@ -5,7 +5,7 @@ collection: portfolio
 ---
 
 Here's the work with Talia on Rossby Wave Breaking orientation changes and Blockings. 
-I had an oral presetation at the stormtracks 2025 in Rosendal, Norway, hosted by University of Bergen.
+I had an oral presentation at the stormtracks 2025 in Rosendal, Norway, hosted by University of Bergen.
 
 You can find my slides <a href="https://docs.google.com/presentation/d/1Ifp9RpLt7Oq6R_w8L-ioHcMhisT09Alo/edit?usp=sharing&ouid=116465514317596629476&rtpof=true&sd=true">here</a>.
 
