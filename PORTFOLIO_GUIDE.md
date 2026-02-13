@@ -1,19 +1,44 @@
 # Portfolio Management Guide
 
+## Automatic Classification System
+
+**NEW**: Portfolio items are now automatically categorized based on their 3-digit file name prefix! You no longer need to manually edit `_pages/portfolio.html`.
+
+### Classification Rules
+
+Portfolio files are automatically sorted into categories based on their number prefix:
+
+| Prefix Range | Category | Description |
+|-------------|----------|-------------|
+| **000-199** | Category 1 | Atmospheric Dynamics & Meteorology |
+| **200-299** | Category 2 | Estimation Theory & Machine Learning |
+| **900-999** | Category 3 | Miscellaneous |
+
+### Examples
+
+- `050_Weather_Forecasts.md` → Category 1 (Atmospheric Dynamics)
+- `101_traffic_jam_blocking.html` → Category 1 (Atmospheric Dynamics)
+- `200_ensemble_conditional_gp.html` → Category 2 (ML)
+- `997solitary_wave.html` → Category 3 (Miscellaneous)
+
 ## How Portfolio Items Work
 
 This website uses Jekyll collections to manage portfolio items. Portfolio items are stored in the `_portfolio/` directory and are automatically generated into individual pages.
 
 ### File Naming Convention
 
-Portfolio files in `_portfolio/` should follow this pattern:
+Portfolio files in `_portfolio/` **must** follow this pattern:
 - `NNN_descriptive_name.html` or `NNN_descriptive_name.md`
-- Where `NNN` is a number for sorting (e.g., `050`, `100`, `101`)
+- Where `NNN` is a **3-digit number** that determines the category:
+  - `000-199` for Atmospheric Dynamics & Meteorology
+  - `200-299` for Estimation Theory & ML
+  - `900-999` for Miscellaneous
 
 Examples:
-- `050_Weather_Forecasts.md`
-- `101_traffic_jam_blocking.html`
-- `200_ensemble_conditional_gp.html`
+- `050_Weather_Forecasts.md` → Category 1
+- `101_traffic_jam_blocking.html` → Category 1
+- `200_ensemble_conditional_gp.html` → Category 2
+- `997solitary_wave.html` → Category 3
 
 ### How Jekyll Generates URLs
 
@@ -23,110 +48,133 @@ Jekyll automatically converts file names to URLs:
 
 ## Adding New Portfolio Items
 
-### Step 1: Create the Portfolio File
+### Step 1: Choose the Right Number Prefix
 
-Create a new file in `_portfolio/` with proper front matter:
+Pick a 3-digit number based on the category:
+- **000-199**: Atmospheric Dynamics & Meteorology
+- **200-299**: Estimation Theory & Machine Learning  
+- **900-999**: Miscellaneous
 
-```html
+### Step 2: Create the Portfolio File
+
+Create a new file in `_portfolio/` with the proper number prefix and name format:
+
+**File name format**: `NNN_descriptive_name.html` or `NNN_descriptive_name.md`
+
+Example: `150_my_new_research.html`
+
+### Step 3: Add Front Matter
+
+Add proper front matter to the file:
+
+```yaml
 ---
 title: "Your Project Title"
-excerpt: "A brief description that appears in listings"
+excerpt: "A brief description. Optional: add image with <img src='/images/your-image.png'>"
 collection: portfolio
 ---
 
 Your full project content goes here...
 ```
 
-### Step 2: Add to Portfolio Page
+**Important**: If you want an image to display in the portfolio grid, include an `<img>` tag in the excerpt field.
 
-Edit `_pages/portfolio.html` to add a link in the appropriate modal section.
+### Step 4: Commit and Push
 
-**Important**: The URL must match the file name exactly!
+That's it! The portfolio page will **automatically**:
+1. Detect the new file
+2. Categorize it based on the number prefix
+3. Display it in the appropriate modal
+4. Extract and show the image from the excerpt (if provided)
 
-Example:
-```html
-<div class="plot-item">
-  <a href="{{ base_path }}/portfolio/YOUR_FILE_NAME/">
-    <img src="{{ base_path }}/images/your-image.png" alt="Description" class="plot-image">
-    <div class="plot-title">Your Project Title</div>
-  </a>
-</div>
-```
-
-If you have no image, use:
-```html
-<div class="plot-item">
-  <a href="{{ base_path }}/portfolio/YOUR_FILE_NAME/">
-    <div class="no-image">No plot available</div>
-    <div class="plot-title">Your Project Title</div>
-  </a>
-</div>
-```
-
-### Step 3: Commit and Push
-
-After editing via GitHub's web interface or locally:
-1. Commit your changes
-2. Push to the master branch
-3. GitHub Pages will automatically rebuild (takes 1-3 minutes)
-4. Visit your site to see the changes
+**No manual editing of `portfolio.html` required!**
 
 ## Common Issues
 
-### Issue: Portfolio item not showing up
+### Issue: Portfolio item not showing up in any category
 
-**Cause**: The link in `_pages/portfolio.html` doesn't match the actual file name.
+**Cause**: The file name doesn't start with a number in the correct range.
 
-**Solution**: Check that:
-1. The file name in `_portfolio/` matches exactly
-2. The URL in portfolio.html uses the correct file name
-3. Example: If file is `050_Weather_Forecasts.md`, URL must be `/portfolio/050_Weather_Forecasts/`
+**Solution**: Ensure the file name starts with:
+- `000-199` for Category 1 (Atmospheric Dynamics)
+- `200-299` for Category 2 (Estimation Theory & ML)
+- `900-999` for Category 3 (Miscellaneous)
 
-### Issue: Changes not appearing on live site
+Numbers outside these ranges won't appear in any category!
 
-**Cause**: GitHub Pages build may be in progress or failed.
+### Issue: Portfolio item appears in wrong category
 
-**Solution**:
-1. Go to your repository on GitHub
-2. Click "Actions" tab
-3. Check the "pages build and deployment" workflow
-4. Wait for it to complete (green checkmark)
-5. If it fails (red X), click to see error details
+**Cause**: The 3-digit prefix determines the category automatically.
 
-### Issue: 404 error when clicking portfolio item
+**Solution**: Rename the file with the correct prefix:
+- Want Category 1? Use `050_`, `100_`, `150_`, etc.
+- Want Category 2? Use `200_`, `250_`, `299_`, etc.
+- Want Category 3? Use `900_`, `950_`, `999_`, etc.
 
-**Cause**: Missing or misnamed file in `_portfolio/` directory.
+### Issue: Image not displaying in portfolio grid
 
-**Solution**:
-1. Check that the file exists in `_portfolio/`
-2. Verify the file has proper front matter with `collection: portfolio`
-3. Ensure the link in portfolio.html matches the file name exactly
+**Cause**: The excerpt doesn't contain an `<img>` tag.
+
+**Solution**: Add an image tag to the excerpt in your front matter:
+```yaml
+excerpt: "Your description <img src='/images/your-image.png'>"
+```
 
 ## Portfolio Categories
 
-The portfolio page has 3 categories:
+The portfolio page has 3 categories with **automatic classification**:
 
-1. **Atmospheric Dynamics & Meteorology** (modal1)
-2. **Estimation Theory & Machine Learning** (modal2)
-3. **Miscellaneous** (modal3)
+1. **Atmospheric Dynamics & Meteorology** (modal1) - Files with prefix `000-199`
+2. **Estimation Theory & Machine Learning** (modal2) - Files with prefix `200-299`
+3. **Miscellaneous** (modal3) - Files with prefix `900-999`
 
-Add your portfolio item to the appropriate modal section in `_pages/portfolio.html`.
+Portfolio items are automatically sorted and displayed in the correct category based on their file name prefix. No manual configuration needed!
+
+## Quick Start: Adding a Portfolio Item
+
+1. **Choose a number**: Pick from 000-199, 200-299, or 900-999 based on the category
+2. **Create file**: Upload to `_portfolio/` with name like `150_my_project.html`
+3. **Add content**:
+   ```yaml
+   ---
+   title: "My Project Title"
+   excerpt: "Description <img src='/images/my-image.png'>"
+   collection: portfolio
+   ---
+   
+   Your content here...
+   ```
+4. **Commit**: Push to master branch
+5. **Done**: Item automatically appears in the correct category!
 
 ## Checklist for Adding Portfolio Items
 
-- [ ] Create file in `_portfolio/` with proper naming
-- [ ] Add front matter with title, excerpt, and collection
-- [ ] Add content to the file
-- [ ] Add link in `_pages/portfolio.html` matching the exact file name
-- [ ] Choose appropriate category (modal1, modal2, or modal3)
-- [ ] Add image or use "no-image" placeholder
-- [ ] Commit changes
-- [ ] Wait for GitHub Pages build to complete
-- [ ] Test the link on the live site
+- [ ] File name starts with 3-digit number in correct range (000-199, 200-299, or 900-999)
+- [ ] File name follows format: `NNN_descriptive_name.html` or `.md`
+- [ ] Front matter includes: title, excerpt, and `collection: portfolio`
+- [ ] Add image in excerpt if desired: `excerpt: "Text <img src='/images/pic.png'>"`
+- [ ] File is in `_portfolio/` directory
+- [ ] Commit and push to master branch
+- [ ] Wait for GitHub Pages build (~1-3 minutes)
+- [ ] Check the live site - item should appear automatically!
 
-## Recent Fixes (February 2026)
+## Recent Updates (February 2026)
 
-Fixed several broken links where the URLs in portfolio.html didn't match actual file names:
+### Auto-Classification System (Latest)
+
+**MAJOR UPDATE**: Portfolio items are now automatically categorized! 
+
+- ✅ No need to edit `portfolio.html` manually
+- ✅ Just upload files with correct number prefix
+- ✅ System automatically detects and categorizes
+- ✅ Images automatically extracted from excerpt field
+- ✅ Items sorted by file name within each category
+
+**How it works**: The portfolio page uses Jekyll Liquid to loop through all files in `_portfolio/` and automatically categorize them based on the 3-digit prefix (000-199, 200-299, or 900-999).
+
+### Previous Fixes
+
+Fixed several broken links where URLs didn't match file names:
 - Fixed: `001_Weather_Forecasts` → `050_Weather_Forecasts`
 - Fixed: `995RWB_blocking_termination` → `102_RWB_blocking_termination`
 - Fixed: `996blocking` → `101_traffic_jam_blocking`
