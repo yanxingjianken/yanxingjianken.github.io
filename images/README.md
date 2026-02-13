@@ -36,14 +36,16 @@ If you encounter errors when uploading files through GitHub's web interface:
 4. **Try uploading via Git CLI**: Use `git add`, `git commit`, and `git push` commands
 5. **Clear browser cache**: Sometimes browser issues can prevent uploads
 
-## Google Drive Images
+## Placeholder Images
 
-If using Google Drive for images, convert the sharing link to a direct download link:
+Some images in this directory are placeholders (grayscale images):
+- `4_bases_decomposition.png` - Placeholder for Four-Basis Decomposition project
+- `ensemble_gp.png` - Placeholder for Ensemble-Consistent GP project
 
-- **Old format**: `https://drive.google.com/file/d/FILE_ID/view?usp=sharing`
-- **New format**: `https://drive.google.com/uc?export=download&id=FILE_ID`
-
-However, note that Google Drive images may not always load reliably. For best results, upload images directly to this directory.
+To replace these with actual images:
+1. Download the real images from the original source (see MANUAL_IMAGE_DOWNLOAD.md)
+2. Replace the placeholder files with the downloaded images
+3. Commit and push the changes
 
 ## Current Images
 
@@ -52,3 +54,5 @@ This directory contains:
 - Profile pictures
 - Icon and favicon files
 - Background images for various sections
+- Placeholder images (to be replaced with actual images)
+
