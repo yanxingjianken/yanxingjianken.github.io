@@ -27,6 +27,26 @@ author_profile: true
   display: flex;
   flex-direction: column;
   justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.category-block video,
+.category-block img.bg-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.5;
+  z-index: 0;
+}
+
+.category-block h2,
+.category-block p {
+  position: relative;
+  z-index: 1;
 }
 
 .category-block:hover {
@@ -48,6 +68,18 @@ author_profile: true
   font-size: 0.9rem;
 }
 
+.video-credit {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  font-size: 0.7rem;
+  color: #999;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 2px 5px;
+  border-radius: 3px;
+}
+
 /* Modal styles */
 .modal {
   display: none;
@@ -59,31 +91,49 @@ author_profile: true
   height: 100%;
   overflow: auto;
   background-color: rgba(0,0,0,0.7);
+  padding: 3rem;
+  box-sizing: border-box;
 }
 
 .modal-content {
   background-color: #fefefe;
-  margin: 2% auto;
-  padding: 2rem;
+  margin: 3rem auto;
+  padding: 3rem;
   border: 1px solid #888;
-  width: 90%;
+  width: calc(100% - 6rem);
   max-width: 1200px;
   border-radius: 8px;
-  max-height: 90vh;
+  max-height: calc(100vh - 6rem);
   overflow-y: auto;
+  position: relative;
 }
 
 .close {
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
   color: #aaa;
-  float: right;
-  font-size: 28px;
+  font-size: 32px;
   font-weight: bold;
   cursor: pointer;
+  z-index: 10;
+  line-height: 1;
+  background: white;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ddd;
+  transition: all 0.3s ease;
 }
 
 .close:hover,
 .close:focus {
   color: #000;
+  background: #f0f0f0;
+  border-color: #999;
 }
 
 .plots-grid {
@@ -141,16 +191,24 @@ author_profile: true
 
 <div class="research-categories">
   <div class="category-block" onclick="openCategory('category1')">
+    <video autoplay loop muted playsinline>
+      <source src="https://svs.gsfc.nasa.gov/vis/a000000/a003800/a003864/jetstream.mp4" type="video/mp4">
+    </video>
     <h2>Atmospheric Dynamics &amp; Meteorology</h2>
     <p>Weather forecasting, blocking, and wave breaking</p>
+    <span class="video-credit">Video: NASA</span>
   </div>
   
   <div class="category-block" onclick="openCategory('category2')">
+    <video autoplay loop muted playsinline>
+      <source src="{{ base_path }}/files/track_359x.mp4" type="video/mp4">
+    </video>
     <h2>Estimation Theory &amp; Machine Learning</h2>
     <p>Downscaling, Gaussian processes, and data assimilation</p>
   </div>
   
   <div class="category-block" onclick="openCategory('category3')">
+    <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&amp;w=1170&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.1.0&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Background" class="bg-image">
     <h2>Miscellaneous</h2>
     <p>Other research topics and projects</p>
   </div>
