@@ -1,0 +1,63 @@
+---
+title: "Orthogonal Four-Basis Decomposition for PV Tendency Analysis"
+excerpt: "A mathematically clean way to separate PV intensification, propagation, and wave-breaking deformation. <br/><img src='https://drive.google.com/file/d/1-UBssFIO30e81ujw4MMupXAeVrwwlKKM/view?usp=sharing' style='max-width: 60%; height: auto;'>"
+collection: portfolio
+---
+
+We developed a unified framework to decompose potential vorticity (PV) tendencies into four physically interpretable and **mutually orthogonal** modes: intensification, zonal propagation, meridional propagation, and wave-breaking deformation.
+
+The motivation comes from a long-standing problem in PV tendency diagnostics: traditional least-squares decompositions suffer from basis cross-correlations, making the resulting coefficients difficult to interpret physically. Our approach resolves this by constructing an **explicitly orthogonal basis**, allowing each dynamical contribution to be isolated cleanly.
+
+<br/>
+
+### The four modes
+
+The decomposition is built from four template fields evaluated at the previous time step:
+
+1. **PV anomaly** — captures amplitude growth or decay (intensification)
+2. **Zonal PV gradient** — rigid east–west propagation
+3. **Meridional PV gradient** — rigid north–south propagation
+4. **Cross-derivative of PV** — diagonal strain associated with Rossby wave breaking
+
+Each mode corresponds directly to an intuitive physical process acting on a PV anomaly.
+
+<br/>
+
+### From a 2×2 toy model to reanalysis data
+
+We start with an idealized **2×2 matrix representation**, where the four modes form an exact orthogonal basis under the Frobenius inner product. This toy problem builds intuition for how intensification, translation, and deformation appear as distinct spatial patterns.
+
+The framework is then generalized to continuous fields using:
+- latitude-weighted inner products,
+- restriction to the negative-PV anomaly core,
+- Gaussian pre-smoothing to suppress small-scale noise,
+- and careful pre-normalization to ensure numerical stability.
+
+Orthogonality is enforced via **Gram–Schmidt**, yielding a basis where each coefficient depends only on its corresponding mode.
+
+<br/>
+
+### Why orthogonality matters
+
+With an orthogonal basis:
+- projection coefficients are computed by **direct inner products** (no matrix inversion),
+- each coefficient has a **clean physical interpretation**,
+- propagation, intensification, and deformation are fully decoupled,
+- and the residual captures only higher-order shape changes.
+
+In the special case of PV tendency, the intensification coefficient directly links to **PV enstrophy growth**, providing a compact diagnostic for anomaly amplification.
+
+<br/>
+
+### What this enables
+
+This framework provides a rigorous way to diagnose Rossby wave breaking and blocking dynamics by separating:
+- how fast a PV anomaly is strengthening,
+- how it is translating,
+- and how much of its evolution comes from irreversible deformation.
+
+It is designed to work seamlessly with **reanalysis composites**, making it suitable for both process studies and systematic climatological analysis.
+
+<br/>
+
+This work was completed in Feb. 2026, with implementations tested on ERA5-based composites. Code for the orthogonal basis construction, projections, and visualization is available upon request.
