@@ -7,8 +7,266 @@ author_profile: true
 
 {% include base_path %}
 
+<style>
+.research-categories {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin: 2rem 0;
+}
 
-{% for post in site.portfolio %}
-  {% include archive-single.html %}
-{% endfor %}
+.category-block {
+  background: #f5f5f5;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.category-block:hover {
+  background: #e8e8e8;
+  border-color: #999;
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.category-block h2 {
+  margin: 0 0 1rem 0;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.category-block p {
+  margin: 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* Modal styles */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.7);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 2% auto;
+  padding: 2rem;
+  border: 1px solid #888;
+  width: 90%;
+  max-width: 1200px;
+  border-radius: 8px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+}
+
+.plots-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.plot-item {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  background: white;
+  transition: transform 0.3s ease;
+}
+
+.plot-item:hover {
+  transform: scale(1.05);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.plot-item a {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.plot-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  background: white;
+}
+
+.plot-title {
+  padding: 1rem;
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+}
+
+.no-image {
+  width: 100%;
+  height: 200px;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  font-style: italic;
+}
+</style>
+
+<div class="research-categories">
+  <div class="category-block" onclick="openCategory('category1')">
+    <h2>Atmospheric Dynamics &amp; Meteorology</h2>
+    <p>Weather forecasting, blocking, and wave breaking</p>
+  </div>
+  
+  <div class="category-block" onclick="openCategory('category2')">
+    <h2>Estimation Theory &amp; Machine Learning</h2>
+    <p>Downscaling, Gaussian processes, and data assimilation</p>
+  </div>
+  
+  <div class="category-block" onclick="openCategory('category3')">
+    <h2>Miscellaneous</h2>
+    <p>Other research topics and projects</p>
+  </div>
+</div>
+
+<!-- Modal for Category 1: Atmospheric Dynamics & Meteorology -->
+<div id="modal1" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('modal1')">&times;</span>
+    <h2>Atmospheric Dynamics &amp; Meteorology</h2>
+    <div class="plots-grid">
+      <div class="plot-item">
+        <a href="{{ base_path }}/portfolio/001_Weather_Forecasts/">
+          <img src="https://github.com/user-attachments/assets/2c8b59d6-994c-4cd8-a69b-d75b0c291b05" alt="Weather Forecasts" class="plot-image">
+          <div class="plot-title">Different Weather Forecasting Techniques</div>
+        </a>
+      </div>
+      <div class="plot-item">
+        <a href="{{ base_path }}/portfolio/995RWB_blocking_termination/">
+          <div class="no-image">No plot available</div>
+          <div class="plot-title">What Determines Wave Breaking Orientations during Blocking Events</div>
+        </a>
+      </div>
+      <div class="plot-item">
+        <a href="{{ base_path }}/portfolio/996blocking/">
+          <img src="{{ base_path }}/images/2024GRL_Exceedance_Blocking.png" alt="Blocking" class="plot-image">
+          <div class="plot-title">Atmospheric Blocking Prediction from the Traffic Jam Theory</div>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for Category 2: Estimation Theory & Machine Learning -->
+<div id="modal2" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('modal2')">&times;</span>
+    <h2>Estimation Theory &amp; Machine Learning</h2>
+    <div class="plots-grid">
+      <div class="plot-item">
+        <a href="{{ base_path }}/portfolio/994_XTC_downscaling/">
+          <div class="no-image">No plot available</div>
+          <div class="plot-title">Downscaling of XTC</div>
+        </a>
+      </div>
+      <div class="plot-item">
+        <a href="{{ base_path }}/portfolio/993_ensemble_conditional_gp/">
+          <div class="no-image">No plot available</div>
+          <div class="plot-title">Ensemble–Conditional Gaussian Processes</div>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for Category 3: Miscellaneous -->
+<div id="modal3" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('modal3')">&times;</span>
+    <h2>Miscellaneous</h2>
+    <div class="plots-grid">
+      <div class="plot-item">
+        <a href="{{ base_path }}/portfolio/997solitary_wave/">
+          <img src="{{ base_path }}/images/2024isope_dbl_solitary_wave.gif" alt="Solitary Wave" class="plot-image">
+          <div class="plot-title">Multi-Solitary (Tsunami) Wave</div>
+        </a>
+      </div>
+      <div class="plot-item">
+        <a href="{{ base_path }}/portfolio/998pmdt_cv/">
+          <img src="{{ base_path }}/images/pmdt.png" alt="Computer Vision" class="plot-image">
+          <div class="plot-title">Computer Vision on High-Voltage Energized Equipment</div>
+        </a>
+      </div>
+      <div class="plot-item">
+        <a href="{{ base_path }}/portfolio/999nyuDURF_cv/">
+          <img src="{{ base_path }}/images/yolov_vehicles.png" alt="DURF CV" class="plot-image">
+          <div class="plot-title">Computer Vision on Vehicular Flux-Density Relationship Regression</div>
+        </a>
+      </div>
+      <div class="plot-item">
+        <a href="{{ base_path }}/portfolio/999z_fdfz_boxue/">
+          <div class="no-image">No plot available</div>
+          <div class="plot-title">A Published Essay on the Commercial Press of China</div>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function openCategory(categoryId) {
+  var modalId = categoryId.replace('category', 'modal');
+  document.getElementById(modalId).style.display = 'block';
+}
+
+function closeModal(modalId) {
+  document.getElementById(modalId).style.display = 'none';
+}
+
+// Close modal when clicking outside of it
+window.onclick = function(event) {
+  if (event.target.classList.contains('modal')) {
+    event.target.style.display = 'none';
+  }
+}
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(event) {
+  if (event.key === 'Escape') {
+    var modals = document.getElementsByClassName('modal');
+    for (var i = 0; i < modals.length; i++) {
+      if (modals[i].style.display === 'block') {
+        modals[i].style.display = 'none';
+      }
+    }
+  }
+});
+</script>
 
