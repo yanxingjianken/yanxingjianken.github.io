@@ -1,6 +1,6 @@
 ---
 title: "Downscaling of XTC"
-excerpt: "Downscaling extreme precipitation across Puerto Rico in current and future climates.<br/><img src='/images/500x300.png' style='max-width: 60%; height: auto;'>"
+excerpt: "Downscaling extreme precipitation across Puerto Rico in current and future climates.<br/><img src='/images/pv_evolution_3scenarios.gif' style='max-width: 60%; height: auto;'>"
 collection: portfolio
 ---
 
