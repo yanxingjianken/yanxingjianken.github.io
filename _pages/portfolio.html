@@ -266,86 +266,86 @@ body.portfolio-modal-open {
   </div>
 </div>
 
-<!-- Modal for Category 1: Atmospheric Dynamics & Meteorology -->
+<!-- Modal for Category 1: Atmospheric Dynamics & Meteorology (000-199) -->
 <div id="modal1" class="portfolio-modal">
   <div class="portfolio-modal-content">
     <span class="close" onclick="closeModal('modal1')">&times;</span>
     <h2>Atmospheric Dynamics &amp; Meteorology</h2>
     <div class="plots-grid">
+      {% assign sorted_portfolio = site.portfolio | sort: 'path' %}
+      {% for item in sorted_portfolio %}
+        {% assign filename = item.path | split: '/' | last | split: '.' | first %}
+        {% assign prefix = filename | slice: 0, 3 | plus: 0 %}
+        {% if prefix >= 0 and prefix < 200 %}
       <div class="plot-item">
-        <a href="{{ base_path }}/portfolio/001_Weather_Forecasts/">
-          <img src="https://github.com/user-attachments/assets/2c8b59d6-994c-4cd8-a69b-d75b0c291b05" alt="Weather Forecasts" class="plot-image">
-          <div class="plot-title">Different Weather Forecasting Techniques</div>
+        <a href="{{ base_path }}{{ item.url }}">
+          {% if item.excerpt contains '<img' %}
+            {% assign img_src = item.excerpt | split: 'src=' | last | split: '"' | first | split: "'" | first %}
+            <img src="{{ img_src }}" alt="{{ item.title }}" class="plot-image">
+          {% else %}
+            <div class="no-image">No plot available</div>
+          {% endif %}
+          <div class="plot-title">{{ item.title }}</div>
         </a>
       </div>
-      <div class="plot-item">
-        <a href="{{ base_path }}/portfolio/995RWB_blocking_termination/">
-          <div class="no-image">No plot available</div>
-          <div class="plot-title">What Determines Wave Breaking Orientations during Blocking Events</div>
-        </a>
-      </div>
-      <div class="plot-item">
-        <a href="{{ base_path }}/portfolio/996blocking/">
-          <img src="{{ base_path }}/images/2024GRL_Exceedance_Blocking.png" alt="Blocking" class="plot-image">
-          <div class="plot-title">Atmospheric Blocking Prediction from the Traffic Jam Theory</div>
-        </a>
-      </div>
+        {% endif %}
+      {% endfor %}
     </div>
   </div>
 </div>
 
-<!-- Modal for Category 2: Estimation Theory & Machine Learning -->
+<!-- Modal for Category 2: Estimation Theory & Machine Learning (200-299) -->
 <div id="modal2" class="portfolio-modal">
   <div class="portfolio-modal-content">
     <span class="close" onclick="closeModal('modal2')">&times;</span>
     <h2>Estimation Theory &amp; Machine Learning</h2>
     <div class="plots-grid">
+      {% assign sorted_portfolio = site.portfolio | sort: 'path' %}
+      {% for item in sorted_portfolio %}
+        {% assign filename = item.path | split: '/' | last | split: '.' | first %}
+        {% assign prefix = filename | slice: 0, 3 | plus: 0 %}
+        {% if prefix >= 200 and prefix < 300 %}
       <div class="plot-item">
-        <a href="{{ base_path }}/portfolio/994_XTC_downscaling/">
-          <div class="no-image">No plot available</div>
-          <div class="plot-title">Downscaling of XTC</div>
+        <a href="{{ base_path }}{{ item.url }}">
+          {% if item.excerpt contains '<img' %}
+            {% assign img_src = item.excerpt | split: 'src=' | last | split: '"' | first | split: "'" | first %}
+            <img src="{{ img_src }}" alt="{{ item.title }}" class="plot-image">
+          {% else %}
+            <div class="no-image">No plot available</div>
+          {% endif %}
+          <div class="plot-title">{{ item.title }}</div>
         </a>
       </div>
-      <div class="plot-item">
-        <a href="{{ base_path }}/portfolio/993_ensemble_conditional_gp/">
-          <div class="no-image">No plot available</div>
-          <div class="plot-title">Ensemble–Conditional Gaussian Processes</div>
-        </a>
-      </div>
+        {% endif %}
+      {% endfor %}
     </div>
   </div>
 </div>
 
-<!-- Modal for Category 3: Miscellaneous -->
+<!-- Modal for Category 3: Miscellaneous (900-999) -->
 <div id="modal3" class="portfolio-modal">
   <div class="portfolio-modal-content">
     <span class="close" onclick="closeModal('modal3')">&times;</span>
     <h2>Miscellaneous</h2>
     <div class="plots-grid">
+      {% assign sorted_portfolio = site.portfolio | sort: 'path' %}
+      {% for item in sorted_portfolio %}
+        {% assign filename = item.path | split: '/' | last | split: '.' | first %}
+        {% assign prefix = filename | slice: 0, 3 | plus: 0 %}
+        {% if prefix >= 900 and prefix < 1000 %}
       <div class="plot-item">
-        <a href="{{ base_path }}/portfolio/997solitary_wave/">
-          <img src="{{ base_path }}/images/2024isope_dbl_solitary_wave.gif" alt="Solitary Wave" class="plot-image">
-          <div class="plot-title">Multi-Solitary (Tsunami) Wave</div>
+        <a href="{{ base_path }}{{ item.url }}">
+          {% if item.excerpt contains '<img' %}
+            {% assign img_src = item.excerpt | split: 'src=' | last | split: '"' | first | split: "'" | first %}
+            <img src="{{ img_src }}" alt="{{ item.title }}" class="plot-image">
+          {% else %}
+            <div class="no-image">No plot available</div>
+          {% endif %}
+          <div class="plot-title">{{ item.title }}</div>
         </a>
       </div>
-      <div class="plot-item">
-        <a href="{{ base_path }}/portfolio/998pmdt_cv/">
-          <img src="{{ base_path }}/images/pmdt.png" alt="Computer Vision" class="plot-image">
-          <div class="plot-title">Computer Vision on High-Voltage Energized Equipment</div>
-        </a>
-      </div>
-      <div class="plot-item">
-        <a href="{{ base_path }}/portfolio/999nyuDURF_cv/">
-          <img src="{{ base_path }}/images/yolov_vehicles.png" alt="DURF CV" class="plot-image">
-          <div class="plot-title">Computer Vision on Vehicular Flux-Density Relationship Regression</div>
-        </a>
-      </div>
-      <div class="plot-item">
-        <a href="{{ base_path }}/portfolio/999z_fdfz_boxue/">
-          <div class="no-image">No plot available</div>
-          <div class="plot-title">A Published Essay on the Commercial Press of China</div>
-        </a>
-      </div>
+        {% endif %}
+      {% endfor %}
     </div>
   </div>
 </div>
