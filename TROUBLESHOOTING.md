@@ -5,7 +5,7 @@ This document provides guidance on resolving file upload and git commit issues i
 
 ## Verified Findings
 
-After investigating the reported issue ("could no longer upload figs or files to anywhere"), we have verified that:
+After investigating the reported issue ("could no longer upload figures or files to anywhere"), we have verified that:
 
 1. ✅ The `.gitignore` file is correct and not blocking any portfolio, image, or HTML files
 2. ✅ Files can be successfully added to all directories (`files/`, `images/`, `_portfolio/`, etc.)
