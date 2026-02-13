@@ -80,6 +80,13 @@ author_profile: true
   border-radius: 3px;
 }
 
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .category-block video {
+    display: none;
+  }
+}
+
 /* Modal styles */
 .modal {
   display: none;
@@ -210,7 +217,7 @@ author_profile: true
   </div>
   
   <div class="category-block" onclick="openCategory('category3')">
-    <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&amp;w=1170&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.1.0&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" aria-hidden="true" class="bg-image">
+    <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&amp;w=1170&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.1.0&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" aria-hidden="true" loading="lazy" class="bg-image">
     <h2>Miscellaneous</h2>
     <p>Other research topics and projects</p>
     <span class="video-credit">Photo: Unsplash</span>
