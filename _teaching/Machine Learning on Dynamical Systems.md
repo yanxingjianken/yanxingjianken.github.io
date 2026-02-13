@@ -33,6 +33,13 @@ Loading using Google Colab is recommended.
 
 ### [Generative Adversarial Networks, & Conditional Gaussian Process Notes](https://www.overleaf.com/read/zjmncnpvckbm#473de2)
 
+### [How to do Sparsity L0 Problem](https://github.com/yanxingjianken/yanxingjianken.github.io/blob/master/files/l0_problem_visualization.ipynb)
+
+### [Sequential Projection, QR Decomposition](https://github.com/yanxingjianken/yanxingjianken.github.io/blob/master/files/l0_sequential.ipynb)
+
+### [Mutual Coherence, L1 problem](https://github.com/yanxingjianken/yanxingjianken.github.io/blob/master/files/l1_mutual_coherence.ipynb)
+
+
 ---
 
 Meanwhile, Sai has some preferred naming of the above psets, which I've also included here:
