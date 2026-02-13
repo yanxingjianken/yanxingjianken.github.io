@@ -1,6 +1,6 @@
 ---
 title: "Orthogonal Four-Basis Decomposition for PV Tendency Analysis"
-excerpt: "A mathematically clean way to separate PV intensification, propagation, and wave-breaking deformation. <br/><img src='/images/4_bases_decomposition.png' style='max-width: 60%; height: auto;'>"
+excerpt: "A mathematically clean way to separate PV intensification, propagation, and wave-breaking deformation. <br/><img src='/images/pv_evolution_3scenarios.gif' style='max-width: 60%; height: auto;'>"
 collection: portfolio
 ---
 
