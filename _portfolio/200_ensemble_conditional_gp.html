@@ -1,0 +1,56 @@
+---
+title: "Ensemble-Consistent Gaussian Process Reconstruction"
+excerpt: "A geometry-aware Gaussian process framework constrained by ensemble covariance structure. <br/><img src='https://drive.google.com/file/d/1Gsu6ynyQlAiy7Ob4CUXf4cE_cfxRVsUU/view?usp=sharing' style='max-width: 60%; height: auto;'>"
+collection: portfolio
+---
+
+This work introduces an ensemble-consistent Gaussian process (EnSCGP) framework for reconstructing geophysical fields while explicitly respecting the covariance geometry implied by an ensemble.
+
+The core problem addressed is familiar in atmospheric and oceanic data analysis: Gaussian process (GP) reconstructions are flexible and powerful, but when applied naively they can violate the dynamical structure encoded in ensemble statistics. EnSCGP resolves this tension by embedding the GP directly into the ensemble covariance subspace.
+
+<br/>
+
+### Key idea
+
+Instead of treating the GP prior and the ensemble covariance as separate objects, we **condition the GP on the ensemble-derived covariance operator**. The resulting reconstruction lives in a space that is:
+
+- statistically consistent with the ensemble,
+- smooth in a controlled, physically interpretable way,
+- and stable under sparse or irregular sampling.
+
+This approach ensures that reconstructed anomalies align with dynamically plausible directions of variability.
+
+<br/>
+
+### Covariance geometry and orthogonality
+
+A central component of the method is an explicit treatment of covariance geometry:
+- ensemble covariance eigenmodes define the admissible subspace,
+- orthogonality is enforced with respect to the ensemble-weighted inner product,
+- and truncation acts as a physically motivated regularization rather than an ad hoc smoothing choice.
+
+This links the method directly to concepts from reduced-order modeling and balance operators, while retaining the flexibility of Gaussian processes.
+
+<br/>
+
+### Relation to ensemble data assimilation
+
+EnSCGP can be interpreted as a **continuous-space analogue of ensemble-based reconstruction**:
+- sparse observations constrain the coefficients,
+- ensemble covariance defines the directions of adjustment,
+- and uncertainty naturally propagates through the GP posterior.
+
+Unlike standard ensemble Kalman approaches, the method does not require linearized dynamics or explicit forecast operators, making it well suited for diagnostic and offline reconstruction problems.
+
+<br/>
+
+### Applications
+
+The framework is particularly suited for:
+- reconstructing PV or geopotential anomalies from sparse composites,
+- diagnosing coherent structures embedded in noisy ensemble fields,
+- and producing uncertainty-aware reconstructions for downstream diagnostics.
+
+The method has been tested on idealized examples and reanalysis-derived ensembles, demonstrating robustness under limited sampling and strong anisotropy.
+
+<br/>
