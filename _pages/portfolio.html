@@ -118,7 +118,6 @@ author_profile: true
 
 .modal-content {
   background-color: #fefefe;
-  margin: auto;
   padding: 3rem;
   border: 1px solid #888;
   width: 90%;
@@ -326,14 +325,12 @@ author_profile: true
 function openCategory(categoryId) {
   var modalId = categoryId.replace('category', 'modal');
   var modal = document.getElementById(modalId);
-  modal.style.display = 'flex';
   modal.classList.add('show');
   document.body.style.overflow = 'hidden';
 }
 
 function closeModal(modalId) {
   var modal = document.getElementById(modalId);
-  modal.style.display = 'none';
   modal.classList.remove('show');
   document.body.style.overflow = '';
 }
@@ -341,7 +338,6 @@ function closeModal(modalId) {
 // Close modal when clicking outside of it
 window.onclick = function(event) {
   if (event.target.classList.contains('modal')) {
-    event.target.style.display = 'none';
     event.target.classList.remove('show');
     document.body.style.overflow = '';
   }
@@ -353,7 +349,6 @@ document.addEventListener('keydown', function(event) {
     var modals = document.getElementsByClassName('modal');
     for (var i = 0; i < modals.length; i++) {
       if (modals[i].classList.contains('show')) {
-        modals[i].style.display = 'none';
         modals[i].classList.remove('show');
         document.body.style.overflow = '';
       }
