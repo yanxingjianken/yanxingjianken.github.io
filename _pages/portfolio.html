@@ -96,12 +96,12 @@ author_profile: true
 }
 
 /* Prevent body scroll when modal is open */
-body.modal-open {
+body.portfolio-modal-open {
   overflow: hidden;
 }
 
-/* Modal styles */
-.modal {
+/* Portfolio modal styles - using specific class to avoid theme conflicts */
+.portfolio-modal {
   display: none;
   position: fixed;
   z-index: 1000;
@@ -112,16 +112,17 @@ body.modal-open {
   overflow: hidden;
   background-color: rgba(0,0,0,0.7);
   padding: 0;
+  margin: 0;
   box-sizing: border-box;
   align-items: center;
   justify-content: center;
 }
 
-.modal.show {
+.portfolio-modal.show {
   display: flex;
 }
 
-.modal-content {
+.portfolio-modal-content {
   background-color: #fefefe;
   padding: 3rem;
   border: 1px solid #888;
@@ -136,7 +137,7 @@ body.modal-open {
 
 /* Mobile responsiveness for modal */
 @media (max-width: 768px) {
-  .modal-content {
+  .portfolio-modal-content {
     width: 95%;
     padding: 2rem 1rem;
     max-height: 90vh;
@@ -266,8 +267,8 @@ body.modal-open {
 </div>
 
 <!-- Modal for Category 1: Atmospheric Dynamics & Meteorology -->
-<div id="modal1" class="modal">
-  <div class="modal-content">
+<div id="modal1" class="portfolio-modal">
+  <div class="portfolio-modal-content">
     <span class="close" onclick="closeModal('modal1')">&times;</span>
     <h2>Atmospheric Dynamics &amp; Meteorology</h2>
     <div class="plots-grid">
@@ -294,8 +295,8 @@ body.modal-open {
 </div>
 
 <!-- Modal for Category 2: Estimation Theory & Machine Learning -->
-<div id="modal2" class="modal">
-  <div class="modal-content">
+<div id="modal2" class="portfolio-modal">
+  <div class="portfolio-modal-content">
     <span class="close" onclick="closeModal('modal2')">&times;</span>
     <h2>Estimation Theory &amp; Machine Learning</h2>
     <div class="plots-grid">
@@ -316,8 +317,8 @@ body.modal-open {
 </div>
 
 <!-- Modal for Category 3: Miscellaneous -->
-<div id="modal3" class="modal">
-  <div class="modal-content">
+<div id="modal3" class="portfolio-modal">
+  <div class="portfolio-modal-content">
     <span class="close" onclick="closeModal('modal3')">&times;</span>
     <h2>Miscellaneous</h2>
     <div class="plots-grid">
@@ -354,31 +355,31 @@ function openCategory(categoryId) {
   var modalId = categoryId.replace('category', 'modal');
   var modal = document.getElementById(modalId);
   modal.classList.add('show');
-  document.body.classList.add('modal-open');
+  document.body.classList.add('portfolio-modal-open');
 }
 
 function closeModal(modalId) {
   var modal = document.getElementById(modalId);
   modal.classList.remove('show');
-  document.body.classList.remove('modal-open');
+  document.body.classList.remove('portfolio-modal-open');
 }
 
 // Close modal when clicking outside of it
 window.onclick = function(event) {
-  if (event.target.classList.contains('modal')) {
+  if (event.target.classList.contains('portfolio-modal')) {
     event.target.classList.remove('show');
-    document.body.classList.remove('modal-open');
+    document.body.classList.remove('portfolio-modal-open');
   }
 }
 
 // Close modal with Escape key
 document.addEventListener('keydown', function(event) {
   if (event.key === 'Escape') {
-    var modals = document.getElementsByClassName('modal');
+    var modals = document.getElementsByClassName('portfolio-modal');
     for (var i = 0; i < modals.length; i++) {
       if (modals[i].classList.contains('show')) {
         modals[i].classList.remove('show');
-        document.body.classList.remove('modal-open');
+        document.body.classList.remove('portfolio-modal-open');
       }
     }
   }
