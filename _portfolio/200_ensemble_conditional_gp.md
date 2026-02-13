@@ -1,6 +1,6 @@
 ---
 title: "Ensemble-Consistent Gaussian Process Reconstruction"
-excerpt: "A geometry-aware Gaussian process framework constrained by ensemble covariance structure. <br/><img src='/images/ensemble_gp.png' style='max-width: 60%; height: auto;'>"
+excerpt: "A geometry-aware Gaussian process framework constrained by ensemble covariance structure. <br/><img src='/images/ens_cgp.png' style='max-width: 60%; height: auto;'>"
 collection: portfolio
 ---
 
