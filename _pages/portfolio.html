@@ -60,7 +60,7 @@ author_profile: true
   margin: 0 0 1rem 0;
   font-size: 1.5rem;
   color: #333;
-  background: white;
+  background: rgba(255, 255, 255, 0.8);
   padding: 0.5rem 1rem;
   border-radius: 4px;
   display: inline-block;
@@ -70,7 +70,7 @@ author_profile: true
   margin: 0;
   color: #666;
   font-size: 0.9rem;
-  background: white;
+  background: rgba(255, 255, 255, 0.8);
   padding: 0.5rem 1rem;
   border-radius: 4px;
   display: inline-block;
@@ -131,6 +131,29 @@ body.modal-open {
   max-height: 85vh;
   overflow-y: auto;
   position: relative;
+  margin: 0 auto;
+}
+
+/* Mobile responsiveness for modal */
+@media (max-width: 768px) {
+  .modal-content {
+    width: 95%;
+    padding: 2rem 1rem;
+    max-height: 90vh;
+  }
+  
+  .close {
+    top: 0.5rem;
+    right: 0.5rem;
+    font-size: 28px;
+    width: 35px;
+    height: 35px;
+  }
+  
+  .plots-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
 }
 
 .close {
