@@ -95,6 +95,11 @@ author_profile: true
   }
 }
 
+/* Prevent body scroll when modal is open */
+body.modal-open {
+  overflow: hidden;
+}
+
 /* Modal styles */
 .modal {
   display: none;
@@ -326,20 +331,20 @@ function openCategory(categoryId) {
   var modalId = categoryId.replace('category', 'modal');
   var modal = document.getElementById(modalId);
   modal.classList.add('show');
-  document.body.style.overflow = 'hidden';
+  document.body.classList.add('modal-open');
 }
 
 function closeModal(modalId) {
   var modal = document.getElementById(modalId);
   modal.classList.remove('show');
-  document.body.style.overflow = '';
+  document.body.classList.remove('modal-open');
 }
 
 // Close modal when clicking outside of it
 window.onclick = function(event) {
   if (event.target.classList.contains('modal')) {
     event.target.classList.remove('show');
-    document.body.style.overflow = '';
+    document.body.classList.remove('modal-open');
   }
 }
 
@@ -350,7 +355,7 @@ document.addEventListener('keydown', function(event) {
     for (var i = 0; i < modals.length; i++) {
       if (modals[i].classList.contains('show')) {
         modals[i].classList.remove('show');
-        document.body.style.overflow = '';
+        document.body.classList.remove('modal-open');
       }
     }
   }
