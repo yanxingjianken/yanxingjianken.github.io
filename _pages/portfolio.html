@@ -280,8 +280,15 @@ body.portfolio-modal-open {
       <div class="plot-item">
         <a href="{{ base_path }}{{ item.url }}">
           {% if item.excerpt contains '<img' %}
-            {% assign img_src = item.excerpt | split: 'src=' | last | split: '"' | first | split: "'" | first %}
-            <img src="{{ img_src }}" alt="{{ item.title }}" class="plot-image">
+            {% assign img_parts = item.excerpt | split: 'src=' | last %}
+            {% assign img_src = img_parts | split: '"' %}
+            {% if img_src.size > 1 %}
+              {% assign final_src = img_src[1] %}
+            {% else %}
+              {% assign img_src_alt = img_parts | split: "'" %}
+              {% assign final_src = img_src_alt[1] %}
+            {% endif %}
+            <img src="{{ final_src }}" alt="{{ item.title }}" class="plot-image">
           {% else %}
             <div class="no-image">No plot available</div>
           {% endif %}
@@ -308,8 +315,15 @@ body.portfolio-modal-open {
       <div class="plot-item">
         <a href="{{ base_path }}{{ item.url }}">
           {% if item.excerpt contains '<img' %}
-            {% assign img_src = item.excerpt | split: 'src=' | last | split: '"' | first | split: "'" | first %}
-            <img src="{{ img_src }}" alt="{{ item.title }}" class="plot-image">
+            {% assign img_parts = item.excerpt | split: 'src=' | last %}
+            {% assign img_src = img_parts | split: '"' %}
+            {% if img_src.size > 1 %}
+              {% assign final_src = img_src[1] %}
+            {% else %}
+              {% assign img_src_alt = img_parts | split: "'" %}
+              {% assign final_src = img_src_alt[1] %}
+            {% endif %}
+            <img src="{{ final_src }}" alt="{{ item.title }}" class="plot-image">
           {% else %}
             <div class="no-image">No plot available</div>
           {% endif %}
@@ -336,8 +350,15 @@ body.portfolio-modal-open {
       <div class="plot-item">
         <a href="{{ base_path }}{{ item.url }}">
           {% if item.excerpt contains '<img' %}
-            {% assign img_src = item.excerpt | split: 'src=' | last | split: '"' | first | split: "'" | first %}
-            <img src="{{ img_src }}" alt="{{ item.title }}" class="plot-image">
+            {% assign img_parts = item.excerpt | split: 'src=' | last %}
+            {% assign img_src = img_parts | split: '"' %}
+            {% if img_src.size > 1 %}
+              {% assign final_src = img_src[1] %}
+            {% else %}
+              {% assign img_src_alt = img_parts | split: "'" %}
+              {% assign final_src = img_src_alt[1] %}
+            {% endif %}
+            <img src="{{ final_src }}" alt="{{ item.title }}" class="plot-image">
           {% else %}
             <div class="no-image">No plot available</div>
           {% endif %}
