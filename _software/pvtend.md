@@ -8,9 +8,11 @@ collection: software
 
 [`pvtend`](https://github.com/yanxingjianken/pvtend) is a Python package for **potential vorticity (PV) tendency decomposition**, designed for analysing the lifecycle of atmospheric blocking and precursor reverse-flow (PRP) events. It works with ERA5 pressure-level data and decomposes PV tendencies into physically meaningful components using an orthogonal basis framework.
 
-📖 **Full documentation:** [pvtend.readthedocs.io](https://pvtend.readthedocs.io/en/latest/)
-💻 **Source code:** [github.com/yanxingjianken/pvtend](https://github.com/yanxingjianken/pvtend)
-📄 **License:** MIT
+**Full documentation:** [pvtend.readthedocs.io](https://pvtend.readthedocs.io/en/latest/)
+
+**Source code:** [github.com/yanxingjianken/pvtend](https://github.com/yanxingjianken/pvtend)
+
+**License:** MIT
 
 ---
 
@@ -109,6 +111,6 @@ The package follows a modular pipeline:
 
 ## Links
 
-- 📖 [Full Documentation (Read the Docs)](https://pvtend.readthedocs.io/en/latest/)
-- 💻 [GitHub Repository](https://github.com/yanxingjianken/pvtend)
-- 🐛 [Issue Tracker](https://github.com/yanxingjianken/pvtend/issues)
+- [Full Documentation (Read the Docs)](https://pvtend.readthedocs.io/en/latest/)
+- [GitHub Repository](https://github.com/yanxingjianken/pvtend)
+- [Issue Tracker](https://github.com/yanxingjianken/pvtend/issues)
