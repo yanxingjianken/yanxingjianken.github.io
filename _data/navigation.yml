@@ -3,20 +3,21 @@ main:
   - title: "Research"
     url: /portfolio/
         
-  - title: "Softwares and Publications"
+  - title: "Publication"
     url: /publications/
-
+    
+  - title: "Software"
+    url: /software/
+  
   - title: "Talks"
     url: /talks/    
 
-  - title: "Teachings and Notes"
+  - title: "Notes"
     url: /teaching/    
     
   - title: "Blogs (Non-Academic)"
     url: /year-archive/
     
-  # - title: "CV"
-  #   url: /cv/
     
   # - title: "Guide"
   #   url: /markdown/
