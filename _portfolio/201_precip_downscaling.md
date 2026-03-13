@@ -1,5 +1,5 @@
 ---
-title: "Downscaling of XTC"
+title: "Downscaling of Extreme Precipitation over Puerto Rico"
 excerpt: "Downscaling extreme precipitation across Puerto Rico in current and future climates.<br/><img src='/images/ens_cgp.png' style='max-width: 60%; height: auto;'>"
 collection: portfolio
 ---
