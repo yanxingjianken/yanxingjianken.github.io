@@ -61,7 +61,7 @@ The history of downscaling methods can be understood as a progressive evolution 
 
 The earliest methods use a **prescribed parametric kernel** (e.g., Matérn, squared exponential) as $K$. The gain $\mathbf{G}$ is computed analytically. This is classical Gaussian process regression, also known as kriging in geostatistics or optimal interpolation in meteorology. It is elegant but limited: the kernel is fixed and cannot capture non-stationary or multi-scale structures.
 
-**Key references**: Gandin (1963), Matheron (1963), Cressie (1993)
+**Key references**: [Gandin (1963)](https://books.google.com/books/about/Objective_Analysis_of_Meteorological_Fie.html?id=yuxOnwEACAAJ), [Matheron (1963)](https://doi.org/10.2113/gsecongeo.58.8.1246), [Cressie (1993)](https://doi.org/10.1002/9781119115151)
 
 <br/>
 
@@ -75,7 +75,7 @@ $$
 
 This makes $K$ flow-dependent and adaptive, but it is limited by the ensemble size (low-rank) and assumes linear-Gaussian statistics. The Ens-CGP framework formalizes this connection rigorously: the ensemble covariance defines a finite-dimensional Gaussian process prior.
 
-**Key references**: Evensen (1994), Houtekamer and Mitchell (1998), [Yan & Ravela — Ens-CGP (2025)](https://arxiv.org/abs/2602.13871)
+**Key references**: [Evensen (1994)](https://doi.org/10.1029/94JC00572), [Houtekamer and Mitchell (1998)](https://doi.org/10.1175/1520-0493(1998)126<0796:DAUAEK>2.0.CO;2), [Ravela et al. — Ens-CGP (2026)](https://arxiv.org/abs/2602.13871)
 
 <br/>
 
@@ -89,7 +89,7 @@ $$
 
 Convolutional neural networks (CNNs) and U-Nets became the workhorses of deterministic downscaling / super-resolution, learning complex nonlinear mappings that no fixed kernel could represent.
 
-**Key references**: Dong et al. — SRCNN (2014), Vandal et al. — DeepSD (2017)
+**Key references**: [Dong et al. — SRCNN (2014)](https://arxiv.org/abs/1501.00092), [Vandal et al. — DeepSD (2017)](https://arxiv.org/abs/1703.03126)
 
 <br/>
 
@@ -99,7 +99,7 @@ Autoencoders learn a **compressed latent representation** of the high-resolution
 
 This is a learned, nonlinear generalization of the two-step interpretation of $\mathbf{G}$: compress, then project.
 
-**Key references**: Kingma and Welling — VAE (2014), Baño-Medina et al. (2020)
+**Key references**: [Kingma and Welling — VAE (2014)](https://arxiv.org/abs/1312.6114), [Baño-Medina et al. (2020)](https://doi.org/10.5194/gmd-13-2109-2020)
 
 <br/>
 
@@ -109,7 +109,7 @@ Generative adversarial networks (GANs) introduce **adversarial training** to pro
 
 The [RaGAN framework](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2023MS003860) (Ravela, 2024) combines **physics-based priors** with adversarial learning: a two-step process that first uses simplified statistical–physical models to bias-correct and then applies a GAN for stochastic super-resolution of rainfall extremes. The inference step in RaGAN also acts as an update — the optimal-estimation-based bias correction is itself a form of the gain operator $\mathbf{G}$, making inference part of the overall downscaling update.
 
-**Key references**: Leinonen et al. (2020), Stengel et al. (2020), [Ravela — RaGAN (2024)](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2023MS003860)
+**Key references**: [Leinonen et al. (2020)](https://doi.org/10.1109/TGRS.2020.3032790), [Stengel et al. (2020)](https://doi.org/10.1073/pnas.1918964117), [Ravela — RaGAN (2024)](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2023MS003860)
 
 <br/>
 
@@ -122,7 +122,7 @@ Diffusion models represent the current state of the art. [**CorrDiff**](https://
 
 This two-step structure mirrors the Ens-CGP operator remarkably: the regression step is the best linear estimate (the gain $\mathbf{G}$ applied to observations), and the diffusion step samples from the posterior uncertainty — exactly what the conditional Gaussian process posterior does, but with a learned, nonlinear score function replacing $K$.
 
-**Key references**: [Mardani et al. — CorrDiff (2023)](https://arxiv.org/abs/2309.15214), Ho et al. — DDPM (2020), Song et al. — Score-based SDE (2021)
+**Key references**: [Mardani et al. — CorrDiff (2023)](https://arxiv.org/abs/2309.15214), [Ho et al. — DDPM (2020)](https://arxiv.org/abs/2006.11239), [Song et al. — Score-based SDE (2021)](https://arxiv.org/abs/2011.13456)
 
 <br/>
 
