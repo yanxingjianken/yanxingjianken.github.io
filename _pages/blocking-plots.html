@@ -1,0 +1,620 @@
+---
+layout: archive
+title: "Blocking Composite Viewer"
+permalink: /blocking-plots/
+author_profile: false
+---
+
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+
+<style>
+  .bc-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .bc-controls label {
+    font-size: 14px;
+    font-weight: 600;
+    margin-right: 4px;
+  }
+  .bc-controls select {
+    font-size: 14px;
+    padding: 4px 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    height: 32px;
+  }
+  .bc-event-count {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 10px;
+  }
+  #loading {
+    font-size: 16px;
+    color: #1f77b4;
+    padding: 20px;
+    text-align: center;
+  }
+  .bc-spinner {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border: 3px solid #ccc;
+    border-top-color: #1f77b4;
+    border-radius: 50%;
+    animation: bc-spin 0.8s linear infinite;
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+  @keyframes bc-spin {
+    to { transform: rotate(360deg); }
+  }
+  .bc-panels {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  .bc-panels > div {
+    min-width: 300px;
+    flex: 1 1 0;
+  }
+  @media (max-width: 900px) {
+    .bc-panels {
+      flex-direction: column;
+      align-items: center;
+    }
+    .bc-panels > div {
+      width: 100%;
+      max-width: 500px;
+    }
+  }
+  #projection-panel {
+    margin-top: 16px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 10px;
+    background: #fafafa;
+  }
+  #projection-panel summary {
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 15px;
+    color: #1f77b4;
+  }
+  #proj-info {
+    font-family: monospace;
+    font-size: 14px;
+    margin: 10px 0;
+    line-height: 1.7;
+  }
+  .bc-proj-panels {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .bc-proj-panels > div {
+    width: 200px;
+  }
+</style>
+
+<div id="loading" style="display:none;">
+  <span class="bc-spinner"></span> Loading composite data... (~8 MB)
+</div>
+
+<div class="bc-controls">
+  <span>
+    <label for="sel-variant">Variant:</label>
+    <select id="sel-variant">
+      <option value="original" selected>All Events</option>
+      <option value="awb">AWB</option>
+      <option value="cwb">CWB</option>
+      <option value="neutral">Ridge</option>
+    </select>
+  </span>
+  <span>
+    <label for="sel-stage">Stage:</label>
+    <select id="sel-stage">
+      <option value="onset">Onset</option>
+      <option value="peak" selected>Peak</option>
+      <option value="decay">Decay</option>
+    </select>
+  </span>
+  <span>
+    <label for="sel-level">Level:</label>
+    <select id="sel-level">
+      <option value="wavg" selected>Column Weighted Avg</option>
+      <option value="1000">1000 hPa</option>
+      <option value="850">850 hPa</option>
+      <option value="700">700 hPa</option>
+      <option value="500">500 hPa</option>
+      <option value="400">400 hPa</option>
+      <option value="300">300 hPa</option>
+      <option value="250">250 hPa</option>
+      <option value="200">200 hPa</option>
+      <option value="100">100 hPa</option>
+    </select>
+  </span>
+</div>
+
+<div class="bc-controls">
+  <span>
+    <label for="sel-shading">Shading:</label>
+    <select id="sel-shading"></select>
+  </span>
+  <span>
+    <label for="sel-contour">Contour:</label>
+    <select id="sel-contour"></select>
+  </span>
+</div>
+
+<div class="bc-event-count" id="event-count"></div>
+
+<div class="bc-panels">
+  <div id="panel-0"></div>
+  <div id="panel-1"></div>
+  <div id="panel-2"></div>
+</div>
+
+<details id="projection-panel">
+  <summary>&#9654; Project onto orthogonal basis</summary>
+  <div id="proj-info"></div>
+  <div class="bc-proj-panels">
+    <div id="proj-inten"></div>
+    <div id="proj-prop"></div>
+    <div id="proj-deform"></div>
+    <div id="proj-resid"></div>
+  </div>
+</details>
+
+<script>
+(function() {
+  'use strict';
+
+  var BASE = 'https://huggingface.co/datasets/yanxingjianken/blocking-composites/resolve/main';
+  var DATA_CACHE = new Map();
+
+  var CONTOUR_GROUPS = ['contour_base', 'contour_omega', 'contour_tendency', 'contour_diabatic', 'contour_pv_grad'];
+  var PRENORM = {beta: 1e6, ax: 1e12, ay: 1e12, gamma: 1e18};
+  var DEFAULT_SHADING = 'u_rot_anom_pv_anom_dx';
+  var DEFAULT_CONTOUR = 'pv_anom';
+
+  var currentData = null;
+  var dropdownsBuilt = false;
+
+  /* ---- Data fetching ---- */
+
+  async function fetchData(variant, stage) {
+    var key = variant + '_' + stage;
+    if (DATA_CACHE.has(key)) return DATA_CACHE.get(key);
+
+    var url = BASE + '/' + key + '.json.gz';
+    var resp = await fetch(url);
+    if (!resp.ok) throw new Error('Fetch failed: ' + resp.status);
+    var ds = new DecompressionStream('gzip');
+    var stream = resp.body.pipeThrough(ds);
+    var text = await new Response(stream).text();
+    var data = JSON.parse(text);
+    DATA_CACHE.set(key, data);
+    return data;
+  }
+
+  /* ---- Dropdown builders ---- */
+
+  function buildShadingDropdown(meta) {
+    var sel = document.getElementById('sel-shading');
+    sel.innerHTML = '';
+    var groups = meta.field_groups;
+    var labels = meta.field_labels;
+
+    Object.keys(groups).forEach(function(gid) {
+      var grp = groups[gid];
+      var og = document.createElement('optgroup');
+      og.label = grp.label;
+      grp.fields.forEach(function(fid) {
+        var opt = document.createElement('option');
+        opt.value = fid;
+        opt.textContent = labels[fid] || fid;
+        if (fid === DEFAULT_SHADING) opt.selected = true;
+        og.appendChild(opt);
+      });
+      sel.appendChild(og);
+    });
+
+    // PoM group
+    if (meta.pom_definitions && meta.pom_definitions.length > 0) {
+      var pomOg = document.createElement('optgroup');
+      pomOg.label = 'PoM (Product of Means)';
+      meta.pom_definitions.forEach(function(pd) {
+        var opt = document.createElement('option');
+        opt.value = pd.id;
+        opt.textContent = pd.label || pd.id;
+        pomOg.appendChild(opt);
+      });
+      sel.appendChild(pomOg);
+    }
+  }
+
+  function buildContourDropdown(meta) {
+    var sel = document.getElementById('sel-contour');
+    sel.innerHTML = '';
+    var groups = meta.field_groups;
+    var labels = meta.field_labels;
+
+    // None option
+    var noneOpt = document.createElement('option');
+    noneOpt.value = '';
+    noneOpt.textContent = 'None';
+    sel.appendChild(noneOpt);
+
+    CONTOUR_GROUPS.forEach(function(gid) {
+      if (!groups[gid]) return;
+      var grp = groups[gid];
+      var og = document.createElement('optgroup');
+      og.label = grp.label;
+      grp.fields.forEach(function(fid) {
+        var opt = document.createElement('option');
+        opt.value = fid;
+        opt.textContent = labels[fid] || fid;
+        if (fid === DEFAULT_CONTOUR) opt.selected = true;
+        og.appendChild(opt);
+      });
+      sel.appendChild(og);
+    });
+  }
+
+  /* ---- Field array helper ---- */
+
+  function getFieldArray(levelData, fieldId, meta) {
+    if (levelData[fieldId]) return levelData[fieldId];
+
+    // PoM: compute product of means
+    var pomDef = null;
+    if (meta.pom_definitions) {
+      for (var k = 0; k < meta.pom_definitions.length; k++) {
+        if (meta.pom_definitions[k].id === fieldId) {
+          pomDef = meta.pom_definitions[k];
+          break;
+        }
+      }
+    }
+    if (!pomDef) return null;
+
+    var u = levelData[pomDef.u_wind];
+    var v = levelData[pomDef.v_wind];
+    var gx = levelData[pomDef.u_grad];
+    var gy = levelData[pomDef.v_grad];
+    if (!u || !v || !gx || !gy) return null;
+
+    var ny = u.length, nx = u[0].length;
+    var result = [];
+    var sign = pomDef.negate ? -1 : 1;
+    for (var j = 0; j < ny; j++) {
+      result[j] = new Array(nx);
+      for (var i = 0; i < nx; i++) {
+        result[j][i] = sign * (u[j][i] * gx[j][i] + v[j][i] * gy[j][i]);
+      }
+    }
+    return result;
+  }
+
+  /* ---- Rendering ---- */
+
+  function renderPanels(data, level, shadingField, contourField) {
+    var dhKeys = ['dh_m12', 'dh_0', 'dh_p12'];
+    var dhLabels = ['dh = \u221212 h', 'dh = 0', 'dh = +12 h'];
+    var x = data.coords.x_rel;
+    var y = data.coords.y_rel;
+
+    dhKeys.forEach(function(dhKey, i) {
+      var lev = data[dhKey][level];
+      if (!lev) return;
+      var shadeArr = getFieldArray(lev, shadingField, data.meta);
+      var traces = [];
+
+      // Shading heatmap
+      if (shadeArr) {
+        traces.push({
+          z: shadeArr, x: x, y: y,
+          type: 'heatmap',
+          colorscale: 'RdBu', reversescale: true,
+          zmid: 0,
+          colorbar: { title: data.meta.field_labels[shadingField] || shadingField }
+        });
+      }
+
+      // PV anomaly contour (always shown)
+      if (lev.pv_anom) {
+        traces.push({
+          z: lev.pv_anom, x: x, y: y,
+          type: 'contour',
+          contours: { coloring: 'none', showlabels: true },
+          line: { color: 'black', width: 2 },
+          showscale: false,
+          ncontours: 10
+        });
+      }
+
+      // User-selected contour overlay
+      if (contourField && contourField !== 'pv_anom' && lev[contourField]) {
+        traces.push({
+          z: lev[contourField], x: x, y: y,
+          type: 'contour',
+          contours: { coloring: 'none', showlabels: true },
+          line: { color: '#1f77b4', width: 1.5, dash: 'dash' },
+          showscale: false,
+          ncontours: 8
+        });
+      }
+
+      var layout = {
+        title: dhLabels[i],
+        xaxis: { title: 'Rel. Longitude (\u00B0)' },
+        yaxis: { title: 'Rel. Latitude (\u00B0)', scaleanchor: 'x' },
+        margin: { t: 40, b: 50, l: 50, r: 20 },
+        width: 380, height: 340
+      };
+
+      Plotly.react('panel-' + i, traces, layout, {responsive: true});
+    });
+  }
+
+  /* ---- Gaussian smoothing (normalized convolution, handles NaN/zero) ---- */
+
+  function gaussianSmoothNaN(field2d, smoothingDeg, gridSpacing) {
+    var ny = field2d.length, nx = field2d[0].length;
+    var sigmaDeg = smoothingDeg / 2.355; // FWHM to sigma: sigma = FWHM / (2*sqrt(2*ln2))
+    var sigmaGp = sigmaDeg / gridSpacing;
+    var radius = Math.ceil(3 * sigmaGp);
+
+    var kern = [];
+    for (var k = -radius; k <= radius; k++) {
+      kern.push(Math.exp(-0.5 * Math.pow(k / sigmaGp, 2)));
+    }
+
+    // Pass 1: smooth along x (columns) with reflect boundary conditions
+    var tmp = [];
+    var j, i;
+    for (j = 0; j < ny; j++) {
+      tmp[j] = new Float64Array(nx);
+      for (i = 0; i < nx; i++) {
+        var wSum = 0, vSum = 0;
+        for (k = -radius; k <= radius; k++) {
+          var ii = i + k;
+          if (ii < 0) ii = -ii;
+          if (ii >= nx) ii = 2 * nx - 2 - ii;
+          var val = field2d[j][ii];
+          if (val !== null && isFinite(val)) {
+            var kw = kern[k + radius];
+            wSum += kw;
+            vSum += kw * val;
+          }
+        }
+        tmp[j][i] = wSum > 0 ? vSum / wSum : 0;
+      }
+    }
+
+    // Pass 2: smooth along y (rows) with reflect boundary conditions
+    var out = [];
+    for (j = 0; j < ny; j++) out[j] = new Array(nx);
+    for (i = 0; i < nx; i++) {
+      for (j = 0; j < ny; j++) {
+        var wSum2 = 0, vSum2 = 0;
+        for (k = -radius; k <= radius; k++) {
+          var jj = j + k;
+          if (jj < 0) jj = -jj;
+          if (jj >= ny) jj = 2 * ny - 2 - jj;
+          var val2 = tmp[jj][i];
+          if (isFinite(val2)) {
+            var kw2 = kern[k + radius];
+            wSum2 += kw2;
+            vSum2 += kw2 * val2;
+          }
+        }
+        out[j][i] = wSum2 > 0 ? vSum2 / wSum2 : 0;
+      }
+    }
+
+    // Restore NaN positions from original
+    for (j = 0; j < ny; j++)
+      for (i = 0; i < nx; i++)
+        if (field2d[j][i] === null || !isFinite(field2d[j][i]))
+          out[j][i] = NaN;
+
+    return out;
+  }
+
+  /* ---- Projection ---- */
+
+  function projectField(fieldArr, basis) {
+    var ny = fieldArr.length, nx = fieldArr[0].length;
+
+    // Gaussian smooth the input field (3.0° FWHM, 1.5° grid)
+    var smoothed = gaussianSmoothNaN(fieldArr, 3.0, 1.5);
+
+    var w = basis.weights, m = basis.mask;
+
+    function wip(f, g) {
+      var s = 0;
+      for (var j = 0; j < ny; j++)
+        for (var i = 0; i < nx; i++)
+          if (m[j][i] && isFinite(f[j][i]) && isFinite(g[j][i]))
+            s += w[j][i] * f[j][i] * g[j][i];
+      return s;
+    }
+
+    var beta_raw  =  wip(smoothed, basis.phi_int) / basis.norms.beta;
+    var ax_raw    = -wip(smoothed, basis.phi_dx)  / basis.norms.ax;
+    var ay_raw    = -wip(smoothed, basis.phi_dy)  / basis.norms.ay;
+    var gamma_raw =  wip(smoothed, basis.phi_def) / basis.norms.gamma;
+
+    var beta  = beta_raw  * PRENORM.beta;
+    var ax    = ax_raw    * PRENORM.ax;
+    var ay    = ay_raw    * PRENORM.ay;
+    var gamma = gamma_raw * PRENORM.gamma;
+
+    // Decomposed components
+    var recon = [], inten = [], prop = [], deform = [], resid = [];
+    var j, i;
+    for (j = 0; j < ny; j++) {
+      recon[j]  = new Array(nx);
+      inten[j]  = new Array(nx);
+      prop[j]   = new Array(nx);
+      deform[j] = new Array(nx);
+      resid[j]  = new Array(nx);
+      for (i = 0; i < nx; i++) {
+        inten[j][i]  = beta_raw  * basis.phi_int[j][i];
+        prop[j][i]   = -ax_raw   * basis.phi_dx[j][i]
+                        -ay_raw   * basis.phi_dy[j][i];
+        deform[j][i] = gamma_raw * basis.phi_def[j][i];
+        recon[j][i]  = inten[j][i] + prop[j][i] + deform[j][i];
+        resid[j][i]  = m[j][i] ? smoothed[j][i] - recon[j][i] : NaN;
+      }
+    }
+
+    // R² (weighted)
+    var ss_res = 0, ss_tot = 0;
+    for (j = 0; j < ny; j++) {
+      for (i = 0; i < nx; i++) {
+        if (m[j][i] && isFinite(smoothed[j][i])) {
+          var r = smoothed[j][i] - recon[j][i];
+          ss_res += w[j][i] * r * r;
+          ss_tot += w[j][i] * smoothed[j][i] * smoothed[j][i];
+        }
+      }
+    }
+    var r_squared = ss_tot > 0 ? 1 - ss_res / ss_tot : 0;
+
+    return { beta: beta, ax: ax, ay: ay, gamma: gamma, r_squared: r_squared,
+             recon: recon, inten: inten, prop: prop, deform: deform, resid: resid };
+  }
+
+  function fmtSci(val) {
+    if (val === 0) return '0.000';
+    var exp = Math.floor(Math.log10(Math.abs(val)));
+    var man = val / Math.pow(10, exp);
+    var sup = String(exp).replace(/-/g, '\u207B').split('').map(function(c) {
+      return '\u2070\u00B9\u00B2\u00B3\u2074\u2075\u2076\u2077\u2078\u2079'[parseInt(c)] || c;
+    }).join('');
+    return man.toFixed(3) + ' \u00D7 10' + sup;
+  }
+
+  function renderProjection(data, level, shadingField) {
+    var basis = data.dh_0[level] && data.dh_0[level].basis;
+    if (!basis) {
+      document.getElementById('proj-info').textContent = 'No basis data available for this level.';
+      return;
+    }
+
+    var fieldArr = getFieldArray(data.dh_0[level], shadingField, data.meta);
+    if (!fieldArr) {
+      document.getElementById('proj-info').textContent = 'Cannot project: field not available.';
+      return;
+    }
+
+    var result = projectField(fieldArr, basis);
+    var info = document.getElementById('proj-info');
+    info.innerHTML =
+      '\u03B2 = ' + fmtSci(result.beta) + '  (Intensity)<br>' +
+      '\u03B1x = ' + fmtSci(result.ax) + '  (Propagation-X)<br>' +
+      '\u03B1y = ' + fmtSci(result.ay) + '  (Propagation-Y)<br>' +
+      '\u03B3 = ' + fmtSci(result.gamma) + '  (Deformation)<br>' +
+      'R\u00B2 = ' + result.r_squared.toFixed(4);
+
+    var projPanels = [
+      {id: 'proj-inten',  arr: result.inten,  label: '\u03B2\u00B7\u03A6\u2081 (Intensity)'},
+      {id: 'proj-prop',   arr: result.prop,   label: '\u03B1\u00B7\u03A6\u2082\u2083 (Propagation)'},
+      {id: 'proj-deform', arr: result.deform, label: '\u03B3\u00B7\u03A6\u2084 (Deformation)'},
+      {id: 'proj-resid',  arr: result.resid,  label: 'Residual'}
+    ];
+
+    var x = data.coords.x_rel;
+    var y = data.coords.y_rel;
+
+    projPanels.forEach(function(pp) {
+      if (!pp.arr) return;
+      Plotly.react(pp.id, [{
+        z: pp.arr, x: x, y: y,
+        type: 'heatmap',
+        colorscale: 'RdBu', reversescale: true,
+        zmid: 0,
+        colorbar: { title: '', len: 0.8 }
+      }], {
+        title: pp.label,
+        xaxis: { title: '' },
+        yaxis: { title: '', scaleanchor: 'x' },
+        margin: { t: 30, b: 20, l: 30, r: 10 },
+        width: 200, height: 200
+      }, {responsive: true});
+    });
+  }
+
+  /* ---- Main update logic ---- */
+
+  async function update() {
+    var variant = document.getElementById('sel-variant').value;
+    var stage = document.getElementById('sel-stage').value;
+    var level = document.getElementById('sel-level').value;
+    var shadingField = document.getElementById('sel-shading').value;
+    var contourField = document.getElementById('sel-contour').value;
+
+    var needFetch = !currentData ||
+      currentData.meta.variant !== variant ||
+      currentData.meta.stage !== stage;
+
+    if (needFetch) {
+      document.getElementById('loading').style.display = 'block';
+      try {
+        currentData = await fetchData(variant, stage);
+      } catch (e) {
+        document.getElementById('loading').style.display = 'none';
+        alert('Error loading data: ' + e.message);
+        return;
+      }
+      document.getElementById('loading').style.display = 'none';
+
+      if (!dropdownsBuilt) {
+        buildShadingDropdown(currentData.meta);
+        buildContourDropdown(currentData.meta);
+        dropdownsBuilt = true;
+        // Re-read selections after building
+        shadingField = document.getElementById('sel-shading').value;
+        contourField = document.getElementById('sel-contour').value;
+      }
+    }
+
+    // Event count
+    var nEvents = currentData.meta.n_events && currentData.meta.n_events.dh_0;
+    document.getElementById('event-count').textContent = nEvents ? ('n = ' + nEvents + ' events') : '';
+
+    renderPanels(currentData, level, shadingField, contourField);
+
+    // Update projection if panel is open
+    if (document.getElementById('projection-panel').open) {
+      renderProjection(currentData, level, shadingField);
+    }
+  }
+
+  /* ---- Event listeners ---- */
+
+  ['sel-variant', 'sel-stage', 'sel-level', 'sel-shading', 'sel-contour'].forEach(function(id) {
+    document.getElementById(id).addEventListener('change', update);
+  });
+
+  document.getElementById('projection-panel').addEventListener('toggle', function() {
+    if (this.open && currentData) {
+      var level = document.getElementById('sel-level').value;
+      var shadingField = document.getElementById('sel-shading').value;
+      renderProjection(currentData, level, shadingField);
+    }
+  });
+
+  /* ---- Initial load ---- */
+  update();
+})();
+</script>
