@@ -12,7 +12,8 @@ collection: portfolio
 ---
 ## Theory
 ### Coconut
-![00edb0f33d9810b91e94ab6187ad4f76](https://github.com/user-attachments/assets/069fbc65-3e60-4348-b2da-555bf829e74c)
+<img width="1029" height="1373" alt="image" src="https://github.com/user-attachments/assets/37f932b5-b70e-4b79-99e8-666285a3d3ae" />
+
 ### Shallow Water
 ### QG
 ### Semi-QG
