@@ -117,6 +117,16 @@ author_profile: false
     border: 1px solid #ccc;
     border-radius: 4px;
   }
+  .bc-proj-warning {
+    background: #fff3cd;
+    border: 1px solid #ffecb5;
+    border-radius: 4px;
+    padding: 8px 12px;
+    margin: 8px 0;
+    font-size: 13px;
+    color: #664d03;
+    display: none;
+  }
 </style>
 
 <div id="loading" style="display:none;">
@@ -186,6 +196,7 @@ author_profile: false
 
 <details id="projection-panel">
   <summary>&#9654; Project onto orthogonal basis</summary>
+  <div id="proj-warning" class="bc-proj-warning"></div>
   <div class="bc-proj-controls">
     <label for="sel-proj-dh">Decompose at:</label>
     <select id="sel-proj-dh">
@@ -580,6 +591,14 @@ author_profile: false
     if (!fieldArr) {
       document.getElementById('proj-info').textContent = 'Cannot project: field not available at ' + dhLabel + '.';
       return;
+    }
+
+    var warnEl = document.getElementById('proj-warning');
+    if (data.meta.projection_warning) {
+      warnEl.textContent = '\u26A0 ' + data.meta.projection_warning;
+      warnEl.style.display = 'block';
+    } else {
+      warnEl.style.display = 'none';
     }
 
     var si = getFieldScaleInfo(shadingField);
