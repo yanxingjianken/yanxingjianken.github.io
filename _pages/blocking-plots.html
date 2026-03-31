@@ -165,10 +165,10 @@ author_profile: false
   <summary>&#9654; Project onto orthogonal basis</summary>
   <div id="proj-info"></div>
   <div class="bc-proj-panels">
-    <div id="proj-phi-int"></div>
-    <div id="proj-phi-dx"></div>
-    <div id="proj-phi-dy"></div>
-    <div id="proj-phi-def"></div>
+    <div id="proj-inten"></div>
+    <div id="proj-prop"></div>
+    <div id="proj-deform"></div>
+    <div id="proj-resid"></div>
   </div>
 </details>
 
@@ -364,55 +364,134 @@ author_profile: false
     });
   }
 
+  /* ---- Gaussian smoothing (normalized convolution, handles NaN/zero) ---- */
+
+  function gaussianSmoothNaN(field2d, smoothingDeg, gridSpacing) {
+    var ny = field2d.length, nx = field2d[0].length;
+    var sigmaDeg = smoothingDeg / 2.355;
+    var sigmaGp = sigmaDeg / gridSpacing;
+    var radius = Math.ceil(3 * sigmaGp);
+
+    var kern = [];
+    for (var k = -radius; k <= radius; k++) {
+      kern.push(Math.exp(-0.5 * Math.pow(k / sigmaGp, 2)));
+    }
+
+    // Pass 1: smooth along x (columns)
+    var tmp = [];
+    var j, i, ki;
+    for (j = 0; j < ny; j++) {
+      tmp[j] = new Float64Array(nx);
+      for (i = 0; i < nx; i++) {
+        var wSum = 0, vSum = 0;
+        for (k = -radius; k <= radius; k++) {
+          var ii = i + k;
+          if (ii < 0) ii = -ii;
+          if (ii >= nx) ii = 2 * nx - 2 - ii;
+          var val = field2d[j][ii];
+          if (val !== null && isFinite(val)) {
+            var kw = kern[k + radius];
+            wSum += kw;
+            vSum += kw * val;
+          }
+        }
+        tmp[j][i] = wSum > 0 ? vSum / wSum : 0;
+      }
+    }
+
+    // Pass 2: smooth along y (rows)
+    var out = [];
+    for (j = 0; j < ny; j++) out[j] = new Array(nx);
+    for (i = 0; i < nx; i++) {
+      for (j = 0; j < ny; j++) {
+        var wSum2 = 0, vSum2 = 0;
+        for (k = -radius; k <= radius; k++) {
+          var jj = j + k;
+          if (jj < 0) jj = -jj;
+          if (jj >= ny) jj = 2 * ny - 2 - jj;
+          var val2 = tmp[jj][i];
+          if (isFinite(val2)) {
+            var kw2 = kern[k + radius];
+            wSum2 += kw2;
+            vSum2 += kw2 * val2;
+          }
+        }
+        out[j][i] = wSum2 > 0 ? vSum2 / wSum2 : 0;
+      }
+    }
+
+    // Restore NaN positions from original
+    for (j = 0; j < ny; j++)
+      for (i = 0; i < nx; i++)
+        if (field2d[j][i] === null || !isFinite(field2d[j][i]))
+          out[j][i] = NaN;
+
+    return out;
+  }
+
   /* ---- Projection ---- */
 
   function projectField(fieldArr, basis) {
     var ny = fieldArr.length, nx = fieldArr[0].length;
+
+    // Gaussian smooth the input field (3.0° FWHM, 1.5° grid)
+    var smoothed = gaussianSmoothNaN(fieldArr, 3.0, 1.5);
+
     var w = basis.weights, m = basis.mask;
 
     function wip(f, g) {
       var s = 0;
       for (var j = 0; j < ny; j++)
         for (var i = 0; i < nx; i++)
-          if (m[j][i]) s += w[j][i] * f[j][i] * g[j][i];
+          if (m[j][i] && isFinite(f[j][i]) && isFinite(g[j][i]))
+            s += w[j][i] * f[j][i] * g[j][i];
       return s;
     }
 
-    var beta_raw  =  wip(fieldArr, basis.phi_int) / basis.norms.beta;
-    var ax_raw    = -wip(fieldArr, basis.phi_dx)  / basis.norms.ax;
-    var ay_raw    = -wip(fieldArr, basis.phi_dy)  / basis.norms.ay;
-    var gamma_raw =  wip(fieldArr, basis.phi_def) / basis.norms.gamma;
+    var beta_raw  =  wip(smoothed, basis.phi_int) / basis.norms.beta;
+    var ax_raw    = -wip(smoothed, basis.phi_dx)  / basis.norms.ax;
+    var ay_raw    = -wip(smoothed, basis.phi_dy)  / basis.norms.ay;
+    var gamma_raw =  wip(smoothed, basis.phi_def) / basis.norms.gamma;
 
     var beta  = beta_raw  * PRENORM.beta;
     var ax    = ax_raw    * PRENORM.ax;
     var ay    = ay_raw    * PRENORM.ay;
     var gamma = gamma_raw * PRENORM.gamma;
 
-    var recon = [];
-    for (var j = 0; j < ny; j++) {
-      recon[j] = new Array(nx);
-      for (var i = 0; i < nx; i++) {
-        recon[j][i] =
-          beta_raw  * basis.phi_int[j][i]
-        - ax_raw    * basis.phi_dx[j][i]
-        - ay_raw    * basis.phi_dy[j][i]
-        + gamma_raw * basis.phi_def[j][i];
+    // Decomposed components
+    var recon = [], inten = [], prop = [], deform = [], resid = [];
+    var j, i;
+    for (j = 0; j < ny; j++) {
+      recon[j]  = new Array(nx);
+      inten[j]  = new Array(nx);
+      prop[j]   = new Array(nx);
+      deform[j] = new Array(nx);
+      resid[j]  = new Array(nx);
+      for (i = 0; i < nx; i++) {
+        inten[j][i]  = beta_raw  * basis.phi_int[j][i];
+        prop[j][i]   = -ax_raw   * basis.phi_dx[j][i]
+                        -ay_raw   * basis.phi_dy[j][i];
+        deform[j][i] = gamma_raw * basis.phi_def[j][i];
+        recon[j][i]  = inten[j][i] + prop[j][i] + deform[j][i];
+        resid[j][i]  = m[j][i] ? smoothed[j][i] - recon[j][i] : NaN;
       }
     }
 
+    // R² (weighted)
     var ss_res = 0, ss_tot = 0;
-    for (var j2 = 0; j2 < ny; j2++) {
-      for (var i2 = 0; i2 < nx; i2++) {
-        if (m[j2][i2]) {
-          var r = fieldArr[j2][i2] - recon[j2][i2];
-          ss_res += w[j2][i2] * r * r;
-          ss_tot += w[j2][i2] * fieldArr[j2][i2] * fieldArr[j2][i2];
+    for (j = 0; j < ny; j++) {
+      for (i = 0; i < nx; i++) {
+        if (m[j][i] && isFinite(smoothed[j][i])) {
+          var r = smoothed[j][i] - recon[j][i];
+          ss_res += w[j][i] * r * r;
+          ss_tot += w[j][i] * smoothed[j][i] * smoothed[j][i];
         }
       }
     }
-    var r_squared = 1 - ss_res / ss_tot;
+    var r_squared = ss_tot > 0 ? 1 - ss_res / ss_tot : 0;
 
-    return { beta: beta, ax: ax, ay: ay, gamma: gamma, r_squared: r_squared, recon: recon };
+    return { beta: beta, ax: ax, ay: ay, gamma: gamma, r_squared: r_squared,
+             recon: recon, inten: inten, prop: prop, deform: deform, resid: resid };
   }
 
   function fmtSci(val) {
@@ -447,27 +526,26 @@ author_profile: false
       '\u03B3 = ' + fmtSci(result.gamma) + '  (Deformation)<br>' +
       'R\u00B2 = ' + result.r_squared.toFixed(4);
 
-    var basisFields = [
-      {id: 'proj-phi-int', key: 'phi_int', label: '\u03C6_int'},
-      {id: 'proj-phi-dx',  key: 'phi_dx',  label: '\u03C6_dx'},
-      {id: 'proj-phi-dy',  key: 'phi_dy',  label: '\u03C6_dy'},
-      {id: 'proj-phi-def', key: 'phi_def', label: '\u03C6_def'}
+    var projPanels = [
+      {id: 'proj-inten',  arr: result.inten,  label: '\u03B2\u00B7\u03A6\u2081 (Intensity)'},
+      {id: 'proj-prop',   arr: result.prop,   label: '\u03B1\u00B7\u03A6\u2082\u2083 (Propagation)'},
+      {id: 'proj-deform', arr: result.deform, label: '\u03B3\u00B7\u03A6\u2084 (Deformation)'},
+      {id: 'proj-resid',  arr: result.resid,  label: 'Residual'}
     ];
 
     var x = data.coords.x_rel;
     var y = data.coords.y_rel;
 
-    basisFields.forEach(function(bf) {
-      var z = basis[bf.key];
-      if (!z) return;
-      Plotly.react(bf.id, [{
-        z: z, x: x, y: y,
+    projPanels.forEach(function(pp) {
+      if (!pp.arr) return;
+      Plotly.react(pp.id, [{
+        z: pp.arr, x: x, y: y,
         type: 'heatmap',
         colorscale: 'RdBu', reversescale: true,
         zmid: 0,
-        colorbar: { title: bf.label, len: 0.8 }
+        colorbar: { title: '', len: 0.8 }
       }], {
-        title: bf.label,
+        title: pp.label,
         xaxis: { title: '' },
         yaxis: { title: '', scaleanchor: 'x' },
         margin: { t: 30, b: 20, l: 30, r: 10 },
