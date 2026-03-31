@@ -364,17 +364,22 @@ author_profile: false
 
       /* Shading heatmap */
       if (shadeArr) {
-        traces.push({
+        var hm = {
           z: scaleArray(shadeArr, si.scale), x: x, y: y,
           type: 'heatmap',
           colorscale: 'RdBu', reversescale: true,
-          zmid: 0,
-          colorbar: {
+          zmid: 0
+        };
+        if (i === dhKeys.length - 1) {
+          hm.colorbar = {
             title: {text: sLabel, font: {size: 11}},
             thickness: 12, len: 0.75,
             exponentformat: 'power'
-          }
-        });
+          };
+        } else {
+          hm.showscale = false;
+        }
+        traces.push(hm);
       }
 
       /* PV anomaly contour overlay (thin dashed) */
@@ -407,7 +412,8 @@ author_profile: false
         xaxis: { title: 'Rel. Longitude (\u00B0)' },
         yaxis: { title: 'Rel. Latitude (\u00B0)', scaleanchor: 'x' },
         margin: { t: 40, b: 50, l: 55, r: 30 },
-        width: 480, height: 400
+        width: 480, height: 400,
+        showlegend: false
       };
 
       Plotly.react('panel-' + i, traces, layout, {responsive: true});
