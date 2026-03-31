@@ -1,6 +1,6 @@
 ---
 title: "A Published Essay on the Commercial Press of China"
-excerpt: "Once upon a time, I almost became a historian.<br/><img src='/images/ens_cgp.png' style='max-width: 60%; height: auto;'>"
+excerpt: "Once upon a time, I almost became a historian.<br/><img src='/images/shangwuyinshuguan.jpg' style='max-width: 60%; height: auto;'>"
 collection: portfolio
 ---
 
