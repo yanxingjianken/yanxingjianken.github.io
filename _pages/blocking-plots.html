@@ -416,6 +416,7 @@ author_profile: false
   }
 
   function fmtSci(val) {
+    if (val === 0) return '0.000';
     var exp = Math.floor(Math.log10(Math.abs(val)));
     var man = val / Math.pow(10, exp);
     var sup = String(exp).replace(/-/g, '\u207B').split('').map(function(c) {
