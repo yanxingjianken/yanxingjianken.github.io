@@ -26,10 +26,12 @@ collection: portfolio
 ## Assimilations
 ### [4D Var Assmilation (EnKF)](https://www.ecmwf.int/sites/default/files/elibrary/2003/76079-variational-data-assimiltion-theory-and-overview_0.pdf)
 ### [Digital filter initialization (DFI)](https://github.com/neuralgcm/dinosaur/blob/main/notebooks/weather_forecast_on_era5.ipynb)
+### [Data assimilation with machine learning in latent space](https://www.science.org/doi/10.1126/sciadv.aea4248)
 
 ---
 ## Useful Links
 ### [Tropical Tidbits 12km Various Model Collections](https://www.tropicaltidbits.com/analysis/models/)
 ### [ECMWF 25km Real-Time IFS & Ens-AIFS](https://data.ecmwf.int/forecasts/20251006/06z/ifs/0p25/)
 ### [MPAS 3.75 km Real-Time Forecasts](https://project.mmm.ucar.edu/real-time-forecasts/)
+### [NOAA Weather Wire Service (NWWS)](https://www.weather.gov/nwws/#access)
 
