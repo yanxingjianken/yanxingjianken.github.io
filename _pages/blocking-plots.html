@@ -371,7 +371,7 @@ author_profile: false
         var hm = {
           z: scaleArray(shadeArr, si.scale), x: x, y: y,
           type: 'heatmap',
-          colorscale: 'RdBu', reversescale: true,
+          colorscale: 'RdBu',
           zmid: 0
         };
         if (i === dhKeys.length - 1) {
@@ -391,7 +391,7 @@ author_profile: false
         traces.push({
           z: scaleArray(lev.pv_anom, 1e6), x: x, y: y,
           type: 'contour',
-          contours: { coloring: 'none', showlabels: true },
+          contours: { coloring: 'none', showlabels: true, labelformat: '.3g' },
           line: { color: 'rgba(31,119,180,0.7)', width: 1, dash: 'dash' },
           showscale: false,
           ncontours: 10
@@ -404,7 +404,7 @@ author_profile: false
           z: ci ? scaleArray(lev[contourField], ci.scale) : lev[contourField],
           x: x, y: y,
           type: 'contour',
-          contours: { coloring: 'none', showlabels: true },
+          contours: { coloring: 'none', showlabels: true, labelformat: '.4g' },
           line: { color: '#000000', width: 1.5 },
           showscale: false,
           ncontours: 8
@@ -416,7 +416,7 @@ author_profile: false
         xaxis: { title: 'Rel. Longitude (\u00B0)' },
         yaxis: { title: 'Rel. Latitude (\u00B0)', scaleanchor: 'x' },
         margin: { t: 40, b: 50, l: 55, r: 30 },
-        width: 480, height: 400,
+        height: 400,
         showlegend: false
       };
 
@@ -610,7 +610,7 @@ author_profile: false
       Plotly.react(pp.id, [{
         z: scaleArray(pp.arr, si.scale), x: x, y: y,
         type: 'heatmap',
-        colorscale: 'RdBu', reversescale: true,
+        colorscale: 'RdBu',
         zmid: 0,
         colorbar: {
           title: {text: si.unit, font: {size: 10}},
