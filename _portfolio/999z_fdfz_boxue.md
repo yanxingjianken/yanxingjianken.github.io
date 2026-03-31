@@ -8,4 +8,5 @@ In honor of the founder of <a href="https://www.fudan.edu.cn/en/">Fudan Universi
 <br/>
 The essay is collected and published in a book (ISBN: 9787309138153) named 《<a href="https://books.google.com/books/about/%E5%8D%9A%E5%AD%B8%E6%9D%AF_2016_2017.html?id=dqX7ygEACAAJ">博学杯·2016—2017：海上的记忆与寻踪》</a>, via <a href="http://www.fudanpress.com/showdetail.asp?bookid=12656">Fudan University Press</a>.<br/>
 <br/>
-This research is guided (also partially funded, maybe) by a great Chinese historian, <a href="https://renwen-shnu-edu-cn.translate.goog/a9/e8/c26117a698856/page.htm?_x_tr_sl=auto&_x_tr_tl=en&_x_tr_hl=en&_x_tr_pto=wapp">Prof. my dad</a>. He is very proud and happy with this work.
+This research is guided (also partially funded, maybe) by <a href="https://renwen-shnu-edu-cn.translate.goog/a9/e8/c26117a698856/page.htm?_x_tr_sl=auto&_x_tr_tl=en&_x_tr_hl=en&_x_tr_pto=wapp">my dad</a>. He is very proud and happy with this work.
+One of the next steps I would like to do on East Asian history research is to use AI to revive the dead <a href="https://en.wikipedia.org/wiki/Tangut_language"> Tangut_language</a>.
