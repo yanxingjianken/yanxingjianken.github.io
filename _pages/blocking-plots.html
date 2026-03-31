@@ -368,7 +368,7 @@ author_profile: false
 
   function gaussianSmoothNaN(field2d, smoothingDeg, gridSpacing) {
     var ny = field2d.length, nx = field2d[0].length;
-    var sigmaDeg = smoothingDeg / 2.355;
+    var sigmaDeg = smoothingDeg / 2.355; // FWHM to sigma: sigma = FWHM / (2*sqrt(2*ln2))
     var sigmaGp = sigmaDeg / gridSpacing;
     var radius = Math.ceil(3 * sigmaGp);
 
@@ -377,9 +377,9 @@ author_profile: false
       kern.push(Math.exp(-0.5 * Math.pow(k / sigmaGp, 2)));
     }
 
-    // Pass 1: smooth along x (columns)
+    // Pass 1: smooth along x (columns) with reflect boundary conditions
     var tmp = [];
-    var j, i, ki;
+    var j, i;
     for (j = 0; j < ny; j++) {
       tmp[j] = new Float64Array(nx);
       for (i = 0; i < nx; i++) {
@@ -399,7 +399,7 @@ author_profile: false
       }
     }
 
-    // Pass 2: smooth along y (rows)
+    // Pass 2: smooth along y (rows) with reflect boundary conditions
     var out = [];
     for (j = 0; j < ny; j++) out[j] = new Array(nx);
     for (i = 0; i < nx; i++) {
