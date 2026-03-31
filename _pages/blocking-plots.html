@@ -120,8 +120,8 @@ author_profile: false
   <span>
     <label for="sel-stage">Stage:</label>
     <select id="sel-stage">
-      <option value="onset">Onset</option>
-      <option value="peak" selected>Peak</option>
+      <option value="onset" selected>Onset</option>
+      <option value="peak">Peak</option>
       <option value="decay">Decay</option>
     </select>
   </span>
@@ -150,6 +150,9 @@ author_profile: false
   <span>
     <label for="sel-contour">Contour:</label>
     <select id="sel-contour"></select>
+  </span>
+  <span>
+    <button id="btn-generate" style="font-size:14px;padding:6px 18px;border:1px solid #1f77b4;border-radius:4px;background:#1f77b4;color:#fff;cursor:pointer;font-weight:600;height:32px;">Generate</button>
   </span>
 </div>
 
@@ -181,8 +184,8 @@ author_profile: false
 
   var CONTOUR_GROUPS = ['contour_base', 'contour_omega', 'contour_tendency', 'contour_diabatic', 'contour_pv_grad'];
   var PRENORM = {beta: 1e6, ax: 1e12, ay: 1e12, gamma: 1e18};
-  var DEFAULT_SHADING = 'u_rot_anom_pv_anom_dx';
-  var DEFAULT_CONTOUR = 'pv_anom';
+  var DEFAULT_SHADING = 'pv_dt';
+  var DEFAULT_CONTOUR = 'z';
 
   var currentData = null;
   var dropdownsBuilt = false;
@@ -226,7 +229,7 @@ author_profile: false
       sel.appendChild(og);
     });
 
-    // PoM group
+    /* PoM group */
     if (meta.pom_definitions && meta.pom_definitions.length > 0) {
       var pomOg = document.createElement('optgroup');
       pomOg.label = 'PoM (Product of Means)';
@@ -246,7 +249,7 @@ author_profile: false
     var groups = meta.field_groups;
     var labels = meta.field_labels;
 
-    // None option
+    /* None option */
     var noneOpt = document.createElement('option');
     noneOpt.value = '';
     noneOpt.textContent = 'None';
@@ -273,7 +276,7 @@ author_profile: false
   function getFieldArray(levelData, fieldId, meta) {
     if (levelData[fieldId]) return levelData[fieldId];
 
-    // PoM: compute product of means
+    /* PoM: compute product of means */
     var pomDef = null;
     if (meta.pom_definitions) {
       for (var k = 0; k < meta.pom_definitions.length; k++) {
@@ -317,7 +320,7 @@ author_profile: false
       var shadeArr = getFieldArray(lev, shadingField, data.meta);
       var traces = [];
 
-      // Shading heatmap
+      /* Shading heatmap */
       if (shadeArr) {
         traces.push({
           z: shadeArr, x: x, y: y,
@@ -328,7 +331,7 @@ author_profile: false
         });
       }
 
-      // PV anomaly contour (always shown)
+      /* PV anomaly contour (always shown) */
       if (lev.pv_anom) {
         traces.push({
           z: lev.pv_anom, x: x, y: y,
@@ -340,7 +343,7 @@ author_profile: false
         });
       }
 
-      // User-selected contour overlay
+      /* User-selected contour overlay */
       if (contourField && contourField !== 'pv_anom' && lev[contourField]) {
         traces.push({
           z: lev[contourField], x: x, y: y,
@@ -368,7 +371,7 @@ author_profile: false
 
   function gaussianSmoothNaN(field2d, smoothingDeg, gridSpacing) {
     var ny = field2d.length, nx = field2d[0].length;
-    var sigmaDeg = smoothingDeg / 2.355; // FWHM to sigma: sigma = FWHM / (2*sqrt(2*ln2))
+    var sigmaDeg = smoothingDeg / 2.355; /* FWHM to sigma: sigma = FWHM / (2*sqrt(2*ln2)) */
     var sigmaGp = sigmaDeg / gridSpacing;
     var radius = Math.ceil(3 * sigmaGp);
 
@@ -377,7 +380,7 @@ author_profile: false
       kern.push(Math.exp(-0.5 * Math.pow(k / sigmaGp, 2)));
     }
 
-    // Pass 1: smooth along x (columns) with reflect boundary conditions
+    /* Pass 1: smooth along x (columns) with reflect boundary conditions */
     var tmp = [];
     var j, i;
     for (j = 0; j < ny; j++) {
@@ -399,7 +402,7 @@ author_profile: false
       }
     }
 
-    // Pass 2: smooth along y (rows) with reflect boundary conditions
+    /* Pass 2: smooth along y (rows) with reflect boundary conditions */
     var out = [];
     for (j = 0; j < ny; j++) out[j] = new Array(nx);
     for (i = 0; i < nx; i++) {
@@ -420,7 +423,7 @@ author_profile: false
       }
     }
 
-    // Restore NaN positions from original
+    /* Restore NaN positions from original */
     for (j = 0; j < ny; j++)
       for (i = 0; i < nx; i++)
         if (field2d[j][i] === null || !isFinite(field2d[j][i]))
@@ -434,7 +437,7 @@ author_profile: false
   function projectField(fieldArr, basis) {
     var ny = fieldArr.length, nx = fieldArr[0].length;
 
-    // Gaussian smooth the input field (3.0° FWHM, 1.5° grid)
+    /* Gaussian smooth the input field (3.0 deg FWHM, 1.5 deg grid) */
     var smoothed = gaussianSmoothNaN(fieldArr, 3.0, 1.5);
 
     var w = basis.weights, m = basis.mask;
@@ -458,7 +461,7 @@ author_profile: false
     var ay    = ay_raw    * PRENORM.ay;
     var gamma = gamma_raw * PRENORM.gamma;
 
-    // Decomposed components
+    /* Decomposed components */
     var recon = [], inten = [], prop = [], deform = [], resid = [];
     var j, i;
     for (j = 0; j < ny; j++) {
@@ -477,7 +480,7 @@ author_profile: false
       }
     }
 
-    // R² (weighted)
+    /* R-squared (weighted) */
     var ss_res = 0, ss_tot = 0;
     for (j = 0; j < ny; j++) {
       for (i = 0; i < nx; i++) {
@@ -582,19 +585,19 @@ author_profile: false
         buildShadingDropdown(currentData.meta);
         buildContourDropdown(currentData.meta);
         dropdownsBuilt = true;
-        // Re-read selections after building
+        /* Re-read selections after building */
         shadingField = document.getElementById('sel-shading').value;
         contourField = document.getElementById('sel-contour').value;
       }
     }
 
-    // Event count
+    /* Event count */
     var nEvents = currentData.meta.n_events && currentData.meta.n_events.dh_0;
     document.getElementById('event-count').textContent = nEvents ? ('n = ' + nEvents + ' events') : '';
 
     renderPanels(currentData, level, shadingField, contourField);
 
-    // Update projection if panel is open
+    /* Update projection if panel is open */
     if (document.getElementById('projection-panel').open) {
       renderProjection(currentData, level, shadingField);
     }
@@ -613,6 +616,8 @@ author_profile: false
       renderProjection(currentData, level, shadingField);
     }
   });
+
+  document.getElementById('btn-generate').addEventListener('click', update);
 
   /* ---- Initial load ---- */
   update();
