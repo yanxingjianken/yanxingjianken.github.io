@@ -99,7 +99,23 @@ author_profile: false
     justify-content: center;
   }
   .bc-proj-panels > div {
-    width: 200px;
+    width: 260px;
+  }
+  .bc-proj-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin: 8px 0;
+    font-size: 14px;
+  }
+  .bc-proj-controls label {
+    font-weight: 600;
+  }
+  .bc-proj-controls select {
+    font-size: 14px;
+    padding: 2px 6px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
   }
 </style>
 
@@ -166,6 +182,14 @@ author_profile: false
 
 <details id="projection-panel">
   <summary>&#9654; Project onto orthogonal basis</summary>
+  <div class="bc-proj-controls">
+    <label for="sel-proj-dh">Decompose at:</label>
+    <select id="sel-proj-dh">
+      <option value="dh_m12">dh = &minus;12 h</option>
+      <option value="dh_0" selected>dh = 0</option>
+      <option value="dh_p12">dh = +12 h</option>
+    </select>
+  </div>
   <div id="proj-info"></div>
   <div class="bc-proj-panels">
     <div id="proj-inten"></div>
@@ -186,6 +210,20 @@ author_profile: false
   var PRENORM = {beta: 1e6, ax: 1e12, ay: 1e12, gamma: 1e18};
   var DEFAULT_SHADING = 'pv_dt';
   var DEFAULT_CONTOUR = 'z';
+
+  function getFieldScaleInfo(fieldId) {
+    if (fieldId === 'z') return {scale: 1, unit: 'm'};
+    if (/^w($|_)/.test(fieldId)) return {scale: 1, unit: 'Pa s\u207B\u00B9'};
+    if (['pv_anom','pv','pv_bar','Q'].indexOf(fieldId) >= 0) return {scale: 1e6, unit: 'PVU'};
+    return {scale: 1e6, unit: 'PVU s\u207B\u00B9'};
+  }
+
+  function scaleArray(arr, scale) {
+    if (scale === 1) return arr;
+    return arr.map(function(row) {
+      return row.map(function(v) { return (v === null || !isFinite(v)) ? v : v * scale; });
+    });
+  }
 
   var currentData = null;
   var dropdownsBuilt = false;
@@ -313,6 +351,10 @@ author_profile: false
     var dhLabels = ['dh = \u221212 h', 'dh = 0', 'dh = +12 h'];
     var x = data.coords.x_rel;
     var y = data.coords.y_rel;
+    var si = getFieldScaleInfo(shadingField);
+    var ci = contourField ? getFieldScaleInfo(contourField) : null;
+    var sLabel = (data.meta.field_labels[shadingField] || shadingField);
+    if (sLabel.indexOf('(') < 0) sLabel += ' (' + si.unit + ')';
 
     dhKeys.forEach(function(dhKey, i) {
       var lev = data[dhKey][level];
@@ -323,21 +365,25 @@ author_profile: false
       /* Shading heatmap */
       if (shadeArr) {
         traces.push({
-          z: shadeArr, x: x, y: y,
+          z: scaleArray(shadeArr, si.scale), x: x, y: y,
           type: 'heatmap',
           colorscale: 'RdBu', reversescale: true,
           zmid: 0,
-          colorbar: { title: data.meta.field_labels[shadingField] || shadingField }
+          colorbar: {
+            title: {text: sLabel, font: {size: 11}},
+            thickness: 12, len: 0.75,
+            exponentformat: 'power'
+          }
         });
       }
 
-      /* PV anomaly contour (always shown) */
+      /* PV anomaly contour overlay (thin dashed) */
       if (lev.pv_anom) {
         traces.push({
-          z: lev.pv_anom, x: x, y: y,
+          z: scaleArray(lev.pv_anom, 1e6), x: x, y: y,
           type: 'contour',
           contours: { coloring: 'none', showlabels: true },
-          line: { color: 'black', width: 2 },
+          line: { color: 'rgba(0,0,0,0.4)', width: 1, dash: 'dash' },
           showscale: false,
           ncontours: 10
         });
@@ -346,7 +392,8 @@ author_profile: false
       /* User-selected contour overlay */
       if (contourField && contourField !== 'pv_anom' && lev[contourField]) {
         traces.push({
-          z: lev[contourField], x: x, y: y,
+          z: ci ? scaleArray(lev[contourField], ci.scale) : lev[contourField],
+          x: x, y: y,
           type: 'contour',
           contours: { coloring: 'none', showlabels: true },
           line: { color: '#1f77b4', width: 1.5, dash: 'dash' },
@@ -359,8 +406,8 @@ author_profile: false
         title: dhLabels[i],
         xaxis: { title: 'Rel. Longitude (\u00B0)' },
         yaxis: { title: 'Rel. Latitude (\u00B0)', scaleanchor: 'x' },
-        margin: { t: 40, b: 50, l: 50, r: 20 },
-        width: 380, height: 340
+        margin: { t: 40, b: 50, l: 55, r: 30 },
+        width: 480, height: 400
       };
 
       Plotly.react('panel-' + i, traces, layout, {responsive: true});
@@ -508,26 +555,35 @@ author_profile: false
   }
 
   function renderProjection(data, level, shadingField) {
-    var basis = data.dh_0[level] && data.dh_0[level].basis;
+    var dhKey = document.getElementById('sel-proj-dh').value;
+    var dhLabel = {dh_m12: 'dh = \u221212 h', dh_0: 'dh = 0', dh_p12: 'dh = +12 h'}[dhKey];
+    var basis = data[dhKey][level] && data[dhKey][level].basis;
     if (!basis) {
-      document.getElementById('proj-info').textContent = 'No basis data available for this level.';
+      document.getElementById('proj-info').textContent = 'No basis data for this level / ' + dhLabel + '.';
+      ['proj-inten','proj-prop','proj-deform','proj-resid'].forEach(function(id) {
+        document.getElementById(id).innerHTML = '';
+      });
       return;
     }
 
-    var fieldArr = getFieldArray(data.dh_0[level], shadingField, data.meta);
+    var fieldArr = getFieldArray(data[dhKey][level], shadingField, data.meta);
     if (!fieldArr) {
-      document.getElementById('proj-info').textContent = 'Cannot project: field not available.';
+      document.getElementById('proj-info').textContent = 'Cannot project: field not available at ' + dhLabel + '.';
       return;
     }
 
+    var si = getFieldScaleInfo(shadingField);
     var result = projectField(fieldArr, basis);
+    var fieldName = data.meta.field_labels[shadingField] || shadingField;
     var info = document.getElementById('proj-info');
     info.innerHTML =
+      '<b>Field:</b> ' + fieldName + ' (' + si.unit + ') at ' + dhLabel + '<br>' +
       '\u03B2 = ' + fmtSci(result.beta) + '  (Intensity)<br>' +
       '\u03B1x = ' + fmtSci(result.ax) + '  (Propagation-X)<br>' +
       '\u03B1y = ' + fmtSci(result.ay) + '  (Propagation-Y)<br>' +
       '\u03B3 = ' + fmtSci(result.gamma) + '  (Deformation)<br>' +
-      'R\u00B2 = ' + result.r_squared.toFixed(4);
+      'R\u00B2 = ' + result.r_squared.toFixed(4) +
+      '<br><small>\u03B2>0 \u2192 intensifying (blue center); \u03B2<0 \u2192 weakening (red center)</small>';
 
     var projPanels = [
       {id: 'proj-inten',  arr: result.inten,  label: '\u03B2\u00B7\u03A6\u2081 (Intensity)'},
@@ -542,17 +598,21 @@ author_profile: false
     projPanels.forEach(function(pp) {
       if (!pp.arr) return;
       Plotly.react(pp.id, [{
-        z: pp.arr, x: x, y: y,
+        z: scaleArray(pp.arr, si.scale), x: x, y: y,
         type: 'heatmap',
         colorscale: 'RdBu', reversescale: true,
         zmid: 0,
-        colorbar: { title: '', len: 0.8 }
+        colorbar: {
+          title: {text: si.unit, font: {size: 10}},
+          thickness: 10, len: 0.8,
+          exponentformat: 'power'
+        }
       }], {
-        title: pp.label,
+        title: {text: pp.label, font: {size: 12}},
         xaxis: { title: '' },
         yaxis: { title: '', scaleanchor: 'x' },
-        margin: { t: 30, b: 20, l: 30, r: 10 },
-        width: 200, height: 200
+        margin: { t: 30, b: 20, l: 30, r: 15 },
+        width: 260, height: 260
       }, {responsive: true});
     });
   }
@@ -611,6 +671,14 @@ author_profile: false
 
   document.getElementById('projection-panel').addEventListener('toggle', function() {
     if (this.open && currentData) {
+      var level = document.getElementById('sel-level').value;
+      var shadingField = document.getElementById('sel-shading').value;
+      renderProjection(currentData, level, shadingField);
+    }
+  });
+
+  document.getElementById('sel-proj-dh').addEventListener('change', function() {
+    if (document.getElementById('projection-panel').open && currentData) {
       var level = document.getElementById('sel-level').value;
       var shadingField = document.getElementById('sel-shading').value;
       renderProjection(currentData, level, shadingField);
