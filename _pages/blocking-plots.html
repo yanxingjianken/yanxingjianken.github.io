@@ -117,16 +117,6 @@ author_profile: false
     border: 1px solid #ccc;
     border-radius: 4px;
   }
-  .bc-proj-warning {
-    background: #fff3cd;
-    border: 1px solid #ffecb5;
-    border-radius: 4px;
-    padding: 8px 12px;
-    margin: 8px 0;
-    font-size: 13px;
-    color: #664d03;
-    display: none;
-  }
 </style>
 
 <div id="loading" style="display:none;">
@@ -137,18 +127,36 @@ author_profile: false
   <span>
     <label for="sel-variant">Variant:</label>
     <select id="sel-variant">
-      <option value="original" selected>All Events</option>
-      <option value="awb">AWB</option>
-      <option value="cwb">CWB</option>
-      <option value="neutral">Ridge</option>
+      <optgroup label="All Events">
+        <option value="original" selected>All Events (1260)</option>
+      </optgroup>
+      <optgroup label="AWB Sub-clusters">
+        <option value="awb_se">AWB SE (160 tracks)</option>
+        <option value="awb_east">AWB East (82 tracks)</option>
+        <option value="awb_dipole">AWB Dipole (76 tracks)</option>
+      </optgroup>
+      <optgroup label="CWB Sub-clusters">
+        <option value="cwb_subtropical">CWB Subtropical (80 tracks)</option>
+        <option value="cwb_sw">CWB SW (94 tracks)</option>
+        <option value="cwb_dipole">CWB Dipole (42 tracks)</option>
+      </optgroup>
+      <optgroup label="Omega Sub-clusters">
+        <option value="omega_sw">Omega SW (88 tracks)</option>
+        <option value="omega_east">Omega East (44 tracks)</option>
+        <option value="omega_se">Omega SE (79 tracks)</option>
+        <option value="omega_west">Omega West (53 tracks)</option>
+      </optgroup>
+      <optgroup label="Other">
+        <option value="neutral">Ridge (417 tracks)</option>
+      </optgroup>
     </select>
   </span>
   <span>
     <label for="sel-stage">Stage:</label>
     <select id="sel-stage">
       <option value="onset" selected>Onset</option>
-      <option value="peak">Peak</option>
-      <option value="decay">Decay</option>
+      <option value="peak" disabled>Peak (coming soon)</option>
+      <option value="decay" disabled>Decay (coming soon)</option>
     </select>
   </span>
   <span>
@@ -196,7 +204,6 @@ author_profile: false
 
 <details id="projection-panel">
   <summary>&#9654; Project onto orthogonal basis</summary>
-  <div id="proj-warning" class="bc-proj-warning"></div>
   <div class="bc-proj-controls">
     <label for="sel-proj-dh">Decompose at:</label>
     <select id="sel-proj-dh">
@@ -228,9 +235,9 @@ author_profile: false
 
   function getFieldScaleInfo(fieldId) {
     if (fieldId === 'z') return {scale: 1, unit: 'm'};
-    if (/^w($|_)/.test(fieldId)) return {scale: 1, unit: 'Pa s\u207B\u00B9'};
+    if (/^w($|_)/.test(fieldId)) return {scale: 1, unit: 'Pa s⁻¹'};
     if (['pv_anom','pv','pv_bar','Q'].indexOf(fieldId) >= 0) return {scale: 1e6, unit: 'PVU'};
-    return {scale: 1e6, unit: 'PVU s\u207B\u00B9'};
+    return {scale: 1e6, unit: 'PVU s⁻¹'};
   }
 
   function scaleArray(arr, scale) {
@@ -363,7 +370,7 @@ author_profile: false
 
   function renderPanels(data, level, shadingField, contourField) {
     var dhKeys = ['dh_m12', 'dh_0', 'dh_p12'];
-    var dhLabels = ['dh = \u221212 h', 'dh = 0', 'dh = +12 h'];
+    var dhLabels = ['dh = −12 h', 'dh = 0', 'dh = +12 h'];
     var x = data.coords.x_rel;
     var y = data.coords.y_rel;
     var si = getFieldScaleInfo(shadingField);
@@ -424,8 +431,8 @@ author_profile: false
 
       var layout = {
         title: dhLabels[i],
-        xaxis: { title: 'Rel. Longitude (\u00B0)' },
-        yaxis: { title: 'Rel. Latitude (\u00B0)', scaleanchor: 'x' },
+        xaxis: { title: 'Rel. Longitude (°)' },
+        yaxis: { title: 'Rel. Latitude (°)', scaleanchor: 'x' },
         margin: { t: 40, b: 50, l: 55, r: 80 },
         height: 400,
         showlegend: false
@@ -505,7 +512,7 @@ author_profile: false
   function projectField(fieldArr, basis) {
     var ny = fieldArr.length, nx = fieldArr[0].length;
 
-    /* Gaussian smooth the input field (3.0\u00B0 FWHM, 1.5\u00B0 grid) */
+    /* Gaussian smooth the input field (3.0° FWHM, 1.5° grid) */
     var smoothed = gaussianSmoothNaN(fieldArr, 3.0, 1.5);
 
     var w = basis.weights, m = basis.mask;
@@ -548,7 +555,7 @@ author_profile: false
       }
     }
 
-    /* R\u00B2 (weighted) */
+    /* R² (weighted) */
     var ss_res = 0, ss_tot = 0;
     for (j = 0; j < ny; j++) {
       for (i = 0; i < nx; i++) {
@@ -577,7 +584,7 @@ author_profile: false
 
   function renderProjection(data, level, shadingField) {
     var dhKey = document.getElementById('sel-proj-dh').value;
-    var dhLabel = {dh_m12: 'dh = \u221212 h', dh_0: 'dh = 0', dh_p12: 'dh = +12 h'}[dhKey];
+    var dhLabel = {dh_m12: 'dh = −12 h', dh_0: 'dh = 0', dh_p12: 'dh = +12 h'}[dhKey];
     var basis = data[dhKey][level] && data[dhKey][level].basis;
     if (!basis) {
       document.getElementById('proj-info').textContent = 'No basis data for this level / ' + dhLabel + '.';
@@ -593,31 +600,23 @@ author_profile: false
       return;
     }
 
-    var warnEl = document.getElementById('proj-warning');
-    if (data.meta.projection_warning) {
-      warnEl.textContent = '\u26A0 ' + data.meta.projection_warning;
-      warnEl.style.display = 'block';
-    } else {
-      warnEl.style.display = 'none';
-    }
-
     var si = getFieldScaleInfo(shadingField);
     var result = projectField(fieldArr, basis);
     var fieldName = data.meta.field_labels[shadingField] || shadingField;
     var info = document.getElementById('proj-info');
     info.innerHTML =
       '<b>Field:</b> ' + fieldName + ' (' + si.unit + ') at ' + dhLabel + '<br>' +
-      '\u03B2 = ' + fmtSci(result.beta) + '  (Intensity)<br>' +
-      '\u03B1x = ' + fmtSci(result.ax) + '  (Propagation-X)<br>' +
-      '\u03B1y = ' + fmtSci(result.ay) + '  (Propagation-Y)<br>' +
-      '\u03B3 = ' + fmtSci(result.gamma) + '  (Deformation)<br>' +
-      'R\u00B2 = ' + result.r_squared.toFixed(4) +
-      '<br><small>\u03B2>0 \u2192 intensifying (blue center); \u03B2<0 \u2192 weakening (red center)</small>';
+      'β = ' + fmtSci(result.beta) + '  (Intensity)<br>' +
+      'αx = ' + fmtSci(result.ax) + '  (Propagation-X)<br>' +
+      'αy = ' + fmtSci(result.ay) + '  (Propagation-Y)<br>' +
+      'γ = ' + fmtSci(result.gamma) + '  (Deformation)<br>' +
+      'R² = ' + result.r_squared.toFixed(4) +
+      '<br><small>β>0 → intensifying (blue center); β<0 → weakening (red center)</small>';
 
     var projPanels = [
-      {id: 'proj-inten',  arr: result.inten,  label: '\u03B2\u00B7\u03A6\u2081 (Intensity)'},
-      {id: 'proj-prop',   arr: result.prop,   label: '\u03B1\u00B7\u03A6\u2082\u2083 (Propagation)'},
-      {id: 'proj-deform', arr: result.deform, label: '\u03B3\u00B7\u03A6\u2084 (Deformation)'},
+      {id: 'proj-inten',  arr: result.inten,  label: 'β·Φ₁ (Intensity)'},
+      {id: 'proj-prop',   arr: result.prop,   label: 'α·Φ₂₃ (Propagation)'},
+      {id: 'proj-deform', arr: result.deform, label: 'γ·Φ₄ (Deformation)'},
       {id: 'proj-resid',  arr: result.resid,  label: 'Residual'}
     ];
 
