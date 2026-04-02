@@ -384,13 +384,18 @@ author_profile: false
       var shadeArr = getFieldArray(lev, shadingField, data.meta);
       var traces = [];
 
-      /* Shading heatmap */
+      /* Shading filled contour (with light Gaussian smoothing) */
       if (shadeArr) {
+        var gridSpacing = Math.abs(x[1] - x[0]) || 1.5;
+        var smoothed = gaussianSmoothNaN(scaleArray(shadeArr, si.scale), 3.0, gridSpacing);
         var hm = {
-          z: scaleArray(shadeArr, si.scale), x: x, y: y,
-          type: 'heatmap',
+          z: smoothed, x: x, y: y,
+          type: 'contour',
           colorscale: 'RdBu',
-          zmid: 0
+          zmid: 0,
+          contours: { coloring: 'heatmap' },
+          ncontours: 15,
+          line: { width: 0 }
         };
         if (i === dhKeys.length - 1) {
           hm.colorbar = {
