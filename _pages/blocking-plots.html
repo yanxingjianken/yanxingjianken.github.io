@@ -429,13 +429,16 @@ author_profile: false
           ncontours: 15,
           line: { width: 0 }
         };
-        hm.colorbar = {
-          thickness: 10, len: 0.7,
-          exponentformat: 'power',
-          tickfont: {size: 9}
-        };
+        /* Colorbar only on rightmost panel */
         if (i === dhKeys.length - 1) {
-          hm.colorbar.title = {text: sLabel, font: {size: 10}};
+          hm.colorbar = {
+            thickness: 10, len: 0.7,
+            exponentformat: 'power',
+            tickfont: {size: 9},
+            title: {text: sLabel, font: {size: 10}}
+          };
+        } else {
+          hm.showscale = false;
         }
         traces.push(hm);
       }
@@ -465,8 +468,17 @@ author_profile: false
         });
       }
 
+      /* Per-panel margins: left panel has y-title, right panel has colorbar */
+      var margins;
+      if (i === 0) {
+        margins = { t: 35, b: 45, l: 55, r: 10 };
+      } else if (i === dhKeys.length - 1) {
+        margins = { t: 35, b: 45, l: 10, r: 55 };
+      } else {
+        margins = { t: 35, b: 45, l: 10, r: 10 };
+      }
+
       /* Dynamic height: compute from container width + data aspect ratio */
-      var margins = { t: 35, b: 45, l: 35, r: 55 };
       var el = document.getElementById('panel-' + i);
       var cw = el.getBoundingClientRect().width || 300;
       var plotW = Math.max(cw - margins.l - margins.r, 50);
@@ -474,8 +486,8 @@ author_profile: false
 
       var layout = {
         title: dhLabels[i],
-        xaxis: { title: 'Rel. Longitude (°)' },
-        yaxis: { title: 'Rel. Latitude (°)', scaleanchor: 'x' },
+        xaxis: { title: i === 1 ? 'Rel. Longitude (°)' : '' },
+        yaxis: { title: i === 0 ? 'Rel. Latitude (°)' : '' },
         margin: margins,
         height: dynH,
         showlegend: false
@@ -680,39 +692,44 @@ author_profile: false
     var yRange = y[y.length - 1] - y[0];
     var projAR = Math.abs(yRange / xRange);
 
-    /* Use same margins as top dh panels */
-    var projM = { t: 35, b: 45, l: 35, r: 55 };
+    /* Per-panel margins: leftmost has y-title, rightmost has colorbar */
+    var projML = { t: 35, b: 45, l: 55, r: 10 };
+    var projMM = { t: 35, b: 45, l: 10, r: 10 };
+    var projMR = { t: 35, b: 45, l: 10, r: 55 };
 
-    /* Compute height to match the top dh row panels:
-       measure full bc-panels container, divide by 3 for per-panel width */
+    /* Compute height from container width */
     var projContainer = document.querySelector('.bc-proj-panels .bc-panels');
     var fullCW = projContainer ? projContainer.getBoundingClientRect().width : 720;
     var perPanelW = (fullCW - 20) / 3;  /* subtract 2 gaps of 10px */
-    var plotW = Math.max(perPanelW - projM.l - projM.r, 80);
-    var projHeight = Math.max(Math.round(plotW * projAR + projM.t + projM.b), 250);
+    var plotW = Math.max(perPanelW - projML.l - projML.r, 80);
+    var projHeight = Math.max(Math.round(plotW * projAR + projML.t + projML.b), 250);
 
     /* Top row: Intensity, Propagation, Deformation */
     projPanels.forEach(function(pp, idx) {
       if (!pp.arr) return;
-      var cbar = {
-        thickness: 10, len: 0.7,
-        exponentformat: 'power',
-        tickfont: {size: 9}
-      };
-      if (idx === projPanels.length - 1) {
-        cbar.title = {text: si.unit, font: {size: 10}};
-      }
-      Plotly.react(pp.id, [{
+      var traceObj = {
         z: scaleArray(pp.arr, si.scale), x: x, y: y,
         type: 'heatmap',
         colorscale: 'RdBu',
-        zmid: 0,
-        colorbar: cbar
-      }], {
+        zmid: 0
+      };
+      /* Colorbar only on rightmost panel */
+      if (idx === projPanels.length - 1) {
+        traceObj.colorbar = {
+          thickness: 10, len: 0.7,
+          exponentformat: 'power',
+          tickfont: {size: 9},
+          title: {text: si.unit, font: {size: 10}}
+        };
+      } else {
+        traceObj.showscale = false;
+      }
+      var pM = idx === 0 ? projML : (idx === projPanels.length - 1 ? projMR : projMM);
+      Plotly.react(pp.id, [traceObj], {
         title: {text: pp.label, font: {size: 12}},
-        xaxis: { title: 'Rel. Longitude (°)' },
-        yaxis: { title: 'Rel. Latitude (°)' },
-        margin: projM,
+        xaxis: { title: idx === 1 ? 'Rel. Longitude (°)' : '' },
+        yaxis: { title: idx === 0 ? 'Rel. Latitude (°)' : '' },
+        margin: pM,
         height: projHeight
       }, {responsive: true});
     });
@@ -730,25 +747,29 @@ author_profile: false
 
     bottomPanels.forEach(function(bp, idx) {
       if (!bp.arr) return;
-      var bcbar = {
-        thickness: 10, len: 0.7,
-        exponentformat: 'power',
-        tickfont: {size: 9}
-      };
-      if (idx === bottomPanels.length - 1) {
-        bcbar.title = {text: si.unit, font: {size: 10}};
-      }
-      Plotly.react(bp.id, [{
+      var traceObj = {
         z: scaleArray(bp.arr, si.scale), x: x, y: y,
         type: 'heatmap',
         colorscale: 'RdBu',
-        zmin: -vmax, zmax: vmax,
-        colorbar: bcbar
-      }], {
+        zmin: -vmax, zmax: vmax
+      };
+      /* Colorbar only on rightmost panel */
+      if (idx === bottomPanels.length - 1) {
+        traceObj.colorbar = {
+          thickness: 10, len: 0.7,
+          exponentformat: 'power',
+          tickfont: {size: 9},
+          title: {text: si.unit, font: {size: 10}}
+        };
+      } else {
+        traceObj.showscale = false;
+      }
+      var bM = idx === 0 ? projML : (idx === bottomPanels.length - 1 ? projMR : projMM);
+      Plotly.react(bp.id, [traceObj], {
         title: {text: bp.label, font: {size: 12}},
-        xaxis: { title: 'Rel. Longitude (°)' },
-        yaxis: { title: 'Rel. Latitude (°)' },
-        margin: projM,
+        xaxis: { title: idx === 1 ? 'Rel. Longitude (°)' : '' },
+        yaxis: { title: idx === 0 ? 'Rel. Latitude (°)' : '' },
+        margin: bM,
         height: projHeight
       }, {responsive: true});
     });
