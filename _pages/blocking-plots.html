@@ -55,12 +55,11 @@ author_profile: false
   .bc-panels {
     display: flex;
     gap: 10px;
-    flex-wrap: wrap;
     justify-content: center;
     margin-bottom: 20px;
   }
   .bc-panels > div {
-    min-width: 300px;
+    min-width: 0;
     flex: 1 1 0;
   }
   @media (max-width: 900px) {
@@ -236,6 +235,8 @@ author_profile: false
     <div class="bc-proj-row">
       <div id="proj-inten"></div>
       <div id="proj-prop-x"></div>
+    </div>
+    <div class="bc-proj-row">
       <div id="proj-prop-y"></div>
       <div id="proj-deform"></div>
     </div>
@@ -407,6 +408,11 @@ author_profile: false
     var sLabel = (data.meta.field_labels[shadingField] || shadingField);
     if (sLabel.indexOf('(') < 0) sLabel += ' (' + si.unit + ')';
 
+    /* Compute data aspect ratio for dynamic height */
+    var xRange = x[x.length - 1] - x[0];
+    var yRange = y[y.length - 1] - y[0];
+    var dataAR = Math.abs(yRange / xRange);
+
     dhKeys.forEach(function(dhKey, i) {
       var lev = data[dhKey][level];
       if (!lev) return;
@@ -426,15 +432,11 @@ author_profile: false
           ncontours: 15,
           line: { width: 0 }
         };
-        if (i === dhKeys.length - 1) {
-          hm.colorbar = {
-            title: {text: sLabel, font: {size: 11}},
-            thickness: 12, len: 0.75,
-            exponentformat: 'power'
-          };
-        } else {
-          hm.showscale = false;
-        }
+        hm.colorbar = {
+          title: {text: sLabel, font: {size: 11}},
+          thickness: 12, len: 0.75,
+          exponentformat: 'power'
+        };
         traces.push(hm);
       }
 
@@ -463,12 +465,19 @@ author_profile: false
         });
       }
 
+      /* Dynamic height: compute from container width + data aspect ratio */
+      var margins = { t: 40, b: 50, l: 45, r: 80 };
+      var el = document.getElementById('panel-' + i);
+      var cw = el.getBoundingClientRect().width || 300;
+      var plotW = Math.max(cw - margins.l - margins.r, 50);
+      var dynH = Math.max(Math.round(plotW * dataAR + margins.t + margins.b), 200);
+
       var layout = {
         title: dhLabels[i],
         xaxis: { title: 'Rel. Longitude (°)' },
         yaxis: { title: 'Rel. Latitude (°)', scaleanchor: 'x' },
-        margin: { t: 40, b: 50, l: 55, r: 80 },
-        height: 400,
+        margin: margins,
+        height: dynH,
         showlegend: false
       };
 
@@ -665,9 +674,19 @@ author_profile: false
     var x = data.coords.x_rel;
     var y = data.coords.y_rel;
 
-    /* Top row: individual colorbars per component */
+    /* Compute data aspect ratio for projection panels */
+    var xRange = x[x.length - 1] - x[0];
+    var yRange = y[y.length - 1] - y[0];
+    var projAR = Math.abs(yRange / xRange);
+
+    /* Top rows (2×2): individual colorbars per component */
     projPanels.forEach(function(pp) {
       if (!pp.arr) return;
+      var projM = { t: 30, b: 20, l: 30, r: 70 };
+      var pel = document.getElementById(pp.id);
+      var pcw = pel.getBoundingClientRect().width || 300;
+      var ppw = Math.max(pcw - projM.l - projM.r, 50);
+      var pdynH = Math.max(Math.round(ppw * projAR + projM.t + projM.b), 150);
       Plotly.react(pp.id, [{
         z: scaleArray(pp.arr, si.scale), x: x, y: y,
         type: 'heatmap',
@@ -682,8 +701,8 @@ author_profile: false
         title: {text: pp.label, font: {size: 12}},
         xaxis: { title: '' },
         yaxis: { title: '', scaleanchor: 'x' },
-        margin: { t: 30, b: 20, l: 30, r: 15 },
-        height: 260
+        margin: projM,
+        height: pdynH
       }, {responsive: true});
     });
 
@@ -700,24 +719,27 @@ author_profile: false
 
     bottomPanels.forEach(function(bp, idx) {
       if (!bp.arr) return;
-      var showScale = (idx === bottomPanels.length - 1);
+      var botM = { t: 30, b: 20, l: 30, r: 70 };
+      var bel = document.getElementById(bp.id);
+      var bcw = bel.getBoundingClientRect().width || 300;
+      var bpw = Math.max(bcw - botM.l - botM.r, 50);
+      var bdynH = Math.max(Math.round(bpw * projAR + botM.t + botM.b), 150);
       Plotly.react(bp.id, [{
         z: scaleArray(bp.arr, si.scale), x: x, y: y,
         type: 'heatmap',
         colorscale: 'RdBu',
         zmin: -vmax, zmax: vmax,
-        showscale: showScale,
-        colorbar: showScale ? {
+        colorbar: {
           title: {text: si.unit, font: {size: 10}},
           thickness: 10, len: 0.8,
           exponentformat: 'power'
-        } : undefined
+        }
       }], {
         title: {text: bp.label, font: {size: 12}},
         xaxis: { title: '' },
         yaxis: { title: '', scaleanchor: 'x' },
-        margin: { t: 30, b: 20, l: 30, r: 15 },
-        height: 260
+        margin: botM,
+        height: bdynH
       }, {responsive: true});
     });
   }
@@ -802,6 +824,15 @@ author_profile: false
   });
 
   document.getElementById('btn-generate').addEventListener('click', update);
+
+  /* ---- Resize handler (debounced) for dynamic height recomputation ---- */
+  var _resizeTimer;
+  window.addEventListener('resize', function() {
+    clearTimeout(_resizeTimer);
+    _resizeTimer = setTimeout(function() {
+      if (currentData) update();
+    }, 250);
+  });
 
   /* ---- Initial load ---- */
   update();
