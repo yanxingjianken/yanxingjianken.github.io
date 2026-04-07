@@ -98,6 +98,23 @@ author_profile: false
     flex-wrap: wrap;
     justify-content: center;
   }
+  .bc-proj-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 6px;
+  }
+  .bc-proj-row > div {
+    flex: 1 1 0;
+    min-width: 200px;
+  }
+  .bc-proj-row-3 > div {
+    flex: 1 1 0;
+    min-width: 260px;
+    max-width: 33%;
+  }
   .bc-proj-panels > div {
     width: 260px;
   }
@@ -130,24 +147,29 @@ author_profile: false
       <optgroup label="All Events">
         <option value="original" selected>All Events (1260)</option>
       </optgroup>
+      <optgroup label="RWB Parent Categories">
+        <option value="awb_only">AWB only</option>
+        <option value="cwb_only">CWB only</option>
+        <option value="omega">Omega (AWB∩CWB)</option>
+        <option value="ridge">Ridge</option>
+      </optgroup>
       <optgroup label="AWB Sub-clusters">
-        <option value="awb_se">AWB SE (160 tracks)</option>
-        <option value="awb_east">AWB East (82 tracks)</option>
-        <option value="awb_dipole">AWB Dipole (76 tracks)</option>
+        <option value="awb_east">AWB East</option>
+        <option value="awb_ne">AWB NE</option>
+        <option value="awb_dipole">AWB Dipole</option>
+        <option value="awb_se">AWB SE</option>
       </optgroup>
       <optgroup label="CWB Sub-clusters">
-        <option value="cwb_subtropical">CWB Subtropical (80 tracks)</option>
-        <option value="cwb_sw">CWB SW (94 tracks)</option>
-        <option value="cwb_dipole">CWB Dipole (42 tracks)</option>
+        <option value="cwb_nw">CWB NW</option>
+        <option value="cwb_dipole">CWB Dipole</option>
+        <option value="cwb_sw">CWB SW</option>
       </optgroup>
       <optgroup label="Omega Sub-clusters">
-        <option value="omega_sw">Omega SW (88 tracks)</option>
-        <option value="omega_east">Omega East (44 tracks)</option>
-        <option value="omega_se">Omega SE (79 tracks)</option>
-        <option value="omega_west">Omega West (53 tracks)</option>
-      </optgroup>
-      <optgroup label="Other">
-        <option value="neutral">Ridge (417 tracks)</option>
+        <option value="omega_c0">Omega C0</option>
+        <option value="omega_c1">Omega C1</option>
+        <option value="omega_c2">Omega C2</option>
+        <option value="omega_c3">Omega C3</option>
+        <option value="omega_c4">Omega C4 (onset only)</option>
       </optgroup>
     </select>
   </span>
@@ -155,8 +177,8 @@ author_profile: false
     <label for="sel-stage">Stage:</label>
     <select id="sel-stage">
       <option value="onset" selected>Onset</option>
-      <option value="peak" disabled>Peak (coming soon)</option>
-      <option value="decay" disabled>Decay (coming soon)</option>
+      <option value="peak">Peak</option>
+      <option value="decay">Decay</option>
     </select>
   </span>
   <span>
@@ -214,10 +236,17 @@ author_profile: false
   </div>
   <div id="proj-info"></div>
   <div class="bc-proj-panels">
-    <div id="proj-inten"></div>
-    <div id="proj-prop"></div>
-    <div id="proj-deform"></div>
-    <div id="proj-resid"></div>
+    <div class="bc-proj-row">
+      <div id="proj-inten"></div>
+      <div id="proj-prop-x"></div>
+      <div id="proj-prop-y"></div>
+      <div id="proj-deform"></div>
+    </div>
+    <div class="bc-proj-row bc-proj-row-3">
+      <div id="proj-orig"></div>
+      <div id="proj-recon"></div>
+      <div id="proj-resid"></div>
+    </div>
   </div>
 </details>
 
@@ -258,7 +287,10 @@ author_profile: false
 
     var url = BASE + '/' + key + '.json.gz';
     var resp = await fetch(url);
-    if (!resp.ok) throw new Error('Fetch failed: ' + resp.status);
+    if (!resp.ok) {
+      if (resp.status === 404) return null;
+      throw new Error('Fetch failed: ' + resp.status);
+    }
     var ds = new DecompressionStream('gzip');
     var stream = resp.body.pipeThrough(ds);
     var text = await new Response(stream).text();
@@ -542,20 +574,21 @@ author_profile: false
     var gamma = gamma_raw * PRENORM.gamma;
 
     /* Decomposed components */
-    var recon = [], inten = [], prop = [], deform = [], resid = [];
+    var recon = [], inten = [], prop_x = [], prop_y = [], deform = [], resid = [];
     var j, i;
     for (j = 0; j < ny; j++) {
-      recon[j]  = new Array(nx);
-      inten[j]  = new Array(nx);
-      prop[j]   = new Array(nx);
-      deform[j] = new Array(nx);
-      resid[j]  = new Array(nx);
+      recon[j]   = new Array(nx);
+      inten[j]   = new Array(nx);
+      prop_x[j]  = new Array(nx);
+      prop_y[j]  = new Array(nx);
+      deform[j]  = new Array(nx);
+      resid[j]   = new Array(nx);
       for (i = 0; i < nx; i++) {
         inten[j][i]  = beta_raw  * basis.phi_int[j][i];
-        prop[j][i]   = -ax_raw   * basis.phi_dx[j][i]
-                        -ay_raw   * basis.phi_dy[j][i];
+        prop_x[j][i] = -ax_raw   * basis.phi_dx[j][i];
+        prop_y[j][i] = -ay_raw   * basis.phi_dy[j][i];
         deform[j][i] = gamma_raw * basis.phi_def[j][i];
-        recon[j][i]  = inten[j][i] + prop[j][i] + deform[j][i];
+        recon[j][i]  = inten[j][i] + prop_x[j][i] + prop_y[j][i] + deform[j][i];
         resid[j][i]  = m[j][i] ? smoothed[j][i] - recon[j][i] : NaN;
       }
     }
@@ -574,7 +607,8 @@ author_profile: false
     var r_squared = ss_tot > 0 ? 1 - ss_res / ss_tot : 0;
 
     return { beta: beta, ax: ax, ay: ay, gamma: gamma, r_squared: r_squared,
-             recon: recon, inten: inten, prop: prop, deform: deform, resid: resid };
+             recon: recon, inten: inten, prop_x: prop_x, prop_y: prop_y,
+             deform: deform, resid: resid, smoothed: smoothed };
   }
 
   function fmtSci(val) {
@@ -620,14 +654,21 @@ author_profile: false
 
     var projPanels = [
       {id: 'proj-inten',  arr: result.inten,  label: 'β·Φ₁ (Intensity)'},
-      {id: 'proj-prop',   arr: result.prop,   label: 'α·Φ₂₃ (Propagation)'},
-      {id: 'proj-deform', arr: result.deform, label: 'γ·Φ₄ (Deformation)'},
-      {id: 'proj-resid',  arr: result.resid,  label: 'Residual'}
+      {id: 'proj-prop-x', arr: result.prop_x, label: '−αx·Φ₂ (Zonal Prop.)'},
+      {id: 'proj-prop-y', arr: result.prop_y, label: '−αy·Φ₃ (Merid. Prop.)'},
+      {id: 'proj-deform', arr: result.deform, label: 'γ·Φ₄ (Deformation)'}
+    ];
+
+    var bottomPanels = [
+      {id: 'proj-orig',  arr: result.smoothed, label: 'Original Field'},
+      {id: 'proj-recon', arr: result.recon,     label: 'Reconstruction'},
+      {id: 'proj-resid', arr: result.resid,     label: 'Residual'}
     ];
 
     var x = data.coords.x_rel;
     var y = data.coords.y_rel;
 
+    /* Top row: individual colorbars per component */
     projPanels.forEach(function(pp) {
       if (!pp.arr) return;
       Plotly.react(pp.id, [{
@@ -645,7 +686,41 @@ author_profile: false
         xaxis: { title: '' },
         yaxis: { title: '', scaleanchor: 'x' },
         margin: { t: 30, b: 20, l: 30, r: 15 },
-        width: 260, height: 260
+        height: 260
+      }, {responsive: true});
+    });
+
+    /* Bottom row: shared vmin/vmax from original field */
+    var vmax = 0;
+    if (result.smoothed) {
+      for (var rj = 0; rj < result.smoothed.length; rj++)
+        for (var ri = 0; ri < result.smoothed[rj].length; ri++) {
+          var av = Math.abs(result.smoothed[rj][ri] * si.scale);
+          if (isFinite(av) && av > vmax) vmax = av;
+        }
+    }
+    vmax = vmax || 1;  /* fallback */
+
+    bottomPanels.forEach(function(bp, idx) {
+      if (!bp.arr) return;
+      var showScale = (idx === bottomPanels.length - 1);
+      Plotly.react(bp.id, [{
+        z: scaleArray(bp.arr, si.scale), x: x, y: y,
+        type: 'heatmap',
+        colorscale: 'RdBu',
+        zmin: -vmax, zmax: vmax,
+        showscale: showScale,
+        colorbar: showScale ? {
+          title: {text: si.unit, font: {size: 10}},
+          thickness: 10, len: 0.8,
+          exponentformat: 'power'
+        } : undefined
+      }], {
+        title: {text: bp.label, font: {size: 12}},
+        xaxis: { title: '' },
+        yaxis: { title: '', scaleanchor: 'x' },
+        margin: { t: 30, b: 20, l: 30, r: 15 },
+        height: 260
       }, {responsive: true});
     });
   }
@@ -673,6 +748,15 @@ author_profile: false
         return;
       }
       document.getElementById('loading').style.display = 'none';
+
+      if (currentData === null) {
+        document.getElementById('event-count').textContent =
+          'No data available for this variant / stage combination.';
+        ['panel-0','panel-1','panel-2'].forEach(function(id) {
+          document.getElementById(id).innerHTML = '';
+        });
+        return;
+      }
 
       if (!dropdownsBuilt) {
         buildShadingDropdown(currentData.meta);
