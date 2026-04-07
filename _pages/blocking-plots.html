@@ -232,15 +232,12 @@ author_profile: false
   </div>
   <div id="proj-info"></div>
   <div class="bc-proj-panels">
-    <div class="bc-proj-row">
+    <div class="bc-panels">
       <div id="proj-inten"></div>
-      <div id="proj-prop-x"></div>
-    </div>
-    <div class="bc-proj-row">
-      <div id="proj-prop-y"></div>
+      <div id="proj-prop"></div>
       <div id="proj-deform"></div>
     </div>
-    <div class="bc-proj-row bc-proj-row-3">
+    <div class="bc-panels">
       <div id="proj-orig"></div>
       <div id="proj-recon"></div>
       <div id="proj-resid"></div>
@@ -583,19 +580,21 @@ author_profile: false
     var gamma = gamma_raw * PRENORM.gamma;
 
     /* Decomposed components */
-    var recon = [], inten = [], prop_x = [], prop_y = [], deform = [], resid = [];
+    var recon = [], inten = [], prop_x = [], prop_y = [], prop = [], deform = [], resid = [];
     var j, i;
     for (j = 0; j < ny; j++) {
       recon[j]   = new Array(nx);
       inten[j]   = new Array(nx);
       prop_x[j]  = new Array(nx);
       prop_y[j]  = new Array(nx);
+      prop[j]    = new Array(nx);
       deform[j]  = new Array(nx);
       resid[j]   = new Array(nx);
       for (i = 0; i < nx; i++) {
         inten[j][i]  = beta_raw  * basis.phi_int[j][i];
         prop_x[j][i] = -ax_raw   * basis.phi_dx[j][i];
         prop_y[j][i] = -ay_raw   * basis.phi_dy[j][i];
+        prop[j][i]   = prop_x[j][i] + prop_y[j][i];
         deform[j][i] = gamma_raw * basis.phi_def[j][i];
         recon[j][i]  = inten[j][i] + prop_x[j][i] + prop_y[j][i] + deform[j][i];
         resid[j][i]  = m[j][i] ? smoothed[j][i] - recon[j][i] : NaN;
@@ -617,7 +616,7 @@ author_profile: false
 
     return { beta: beta, ax: ax, ay: ay, gamma: gamma, r_squared: r_squared,
              recon: recon, inten: inten, prop_x: prop_x, prop_y: prop_y,
-             deform: deform, resid: resid, smoothed: smoothed };
+             prop: prop, deform: deform, resid: resid, smoothed: smoothed };
   }
 
   function fmtSci(val) {
@@ -636,7 +635,7 @@ author_profile: false
     var basis = data[dhKey][level] && data[dhKey][level].basis;
     if (!basis) {
       document.getElementById('proj-info').textContent = 'No basis data for this level / ' + dhLabel + '.';
-      ['proj-inten','proj-prop','proj-deform','proj-resid'].forEach(function(id) {
+      ['proj-inten','proj-prop','proj-deform','proj-orig','proj-recon','proj-resid'].forEach(function(id) {
         document.getElementById(id).innerHTML = '';
       });
       return;
@@ -663,8 +662,7 @@ author_profile: false
 
     var projPanels = [
       {id: 'proj-inten',  arr: result.inten,  label: 'β·Φ₁ (Intensity)'},
-      {id: 'proj-prop-x', arr: result.prop_x, label: '−αx·Φ₂ (Zonal Prop.)'},
-      {id: 'proj-prop-y', arr: result.prop_y, label: '−αy·Φ₃ (Merid. Prop.)'},
+      {id: 'proj-prop',   arr: result.prop,   label: '−α·∇Φ (Propagation)'},
       {id: 'proj-deform', arr: result.deform, label: 'γ·Φ₄ (Deformation)'}
     ];
 
@@ -682,29 +680,34 @@ author_profile: false
     var yRange = y[y.length - 1] - y[0];
     var projAR = Math.abs(yRange / xRange);
 
-    /* Top rows (2×2): individual colorbars per component */
-    projPanels.forEach(function(pp) {
+    /* Use same margins as top dh panels */
+    var projM = { t: 35, b: 45, l: 35, r: 55 };
+
+    /* Top row: Intensity, Propagation, Deformation */
+    projPanels.forEach(function(pp, idx) {
       if (!pp.arr) return;
-      var projM = { t: 28, b: 15, l: 20, r: 50 };
       var pel = document.getElementById(pp.id);
       var pcw = pel.getBoundingClientRect().width || 300;
       var ppw = Math.max(pcw - projM.l - projM.r, 50);
-      var pdynH = Math.max(Math.round(ppw * projAR + projM.t + projM.b), 140);
+      var pdynH = Math.max(Math.round(ppw * projAR + projM.t + projM.b), 200);
+      var cbar = {
+        thickness: 10, len: 0.7,
+        exponentformat: 'power',
+        tickfont: {size: 9}
+      };
+      if (idx === projPanels.length - 1) {
+        cbar.title = {text: si.unit, font: {size: 10}};
+      }
       Plotly.react(pp.id, [{
         z: scaleArray(pp.arr, si.scale), x: x, y: y,
         type: 'heatmap',
         colorscale: 'RdBu',
         zmid: 0,
-        colorbar: {
-          title: {text: si.unit, font: {size: 9}},
-          thickness: 8, len: 0.75,
-          exponentformat: 'power',
-          tickfont: {size: 8}
-        }
+        colorbar: cbar
       }], {
-        title: {text: pp.label, font: {size: 11}},
-        xaxis: { title: '' },
-        yaxis: { title: '', scaleanchor: 'x' },
+        title: {text: pp.label, font: {size: 12}},
+        xaxis: { title: 'Rel. Longitude (°)' },
+        yaxis: { title: 'Rel. Latitude (°)', scaleanchor: 'x' },
         margin: projM,
         height: pdynH
       }, {responsive: true});
@@ -723,27 +726,29 @@ author_profile: false
 
     bottomPanels.forEach(function(bp, idx) {
       if (!bp.arr) return;
-      var botM = { t: 28, b: 15, l: 20, r: 50 };
       var bel = document.getElementById(bp.id);
       var bcw = bel.getBoundingClientRect().width || 300;
-      var bpw = Math.max(bcw - botM.l - botM.r, 50);
-      var bdynH = Math.max(Math.round(bpw * projAR + botM.t + botM.b), 140);
+      var bpw = Math.max(bcw - projM.l - projM.r, 50);
+      var bdynH = Math.max(Math.round(bpw * projAR + projM.t + projM.b), 200);
+      var bcbar = {
+        thickness: 10, len: 0.7,
+        exponentformat: 'power',
+        tickfont: {size: 9}
+      };
+      if (idx === bottomPanels.length - 1) {
+        bcbar.title = {text: si.unit, font: {size: 10}};
+      }
       Plotly.react(bp.id, [{
         z: scaleArray(bp.arr, si.scale), x: x, y: y,
         type: 'heatmap',
         colorscale: 'RdBu',
         zmin: -vmax, zmax: vmax,
-        colorbar: {
-          title: {text: si.unit, font: {size: 9}},
-          thickness: 8, len: 0.75,
-          exponentformat: 'power',
-          tickfont: {size: 8}
-        }
+        colorbar: bcbar
       }], {
-        title: {text: bp.label, font: {size: 11}},
-        xaxis: { title: '' },
-        yaxis: { title: '', scaleanchor: 'x' },
-        margin: botM,
+        title: {text: bp.label, font: {size: 12}},
+        xaxis: { title: 'Rel. Longitude (°)' },
+        yaxis: { title: 'Rel. Latitude (°)', scaleanchor: 'x' },
+        margin: projM,
         height: bdynH
       }, {responsive: true});
     });
