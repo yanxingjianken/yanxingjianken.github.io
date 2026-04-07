@@ -486,8 +486,8 @@ author_profile: false
 
       var layout = {
         title: dhLabels[i],
-        xaxis: { title: i === 1 ? 'Rel. Longitude (°)' : '' },
-        yaxis: { title: i === 0 ? 'Rel. Latitude (°)' : '' },
+        xaxis: { title: i === 1 ? 'Rel. Longitude (°)' : '', constrain: 'domain' },
+        yaxis: { title: i === 0 ? 'Rel. Latitude (°)' : '', scaleanchor: 'x', scaleratio: 1, constrain: 'domain' },
         margin: margins,
         height: dynH,
         showlegend: false
@@ -727,8 +727,8 @@ author_profile: false
       var pM = idx === 0 ? projML : (idx === projPanels.length - 1 ? projMR : projMM);
       Plotly.react(pp.id, [traceObj], {
         title: {text: pp.label, font: {size: 12}},
-        xaxis: { title: idx === 1 ? 'Rel. Longitude (°)' : '' },
-        yaxis: { title: idx === 0 ? 'Rel. Latitude (°)' : '' },
+        xaxis: { title: idx === 1 ? 'Rel. Longitude (°)' : '', constrain: 'domain' },
+        yaxis: { title: idx === 0 ? 'Rel. Latitude (°)' : '', scaleanchor: 'x', scaleratio: 1, constrain: 'domain' },
         margin: pM,
         height: projHeight
       }, {responsive: true});
@@ -767,8 +767,8 @@ author_profile: false
       var bM = idx === 0 ? projML : (idx === bottomPanels.length - 1 ? projMR : projMM);
       Plotly.react(bp.id, [traceObj], {
         title: {text: bp.label, font: {size: 12}},
-        xaxis: { title: idx === 1 ? 'Rel. Longitude (°)' : '' },
-        yaxis: { title: idx === 0 ? 'Rel. Latitude (°)' : '' },
+        xaxis: { title: idx === 1 ? 'Rel. Longitude (°)' : '', constrain: 'domain' },
+        yaxis: { title: idx === 0 ? 'Rel. Latitude (°)' : '', scaleanchor: 'x', scaleratio: 1, constrain: 'domain' },
         margin: bM,
         height: projHeight
       }, {responsive: true});
