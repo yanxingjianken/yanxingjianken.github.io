@@ -683,13 +683,17 @@ author_profile: false
     /* Use same margins as top dh panels */
     var projM = { t: 35, b: 45, l: 35, r: 55 };
 
+    /* Compute height to match the top dh row panels:
+       measure full bc-panels container, divide by 3 for per-panel width */
+    var projContainer = document.querySelector('.bc-proj-panels .bc-panels');
+    var fullCW = projContainer ? projContainer.getBoundingClientRect().width : 720;
+    var perPanelW = (fullCW - 20) / 3;  /* subtract 2 gaps of 10px */
+    var plotW = Math.max(perPanelW - projM.l - projM.r, 80);
+    var projHeight = Math.max(Math.round(plotW * projAR + projM.t + projM.b), 250);
+
     /* Top row: Intensity, Propagation, Deformation */
     projPanels.forEach(function(pp, idx) {
       if (!pp.arr) return;
-      var pel = document.getElementById(pp.id);
-      var pcw = pel.getBoundingClientRect().width || 300;
-      var ppw = Math.max(pcw - projM.l - projM.r, 50);
-      var pdynH = Math.max(Math.round(ppw * projAR + projM.t + projM.b), 200);
       var cbar = {
         thickness: 10, len: 0.7,
         exponentformat: 'power',
@@ -707,9 +711,9 @@ author_profile: false
       }], {
         title: {text: pp.label, font: {size: 12}},
         xaxis: { title: 'Rel. Longitude (°)' },
-        yaxis: { title: 'Rel. Latitude (°)', scaleanchor: 'x' },
+        yaxis: { title: 'Rel. Latitude (°)' },
         margin: projM,
-        height: pdynH
+        height: projHeight
       }, {responsive: true});
     });
 
@@ -726,10 +730,6 @@ author_profile: false
 
     bottomPanels.forEach(function(bp, idx) {
       if (!bp.arr) return;
-      var bel = document.getElementById(bp.id);
-      var bcw = bel.getBoundingClientRect().width || 300;
-      var bpw = Math.max(bcw - projM.l - projM.r, 50);
-      var bdynH = Math.max(Math.round(bpw * projAR + projM.t + projM.b), 200);
       var bcbar = {
         thickness: 10, len: 0.7,
         exponentformat: 'power',
@@ -747,9 +747,9 @@ author_profile: false
       }], {
         title: {text: bp.label, font: {size: 12}},
         xaxis: { title: 'Rel. Longitude (°)' },
-        yaxis: { title: 'Rel. Latitude (°)', scaleanchor: 'x' },
+        yaxis: { title: 'Rel. Latitude (°)' },
         margin: projM,
-        height: bdynH
+        height: projHeight
       }, {responsive: true});
     });
   }
