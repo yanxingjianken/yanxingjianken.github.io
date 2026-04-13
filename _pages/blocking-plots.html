@@ -618,7 +618,9 @@ author_profile: false
     var ay_raw     = -wip(smoothed, b.phi_dy)     / b.norms.ay;
     var gamma1_raw = -wip(smoothed, b.phi_def)    / b.norms.gamma1;
     var gamma2_raw = -wip(smoothed, b.phi_strain) / b.norms.gamma2;
-    var sigma_raw  =  wip(smoothed, b.phi_lap)    / b.norms.sigma;
+    /* When Lap is off the nolap basis has phi_lap≡0 and norms.sigma≈0;
+       skip the division entirely to avoid 0/0 → NaN contamination. */
+    var sigma_raw  = useLap ? (wip(smoothed, b.phi_lap) / b.norms.sigma) : 0;
 
     /* Physical-scale coefficients (multiply by scale factor / prenorm) */
     var sf = b.scale_factors;
