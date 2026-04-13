@@ -138,35 +138,16 @@ author_profile: false
 
 <div class="bc-controls">
   <span>
+    <label for="sel-event-type">Event Type:</label>
+    <select id="sel-event-type">
+      <option value="blocking" selected>Blocking Anticyclones</option>
+      <option value="prp">Propagating Anticyclones</option>
+    </select>
+  </span>
+  <span>
     <label for="sel-variant">Variant:</label>
     <select id="sel-variant">
-      <optgroup label="All Events">
-        <option value="original" selected>All Events (1260)</option>
-      </optgroup>
-      <optgroup label="RWB Parent Categories">
-        <option value="awb_only">AWB only</option>
-        <option value="cwb_only">CWB only</option>
-        <option value="omega">Omega (AWB∩CWB)</option>
-        <option value="ridge">Ridge</option>
-      </optgroup>
-      <optgroup label="AWB Sub-clusters">
-        <option value="awb_east">AWB East</option>
-        <option value="awb_ne">AWB NE</option>
-        <option value="awb_dipole">AWB Dipole</option>
-        <option value="awb_se">AWB SE</option>
-      </optgroup>
-      <optgroup label="CWB Sub-clusters">
-        <option value="cwb_nw">CWB NW</option>
-        <option value="cwb_dipole">CWB Dipole</option>
-        <option value="cwb_sw">CWB SW</option>
-      </optgroup>
-      <optgroup label="Omega Sub-clusters">
-        <option value="omega_c0">Omega C0</option>
-        <option value="omega_c1">Omega C1</option>
-        <option value="omega_c2">Omega C2</option>
-        <option value="omega_c3">Omega C3</option>
-        <option value="omega_c4">Omega C4 (onset only)</option>
-      </optgroup>
+      <option value="original" selected>All Events</option>
     </select>
   </span>
   <span>
@@ -229,6 +210,10 @@ author_profile: false
       <option value="dh_0" selected>dh = 0</option>
       <option value="dh_p12">dh = +12 h</option>
     </select>
+    <span style="margin-left: 16px;">
+      <input type="checkbox" id="chk-lap" checked>
+      <label for="chk-lap" style="font-size:13px;">Include Laplacian basis (6 modes)</label>
+    </span>
   </div>
   <div id="proj-info"></div>
   <div class="bc-proj-panels">
@@ -253,9 +238,50 @@ author_profile: false
   var DATA_CACHE = new Map();
 
   var CONTOUR_GROUPS = ['contour_base', 'contour_omega', 'contour_tendency', 'contour_diabatic', 'contour_pv_grad'];
-  var PRENORM = {beta: 1e6, ax: 1e12, ay: 1e12, gamma: 1e18};
   var DEFAULT_SHADING = 'pv_dt';
   var DEFAULT_CONTOUR = 'z';
+
+  /* Variant catalogs per event type — populated on first load */
+  var VARIANT_CATALOGS = {};
+  var catalogLoaded = {};
+
+  function getEventTypePrefix() {
+    return document.getElementById('sel-event-type').value;  /* 'blocking' or 'prp' */
+  }
+
+  async function loadCatalog(eventType) {
+    if (VARIANT_CATALOGS[eventType]) return VARIANT_CATALOGS[eventType];
+    try {
+      var resp = await fetch(BASE + '/' + eventType + '/_catalog.json');
+      if (resp.ok) {
+        var cat = await resp.json();
+        VARIANT_CATALOGS[eventType] = cat;
+        return cat;
+      }
+    } catch(e) { /* ignore */ }
+    return null;
+  }
+
+  function rebuildVariantDropdown(catalog) {
+    var sel = document.getElementById('sel-variant');
+    sel.innerHTML = '';
+    if (!catalog || !catalog.variants || catalog.variants.length === 0) {
+      sel.innerHTML = '<option value="original" selected>All Events</option>';
+      return;
+    }
+    /* Group variants: collect unique variant keys with display names */
+    var seen = {};
+    catalog.variants.forEach(function(e) {
+      if (!seen[e.variant]) seen[e.variant] = e.display;
+    });
+    Object.keys(seen).forEach(function(vk) {
+      var opt = document.createElement('option');
+      opt.value = vk;
+      opt.textContent = seen[vk];
+      if (vk === 'original') opt.selected = true;
+      sel.appendChild(opt);
+    });
+  }
 
   function getFieldScaleInfo(fieldId) {
     if (fieldId === 'z') return {scale: 1, unit: 'm'};
@@ -277,10 +303,11 @@ author_profile: false
   /* ---- Data fetching ---- */
 
   async function fetchData(variant, stage) {
-    var key = variant + '_' + stage;
+    var et = getEventTypePrefix();
+    var key = et + '/' + variant + '_' + stage;
     if (DATA_CACHE.has(key)) return DATA_CACHE.get(key);
 
-    var url = BASE + '/' + key + '.json.gz';
+    var url = BASE + '/' + et + '/' + variant + '_' + stage + '.json.gz';
     var resp = await fetch(url);
     if (!resp.ok) {
       if (resp.status === 404) return null;
@@ -565,12 +592,16 @@ author_profile: false
   /* ---- Projection ---- */
 
   function projectField(fieldArr, basis) {
+    var useLap = document.getElementById('chk-lap').checked;
+    /* If Lap checkbox is off and we have the nolap sub-basis, use it */
+    var b = (!useLap && basis.nolap) ? basis.nolap : basis;
+
     var ny = fieldArr.length, nx = fieldArr[0].length;
 
     /* Gaussian smooth the input field (3.0° FWHM, 1.5° grid) */
     var smoothed = gaussianSmoothNaN(fieldArr, 3.0, 1.5);
 
-    var w = basis.weights, m = basis.mask;
+    var w = b.weights, m = b.mask;
 
     function wip(f, g) {
       var s = 0;
@@ -581,34 +612,59 @@ author_profile: false
       return s;
     }
 
-    var beta_raw  =  wip(smoothed, basis.phi_int) / basis.norms.beta;
-    var ax_raw    = -wip(smoothed, basis.phi_dx)  / basis.norms.ax;
-    var ay_raw    = -wip(smoothed, basis.phi_dy)  / basis.norms.ay;
-    var gamma_raw =  wip(smoothed, basis.phi_def) / basis.norms.gamma;
+    /* Coefficients (raw = in pre-normalized space) */
+    var beta_raw   =  wip(smoothed, b.phi_int)    / b.norms.beta;
+    var ax_raw     = -wip(smoothed, b.phi_dx)     / b.norms.ax;
+    var ay_raw     = -wip(smoothed, b.phi_dy)     / b.norms.ay;
+    var gamma1_raw = -wip(smoothed, b.phi_def)    / b.norms.gamma1;
+    var gamma2_raw = -wip(smoothed, b.phi_strain) / b.norms.gamma2;
+    var sigma_raw  =  wip(smoothed, b.phi_lap)    / b.norms.sigma;
 
-    var beta  = beta_raw  * PRENORM.beta;
-    var ax    = ax_raw    * PRENORM.ax;
-    var ay    = ay_raw    * PRENORM.ay;
-    var gamma = gamma_raw * PRENORM.gamma;
+    /* Physical-scale coefficients (multiply by scale factor / prenorm) */
+    var sf = b.scale_factors;
+    var beta   = beta_raw   * sf.beta;
+    var ax     = ax_raw     * sf.ax;
+    var ay     = ay_raw     * sf.ay;
+    var gamma1 = gamma1_raw * sf.gamma1;
+    var gamma2 = gamma2_raw * sf.gamma2;
+    var sigma  = sigma_raw  * sf.sigma;
 
-    /* Decomposed components */
-    var recon = [], inten = [], prop_x = [], prop_y = [], prop = [], deform = [], resid = [];
+    /* Decomposed component arrays */
+    var recon = [], inten = [], prop = [], deform = [], resid = [];
+    var inten_beta = [], inten_sigma = [];
+    var prop_x = [], prop_y = [];
+    var def_shear = [], def_strain = [];
     var j, i;
     for (j = 0; j < ny; j++) {
-      recon[j]   = new Array(nx);
-      inten[j]   = new Array(nx);
-      prop_x[j]  = new Array(nx);
-      prop_y[j]  = new Array(nx);
-      prop[j]    = new Array(nx);
-      deform[j]  = new Array(nx);
-      resid[j]   = new Array(nx);
+      recon[j]      = new Array(nx);
+      inten[j]      = new Array(nx);
+      inten_beta[j] = new Array(nx);
+      inten_sigma[j]= new Array(nx);
+      prop[j]       = new Array(nx);
+      prop_x[j]     = new Array(nx);
+      prop_y[j]     = new Array(nx);
+      deform[j]     = new Array(nx);
+      def_shear[j]  = new Array(nx);
+      def_strain[j] = new Array(nx);
+      resid[j]      = new Array(nx);
       for (i = 0; i < nx; i++) {
-        inten[j][i]  = beta_raw  * basis.phi_int[j][i];
-        prop_x[j][i] = -ax_raw   * basis.phi_dx[j][i];
-        prop_y[j][i] = -ay_raw   * basis.phi_dy[j][i];
-        prop[j][i]   = prop_x[j][i] + prop_y[j][i];
-        deform[j][i] = gamma_raw * basis.phi_def[j][i];
-        recon[j][i]  = inten[j][i] + prop_x[j][i] + prop_y[j][i] + deform[j][i];
+        var ib =  beta_raw   * b.phi_int[j][i];
+        var is_ = sigma_raw  * b.phi_lap[j][i];
+        var px = -ax_raw     * b.phi_dx[j][i];
+        var py = -ay_raw     * b.phi_dy[j][i];
+        var ds = -gamma1_raw * b.phi_def[j][i];
+        var dn = -gamma2_raw * b.phi_strain[j][i];
+
+        inten_beta[j][i]  = ib;
+        inten_sigma[j][i] = is_;
+        inten[j][i]  = ib + is_;
+        prop_x[j][i] = px;
+        prop_y[j][i] = py;
+        prop[j][i]   = px + py;
+        def_shear[j][i]  = ds;
+        def_strain[j][i] = dn;
+        deform[j][i] = ds + dn;
+        recon[j][i]  = ib + is_ + px + py + ds + dn;
         resid[j][i]  = m[j][i] ? smoothed[j][i] - recon[j][i] : NaN;
       }
     }
@@ -626,9 +682,13 @@ author_profile: false
     }
     var r_squared = ss_tot > 0 ? 1 - ss_res / ss_tot : 0;
 
-    return { beta: beta, ax: ax, ay: ay, gamma: gamma, r_squared: r_squared,
-             recon: recon, inten: inten, prop_x: prop_x, prop_y: prop_y,
-             prop: prop, deform: deform, resid: resid, smoothed: smoothed };
+    return {
+      beta: beta, sigma: sigma, ax: ax, ay: ay,
+      gamma1: gamma1, gamma2: gamma2,
+      r_squared: r_squared, useLap: useLap,
+      recon: recon, inten: inten, prop: prop, deform: deform,
+      resid: resid, smoothed: smoothed
+    };
   }
 
   function fmtSci(val) {
@@ -662,20 +722,24 @@ author_profile: false
     var si = getFieldScaleInfo(shadingField);
     var result = projectField(fieldArr, basis);
     var fieldName = data.meta.field_labels[shadingField] || shadingField;
+    var nModes = result.useLap ? 6 : 5;
     var info = document.getElementById('proj-info');
     info.innerHTML =
-      '<b>Field:</b> ' + fieldName + ' (' + si.unit + ') at ' + dhLabel + '<br>' +
+      '<b>Field:</b> ' + fieldName + ' (' + si.unit + ') at ' + dhLabel +
+      ' &nbsp; [' + nModes + '-mode basis]<br>' +
       'β = ' + fmtSci(result.beta) + '  (Intensity)<br>' +
+      (result.useLap ? ('σ = ' + fmtSci(result.sigma) + '  (Laplacian/Diffusion)<br>') : '') +
       'αx = ' + fmtSci(result.ax) + '  (Propagation-X)<br>' +
       'αy = ' + fmtSci(result.ay) + '  (Propagation-Y)<br>' +
-      'γ = ' + fmtSci(result.gamma) + '  (Deformation)<br>' +
+      'γ₁ = ' + fmtSci(result.gamma1) + '  (Shear Deformation)<br>' +
+      'γ₂ = ' + fmtSci(result.gamma2) + '  (Normal Strain)<br>' +
       'R² = ' + result.r_squared.toFixed(4) +
-      '<br><small>β>0 → intensifying (blue center); β<0 → weakening (red center)</small>';
+      '<br><small>β>0 → intensifying (blue center); β<0 → weakening</small>';
 
     var projPanels = [
-      {id: 'proj-inten',  arr: result.inten,  label: 'β·Φ₁ (Intensity)'},
-      {id: 'proj-prop',   arr: result.prop,   label: '−α·∇Φ (Propagation)'},
-      {id: 'proj-deform', arr: result.deform, label: 'γ·Φ₄ (Deformation)'}
+      {id: 'proj-inten',  arr: result.inten,  label: result.useLap ? 'β·Φ₁ + σ·Φ₆ (INT)' : 'β·Φ₁ (INT)'},
+      {id: 'proj-prop',   arr: result.prop,   label: '−αx·Φ₂ − αy·Φ₃ (PRP)'},
+      {id: 'proj-deform', arr: result.deform, label: '−γ₁·Φ₄ − γ₂·Φ₅ (DEF)'}
     ];
 
     var bottomPanels = [
@@ -778,13 +842,23 @@ author_profile: false
   /* ---- Main update logic ---- */
 
   async function update() {
+    var eventType = getEventTypePrefix();
     var variant = document.getElementById('sel-variant').value;
     var stage = document.getElementById('sel-stage').value;
     var level = document.getElementById('sel-level').value;
     var shadingField = document.getElementById('sel-shading').value;
     var contourField = document.getElementById('sel-contour').value;
 
+    /* Load catalog on first access to this event type */
+    if (!catalogLoaded[eventType]) {
+      var cat = await loadCatalog(eventType);
+      if (cat) rebuildVariantDropdown(cat);
+      catalogLoaded[eventType] = true;
+      variant = document.getElementById('sel-variant').value;
+    }
+
     var needFetch = !currentData ||
+      currentData._eventType !== eventType ||
       currentData.meta.variant !== variant ||
       currentData.meta.stage !== stage;
 
@@ -807,6 +881,8 @@ author_profile: false
         });
         return;
       }
+
+      currentData._eventType = eventType;
 
       if (!dropdownsBuilt) {
         buildShadingDropdown(currentData.meta);
@@ -838,6 +914,22 @@ author_profile: false
 
   document.getElementById('chk-pvanom').addEventListener('change', update);
 
+  /* Event type change → reset variant to 'original', rebuild variant dropdown */
+  document.getElementById('sel-event-type').addEventListener('change', async function() {
+    var et = getEventTypePrefix();
+    currentData = null;
+    dropdownsBuilt = false;
+    /* Load catalog and rebuild variant dropdown */
+    if (VARIANT_CATALOGS[et]) {
+      rebuildVariantDropdown(VARIANT_CATALOGS[et]);
+    } else {
+      var sel = document.getElementById('sel-variant');
+      sel.innerHTML = '<option value="original" selected>All Events</option>';
+      catalogLoaded[et] = false;
+    }
+    update();
+  });
+
   document.getElementById('projection-panel').addEventListener('toggle', function() {
     if (this.open && currentData) {
       var level = document.getElementById('sel-level').value;
@@ -847,6 +939,14 @@ author_profile: false
   });
 
   document.getElementById('sel-proj-dh').addEventListener('change', function() {
+    if (document.getElementById('projection-panel').open && currentData) {
+      var level = document.getElementById('sel-level').value;
+      var shadingField = document.getElementById('sel-shading').value;
+      renderProjection(currentData, level, shadingField);
+    }
+  });
+
+  document.getElementById('chk-lap').addEventListener('change', function() {
     if (document.getElementById('projection-panel').open && currentData) {
       var level = document.getElementById('sel-level').value;
       var shadingField = document.getElementById('sel-shading').value;
