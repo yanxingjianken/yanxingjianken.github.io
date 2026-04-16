@@ -24,6 +24,7 @@ collection: portfolio
 ### [AI Weather Models](https://yanxingjianken.github.io/teaching/ai-weather-models)
    
 ## Assimilations
+### [Theory Review Paper](https://www.ecmwf.int/sites/default/files/elibrary/2003/76079-c-and-overview_0.pdf)
 ### [4D Var Assmilation (EnKF)](https://www.ecmwf.int/sites/default/files/elibrary/2003/76079-variational-data-assimiltion-theory-and-overview_0.pdf)
 ### [Digital filter initialization (DFI)](https://github.com/neuralgcm/dinosaur/blob/main/notebooks/weather_forecast_on_era5.ipynb)
 ### [Data assimilation with machine learning in latent space](https://www.science.org/doi/10.1126/sciadv.aea4248)
