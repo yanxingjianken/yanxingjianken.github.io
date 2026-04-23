@@ -109,6 +109,24 @@ The package follows a modular pipeline:
 
 ---
 
+## Recent Blocking Figures
+
+These updated EGU figures are generated from the blocking composite workflow and use anomaly-side vertical cross terms for the `-\omega \partial q' / \partial p` shading panels.
+
+### Closure Check at Onset
+
+<img src="https://huggingface.co/datasets/yanxingjianken/blocking-composites/resolve/main/figures/pvtend/closure_onset_dh0_wavg.png" alt="Closure check onset figure" style="max-width: 100%; height: auto; border: 1px solid #ddd;">
+
+### αx Projection at Peak
+
+<img src="https://huggingface.co/datasets/yanxingjianken/blocking-composites/resolve/main/figures/pvtend/ax_projection_peak.png" alt="Ax projection peak figure" style="max-width: 100%; height: auto; border: 1px solid #ddd;">
+
+### β Projection at Onset
+
+<img src="https://huggingface.co/datasets/yanxingjianken/blocking-composites/resolve/main/figures/pvtend/beta_projection_onset.png" alt="Beta projection onset figure" style="max-width: 100%; height: auto; border: 1px solid #ddd;">
+
+---
+
 ## Links
 
 - [Full Documentation (Read the Docs)](https://pvtend.readthedocs.io/en/latest/)
