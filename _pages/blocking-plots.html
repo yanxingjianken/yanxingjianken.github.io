@@ -185,11 +185,11 @@ author_profile: false
     <select id="sel-contour"></select>
   </span>
   <span>
-    <button id="btn-generate" style="font-size:14px;padding:6px 18px;border:1px solid #1f77b4;border-radius:4px;background:#1f77b4;color:#fff;cursor:pointer;font-weight:600;height:32px;">Generate</button>
+    <label for="sel-arrows">Arrows:</label>
+    <select id="sel-arrows"></select>
   </span>
-  <span style="margin-left:12px;">
-    <input type="checkbox" id="chk-pvanom">
-    <label for="chk-pvanom" style="font-size:13px;">Show PV anomaly contours</label>
+  <span>
+    <button id="btn-generate" style="font-size:14px;padding:6px 18px;border:1px solid #1f77b4;border-radius:4px;background:#1f77b4;color:#fff;cursor:pointer;font-weight:600;height:32px;">Generate</button>
   </span>
 </div>
 
@@ -239,7 +239,26 @@ author_profile: false
 
   var CONTOUR_GROUPS = ['contour_base', 'contour_omega', 'contour_tendency', 'contour_diabatic', 'contour_pv_grad'];
   var DEFAULT_SHADING = 'pv_dt';
-  var DEFAULT_CONTOUR = 'z';
+  var DEFAULT_CONTOUR = '';   /* 'None' by default */
+  var DEFAULT_ARROWS = 'none';
+
+  /* Arrow options: resolved client-side against fields present in each level dict.
+     Each entry lists one or more (u_field, v_field) pairs that are summed
+     element-wise. If any listed field is absent the option yields null. */
+  var ARROW_OPTIONS = [
+    {id: 'none',              label: 'None',                                            pairs: []},
+    {id: 'uv_total',          label: 'u, v (total)',                                    pairs: [['u', 'v']]},
+    {id: 'uv_div',            label: 'u_div, v_div (bar + anom)',                       pairs: [['u_div_bar', 'v_div_bar'], ['u_div_anom', 'v_div_anom']]},
+    {id: 'uv_div_adiabatic',  label: 'u_div_adiabatic, v_div_adiabatic',                pairs: [['u_div_adiabatic', 'v_div_adiabatic']]},
+    {id: 'uv_div_diabatic',   label: 'u_div_diabatic, v_div_diabatic',                  pairs: [['u_div_diabatic', 'v_div_diabatic']]},
+    {id: 'uv_div_qg_diabatic',label: 'u_div_qg_diabatic, v_div_qg_diabatic',            pairs: [['u_div_qg_diabatic', 'v_div_qg_diabatic']]},
+    {id: 'uv_div_lhr',        label: 'u_div_lhr, v_div_lhr (moist latent heat)',        pairs: [['u_div_lhr_moist', 'v_div_lhr_moist']]},
+    {id: 'uv_rot',            label: 'u_rot, v_rot (bar + anom)',                       pairs: [['u_rot_bar', 'v_rot_bar'], ['u_rot_anom', 'v_rot_anom']]},
+    {id: 'uv_rot_bar',        label: 'u_rot_bar, v_rot_bar',                            pairs: [['u_rot_bar', 'v_rot_bar']]},
+    {id: 'uv_rot_anom',       label: "u_rot_anom, v_rot_anom (u_rot', v_rot')",        pairs: [['u_rot_anom', 'v_rot_anom']]},
+    {id: 'uv_anom',           label: "u_anom, v_anom (u', v')",                         pairs: [['u_anom', 'v_anom']]},
+    {id: 'uv_bar',            label: 'u_bar, v_bar (ū, v̄)',                            pairs: [['u_bar', 'v_bar']]}
+  ];
 
   /* Variant catalogs per event type — populated on first load */
   var VARIANT_CATALOGS = {};
@@ -285,8 +304,10 @@ author_profile: false
 
   function getFieldScaleInfo(fieldId) {
     if (fieldId === 'z') return {scale: 1, unit: 'm'};
+    if (fieldId === 'Q') return {scale: 86400, unit: 'K day⁻¹'};
     if (/^w($|_)/.test(fieldId)) return {scale: 1, unit: 'Pa s⁻¹'};
-    if (['pv_anom','pv','pv_bar','Q'].indexOf(fieldId) >= 0) return {scale: 1e6, unit: 'PVU'};
+    if (/^u($|_)/.test(fieldId) || /^v($|_)/.test(fieldId)) return {scale: 1, unit: 'm s⁻¹'};
+    if (['pv_anom','pv','pv_bar'].indexOf(fieldId) >= 0) return {scale: 1e6, unit: 'PVU'};
     return {scale: 1e6, unit: 'PVU s⁻¹'};
   }
 
@@ -363,10 +384,11 @@ author_profile: false
     var groups = meta.field_groups;
     var labels = meta.field_labels;
 
-    /* None option */
+    /* None option (default) */
     var noneOpt = document.createElement('option');
     noneOpt.value = '';
     noneOpt.textContent = 'None';
+    noneOpt.selected = (DEFAULT_CONTOUR === '');
     sel.appendChild(noneOpt);
 
     CONTOUR_GROUPS.forEach(function(gid) {
@@ -383,6 +405,25 @@ author_profile: false
       });
       sel.appendChild(og);
     });
+  }
+
+  function buildArrowsDropdown() {
+    var sel = document.getElementById('sel-arrows');
+    sel.innerHTML = '';
+    ARROW_OPTIONS.forEach(function(opt) {
+      var o = document.createElement('option');
+      o.value = opt.id;
+      o.textContent = opt.label;
+      if (opt.id === DEFAULT_ARROWS) o.selected = true;
+      sel.appendChild(o);
+    });
+  }
+
+  function getArrowOption(optionId) {
+    for (var i = 0; i < ARROW_OPTIONS.length; i++) {
+      if (ARROW_OPTIONS[i].id === optionId) return ARROW_OPTIONS[i];
+    }
+    return null;
   }
 
   /* ---- Field array helper ---- */
@@ -420,14 +461,208 @@ author_profile: false
     return result;
   }
 
+  function sumFieldArrays(levelData, fieldNames) {
+    if (!fieldNames || fieldNames.length === 0) return null;
+    var arrays = [];
+    for (var i = 0; i < fieldNames.length; i++) {
+      if (!levelData[fieldNames[i]]) return null;
+      arrays.push(levelData[fieldNames[i]]);
+    }
+    var ny = arrays[0].length, nx = arrays[0][0].length;
+    var out = [];
+    for (var j = 0; j < ny; j++) {
+      out[j] = new Array(nx);
+      for (var k = 0; k < nx; k++) {
+        var val = 0;
+        var finite = true;
+        for (var a = 0; a < arrays.length; a++) {
+          var cell = arrays[a][j][k];
+          if (cell === null || !isFinite(cell)) {
+            finite = false;
+            break;
+          }
+          val += cell;
+        }
+        out[j][k] = finite ? val : null;
+      }
+    }
+    return out;
+  }
+
+  function getArrowComponents(levelData, arrowOpt) {
+    if (!arrowOpt || !arrowOpt.pairs || arrowOpt.pairs.length === 0) return null;
+    var pairs = arrowOpt.pairs;
+    /* Verify every referenced field is present. */
+    for (var p = 0; p < pairs.length; p++) {
+      if (!levelData[pairs[p][0]] || !levelData[pairs[p][1]]) {
+        if (typeof console !== 'undefined' && console.warn) {
+          console.warn('Arrow option ' + arrowOpt.id + ' missing field: ' + pairs[p][0] + '/' + pairs[p][1]);
+        }
+        return null;
+      }
+    }
+    var u0 = levelData[pairs[0][0]];
+    var v0 = levelData[pairs[0][1]];
+    var ny = u0.length, nx = u0[0].length;
+    var u = [], v = [];
+    for (var j = 0; j < ny; j++) {
+      u[j] = new Array(nx);
+      v[j] = new Array(nx);
+      for (var i = 0; i < nx; i++) {
+        var us = 0, vs = 0, finite = true;
+        for (var k = 0; k < pairs.length; k++) {
+          var uk = levelData[pairs[k][0]][j][i];
+          var vk = levelData[pairs[k][1]][j][i];
+          if (uk === null || vk === null || !isFinite(uk) || !isFinite(vk)) {
+            finite = false;
+            break;
+          }
+          us += uk;
+          vs += vk;
+        }
+        u[j][i] = finite ? us : null;
+        v[j][i] = finite ? vs : null;
+      }
+    }
+    return {u: u, v: v};
+  }
+
+  function niceArrowMag(m) {
+    /* Pick the largest ladder entry <= m. Supports tiny magnitudes (down to 0.01 m/s)
+       so divergent-wind options (~0.05-0.5 m/s) still get a reasonable reference. */
+    var ladder = [0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50, 100, 200, 500];
+    var pick = ladder[0];
+    for (var i = 0; i < ladder.length; i++) {
+      if (ladder[i] <= m) pick = ladder[i];
+    }
+    return pick;
+  }
+
+  function buildArrowGeometry(u2d, v2d, x, y, arrowScale) {
+    /* Build arrow line + arrowhead segments starting from (x[i], y[j]).
+       Samples every stepX in x and stepY in y. Returns {xs, ys, stepX, stepY}. */
+    var stepX = Math.max(1, Math.floor((x.length - 1) / 10));
+    var stepY = Math.max(1, Math.floor((y.length - 1) / 8));
+    var headFrac = 0.28;
+    var headAngle = Math.PI / 7;
+    var xs = [], ys = [];
+    for (var j = 0; j < u2d.length; j += stepY) {
+      for (var i = 0; i < u2d[j].length; i += stepX) {
+        var uHere = u2d[j][i];
+        var vHere = v2d[j][i];
+        if (uHere === null || vHere === null || !isFinite(uHere) || !isFinite(vHere)) continue;
+        var dx = uHere * arrowScale;
+        var dy = vHere * arrowScale;
+        var magHere = Math.hypot(dx, dy);
+        if (!isFinite(magHere) || magHere <= 0) continue;
+        var x0 = x[i];
+        var y0 = y[j];
+        var x1 = x0 + dx;
+        var y1 = y0 + dy;
+        xs.push(x0, x1, null);
+        ys.push(y0, y1, null);
+        var theta = Math.atan2(dy, dx);
+        var headLen = magHere * headFrac;
+        xs.push(x1, x1 - headLen * Math.cos(theta - headAngle), null);
+        ys.push(y1, y1 - headLen * Math.sin(theta - headAngle), null);
+        xs.push(x1, x1 - headLen * Math.cos(theta + headAngle), null);
+        ys.push(y1, y1 - headLen * Math.sin(theta + headAngle), null);
+      }
+    }
+    return {xs: xs, ys: ys, stepX: stepX, stepY: stepY};
+  }
+
+  /* Build arrow traces AND a reference-legend annotation anchored at bottom-right
+     of the panel (paper coordinates). Returns { traces: [...], annotation: {...} }
+     or null if the option cannot be resolved. */
+  function buildVectorOverlayTrace(levelData, arrowOpt, x, y) {
+    var comp = getArrowComponents(levelData, arrowOpt);
+    if (!comp) return null;
+
+    /* Find max magnitude (sample same subgrid used for rendering). */
+    var sampStepX = Math.max(1, Math.floor((x.length - 1) / 10));
+    var sampStepY = Math.max(1, Math.floor((y.length - 1) / 8));
+    var maxMag = 0;
+    for (var jj = 0; jj < comp.u.length; jj += sampStepY) {
+      for (var ii = 0; ii < comp.u[jj].length; ii += sampStepX) {
+        var uVal = comp.u[jj][ii];
+        var vVal = comp.v[jj][ii];
+        if (uVal === null || vVal === null || !isFinite(uVal) || !isFinite(vVal)) continue;
+        var mag = Math.hypot(uVal, vVal);
+        if (mag > maxMag) maxMag = mag;
+      }
+    }
+    if (!isFinite(maxMag) || maxMag <= 0) return null;
+
+    var domainSpan = Math.min(Math.abs(x[x.length - 1] - x[0]), Math.abs(y[y.length - 1] - y[0]));
+    var arrowScale = (0.13 * domainSpan) / maxMag;
+
+    var geom = buildArrowGeometry(comp.u, comp.v, x, y, arrowScale);
+    var arrowTrace = {
+      x: geom.xs,
+      y: geom.ys,
+      type: 'scatter',
+      mode: 'lines',
+      line: {color: 'rgba(0,0,0,0.82)', width: 1.3},
+      hoverinfo: 'skip',
+      showlegend: false
+    };
+
+    /* Reference legend: place a fixed-magnitude reference arrow near the bottom-right
+       of the data axes, with an m/s label annotation. The reference arrow sits in
+       data coordinates so it scales with the same arrowScale as the field. */
+    var refMag = niceArrowMag(maxMag);
+    var xLeft  = Math.min(x[0], x[x.length - 1]);
+    var xRight = Math.max(x[0], x[x.length - 1]);
+    var yLow   = Math.min(y[0], y[y.length - 1]);
+    var yHigh  = Math.max(y[0], y[y.length - 1]);
+    var xSpan  = xRight - xLeft;
+    var ySpan  = yHigh - yLow;
+    var refShaft = refMag * arrowScale;
+    var refTipX  = xRight - 0.04 * xSpan;
+    var refTipY  = yLow   + 0.06 * ySpan;
+    var refTailX = refTipX - refShaft;
+    var refTailY = refTipY;
+    /* Build an arrow of length refShaft pointing right. */
+    var refU = [[refMag]];
+    var refV = [[0]];
+    var refGeom = buildArrowGeometry(refU, refV, [refTailX, refTailX + refShaft], [refTailY], arrowScale);
+    var refTrace = {
+      x: refGeom.xs,
+      y: refGeom.ys,
+      type: 'scatter',
+      mode: 'lines',
+      line: {color: 'rgba(0,0,0,0.95)', width: 1.8},
+      hoverinfo: 'skip',
+      showlegend: false
+    };
+    var refLabel = {
+      x: (refTailX + refTipX) / 2,
+      y: refTipY - 0.025 * ySpan,
+      xref: 'x',
+      yref: 'y',
+      text: refMag + ' m s⁻¹',
+      showarrow: false,
+      font: {size: 10, color: '#000'},
+      bgcolor: 'rgba(255,255,255,0.75)',
+      bordercolor: 'rgba(0,0,0,0.4)',
+      borderwidth: 0.5,
+      borderpad: 2,
+      xanchor: 'center',
+      yanchor: 'top'
+    };
+    return {traces: [arrowTrace, refTrace], annotation: refLabel};
+  }
+
   /* ---- Rendering ---- */
 
-  function renderPanels(data, level, shadingField, contourField) {
+  function renderPanels(data, level, shadingField, contourField, arrowsField) {
     var dhKeys = ['dh_m12', 'dh_0', 'dh_p12'];
     var dhLabels = ['dh = −12 h', 'dh = 0', 'dh = +12 h'];
     var x = data.coords.x_rel;
     var y = data.coords.y_rel;
     var si = getFieldScaleInfo(shadingField);
+    var arrowOpt = (arrowsField && arrowsField !== 'none') ? getArrowOption(arrowsField) : null;
     var ci = contourField ? getFieldScaleInfo(contourField) : null;
     var sLabel = (data.meta.field_labels[shadingField] || shadingField);
     if (sLabel.indexOf('(') < 0) sLabel += ' (' + si.unit + ')';
@@ -442,6 +677,7 @@ author_profile: false
       if (!lev) return;
       var shadeArr = getFieldArray(lev, shadingField, data.meta);
       var traces = [];
+      var annotations = [];
 
       /* Shading filled contour (with light Gaussian smoothing) */
       if (shadeArr) {
@@ -470,20 +706,8 @@ author_profile: false
         traces.push(hm);
       }
 
-      /* PV anomaly contour overlay (blue dashed, toggleable) */
-      if (document.getElementById('chk-pvanom').checked && lev.pv_anom) {
-        traces.push({
-          z: scaleArray(lev.pv_anom, 1e6), x: x, y: y,
-          type: 'contour',
-          contours: { coloring: 'none', showlabels: true, labelformat: '.3g' },
-          line: { color: 'rgba(31,119,180,0.7)', width: 1, dash: 'dash' },
-          showscale: false,
-          ncontours: 10
-        });
-      }
-
       /* User-selected contour overlay (black solid) */
-      if (contourField && contourField !== 'pv_anom' && lev[contourField]) {
+      if (contourField && lev[contourField]) {
         traces.push({
           z: ci ? scaleArray(lev[contourField], ci.scale) : lev[contourField],
           x: x, y: y,
@@ -491,8 +715,17 @@ author_profile: false
           contours: { coloring: 'none', showlabels: true, labelformat: '.4g' },
           line: { color: '#000000', width: 1.5 },
           showscale: false,
-          ncontours: 8
+          ncontours: 10
         });
+      }
+
+      /* Arrow overlay + per-panel reference-legend */
+      if (arrowOpt) {
+        var overlay = buildVectorOverlayTrace(lev, arrowOpt, x, y);
+        if (overlay) {
+          overlay.traces.forEach(function(t) { traces.push(t); });
+          if (overlay.annotation) annotations.push(overlay.annotation);
+        }
       }
 
       /* Per-panel margins: left panel has y-title, right panel has colorbar */
@@ -517,10 +750,12 @@ author_profile: false
         yaxis: { title: i === 0 ? 'Rel. Latitude (°)' : '', scaleanchor: 'x', scaleratio: 1, constrain: 'domain' },
         margin: margins,
         height: dynH,
-        showlegend: false
+        showlegend: false,
+        annotations: annotations
       };
 
-      Plotly.react('panel-' + i, traces, layout, {responsive: true});
+      /* Always fully regenerate to avoid stale traces/annotations from previous selections. */
+      Plotly.newPlot('panel-' + i, traces, layout, {responsive: true});
     });
   }
 
@@ -850,6 +1085,7 @@ author_profile: false
     var level = document.getElementById('sel-level').value;
     var shadingField = document.getElementById('sel-shading').value;
     var contourField = document.getElementById('sel-contour').value;
+    var arrowsField = document.getElementById('sel-arrows').value;
 
     /* Load catalog on first access to this event type */
     if (!catalogLoaded[eventType]) {
@@ -889,10 +1125,12 @@ author_profile: false
       if (!dropdownsBuilt) {
         buildShadingDropdown(currentData.meta);
         buildContourDropdown(currentData.meta);
+        buildArrowsDropdown();
         dropdownsBuilt = true;
         /* Re-read selections after building */
         shadingField = document.getElementById('sel-shading').value;
         contourField = document.getElementById('sel-contour').value;
+        arrowsField = document.getElementById('sel-arrows').value;
       }
     }
 
@@ -900,7 +1138,7 @@ author_profile: false
     var nEvents = currentData.meta.n_events && currentData.meta.n_events.dh_0;
     document.getElementById('event-count').textContent = nEvents ? ('n = ' + nEvents + ' events') : '';
 
-    renderPanels(currentData, level, shadingField, contourField);
+    renderPanels(currentData, level, shadingField, contourField, arrowsField);
 
     /* Update projection if panel is open */
     if (document.getElementById('projection-panel').open) {
@@ -910,11 +1148,9 @@ author_profile: false
 
   /* ---- Event listeners ---- */
 
-  ['sel-variant', 'sel-stage', 'sel-level', 'sel-shading', 'sel-contour'].forEach(function(id) {
+  ['sel-variant', 'sel-stage', 'sel-level', 'sel-shading', 'sel-contour', 'sel-arrows'].forEach(function(id) {
     document.getElementById(id).addEventListener('change', update);
   });
-
-  document.getElementById('chk-pvanom').addEventListener('change', update);
 
   /* Event type change → reset variant to 'original', rebuild variant dropdown */
   document.getElementById('sel-event-type').addEventListener('change', async function() {
