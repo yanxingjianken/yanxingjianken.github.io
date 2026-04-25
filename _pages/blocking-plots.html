@@ -148,6 +148,8 @@ author_profile: false
     <label for="sel-variant">Variant:</label>
     <select id="sel-variant">
       <option value="original" selected>All Events</option>
+      <option value="awb">Total AWB</option>
+      <option value="cwb">Total CWB</option>
     </select>
   </span>
   <span>
@@ -286,25 +288,43 @@ author_profile: false
     return null;
   }
 
+  /* Fixed baseline variants always present regardless of catalog */
+  var FIXED_VARIANTS = [
+    {value: 'original', label: 'All Events'},
+    {value: 'awb',      label: 'Total AWB'},
+    {value: 'cwb',      label: 'Total CWB'}
+  ];
+
   function rebuildVariantDropdown(catalog) {
     var sel = document.getElementById('sel-variant');
+    var curVal = sel.value;
     sel.innerHTML = '';
-    if (!catalog || !catalog.variants || catalog.variants.length === 0) {
-      sel.innerHTML = '<option value="original" selected>All Events</option>';
-      return;
-    }
-    /* Group variants: collect unique variant keys with display names */
-    var seen = {};
-    catalog.variants.forEach(function(e) {
-      if (!seen[e.variant]) seen[e.variant] = e.display;
-    });
-    Object.keys(seen).forEach(function(vk) {
+    /* Always include baseline variants */
+    FIXED_VARIANTS.forEach(function(fv) {
       var opt = document.createElement('option');
-      opt.value = vk;
-      opt.textContent = seen[vk];
-      if (vk === 'original') opt.selected = true;
+      opt.value = fv.value;
+      opt.textContent = fv.label;
       sel.appendChild(opt);
     });
+    /* Append any additional catalog variants not already in the fixed list */
+    if (catalog && catalog.variants && catalog.variants.length > 0) {
+      var fixedKeys = FIXED_VARIANTS.map(function(fv) { return fv.value; });
+      var seen = {};
+      catalog.variants.forEach(function(e) {
+        if (!seen[e.variant] && fixedKeys.indexOf(e.variant) === -1) {
+          seen[e.variant] = e.display;
+        }
+      });
+      Object.keys(seen).forEach(function(vk) {
+        var opt = document.createElement('option');
+        opt.value = vk;
+        opt.textContent = seen[vk];
+        sel.appendChild(opt);
+      });
+    }
+    /* Restore previous selection if still valid, else default to original */
+    var opts = Array.from(sel.options).map(function(o) { return o.value; });
+    sel.value = opts.indexOf(curVal) !== -1 ? curVal : 'original';
   }
 
   function getFieldScaleInfo(fieldId) {
@@ -1227,14 +1247,9 @@ author_profile: false
     var et = getEventTypePrefix();
     currentData = null;
     dropdownsBuilt = false;
-    /* Load catalog and rebuild variant dropdown */
-    if (VARIANT_CATALOGS[et]) {
-      rebuildVariantDropdown(VARIANT_CATALOGS[et]);
-    } else {
-      var sel = document.getElementById('sel-variant');
-      sel.innerHTML = '<option value="original" selected>All Events</option>';
-      catalogLoaded[et] = false;
-    }
+    /* Load catalog and rebuild variant dropdown (always includes fixed baseline variants) */
+    rebuildVariantDropdown(VARIANT_CATALOGS[et] || null);
+    catalogLoaded[et] = false;
     update();
   });
 
