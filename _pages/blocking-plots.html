@@ -55,7 +55,7 @@ author_profile: false
   .bc-panels {
     display: flex;
     gap: 10px;
-    justify-content: center;
+    width: 100%;
     margin-bottom: 20px;
   }
   .bc-panels > div {
@@ -214,6 +214,10 @@ author_profile: false
       <input type="checkbox" id="chk-lap" checked>
       <label for="chk-lap" style="font-size:13px;">Include Laplacian basis (6 modes)</label>
     </span>
+    <span style="margin-left: 16px;">
+      <input type="checkbox" id="chk-all-events">
+      <label for="chk-all-events" style="font-size:13px;">Use all-event composited bases</label>
+    </span>
   </div>
   <div id="proj-info"></div>
   <div class="bc-proj-panels">
@@ -263,6 +267,7 @@ author_profile: false
   /* Variant catalogs per event type — populated on first load */
   var VARIANT_CATALOGS = {};
   var catalogLoaded = {};
+  var BASIS_CACHE = new Map();
 
   function getEventTypePrefix() {
     return document.getElementById('sel-event-type').value;  /* 'blocking' or 'prp' */
@@ -340,6 +345,28 @@ author_profile: false
     var data = JSON.parse(text);
     DATA_CACHE.set(key, data);
     return data;
+  }
+
+  async function getAllEventBasisData(stage) {
+    var et = getEventTypePrefix();
+    var key = et + '/original_' + stage;
+    /* Reuse main data cache if all-event variant is already loaded */
+    if (DATA_CACHE.has(key)) return DATA_CACHE.get(key);
+    if (BASIS_CACHE.has(key)) return BASIS_CACHE.get(key);
+    document.getElementById('loading').style.display = 'block';
+    try {
+      var url = BASE + '/' + et + '/original_' + stage + '.json.gz';
+      var resp = await fetch(url);
+      if (!resp.ok) throw new Error('Fetch failed for all-event basis: ' + resp.status);
+      var ds = new DecompressionStream('gzip');
+      var stream = resp.body.pipeThrough(ds);
+      var text = await new Response(stream).text();
+      var bData = JSON.parse(text);
+      BASIS_CACHE.set(key, bData);
+      return bData;
+    } finally {
+      document.getElementById('loading').style.display = 'none';
+    }
   }
 
   /* ---- Dropdown builders ---- */
@@ -695,7 +722,8 @@ author_profile: false
         /* Colorbar only on rightmost panel */
         if (i === dhKeys.length - 1) {
           hm.colorbar = {
-            thickness: 10, len: 0.7,
+            thickness: 10, len: 0.85,
+            x: 1.02, xanchor: 'left', xpad: 4,
             exponentformat: 'power',
             tickfont: {size: 9},
             title: {text: sLabel, font: {size: 10}}
@@ -728,15 +756,8 @@ author_profile: false
         }
       }
 
-      /* Per-panel margins: left panel has y-title, right panel has colorbar */
-      var margins;
-      if (i === 0) {
-        margins = { t: 35, b: 45, l: 55, r: 10 };
-      } else if (i === dhKeys.length - 1) {
-        margins = { t: 35, b: 45, l: 10, r: 55 };
-      } else {
-        margins = { t: 35, b: 45, l: 10, r: 10 };
-      }
+      /* Uniform margins: all panels same size; y-labels only on panel 0, colorbar only on panel 2 */
+      var margins = { t: 35, b: 45, l: 55, r: 55 };
 
       /* Dynamic height: compute from container width + data aspect ratio */
       var el = document.getElementById('panel-' + i);
@@ -747,7 +768,11 @@ author_profile: false
       var layout = {
         title: dhLabels[i],
         xaxis: { title: i === 1 ? 'Rel. Longitude (°)' : '', constrain: 'domain' },
-        yaxis: { title: i === 0 ? 'Rel. Latitude (°)' : '', scaleanchor: 'x', scaleratio: 1, constrain: 'domain' },
+        yaxis: {
+          title: i === 0 ? 'Rel. Latitude (°)' : '',
+          showticklabels: i === 0,
+          scaleanchor: 'x', scaleratio: 1, constrain: 'domain'
+        },
         margin: margins,
         height: dynH,
         showlegend: false,
@@ -960,10 +985,11 @@ author_profile: false
     var result = projectField(fieldArr, basis);
     var fieldName = data.meta.field_labels[shadingField] || shadingField;
     var nModes = result.useLap ? 6 : 5;
+    var basisNote = (useAllEventBasis && data.meta.variant !== 'original') ? ' &mdash; <em>all-event basis</em>' : '';
     var info = document.getElementById('proj-info');
     info.innerHTML =
       '<b>Field:</b> ' + fieldName + ' (' + si.unit + ') at ' + dhLabel +
-      ' &nbsp; [' + nModes + '-mode basis]<br>' +
+      ' &nbsp; [' + nModes + '-mode basis' + basisNote + ']<br>' +
       'β = ' + fmtSci(result.beta) + '  (Intensity)<br>' +
       (result.useLap ? ('σ = ' + fmtSci(result.sigma) + '  (Laplacian/Diffusion)<br>') : '') +
       'αx = ' + fmtSci(result.ax) + '  (Propagation-X)<br>' +
@@ -993,17 +1019,27 @@ author_profile: false
     var yRange = y[y.length - 1] - y[0];
     var projAR = Math.abs(yRange / xRange);
 
-    /* Per-panel margins: leftmost has y-title, rightmost has colorbar */
-    var projML = { t: 35, b: 45, l: 55, r: 10 };
-    var projMM = { t: 35, b: 45, l: 10, r: 10 };
-    var projMR = { t: 35, b: 45, l: 10, r: 55 };
+    /* Uniform margins: all projection panels identical size */
+    var projM = { t: 35, b: 45, l: 55, r: 55 };
 
     /* Compute height from container width */
     var projContainer = document.querySelector('.bc-proj-panels .bc-panels');
     var fullCW = projContainer ? projContainer.getBoundingClientRect().width : 720;
     var perPanelW = (fullCW - 20) / 3;  /* subtract 2 gaps of 10px */
-    var plotW = Math.max(perPanelW - projML.l - projML.r, 80);
-    var projHeight = Math.max(Math.round(plotW * projAR + projML.t + projML.b), 250);
+    var plotW = Math.max(perPanelW - projM.l - projM.r, 80);
+    var projHeight = Math.max(Math.round(plotW * projAR + projM.t + projM.b), 250);
+
+    /* Compute shared color range for top row */
+    var topVmax = 0;
+    projPanels.forEach(function(pp) {
+      if (!pp.arr) return;
+      for (var rj = 0; rj < pp.arr.length; rj++)
+        for (var ri = 0; ri < pp.arr[rj].length; ri++) {
+          var av = Math.abs(pp.arr[rj][ri] * si.scale);
+          if (isFinite(av) && av > topVmax) topVmax = av;
+        }
+    });
+    topVmax = topVmax || 1;
 
     /* Top row: Intensity, Propagation, Deformation */
     projPanels.forEach(function(pp, idx) {
@@ -1012,12 +1048,13 @@ author_profile: false
         z: scaleArray(pp.arr, si.scale), x: x, y: y,
         type: 'heatmap',
         colorscale: 'RdBu',
-        zmid: 0
+        zmin: -topVmax, zmax: topVmax
       };
       /* Colorbar only on rightmost panel */
       if (idx === projPanels.length - 1) {
         traceObj.colorbar = {
-          thickness: 10, len: 0.7,
+          thickness: 10, len: 0.85,
+          x: 1.02, xanchor: 'left', xpad: 4,
           exponentformat: 'power',
           tickfont: {size: 9},
           title: {text: si.unit, font: {size: 10}}
@@ -1025,12 +1062,15 @@ author_profile: false
       } else {
         traceObj.showscale = false;
       }
-      var pM = idx === 0 ? projML : (idx === projPanels.length - 1 ? projMR : projMM);
       Plotly.react(pp.id, [traceObj], {
         title: {text: pp.label, font: {size: 12}},
         xaxis: { title: idx === 1 ? 'Rel. Longitude (°)' : '', constrain: 'domain' },
-        yaxis: { title: idx === 0 ? 'Rel. Latitude (°)' : '', scaleanchor: 'x', scaleratio: 1, constrain: 'domain' },
-        margin: pM,
+        yaxis: {
+          title: idx === 0 ? 'Rel. Latitude (°)' : '',
+          showticklabels: idx === 0,
+          scaleanchor: 'x', scaleratio: 1, constrain: 'domain'
+        },
+        margin: projM,
         height: projHeight
       }, {responsive: true});
     });
@@ -1057,7 +1097,8 @@ author_profile: false
       /* Colorbar only on rightmost panel */
       if (idx === bottomPanels.length - 1) {
         traceObj.colorbar = {
-          thickness: 10, len: 0.7,
+          thickness: 10, len: 0.85,
+          x: 1.02, xanchor: 'left', xpad: 4,
           exponentformat: 'power',
           tickfont: {size: 9},
           title: {text: si.unit, font: {size: 10}}
@@ -1065,12 +1106,15 @@ author_profile: false
       } else {
         traceObj.showscale = false;
       }
-      var bM = idx === 0 ? projML : (idx === bottomPanels.length - 1 ? projMR : projMM);
       Plotly.react(bp.id, [traceObj], {
         title: {text: bp.label, font: {size: 12}},
         xaxis: { title: idx === 1 ? 'Rel. Longitude (°)' : '', constrain: 'domain' },
-        yaxis: { title: idx === 0 ? 'Rel. Latitude (°)' : '', scaleanchor: 'x', scaleratio: 1, constrain: 'domain' },
-        margin: bM,
+        yaxis: {
+          title: idx === 0 ? 'Rel. Latitude (°)' : '',
+          showticklabels: idx === 0,
+          scaleanchor: 'x', scaleratio: 1, constrain: 'domain'
+        },
+        margin: projM,
         height: projHeight
       }, {responsive: true});
     });
@@ -1138,11 +1182,17 @@ author_profile: false
     var nEvents = currentData.meta.n_events && currentData.meta.n_events.dh_0;
     document.getElementById('event-count').textContent = nEvents ? ('n = ' + nEvents + ' events') : '';
 
+    /* Disable all-event basis checkbox when viewing the all-events composite (no-op) */
+    var chkAllEv = document.getElementById('chk-all-events');
+    var isAllEvents = (currentData.meta.variant === 'original');
+    chkAllEv.disabled = isAllEvents;
+    if (isAllEvents) chkAllEv.checked = false;
+
     renderPanels(currentData, level, shadingField, contourField, arrowsField);
 
     /* Update projection if panel is open */
     if (document.getElementById('projection-panel').open) {
-      renderProjection(currentData, level, shadingField);
+      await renderProjection(currentData, level, shadingField);
     }
   }
 
@@ -1185,6 +1235,14 @@ author_profile: false
   });
 
   document.getElementById('chk-lap').addEventListener('change', function() {
+    if (document.getElementById('projection-panel').open && currentData) {
+      var level = document.getElementById('sel-level').value;
+      var shadingField = document.getElementById('sel-shading').value;
+      renderProjection(currentData, level, shadingField);
+    }
+  });
+
+  document.getElementById('chk-all-events').addEventListener('change', function() {
     if (document.getElementById('projection-panel').open && currentData) {
       var level = document.getElementById('sel-level').value;
       var shadingField = document.getElementById('sel-shading').value;
