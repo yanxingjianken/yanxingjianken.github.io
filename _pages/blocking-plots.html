@@ -756,13 +756,15 @@ author_profile: false
         }
       }
 
-      /* Uniform margins: all panels same size; y-labels only on panel 0, colorbar only on panel 2 */
-      var margins = { t: 35, b: 45, l: 55, r: 55 };
+      /* Asymmetric margins: compact gaps; all heatmaps equal height via normPlotW */
+      var margins = i === 0 ? { t: 35, b: 45, l: 55, r: 10 }
+                  : i === dhKeys.length - 1 ? { t: 35, b: 45, l: 10, r: 55 }
+                  : { t: 35, b: 45, l: 10, r: 10 };
 
-      /* Dynamic height: compute from container width + data aspect ratio */
+      /* Dynamic height: normalize to outer-panel inner width (cw-65) so all heatmaps equal height */
       var el = document.getElementById('panel-' + i);
       var cw = el.getBoundingClientRect().width || 300;
-      var plotW = Math.max(cw - margins.l - margins.r, 50);
+      var plotW = Math.max(cw - 65, 50);
       var dynH = Math.max(Math.round(plotW * dataAR + margins.t + margins.b), 200);
 
       var layout = {
@@ -963,10 +965,24 @@ author_profile: false
     return man.toFixed(3) + ' \u00D7 10' + sup;
   }
 
-  function renderProjection(data, level, shadingField) {
+  async function renderProjection(data, level, shadingField) {
     var dhKey = document.getElementById('sel-proj-dh').value;
     var dhLabel = {dh_m12: 'dh = −12 h', dh_0: 'dh = 0', dh_p12: 'dh = +12 h'}[dhKey];
     var basis = data[dhKey][level] && data[dhKey][level].basis;
+
+    /* All-event bases option */
+    var useAllEventBasis = document.getElementById('chk-all-events').checked;
+    if (useAllEventBasis && data.meta.variant !== 'original') {
+      try {
+        var basisJson = await getAllEventBasisData(data.meta.stage);
+        if (basisJson && basisJson[dhKey] && basisJson[dhKey][level]) {
+          basis = basisJson[dhKey][level].basis || basis;
+        }
+      } catch (e) {
+        console.warn('Could not fetch all-event basis:', e);
+      }
+    }
+
     if (!basis) {
       document.getElementById('proj-info').textContent = 'No basis data for this level / ' + dhLabel + '.';
       ['proj-inten','proj-prop','proj-deform','proj-orig','proj-recon','proj-resid'].forEach(function(id) {
@@ -1019,15 +1035,19 @@ author_profile: false
     var yRange = y[y.length - 1] - y[0];
     var projAR = Math.abs(yRange / xRange);
 
-    /* Uniform margins: all projection panels identical size */
-    var projM = { t: 35, b: 45, l: 55, r: 55 };
+    /* Asymmetric margins per panel: compact gaps, equal heatmap height */
+    var projMargins = [
+      { t: 35, b: 45, l: 55, r: 10 },
+      { t: 35, b: 45, l: 10, r: 10 },
+      { t: 35, b: 45, l: 10, r: 55 }
+    ];
 
-    /* Compute height from container width */
+    /* Compute height from container width, normalized to outer-panel inner width */
     var projContainer = document.querySelector('.bc-proj-panels .bc-panels');
     var fullCW = projContainer ? projContainer.getBoundingClientRect().width : 720;
     var perPanelW = (fullCW - 20) / 3;  /* subtract 2 gaps of 10px */
-    var plotW = Math.max(perPanelW - projM.l - projM.r, 80);
-    var projHeight = Math.max(Math.round(plotW * projAR + projM.t + projM.b), 250);
+    var projW = Math.max(perPanelW - 65, 80);  /* 65 = max total margin (55+10) */
+    var projHeight = Math.max(Math.round(projW * projAR + 35 + 45), 250);
 
     /* Compute shared color range for top row */
     var topVmax = 0;
@@ -1070,7 +1090,7 @@ author_profile: false
           showticklabels: idx === 0,
           scaleanchor: 'x', scaleratio: 1, constrain: 'domain'
         },
-        margin: projM,
+        margin: projMargins[idx],
         height: projHeight
       }, {responsive: true});
     });
@@ -1114,7 +1134,7 @@ author_profile: false
           showticklabels: idx === 0,
           scaleanchor: 'x', scaleratio: 1, constrain: 'domain'
         },
-        margin: projM,
+        margin: projMargins[idx],
         height: projHeight
       }, {responsive: true});
     });
