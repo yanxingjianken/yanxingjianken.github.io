@@ -1,7 +1,7 @@
 ---
 title: "Run Your Own AI Weather Model"
-collection: notes
-type: "misc."
+collection: teaching
+type: "Machine Learning"
 permalink: /teaching/ai-weather-models
 venue: "misc."
 date: 2025-09-11

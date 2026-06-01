@@ -1,7 +1,7 @@
 ---
 title: "HPC Quick Notes"
-collection: notes
-type: "misc."
+collection: teaching
+type: "HPC & Tools"
 permalink: /teaching/hpc_guide
 venue: "misc."
 date: 2025-08-25

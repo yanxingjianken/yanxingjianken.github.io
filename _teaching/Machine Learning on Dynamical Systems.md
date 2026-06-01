@@ -1,7 +1,7 @@
 ---
 title: "Machine Learning on Dynamical Systems"
 collection: teaching
-type: "EAPS course notes"
+type: "Machine Learning"
 permalink: /teaching/Machine_Learning_on_Dynamical_Systems
 venue: "MIT EAPS"
 date: 2025-01-31

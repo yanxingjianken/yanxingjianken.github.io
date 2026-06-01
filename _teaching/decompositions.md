@@ -1,7 +1,7 @@
 ---
 title: "Various of Decompositions on a fluid field"
-collection: notes
-type: "misc."
+collection: teaching
+type: "Climate Dynamics"
 permalink: /teaching/decompositions
 venue: "misc."
 date: 2025-07-01

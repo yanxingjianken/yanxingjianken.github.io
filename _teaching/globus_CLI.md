@@ -1,7 +1,7 @@
 ---
 title: "Intro to Globus CLI (on HPC)"
-collection: notes
-type: "misc."
+collection: teaching
+type: "HPC & Tools"
 permalink: /teaching/globus_CLI
 venue: "misc."
 date: 2025-06-10

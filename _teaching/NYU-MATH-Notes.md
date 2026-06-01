@@ -1,7 +1,7 @@
 ---
 title: "NYU Math Course Notes"
 collection: teaching
-type: "Math course notes"
+type: "Course Notes"
 permalink: /teaching/NYU_math_course_notes
 venue: "NYU Courant"
 date: 2021-09-01

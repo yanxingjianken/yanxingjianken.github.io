@@ -1,7 +1,7 @@
 ---
 title: "MIT EAPS Course Notes"
 collection: teaching
-type: "EAPS course notes"
+type: "Course Notes"
 permalink: /teaching/MIT_EAPS_course_notes
 venue: "MIT EAPS"
 date: 2024-09-01

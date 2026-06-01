@@ -1,7 +1,7 @@
 ---
 title: "Intro to NCL (on HPC and PC)"
-collection: notes
-type: "misc."
+collection: teaching
+type: "HPC & Tools"
 permalink: /teaching/into2ncl
 venue: "misc."
 date: 2025-03-16

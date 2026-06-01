@@ -1,7 +1,7 @@
 ---
 title: "Using Tempest Extreme to track (Anti)Cyclones anywhere on any level surfaces!"
-collection: misc.
-type: "2025 Princeton GFDL Hackathon"
+collection: teaching
+type: "Climate Dynamics"
 permalink: /teaching/tempest_extreme
 venue: "Princeton GFDL"
 date: 2025-05-14

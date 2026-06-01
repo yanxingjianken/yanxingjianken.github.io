@@ -1,7 +1,7 @@
 ---
 title: "MPAS-A Notes"
-collection: modeling
-type: "Notes for Running MODEL FOR PREDICTION ACROSS SCALES - ATMOSPHERE"
+collection: teaching
+type: "Climate Dynamics"
 permalink: /teaching/mpas
 venue: "MIT EAPS"
 date: 2025-08-08
