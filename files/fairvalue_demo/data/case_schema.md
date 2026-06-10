@@ -1,8 +1,8 @@
 # Case-bundle schema (v1) — `data/caseN.js`
 
-Contract between the **backtest exporter** (to be written; replays one held-out
-station-day at every decision hour through the production stage-1 path) and the
-demo page `reports/webapp/index.html` (Examples 1–3 tabs).
+Contract between the **backtest exporter** (`scripts/export_cases.py`; replays
+one held-out station-day at every decision hour through the production stage-1
+path) and the demo page `reports/webapp/index.html` (Examples 1–3 tabs).
 
 Each file is a single JS statement wrapping ONE strict-JSON object:
 
@@ -46,7 +46,7 @@ that tab in its "case pending" state (the `<script>` 404s harmlessly).
 
 | field | type | meaning |
 |---|---|---|
-| `hour` | int | decision hour, local standard (0–23) |
+| `hour` | int | decision hour, local standard (0–23; a negative value is a PRE-DAY decision, e.g. `-6` = 18:00 LST the previous evening) |
 | `high` | obj/null | side document (below); `null` = not priced at this hour |
 | `low` | obj/null | same shape |
 | `warnings` | list | strings — the tick's warnings (schema v1 `warnings`) |
@@ -71,7 +71,7 @@ exporter can serialize the backtest's per-hour `SideDoc`s as-is:
 
 | field | type | meaning |
 |---|---|---|
-| `ticker` | str | market ticker (or a synthetic id for demo bundles) |
+| `ticker` | str | market ticker (or a reconstructed `RECON-*` id when historical strike tables are unavailable) |
 | `type` | str | `"less"` / `"between"` / `"greater"` |
 | `lo` | int/null | INCLUSIVE payout lower bound (null for `less`) |
 | `hi` | int/null | INCLUSIVE payout upper bound (null for `greater`) |
@@ -100,5 +100,10 @@ exporter can serialize the backtest's per-hour `SideDoc`s as-is:
   honoring the no-leak rule L1, exactly like `backtest/runner.py`.
 * Keep bundles < ~300 KB: subsample `obs` to 15 min, drop PMF entries < 1e-6
   (already the schema-v1 convention), limit `hours` to ~12 entries.
-* `data/case1.js` currently in this directory is a SYNTHETIC placeholder so
-  the page renders before the exporter exists; replace it with a real export.
+* `data/case1.js`–`case3.js` in this directory are REAL exports from
+  `scripts/export_cases.py` (the original pre-exporter placeholder bundle has
+  been replaced): backfilled GEFS/HRRR-lag/NAM-nest trajectory archives +
+  archived 1-min obs + the official NWS CLI settlement, replayed through the
+  walk-forward backtest stage-1 path. Historical strike tables are not
+  archived, so brackets are the standard 6-bracket structure reconstructed
+  around the corrected PMF's median (see each bundle's `meta`).
