@@ -91,6 +91,20 @@ exporter can serialize the backtest's per-hour `SideDoc`s as-is:
 | `n_obs` | int | observations seen up to the hour |
 | `sources_used` | list | obs sources, e.g. `["synoptic_5min"]` |
 
+### Diagnostics (optional stage-0 / consensus keys)
+
+The production daemon (and the exporter mirroring it) additionally emits the
+stage-0 EMOS-consensus diagnostics below. All are OPTIONAL: bundles exported
+before the stage-0 prior landed simply lack them and the page renders
+unchanged (no strip, no prior badge).
+
+| field | type | meaning |
+|---|---|---|
+| `prior_source` | str | `"stage0"` — `pmf_prior` is the trained stage-0 EMOS consensus; `"raw_pool"` — the forecast-only equal-system pool fallback |
+| `systems_summary` | obj/null | per-system consensus view `{system: {point_f, sd_f, n_members, weight_mass, init_utc}}` (`realtime.loop._systems_summary`): `point_f` = member-mean in-day extreme °F (1 dp), `sd_f` = member sd (2 dp; `null` for deterministic 1-member systems, e.g. MOS), `n_members` = members entering the feature, `weight_mass` = the system's posterior F-draw mass (`null` for systems absent from the draw, e.g. MOS), `init_utc` = ISO init of the newest run used. Renders as the per-system strip under the PMF chart |
+| `stage0` | obj/null | stage-0 EMOS predictive diagnostics when `prior_source == "stage0"`: `mu_f`, `sigma_f`, `pattern`, `ladder_level`, `s2bar_f2`, `n_fit`, `dist`, `t_df`; `null` on the raw-pool fallback |
+| `anchor` | obj/null | the moment anchor mapping the posterior F arm onto the stage-0 prior (`stage1_truncate.compute_anchor`): `m0_eff`, `gamma`, `mu_w`, `sig_d`, `s_w`, `m0`, `s0`, `rbar`; `null` when anchoring is off, refused, or the prior is raw-pool |
+
 ## Exporter notes
 
 * One bundle per held-out day; the day must come from the holdout split
