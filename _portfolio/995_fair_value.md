@@ -1,19 +1,12 @@
 ---
 title: "Fair-Value Engine: Probabilistic Pricing for Event Contracts"
-excerpt: "An ongoing quantitative-research project that turns live data streams into full probability distributions — and fair values — for short-horizon event contracts, with a password-gated interactive demo.<br/><img src='/files/fairvalue_demo/fig/thumbnail.png' style='max-width:60%;height:auto;'>"
+excerpt: "Fair values for a contract.<br/><img src='/files/fairvalue_demo/fig/thumbnail.png' style='max-width:60%;height:auto;'>"
 collection: portfolio
 ---
 
-This is an ongoing quantitative-research project on pricing short-horizon
-event contracts. Rather than a single point estimate, the engine maintains a
-full probability distribution over the contract's settlement value and updates
-it continuously as new information arrives — so every listed outcome bracket
-gets a model fair value, before and after each update. The interesting part is
-watching the two distributions disagree early in the horizon and converge as
-the outcome locks in.
+Scientific arbitrage.
 
-A live, interactive demo lets you replay archived examples hour by hour and
-price today's contracts in real time, end to end in the browser.
+A live, interactive demo lets you replay archived examples and in real time in the browser.
 
 <div style="margin:22px 0;padding:18px;border:1px solid #ccc;border-radius:10px;background:#f7f9fb">
   <b>🔒 Interactive demo — password-protected</b><br/>
