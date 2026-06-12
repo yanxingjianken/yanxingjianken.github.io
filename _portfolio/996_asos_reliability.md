@@ -1,15 +1,10 @@
 ---
-title: "Real-Time Signals: A High-Frequency Trading Research Project"
-excerpt: "A high-frequency trading research project that fuses live data streams with machine learning to surface fast, model-driven signals — with a hands-on interactive demo you can launch in the browser.<br/><img src='/files/asos_demo/fig/demo_satellite.png' style='max-width:60%;height:auto;'>"
+title: "Bayesian Prob for Pricing Reliability"
+excerpt: "Bayesian Model on Pricing.<br/><img src='/files/asos_demo/fig/demo_satellite.png' style='max-width:60%;height:auto;'>"
 collection: portfolio
 ---
 
-This is an ongoing high-frequency trading research project built around real-time data
-streams and machine-learning inference. The idea is simple to state and hard to do well:
-ingest fast-moving signals as they arrive, run them through a predictive model, and act on
-the edge before it decays. An execution-aware framework ties it together, designed to react
-to short-lived opportunities as they appear. A live, interactive demo lets you watch the
-pipeline reason over fresh data, end to end.
+Given a price of a contract, what's the prob that it is over/underpriced?
 
 <div style="margin:22px 0;padding:18px;border:1px solid #ccc;border-radius:10px;background:#f7f9fb">
   <b>🔒 Interactive demo — password-protected</b><br/>
