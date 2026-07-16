@@ -47,6 +47,29 @@ collection: portfolio
 <div class="wxsys" markdown="0">
 <p class="intro">Twenty-one recurring circulations — from the Boston sea breeze to the Appalachian cold-air wedge — read as mechanisms: what forces them, what they do to the near-surface temperature, and where they lead. <b>Every system carries both</b> a hand-drawn cross-section or plan-view schematic <b>and a real ERA5 map of its case date</b> — 850-hPa temperature (shaded) + 500-hPa geopotential height (contours). For the storm- and mesoscale systems the ERA5 map shows the <em>synoptic setup that permits them</em>; the feature itself lives below reanalysis resolution (look to radar). Forecaster cases are quoted from NWS Area Forecast Discussions with a link to the source text.</p>
 
+<p style="font-size:13px;color:var(--soft);background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--warm);border-radius:8px;padding:12px 14px;margin:16px 0 6px;max-width:78ch">
+<b>What actually diagnoses these systems — and why the maps above are the wrong instrument.</b>
+Every card's "Diagnose with" line below reports what the peer-reviewed literature says, not what
+convention assumes. Reading 53 papers produced exactly one result that generalises, and it is a
+surprise: <b>for every system on this page where a primary source could be verified, the controlling
+quantity is a <em>layer</em> — a depth, a difference between two levels, an integral through the whole
+profile — and it cannot be recovered from any single pressure level.</b> Lake-effect snow needs the lake
+temperature <em>minus</em> the 850-hPa temperature, not either one alone. Freezing rain needs the melting
+and refreezing energy integrated down the sounding. A capping inversion needs a lapse rate sustained
+over 200 hPa. An Alberta clipper needs the <em>offset</em> between the 500-hPa vorticity maximum and the
+surface low. Cold-air damming shows <b>no expression at all</b> at 850 hPa — it lives near 930 hPa,
+underneath the level everyone reaches for. Five independent papers arrive here by five different
+physics. So the 850-hPa temperature and 500-hPa height maps on these cards are <em>context</em>: they show
+the synoptic setup that permits each system, and they are not the diagnostic for any of them.
+🔶 The clause "single levels are insufficient" is our own synthesis — none of those five papers says it
+in so many words, and that gap is exactly what the tags below are for.
+<b>✅</b> the paper says it in words and the quote is printed here ·
+<b>🔶</b> it follows from the paper's methods but the paper does not state it — never a quotation ·
+<b>⚠️</b> a wording limit or a contrary nuance we are not smoothing over ·
+<b>❌</b> we searched, twice, and nothing survived. An honest gap, printed rather than filled with a
+plausible guess.
+</p>
+
 <div class="legend">
   <span class="k"><svg width="34" height="14"><line x1="1" y1="7" x2="33" y2="7" stroke="var(--cold)" stroke-width="2"/><polygon points="9,7 13,2 17,7" fill="var(--cold)"/><polygon points="21,7 25,2 29,7" fill="var(--cold)"/></svg> cold front</span>
   <span class="k"><svg width="24" height="14"><line x1="2" y1="7" x2="22" y2="7" stroke="var(--warm)" stroke-width="2.4" marker-end="url(#mw)"/></svg> warm / rising air</span>
@@ -81,7 +104,7 @@ collection: portfolio
   <dl class="mech"><dt>Cause</dt><dd>Differential land–sea heating drives onshore flow beneath a return flow aloft.</dd>
   <dt>Affects</dt><dd>The advancing <b>sea-breeze front</b> shifts wind onshore, raises dewpoint, and caps the coastal high by late morning.</dd>
   <dt>Leads to</dt><dd>A sharp coast-vs-inland split; the convergence line can trigger inland showers.</dd></dl>
-  <p class="diag"><b>Diagnose with:</b> 10-m wind + T2m + dewpoint; radar clear-air fine-line. <em>(Mesoscale — below reanalysis resolution.)</em></p>
+  <p class="diag"><b>Diagnose with:</b> the <b>thermodynamic front and the kinematic front separately</b> — the sea-breeze front <em>bifurcates</em>, and the two are <b>not co-located</b>, so tracking 10-m convergence alone mis-locates the T2m drop by up to <b>~15 km</b>: the convergence line and the temperature drop are different objects. 🔶 Inferred from Miller, Keim, Talbot &amp; Mao 2003, <em>Rev. Geophys.</em> (after Atkins et al. 1995) — no DOI recorded in our review; the paper does not phrase it this way. Then: 10-m wind shift, dewpoint gradient, radar clear-air fine-line. ✅ Timing: the coastal daily maximum runs <b>~1–2 h earlier</b> on sea-breeze days — <b>1800–1900 UTC</b> versus <b>~2000 UTC</b> on fair-weather days, with Wantagh <em>"cool[ing] almost 2 h earlier (1900 UTC)"</em> — McCabe &amp; Freedman 2023, <em>Wea. Forecasting</em> 38(4), 10.1175/WAF-D-22-0119.1. <em>(Mesoscale — below reanalysis resolution.)</em></p>
   <p class="ex"><span class="d"><a href="https://mesonet.agron.iastate.edu/cgi-bin/afos/retrieve.py?pil=AFDBOX&sdate=2007-03-27&edate=2007-03-28&fmt=text">2007-03-27 · Boston (BOX) — source</a></span><i>"eastern coastal MASS where temps have cooled into the mid 40s courtesy of the seabreeze front."</i></p></div></article>
 
 <article class="sys"><div class="fig"><svg viewBox="0 0 300 168" role="img" aria-label="Backdoor cold front plan view">
@@ -97,7 +120,7 @@ collection: portfolio
   <dl class="mech"><dt>Cause</dt><dd>A 500-hPa ridge over eastern Canada and a surface high over Québec/the Maritimes drive cool marine air <em>southwest</em> down the coast.</dd>
   <dt>Affects</dt><dd>A coastal <b>crash of 10–30 °F</b> behind an NE wind shift and dewpoint drop; the interior often stays hot.</dd>
   <dt>Leads to</dt><dd>Big coast-vs-inland splits and forecast busts — a spring/early-summer specialty.</dd></dl>
-  <p class="diag"><b>Diagnose with:</b> MSLP + 10-m wind + dewpoint; 850-hPa T; radar fine-line.</p>
+  <p class="diag"><b>Diagnose with:</b> MSLP + 10-m wind + dewpoint; the NE wind shift; radar fine-line. ❌ <b>Forecaster practice, not a cited result.</b> <em>The backdoor front is not covered anywhere in our 53-paper review — it was neither verified nor formally searched, so nothing on this line is carried by a source. Note in particular that the 850-hPa temperature is dropped from this line: this is a shallow front, and no verified result supports reading it at 850 hPa.</em></p>
   <p class="ex"><span class="d"><a href="https://mesonet.agron.iastate.edu/cgi-bin/afos/retrieve.py?pil=AFDBOX&sdate=2008-03-08&edate=2008-03-09&fmt=text">2008-03-08 · Boston (BOX) — source</a></span><i>"the backdoor cold front that cooled temperatures into the upper 30s and lower 40s."</i></p></div></article>
 
 <article class="sys"><div class="fig"><svg viewBox="0 0 300 168" role="img" aria-label="Coastal front cross-section">
@@ -114,7 +137,7 @@ collection: portfolio
   <dl class="mech"><dt>Cause</dt><dd>Land–sea thermal contrast (often reinforced by cold-air damming) concentrates a shallow baroclinic zone at the coast.</dd>
   <dt>Affects</dt><dd>A very tight T and precip-type gradient — a few km separate 34 °F rain/snow from 45 °F.</dd>
   <dt>Leads to</dt><dd>Rain/snow lines and a favored axis for coastal cyclogenesis.</dd></dl>
-  <p class="diag"><b>Diagnose with:</b> surface T + wind convergence; radar. <em>(Mesoscale.)</em></p>
+  <p class="diag"><b>Diagnose with:</b> Petterssen frontogenesis computed from the <b>total observed 10-m wind — the convergence term</b>, explicitly <em>not</em> the geostrophic/deformation term; <b>SST and air–sea ΔT</b> (the SST is the necessary condition); <b>700-hPa height and wind</b> — this, not 500, is the steering level; and <b>850-hPa thermal advection</b>, i.e. t850 <em>together with</em> the 850-hPa wind — the t850 value on its own is useless here. ✅ Quoted: <em>"the initial coastal development takes place in the absence of a geopotential perturbation at 500 mb" … "The steering level for the zipper low appears to be 700 mb." … "geostrophic deformation was incapable of initiating coastal frontogenesis."</em> — Keshishian &amp; Bosart 1987, <em>Mon. Wea. Rev.</em> 115, 100–117 (no DOI printed in the PDF — 1987 AMS typesetting predates DOI assignment). That last line is the one that matters: a height-derived, geostrophic frontogenesis diagnostic does not merely under-detect this front — <b>it carries the wrong sign</b>, degenerating into a cellular four-quadrant pattern where the observed wind gives a clean coast-parallel axis. Baroclinicity is <em>"concentrated below 800 mb"</em>; the cold layer is ~300 m deep. See also Bosart 1975, <em>QJRMS</em> 101, 957–978, and Nielsen 1989, <em>Mon. Wea. Rev.</em> 117, 1380–1401 (neither prints a DOI). <em>(Mesoscale.)</em></p>
   <p class="ex"><span class="d"><a href="https://mesonet.agron.iastate.edu/cgi-bin/afos/retrieve.py?pil=AFDBOX&sdate=2008-01-26&edate=2008-01-27&fmt=text">2008-01-26 · Boston (BOX) — source</a></span><i>"caveat: coastal front developing /ESE wind/… snow showers may break out Boston to NBT."</i></p></div></article>
 
 <article class="sys"><div class="fig"><svg viewBox="0 0 300 168" role="img" aria-label="Marine layer cross-section">
@@ -130,8 +153,8 @@ collection: portfolio
   <p class="lead">Cool moist marine air trapped under an inversion, filled with stratus and fog.</p>
   <dl class="mech"><dt>Cause</dt><dd>Warm moist air over cold shelf water; a subsidence inversion caps a shallow saturated layer.</dd>
   <dt>Affects</dt><dd>Suppressed insolation and a cool, late-peaking coastal high; dense fog.</dd>
-  <dt>Leads to</dt><dd>A known <b>MPAS warm-bias</b> — models burn the stratus off too fast.</dd></dl>
-  <p class="diag"><b>Diagnose with:</b> GOES visible/IR loop, ceilometer.</p>
+  <dt>Leads to</dt><dd>A coastal warm bias when the stratus clears sooner than forecast. <em>❌ Which model, and by how much, is not something we can source: our 53-paper review found no paper evaluating MPAS 2-m temperature bias at convection-permitting resolution, and the marine layer itself returned no primary source in two searches.</em></dd></dl>
+  <p class="diag"><b>Diagnose with:</b> GOES visible/IR loop, ceilometer; air–sea ΔT; cloud fraction and cloud base. ❌ <b>Forecaster practice, not a cited result.</b> <em>The marine layer / coastal stratus / sea fog is one of the systems our 53-paper review searched twice and found no primary source for. The burn-off claim in the panel above should be read the same way: the review also found <b>no paper at all</b> evaluating MPAS 2-m temperature bias at convection-permitting resolution, so no citation supports it either.</em></p>
   <p class="ex"><span class="d"><a href="https://mesonet.agron.iastate.edu/cgi-bin/afos/retrieve.py?pil=AFDBOX&sdate=2009-05-19&edate=2009-05-20&fmt=text">2009-05-19 · Boston (BOX) — source</a></span><i>"cooler marine-influenced region… Logan may have its warmest temps around 6 PM?"</i></p></div></article>
 
 <article class="sys"><div class="fig"><svg viewBox="0 0 300 168" role="img" aria-label="Nor'easter plan view">
@@ -147,7 +170,7 @@ collection: portfolio
   <dl class="mech"><dt>Cause</dt><dd>Baroclinic cyclogenesis along the coast / Gulf-Stream gradient, forced by an upper trough and jet.</dd>
   <dt>Affects</dt><dd>Heavy snow/rain NW of the track, damaging NE winds, coastal surge.</dd>
   <dt>Leads to</dt><dd>The Northeast's signature high-impact winter storms.</dd></dl>
-  <p class="diag"><b>Diagnose with:</b> MSLP + 500-hPa height/vorticity; IR comma cloud; radar bands.</p>
+  <p class="diag"><b>Diagnose with:</b> MSLP + 500-hPa height/vorticity; IR comma cloud; radar bands. ❌ <b>Forecaster practice, not a cited result.</b> <em>The nor'easter — and the Miller-A-versus-B distinction — is one of the systems our 53-paper review searched twice and found no primary source for. The 500-hPa field here is convention, not a verified diagnostic; it is on this line because forecasters use it, not because a paper says it works.</em></p>
   <p class="ex"><span class="d">27 Jan 2015 · OKX / BOX</span><i>a benchmark coastal low; 60–90 cm snowfall across eastern New England.</i></p></div></article>
 
 <article class="sys"><div class="fig"><svg viewBox="0 0 300 168" role="img" aria-label="Miller B redevelopment plan view">
@@ -163,7 +186,7 @@ collection: portfolio
   <dl class="mech"><dt>Cause</dt><dd>The inland low weakens crossing the mountains; upper energy transfers to a secondary coastal low.</dd>
   <dt>Affects</dt><dd>A sudden coastal intensification and a jump in the snow gradient.</dd>
   <dt>Leads to</dt><dd>Notorious busts — the storm "reloads" on the coast hours later.</dd></dl>
-  <p class="diag"><b>Diagnose with:</b> MSLP tendency, 500-hPa vorticity handoff, the benchmark 40 °N/70 °W.</p>
+  <p class="diag"><b>Diagnose with:</b> MSLP tendency, 500-hPa vorticity handoff, the benchmark 40 °N/70 °W. ❌ <b>Forecaster practice, not a cited result.</b> <em>The Miller-A-versus-B distinction is one of the systems our 53-paper review searched twice and found no primary source for. Every term on this line is forecaster convention.</em></p>
   <p class="ex"><span class="d">DJF · OKX / PHI</span><i>the classic "Miller B" secondary cyclogenesis.</i></p></div></article>
 
 </div>
@@ -183,8 +206,8 @@ collection: portfolio
   <p class="lead">A shallow dome of cold air trapped against the east slope of the Appalachians.</p>
   <dl class="mech"><dt>Cause</dt><dd>High pressure to the N/NE forces cold, dense air against the mountains; warm air overruns it aloft.</dd>
   <dt>Affects</dt><dd>Overcast, drizzle, and a strongly suppressed daytime high from DC through NYC (8–20 °F cold).</dd>
-  <dt>Leads to</dt><dd>Freezing rain and busts — models <b>erode the wedge too fast (warm bias)</b>.</dd></dl>
-  <p class="diag"><b>Diagnose with:</b> surface θ / mesonet, 850-hPa T, the in-situ pressure ridge.</p>
+  <dt>Leads to</dt><dd>Freezing rain, and busts when the wedge erodes sooner than forecast. <em>⚠️ Ellis, Marston &amp; Nelson 2018 identify the hard part as the cloud- and precipitation-driven diabatic cooling that sustains the dome — not the dry dynamics. We make no claim about how fast any particular model erodes it: no paper in our review measures that.</em></dd></dl>
+  <p class="diag"><b>Diagnose with — and note what is <em>not</em> here:</b> ① the <b>"U"-shaped ridge in the SLP field</b> (equivalently a U-shaped trough in the sea-level thermal field); ② <b>930-hPa height and temperature</b> — the base of the capping inversion, and <em>930 hPa is not a standard pressure level; 925 hPa is the nearest available one</em>; ③ surface T <b>and</b> surface moisture, on <b>both</b> sides of the barrier; ④ <b>925-hPa wind direction</b> — easterly east of the ridge versus southerly west of it; ⑤ ceiling / cloud base; ⑥ the <b>PNA index 2–3 days earlier</b>, which carries real predictive skill (p = 0.02 at −2 d, p &lt; 0.01 at −3 d). <b>850-hPa temperature has been removed from this line.</b> ✅ Quoted: <em>"Composite air temperatures depict cold air along the eastern side of the Appalachians at the surface, but <b>no expression of CAD at the 850 hPa level</b>. This coincides with a composite wind field comprised of easterly and northeasterly flow at the surface east of the Appalachians, yet southerly and southwesterly 850 hPa winds across all of the region."</em> — Ellis, Marston &amp; Nelson 2018, <em>Int. J. Climatol.</em> 38, 530–542, 10.1002/joc.5189. And: <em>"the cold dome can be identified by a 'U' shaped ridge (trough) in the sea level isobar (thermal) patterns and the 930-mb height (temperature) fields representative of conditions at the base of the inversion overlying the cold dome."</em> — Bell &amp; Bosart 1988, <em>Mon. Wea. Rev.</em> 116, 137–161 (no DOI printed in the PDF; the legacy AMS DOI string appears in filenames only and is not asserted as read). The dome is almost always confined <b>below 850 hPa</b>; z500 is a broad-scale precursor only — never an identifier. ⚠️ Ellis et al. document a <em>suppressed diurnal amplitude</em> inside the wedge; they make no claim about a shift in the <em>timing</em> of the daily maximum, and neither do we. See also Bailey et al. 2003, <em>Wea. Forecasting</em> 18(4) (objective climatology, SLP-Laplacian detection; no DOI recorded in our review); and, for the Japanese (Kanto) analogue of the same wedge, Suzuki et al., <em>J. Meteor. Soc. Japan</em> 99(1), 10.2151/jmsj.2021-002, where <b>model terrain height</b> — not the turbulence scheme — is the dominant error term.</p>
   <p class="ex"><span class="d"><a href="https://mesonet.agron.iastate.edu/cgi-bin/afos/retrieve.py?pil=AFDBOX&sdate=2007-04-02&edate=2007-04-03&fmt=text">2007-04-02 · Boston (BOX) — source</a></span><i>"stuck in the 40s as a strong wedge of high pressure knifes in from the NNE."</i></p></div></article>
 
 <article class="sys"><div class="fig"><svg viewBox="0 0 300 168" role="img" aria-label="Downslope warming">
@@ -198,8 +221,8 @@ collection: portfolio
   <p class="lead">Air descending the lee of the mountains warms and dries by compression.</p>
   <dl class="mech"><dt>Cause</dt><dd>W/NW flow crosses the Appalachians/Berkshires and sinks on the lee side, warming dry-adiabatically.</dd>
   <dt>Affects</dt><dd>A higher, drier maximum at NYC/PHL/DCA and lower dewpoints.</dd>
-  <dt>Leads to</dt><dd>Elevated highs and fire-weather days — a mechanism MPAS handles <b>well</b> (resolved terrain).</dd></dl>
-  <p class="diag"><b>Diagnose with:</b> NW gradient wind, falling dewpoint, 850-hPa thermal ridge.</p>
+  <dt>Leads to</dt><dd>Elevated highs and fire-weather days. <em>❌ The page previously called this "a mechanism MPAS handles well". That was unsourced and has been removed: downslope / lee warming returned no primary source in two searches, and no paper in our review evaluates MPAS 2-m temperature at all.</em></dd></dl>
+  <p class="diag"><b>Diagnose with:</b> NW gradient wind, falling dewpoint, 850-hPa thermal ridge, the lee-slope descent path. ❌ <b>Forecaster practice, not a cited result.</b> <em>Downslope / lee warming is one of the systems our 53-paper review searched twice and found no primary source for. The "MPAS handles this well" claim in the panel above is unverified on the same grounds: the review found no paper evaluating MPAS 2-m temperature bias at all.</em></p>
   <p class="ex"><span class="d"><a href="https://mesonet.agron.iastate.edu/cgi-bin/afos/retrieve.py?pil=AFDBOX&sdate=2008-06-08&edate=2008-06-09&fmt=text">2008-06-08 · Boston (BOX) — source</a></span><i>"highs nudged upward a few degrees… W downsloping flow expected… E-coast beaches will be hotter."</i></p></div></article>
 
 <article class="sys"><div class="fig"><svg viewBox="0 0 300 168" role="img" aria-label="Lake-effect snow">
@@ -215,7 +238,7 @@ collection: portfolio
   <dl class="mech"><dt>Cause</dt><dd>Large lake-minus-850-hPa T difference (≥13 °C) plus long fetch drives shallow convection over open water.</dd>
   <dt>Affects</dt><dd>Extremely localized heavy snow and sharp gradients on the downwind shore.</dd>
   <dt>Leads to</dt><dd>Feet of snow over a few km (Tug Hill, Buffalo).</dd></dl>
-  <p class="diag"><b>Diagnose with:</b> radar bands, 850-hPa T minus lake temp, boundary-layer depth, fetch.</p>
+  <p class="diag"><b>Diagnose with:</b> <b>lake-surface water temperature MINUS 850-hPa temperature</b> — the ~13 °C threshold — plus fetch, boundary-layer depth, and the radar bands. 🔶 <b>t850 undifferenced is meaningless here:</b> the operative variable is a <em>difference</em>, so the lake/water surface temperature carries exactly as much of the diagnosis as t850 does. Niziol 1987, <em>Operational Forecasting of Lake Effect Snowfall in Western and Central New York</em>, <em>Wea. Forecasting</em> 2(4), 310–321 (no DOI recorded in our review). ⚠️ Niziol <em>does</em> use 500-mb height — at synoptic scale, for pattern recognition, not for the lake-effect diagnosis itself. That distinction is the whole point of this page.</p>
   <p class="ex"><span class="d"><a href="https://mesonet.agron.iastate.edu/cgi-bin/afos/retrieve.py?pil=AFDBOX&sdate=2014-11-07&edate=2014-11-08&fmt=text">2014-11-07 · Boston (BOX) — source</a></span><i>"a swath of rain/snow squalls over western NY state… some of this activity is lake-effect enhanced with CAA coming across."</i></p></div></article>
 
 </div>
@@ -235,8 +258,8 @@ collection: portfolio
   <p class="lead">On clear, calm, dry nights the surface radiates away its heat and cold air drains downhill.</p>
   <dl class="mech"><dt>Cause</dt><dd>Strong longwave loss builds a surface inversion; the layer decouples and cold air pools in valleys (aided by snow).</dd>
   <dt>Affects</dt><dd>Drives the daily minimum, frost, and fog; large diurnal range.</dd>
-  <dt>Leads to</dt><dd>Valley cold pools — MPAS runs <b>too warm</b> (stable-PBL scheme under-cools).</dd></dl>
-  <p class="diag"><b>Diagnose with:</b> sky cover + wind + dewpoint, snow analysis, sfc cooling rate.</p>
+  <dt>Leads to</dt><dd>Valley cold pools, and a nocturnal warm bias when the stable layer is under-resolved. <em>⚠️ The evidence here is real but it is about <b>WRF and the HRRR</b>, not MPAS — and Suzuki et al. 2021 find <b>model terrain height</b>, not the turbulence scheme, to be the dominant error term. The corpus also disagrees with itself on the scheme: one paper has MYNN <em>under</em>-mixing in a stable cold pool, another has it <em>over</em>-mixing in a stable valley. We are not smoothing that over.</em></dd></dl>
+  <p class="diag"><b>Diagnose with — and not with any mid-tropospheric field:</b> ① <b>cloud fraction</b> ② <b>liquid water path</b> ③ <b>downwelling shortwave <em>and</em> longwave at the surface</b> ④ PBL height ⑤ 10-m wind ⑥ snow cover. ✅ These, not z500 or t850, drive the T2m error in cold pools — Adler, Bianco, Djalalova, Olson &amp; Turner 2023, <em>Geosci. Model Dev.</em> 16, 597–619, 10.5194/gmd-16-597-2023. The numbers to calibrate against: <b>GFSv15</b>, conditioned on ≤50 % sky cover, runs <b>+1.0 °C warm at the 07 h climatological minimum</b> and <b>−1.9 °C cold at the 15 h maximum</b>; conditioned further on ≤5 kt winds the morning warm bias worsens to <b>+1.7 °C</b>. <b>HRRR (MYNN-EDMF) is much flatter: +0.1 → +0.6 °C.</b> Convection-allowing WRF morning boundary layers are too cool and too dry across <em>all five</em> schemes tested — <b>despite near-unbiased PBL <em>depth</em></b>; depth being right does not mean the profile is (Coniglio, Correia, Marsh &amp; Kong 2013, <em>Wea. Forecasting</em> 28(3), 842–862, 10.1175/WAF-D-12-00103.1). ⚠️ A disagreement we are preserving rather than averaging away: Ntoumos 2023 finds the diurnal range <b>overstated</b> (warm TX + cold TN), while Patel et al. 2021 finds the clear-sky range <b>compressed by ≈3 °C</b> — <em>opposite signs</em> (Patel: <em>GRL</em>, 10.1029/2021GL095101; no DOI recorded in our review for Ntoumos). Also Hu, Nielsen-Gammon &amp; Zhang 2010, <em>J. Appl. Meteor. Climatol.</em> 49(9), 1831–1844, 10.1175/2010JAMC2432.1; and Ma et al. 2024, <em>Meteorol. Appl.</em>, 10.1002/met.70020 — where local/TKE schemes best reproduce nocturnal PBL height, yet <b>no scheme reproduced the observed cold-pool <em>depth</em></b>.</p>
   <p class="ex"><span class="d"><a href="https://mesonet.agron.iastate.edu/cgi-bin/afos/retrieve.py?pil=AFDBOX&sdate=2016-01-05&edate=2016-01-06&fmt=text">2016-01-05 · Boston (BOX) — source</a></span><i>"high pressure overhead along with clear skies/light winds was leading to an ideal night of radiational cooling."</i></p></div></article>
 
 <article class="sys"><div class="fig"><svg viewBox="0 0 300 168" role="img" aria-label="Capping inversion mixing out">
@@ -251,7 +274,7 @@ collection: portfolio
   <dl class="mech"><dt>Cause</dt><dd>An elevated mixed layer (warm dry air aloft) lids surface heating; the surface is "stuck" until the mixed layer eats through.</dd>
   <dt>Affects</dt><dd>Temperature flat for hours, then a sudden step-up when it mixes out — or a capped day that never warms.</dd>
   <dt>Leads to</dt><dd>Delayed convective initiation or a warm/cool bust on cap-break timing.</dd></dl>
-  <p class="diag"><b>Diagnose with:</b> 12Z sounding cap strength, profiler, surface T trend.</p>
+  <p class="diag"><b>Diagnose with:</b> a <b>lapse rate ≥8 °C km⁻¹ sustained over ≥200 hPa</b>, plus <b>MUCAPE</b> and <b>CIN</b> — every one of them a <em>layer integral</em>, and not one of them readable off a single isobaric level. ✅ Andrews et al. 2024, <em>J. Climate</em> 37(5), 10.1175/JCLI-D-23-0517.1. The 12Z sounding and the profiler are the practical instruments precisely because they are what hand you the layer; the surface T trend then tells you when it broke.</p>
   <p class="ex"><span class="d"><a href="https://mesonet.agron.iastate.edu/cgi-bin/afos/retrieve.py?pil=AFDBOX&sdate=2007-07-24&edate=2007-07-25&fmt=text">2007-07-24 · Boston (BOX) — source</a></span><i>"readings will be held in the upper 70s… decent cap in place and with a lack of surface convergence."</i></p></div></article>
 
 <article class="sys"><div class="fig"><svg viewBox="0 0 300 168" role="img" aria-label="Warm advection midnight high">
@@ -266,7 +289,7 @@ collection: portfolio
   <dl class="mech"><dt>Cause</dt><dd>Ahead of a warm front, low-level warm advection and isentropic upglide raise the temperature through the night.</dd>
   <dt>Affects</dt><dd>The temperature <em>rises after dark</em>; at NYC/BOS ~20 % of winter daily highs occur near midnight.</dd>
   <dt>Leads to</dt><dd>Timing busts — the reason a same-day run must extend past local midnight.</dd></dl>
-  <p class="diag"><b>Diagnose with:</b> 850-hPa T/θ advection, low-level jet, overnight trend. MPAS handles this <b>well</b>.</p>
+  <p class="diag"><b>Diagnose with:</b> 850-hPa thermal advection read <em>together with</em> the 850-hPa wind — the t850 value alone carries no advection — plus the low-level jet and the overnight temperature trend. ❌ <b>Forecaster practice, not a cited result — and the sharpest gap on this page.</b> <em><b>Not one</b> of the 53 papers we reviewed addresses the <b>timing of the daily maximum temperature</b>. What the corpus does find is that models get the <b>phase right and the amplitude wrong</b>: Hu — <em>"the schemes agree on phase, disagree on amplitude"</em>; Cohen and García-Díez — all schemes place the maximum at the observed hour. The only quantified shift anywhere in the corpus is the sea breeze's ~1–2 h <b>earlier</b> maximum (see the sea-breeze card). The "~20 % of winter highs near midnight" figure in the panel above is <b>our own station climatology, not a published result</b> — no paper we found supports a midnight maximum, and citing one for it would be fabrication. The literature never asked this question.</em></p>
   <p class="ex"><span class="d"><a href="https://mesonet.agron.iastate.edu/cgi-bin/afos/retrieve.py?pil=AFDBOX&sdate=2008-08-04&edate=2008-08-05&fmt=text">2008-08-04 · Boston (BOX) — source</a></span><i>"a warm front approaches Tuesday night… isentropic lift…"</i></p></div></article>
 
 <article class="sys"><div class="fig"><svg viewBox="0 0 300 168" role="img" aria-label="Nocturnal low-level jet">
@@ -280,7 +303,7 @@ collection: portfolio
   <dl class="mech"><dt>Cause</dt><dd>Frictional decoupling lets the low-level wind undergo an inertial oscillation and accelerate into a jet.</dd>
   <dt>Affects</dt><dd>Rapid overnight moisture and warm-air transport; feeds dew, fog, elevated convection.</dd>
   <dt>Leads to</dt><dd>Overnight MCS development and the midnight warm-up.</dd></dl>
-  <p class="diag"><b>Diagnose with:</b> VAD wind profile, 925/850-hPa wind max, decoupling time.</p>
+  <p class="diag"><b>Diagnose with:</b> the <b>U/V wind profile</b> through the jet, the geostrophic wind <b>G</b>, the <b>turbulent stress divergence</b>, and the <b>eddy diffusivity</b> — the VAD profile and the decoupling time are the observational route to all four. 🔶 A full-text search of the primary paper returns <b>zero</b> hits for "500 hPa" and zero for "850 hPa": Van de Wiel et al. 2010, <em>J. Atmos. Sci.</em> 67(8), 10.1175/2010JAS3289.1. ✅ For objective low-level-jet identification (jointly with the sea breeze) in the New York Bight specifically, see McCabe &amp; Freedman 2023, <em>Wea. Forecasting</em> 38(4), 10.1175/WAF-D-22-0119.1.</p>
   <p class="ex"><span class="d"><a href="https://mesonet.agron.iastate.edu/cgi-bin/afos/retrieve.py?pil=AFDOKX&sdate=2008-06-22&edate=2008-06-23&fmt=text">2008-06-22 · New York (OKX) — source</a></span><i>"training of storms possible as the low level jet aligns with upper flow."</i></p></div></article>
 
 </div>
@@ -299,7 +322,7 @@ collection: portfolio
   <dl class="mech"><dt>Cause</dt><dd>A shallow surface cold layer (often CAD) beneath an elevated <em>warm nose</em> &gt; 0 °C; precip melts then supercools.</dd>
   <dt>Affects</dt><dd>Rain that freezes on contact — ice accretion on every surface.</dd>
   <dt>Leads to</dt><dd>Damaging ice storms; the depth of the cold layer is the whole forecast.</dd></dl>
-  <p class="diag"><b>Diagnose with:</b> the vertical T sounding (twice crossing 0 °C), surface wet-bulb, CAD strength.</p>
+  <p class="diag"><b>Diagnose with:</b> <b>positive melting energy and negative refreezing energy</b> — <em>depth-weighted integrals of the vertical temperature profile</em>, not any single level's value — plus warm-nose depth, the surface wet-bulb, and CAD strength. 🔶 This is the clearest case on the page in which standard pressure levels are <em>structurally</em> inadequate: the integral needs the profile, and the profile is what pressure levels throw away. The sounding crossing 0 °C twice is the picture; the two energies are the forecast. Bourgouin 2000, <em>Wea. Forecasting</em> (no DOI recorded in our review); Birk et al. 2021, <em>Wea. Forecasting</em> 36(2), 10.1175/WAF-D-20-0118.1; Lackmann, Keeter, Lee &amp; Ek 2002, <em>Model Representation of Freezing and Melting Precipitation: Implications for Winter Weather Forecasting</em>, <em>Wea. Forecasting</em> 17, 1016–1033 (no DOI printed in the PDF).</p>
   <p class="ex"><span class="d"><a href="https://mesonet.agron.iastate.edu/cgi-bin/afos/retrieve.py?pil=AFDBOX&sdate=2008-01-03&edate=2008-01-04&fmt=text">2008-01-03 · Boston (BOX) — source</a></span><i>"southern NH where the deep snowpack may provide sufficient low level cold air for the risk of a period of freezing rain/drizzle."</i></p></div></article>
 
 <article class="sys"><div class="fig"><svg viewBox="0 0 300 168" role="img" aria-label="Bomb cyclone">
@@ -313,7 +336,7 @@ collection: portfolio
   <dl class="mech"><dt>Cause</dt><dd>Strong baroclinicity, a favorable upper jet/trough, and latent-heat release (over the Gulf Stream) drive explosive deepening.</dd>
   <dt>Affects</dt><dd>Extreme wind, heavy snow, rapid pressure falls over the NE waters and coast.</dd>
   <dt>Leads to</dt><dd>The most intense coastal storms; blizzards and coastal flooding.</dd></dl>
-  <p class="diag"><b>Diagnose with:</b> 24-h MSLP tendency, 300-hPa jet, 500-hPa vorticity, SST gradient.</p>
+  <p class="diag"><b>Diagnose with:</b> 24-h MSLP tendency, 300-hPa jet, 500-hPa vorticity, SST gradient. ❌ <b>Forecaster practice, not a cited result.</b> <em>Explosive cyclogenesis is not covered anywhere in our 53-paper review — it was neither verified nor formally searched — so nothing on this line is carried by a source. The 24 hPa / 24 h figure in the panel above is the standard definition, not a finding of ours.</em></p>
   <p class="ex"><span class="d">4 Jan 2018 · offshore benchmark</span><i>pressure fell &gt; 50 hPa; hurricane-force winds off New England.</i></p></div></article>
 
 <article class="sys"><div class="fig"><svg viewBox="0 0 300 168" role="img" aria-label="Alberta clipper track">
@@ -328,7 +351,7 @@ collection: portfolio
   <dl class="mech"><dt>Cause</dt><dd>A quick Canadian shortwave with little Gulf moisture races SE across the northern tier.</dd>
   <dt>Affects</dt><dd>A swath of light, fluffy snow followed by a sharp shot of arctic cold and gusty NW winds.</dd>
   <dt>Leads to</dt><dd>Temperature crashes and wind chill behind the system.</dd></dl>
-  <p class="diag"><b>Diagnose with:</b> 500-hPa shortwave speed, thickness fall, post-frontal wind.</p>
+  <p class="diag"><b>Diagnose with:</b> the <b>500-hPa vorticity maximum <em>relative to</em> the SLP minimum</b> — a <em>phase offset between two levels</em>, which is a vertical-structure quantity and not a single-level field — plus the thickness fall and the post-frontal wind. 🔶 The vorticity maximum sits <em>always</em> west of the surface low, so the 500-hPa field <b>alone misplaces the surface low</b>: the shortwave speed you read off z500 is not where the cold arrives. Thomas &amp; Martin 2007, <em>Wea. Forecasting</em>, 10.1175/WAF982.1.</p>
   <p class="ex"><span class="d"><a href="https://mesonet.agron.iastate.edu/cgi-bin/afos/retrieve.py?pil=AFDBOX&sdate=2008-01-19&edate=2008-01-20&fmt=text">2008-01-19 · Boston (BOX) — source</a></span><i>"a clipper moves across the region Tue… suspect might be a little too optimistic with the high temps."</i></p></div></article>
 
 </div>
@@ -349,7 +372,7 @@ collection: portfolio
   <dl class="mech"><dt>Cause</dt><dd>Evaporative cooling in the downdraft builds a cold pool that surges outward.</dd>
   <dt>Affects</dt><dd>An abrupt wind shift, gust, and temperature drop at the leading gust front.</dd>
   <dt>Leads to</dt><dd>New convection along the convergence, and micro-timing of T2m a coarse model smears.</dd></dl>
-  <p class="diag"><b>Diagnose with:</b> radar thin-line, pressure jump &amp; temperature drop, mesonet.</p>
+  <p class="diag"><b>Diagnose with:</b> radar thin-line, pressure jump &amp; temperature drop, mesonet. ❌ <b>Forecaster practice, not a cited result.</b> <em>The gust front / thunderstorm cold pool is one of the systems our 53-paper review searched twice and found no primary source for.</em></p>
   <p class="ex"><span class="d"><a href="https://mesonet.agron.iastate.edu/cgi-bin/afos/retrieve.py?pil=AFDBOX&sdate=2013-07-08&edate=2013-07-09&fmt=text">2013-07-08 · Boston (BOX) — source</a></span><i>"surface analysis shows a weak boundary… perhaps outflow from morning convection is moving through."</i></p></div></article>
 
 <article class="sys"><div class="fig"><svg viewBox="0 0 300 168" role="img" aria-label="Derecho bow echo">
@@ -362,7 +385,7 @@ collection: portfolio
   <dl class="mech"><dt>Cause</dt><dd>An organized MCS with a strong cold pool and a descending <em>rear-inflow jet</em> accelerates as a bow echo, often on the north flank of a heat ridge.</dd>
   <dt>Affects</dt><dd>Widespread 60–100 mph winds along a hundreds-of-km track.</dd>
   <dt>Leads to</dt><dd>Major wind damage and outages.</dd></dl>
-  <p class="diag"><b>Diagnose with:</b> radar bow &amp; rear-inflow notch, MUCAPE + deep shear, the 850-hPa ring-of-fire.</p>
+  <p class="diag"><b>Diagnose with:</b> radar bow &amp; rear-inflow notch, MUCAPE + deep shear, the 850-hPa ring-of-fire. ❌ <b>Forecaster practice, not a cited result.</b> <em>The derecho is one of the systems our 53-paper review searched twice and found no primary source for.</em></p>
   <p class="ex"><span class="d">29 Jun 2012 · DC/Mid-Atlantic (LWX)</span><i>a derecho ran from Indiana to the coast with 80+ mph gusts.</i></p></div></article>
 
 <article class="sys"><div class="fig"><svg viewBox="0 0 300 168" role="img" aria-label="Dryline">
@@ -376,7 +399,7 @@ collection: portfolio
   <dl class="mech"><dt>Cause</dt><dd>Moist Gulf air meets dry, well-mixed desert air; the boundary mixes east by day, retreats at night.</dd>
   <dt>Affects</dt><dd>Big dewpoint contrast and convergence across a few km.</dd>
   <dt>Leads to</dt><dd>Supercells and tornado outbreaks (a Plains feature — the NE analogue is the sea-breeze / backdoor Td boundary).</dd></dl>
-  <p class="diag"><b>Diagnose with:</b> surface dewpoint gradient, 2-m mixing ratio, convergence, cap.</p>
+  <p class="diag"><b>Diagnose with:</b> surface dewpoint gradient, 2-m mixing ratio, convergence, cap. ❌ <b>Forecaster practice, not a cited result.</b> <em>The dryline is one of the systems our 53-paper review searched twice and found no primary source for.</em></p>
   <p class="ex"><span class="d">Spring · Southern Plains</span><i>the classic severe-weather focus.</i></p></div></article>
 
 </div>
@@ -395,7 +418,7 @@ collection: portfolio
   <dl class="mech"><dt>Cause</dt><dd>The jet buckles into a stationary high-amplitude ridge with cutoff lows on each side; it locks in for days.</dd>
   <dt>Affects</dt><dd>Prolonged heat and drought under the ridge, cool and wet on the flanks.</dd>
   <dt>Leads to</dt><dd>Heat waves and air-stagnation; multi-day forecast persistence.</dd></dl>
-  <p class="diag"><b>Diagnose with:</b> 500-hPa height anomaly, blocking indices, ridge-axis position.</p>
+  <p class="diag"><b>Diagnose with:</b> 500-hPa height anomaly, blocking indices, ridge-axis position. ❌ <b>Forecaster practice, not a cited result.</b> <em>The omega block / blocking-ridge heat wave is one of the systems our 53-paper review searched twice and found no primary source for. This is the one card on the page where a 500-hPa field is the natural instrument — the block <b>is</b> a z500 object — and even here it is convention rather than a verified result.</em></p>
   <p class="ex"><span class="d">Jul 2012 · Northeast heat</span><i>with the ridge overhead, the daily max ran several degrees above normal for a week.</i></p></div></article>
 
 <article class="sys"><div class="fig"><svg viewBox="0 0 300 168" role="img" aria-label="Santa Ana offshore downslope">
@@ -412,7 +435,7 @@ collection: portfolio
   <dl class="mech"><dt>Cause</dt><dd>A Great-Basin high forces a gradient toward the coast; air sinks down the mountains, compressing and drying.</dd>
   <dt>Affects</dt><dd>Hot, bone-dry, gusty conditions at the CA coast — the <em>opposite</em> of the marine-layer regime.</dd>
   <dt>Leads to</dt><dd>Critical fire weather. The West-Coast contrast to the NE onshore/sea-breeze world.</dd></dl>
-  <p class="diag"><b>Diagnose with:</b> offshore MSLP gradient, 850-hPa warm/dry advection, RH &amp; wind.</p>
+  <p class="diag"><b>Diagnose with:</b> offshore MSLP gradient, 850-hPa warm/dry advection, RH &amp; wind. ❌ <b>Forecaster practice, not a cited result.</b> <em>The Santa Ana is not named anywhere in our 53-paper review; the closest entry is downslope / lee warming, which was searched twice and yielded no primary source either. Nothing on this line is carried by a citation.</em></p>
   <p class="ex"><span class="d">Oct 2007 · Southern California</span><i>the mirror image of the marine layer — downslope wins, and LAX bakes.</i></p></div></article>
 
 </div>
