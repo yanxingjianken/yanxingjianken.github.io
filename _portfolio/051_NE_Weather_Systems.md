@@ -1,6 +1,6 @@
 ---
 title: "Special Weather Systems of the U.S. &amp; the Northeast"
-excerpt: "A field guide to 20 recurring circulations — sea breeze, backdoor front, cold-air damming, nor'easters — each with a mechanism schematic, a real t850/z500 map, and a sourced forecaster case.<br/><img src='/images/wx_systems/noreaster_2015.png' style='max-width: 60%; height: auto;'>"
+excerpt: "A field guide to 21 recurring circulations — sea breeze, backdoor front, cold-air damming, nor'easters — every one with a mechanism schematic, a real ERA5 850-hPa T / 500-hPa height map of its case date, and a sourced NWS forecaster quote.<br/><img src='/images/wx_systems/noreaster_2015.png' style='max-width: 60%; height: auto;'>"
 collection: portfolio
 ---
 
@@ -45,7 +45,7 @@ collection: portfolio
 </style>
 
 <div class="wxsys" markdown="0">
-<p class="intro">Twenty recurring circulations — from the Boston sea breeze to the Appalachian cold-air wedge — read as mechanisms: what forces them, what they do to the near-surface temperature, and where they lead. Each has a hand-drawn cross-section or plan-view schematic; the synoptic-scale systems also carry a real <b>850-hPa temperature (shaded) + 500-hPa height (contours)</b> map for the case date, from ERA5. Forecaster cases are quoted from NWS Area Forecast Discussions with a link to the source text.</p>
+<p class="intro">Twenty-one recurring circulations — from the Boston sea breeze to the Appalachian cold-air wedge — read as mechanisms: what forces them, what they do to the near-surface temperature, and where they lead. <b>Every system carries both</b> a hand-drawn cross-section or plan-view schematic <b>and a real ERA5 map of its case date</b> — 850-hPa temperature (shaded) + 500-hPa geopotential height (contours). For the storm- and mesoscale systems the ERA5 map shows the <em>synoptic setup that permits them</em>; the feature itself lives below reanalysis resolution (look to radar). Forecaster cases are quoted from NWS Area Forecast Discussions with a link to the source text.</p>
 
 <div class="legend">
   <span class="k"><svg width="34" height="14"><line x1="1" y1="7" x2="33" y2="7" stroke="var(--cold)" stroke-width="2"/><polygon points="9,7 13,2 17,7" fill="var(--cold)"/><polygon points="21,7 25,2 29,7" fill="var(--cold)"/></svg> cold front</span>
@@ -75,6 +75,7 @@ collection: portfolio
   <line x1="48" y1="70" x2="48" y2="112" stroke="var(--cold)" stroke-width="1.8" marker-end="url(#mc)"/>
   <line x1="150" y1="116" x2="150" y2="132" stroke="var(--cold)" stroke-width="2"/><polygon points="150,120 157,124 150,128" fill="var(--cold)"/>
   <text class="cl" x="8" y="150">cool sea</text><text class="wm" x="238" y="150">hot land</text><text class="hi" x="116" y="112">sea-breeze front →</text></svg></div>
+  <div class="realfig"><img src="/images/wx_systems/seabreeze_2007.png" alt="Sea breeze ERA5 t850 z500"><div class="cap">ERA5 · 2007-03-27 18Z (synoptic setup)</div></div>
   <div class="bd"><span class="chip">Mesoscale · thermally direct</span><h3>Sea breeze</h3>
   <p class="lead">A daytime onshore circulation set up by the land heating faster than the sea.</p>
   <dl class="mech"><dt>Cause</dt><dd>Differential land–sea heating drives onshore flow beneath a return flow aloft.</dd>
@@ -107,13 +108,14 @@ collection: portfolio
   <line x1="240" y1="122" x2="162" y2="122" stroke="var(--warm)" stroke-width="2" marker-end="url(#mw)"/>
   <ellipse cx="150" cy="52" rx="34" ry="12" fill="var(--soft)" opacity=".35"/>
   <text class="cl" x="30" y="150">cold interior</text><text class="wm" x="196" y="150">mild marine</text><text class="hi" x="120" y="34">coastal front</text></svg></div>
+  <div class="realfig"><img src="/images/wx_systems/coastalfront_2008.png" alt="Coastal front ERA5 t850 z500"><div class="cap">ERA5 · 2008-01-26 12Z</div></div>
   <div class="bd"><span class="chip">Mesoscale · baroclinic zone</span><h3>Coastal front</h3>
   <p class="lead">A near-stationary temperature boundary hugging the coastline in the cool season.</p>
   <dl class="mech"><dt>Cause</dt><dd>Land–sea thermal contrast (often reinforced by cold-air damming) concentrates a shallow baroclinic zone at the coast.</dd>
   <dt>Affects</dt><dd>A very tight T and precip-type gradient — a few km separate 34 °F rain/snow from 45 °F.</dd>
   <dt>Leads to</dt><dd>Rain/snow lines and a favored axis for coastal cyclogenesis.</dd></dl>
   <p class="diag"><b>Diagnose with:</b> surface T + wind convergence; radar. <em>(Mesoscale.)</em></p>
-  <p class="ex"><span class="d">Nov–Mar · OKX / BOX</span><i>the classic New England / Long Island rain–snow line.</i></p></div></article>
+  <p class="ex"><span class="d"><a href="https://mesonet.agron.iastate.edu/cgi-bin/afos/retrieve.py?pil=AFDBOX&sdate=2008-01-26&edate=2008-01-27&fmt=text">2008-01-26 · Boston (BOX) — source</a></span><i>"caveat: coastal front developing /ESE wind/… snow showers may break out Boston to NBT."</i></p></div></article>
 
 <article class="sys"><div class="fig"><svg viewBox="0 0 300 168" role="img" aria-label="Marine layer cross-section">
   <rect width="300" height="168" fill="var(--sky)"/><g stroke="var(--warm)" stroke-width="1.3"><circle cx="250" cy="26" r="8" fill="var(--warm)" opacity=".45"/><line x1="250" y1="10" x2="250" y2="4"/></g>
@@ -123,6 +125,7 @@ collection: portfolio
   <rect x="0" y="132" width="300" height="36" fill="var(--cold)" opacity=".30"/>
   <line x1="20" y1="122" x2="150" y2="122" stroke="var(--cold)" stroke-width="2" marker-end="url(#mc)"/>
   <text class="cl" x="6" y="150">cold shelf water</text><text class="hi" x="120" y="120">stratus / sea fog under lid</text></svg></div>
+  <div class="realfig"><img src="/images/wx_systems/marine_2009.png" alt="Marine layer &amp; sea fog ERA5 t850 z500"><div class="cap">ERA5 · 2009-05-19 15Z</div></div>
   <div class="bd"><span class="chip">Boundary layer · low cloud</span><h3>Marine layer &amp; sea fog</h3>
   <p class="lead">Cool moist marine air trapped under an inversion, filled with stratus and fog.</p>
   <dl class="mech"><dt>Cause</dt><dd>Warm moist air over cold shelf water; a subsidence inversion caps a shallow saturated layer.</dd>
@@ -154,6 +157,7 @@ collection: portfolio
   <g fill="none" stroke="var(--soft)" stroke-width="1.2"><ellipse cx="215" cy="112" rx="16" ry="13"/><ellipse cx="215" cy="112" rx="32" ry="26"/></g>
   <text x="209" y="117" font-size="14" font-weight="700" fill="var(--cold)">L</text><text class="hi" x="194" y="150">new coastal low</text>
   <path d="M104 86 C 150 96, 175 100, 196 108" stroke="var(--warm)" stroke-width="2" fill="none" marker-end="url(#mw)"/><text x="120" y="80">energy transfer →</text></svg></div>
+  <div class="realfig"><img src="/images/wx_systems/millerb_2011.png" alt="Miller-B redevelopment ERA5 t850 z500"><div class="cap">ERA5 · 2011-01-27 00Z</div></div>
   <div class="bd"><span class="chip">Synoptic · redevelopment</span><h3>Miller-B redevelopment</h3>
   <p class="lead">A primary low fills over the Appalachians while a new low jumps to the coast.</p>
   <dl class="mech"><dt>Cause</dt><dd>The inland low weakens crossing the mountains; upper energy transfers to a secondary coastal low.</dd>
@@ -205,13 +209,14 @@ collection: portfolio
   <g fill="var(--soft)" opacity=".8"><ellipse cx="120" cy="96" rx="16" ry="10"/><ellipse cx="150" cy="86" rx="20" ry="12"/><ellipse cx="185" cy="92" rx="18" ry="11"/></g>
   <g stroke="var(--panel)" stroke-width="1.4" opacity=".9"><line x1="150" y1="104" x2="147" y2="130"/><line x1="168" y1="106" x2="165" y2="130"/><line x1="185" y1="104" x2="182" y2="128"/></g>
   <text class="hi" x="150" y="150">snow band</text></svg></div>
+  <div class="realfig"><img src="/images/wx_systems/lakeeffect_2014.png" alt="Lake-effect snow ERA5 t850 z500"><div class="cap">ERA5 · 2014-11-07 12Z</div></div>
   <div class="bd"><span class="chip">Convective · lake-modified</span><h3>Lake-effect snow</h3>
   <p class="lead">Cold air crossing a warm lake destabilizes and dumps narrow, intense snow bands downwind.</p>
   <dl class="mech"><dt>Cause</dt><dd>Large lake-minus-850-hPa T difference (≥13 °C) plus long fetch drives shallow convection over open water.</dd>
   <dt>Affects</dt><dd>Extremely localized heavy snow and sharp gradients on the downwind shore.</dd>
   <dt>Leads to</dt><dd>Feet of snow over a few km (Tug Hill, Buffalo).</dd></dl>
   <p class="diag"><b>Diagnose with:</b> radar bands, 850-hPa T minus lake temp, boundary-layer depth, fetch.</p>
-  <p class="ex"><span class="d">Nov–Jan · lee of the Great Lakes</span><i>single bands can exceed 5 cm/hr with thundersnow.</i></p></div></article>
+  <p class="ex"><span class="d"><a href="https://mesonet.agron.iastate.edu/cgi-bin/afos/retrieve.py?pil=AFDBOX&sdate=2014-11-07&edate=2014-11-08&fmt=text">2014-11-07 · Boston (BOX) — source</a></span><i>"a swath of rain/snow squalls over western NY state… some of this activity is lake-effect enhanced with CAA coming across."</i></p></div></article>
 
 </div>
 
@@ -225,13 +230,14 @@ collection: portfolio
   <path d="M60 150 C 110 150, 190 150, 240 150 L228 132 C 190 138, 110 138, 72 132 Z" fill="var(--cold)" opacity=".5"/>
   <line x1="40" y1="122" x2="260" y2="122" stroke="#cbd6e2" stroke-width="1.2" stroke-dasharray="5 3"/>
   <text x="60" y="24" fill="#cbd6e2">clear · calm · dry night</text><text x="182" y="116" fill="#e8a0a0">IR loss ↑</text><text x="118" y="164" fill="#cbd6e2">cold pool in valley</text></svg></div>
+  <div class="realfig"><img src="/images/wx_systems/radcool_2016.png" alt="Radiational cooling &amp; cold pools ERA5 t850 z500"><div class="cap">ERA5 · 2016-01-05 06Z</div></div>
   <div class="bd"><span class="chip">Boundary layer · nocturnal</span><h3>Radiational cooling &amp; cold pools</h3>
   <p class="lead">On clear, calm, dry nights the surface radiates away its heat and cold air drains downhill.</p>
   <dl class="mech"><dt>Cause</dt><dd>Strong longwave loss builds a surface inversion; the layer decouples and cold air pools in valleys (aided by snow).</dd>
   <dt>Affects</dt><dd>Drives the daily minimum, frost, and fog; large diurnal range.</dd>
   <dt>Leads to</dt><dd>Valley cold pools — MPAS runs <b>too warm</b> (stable-PBL scheme under-cools).</dd></dl>
   <p class="diag"><b>Diagnose with:</b> sky cover + wind + dewpoint, snow analysis, sfc cooling rate.</p>
-  <p class="ex"><span class="d">Cold season · interior valleys</span><i>the min can be 15–20 °F colder in a snow-covered valley than at the airport.</i></p></div></article>
+  <p class="ex"><span class="d"><a href="https://mesonet.agron.iastate.edu/cgi-bin/afos/retrieve.py?pil=AFDBOX&sdate=2016-01-05&edate=2016-01-06&fmt=text">2016-01-05 · Boston (BOX) — source</a></span><i>"high pressure overhead along with clear skies/light winds was leading to an ideal night of radiational cooling."</i></p></div></article>
 
 <article class="sys"><div class="fig"><svg viewBox="0 0 300 168" role="img" aria-label="Capping inversion mixing out">
   <rect width="300" height="168" fill="var(--sky)"/><rect x="0" y="66" width="300" height="26" fill="var(--warm)" opacity=".22"/>
@@ -268,13 +274,14 @@ collection: portfolio
   <line x1="0" y1="112" x2="300" y2="112" stroke="#cbd6e2" stroke-width="1.1" stroke-dasharray="5 3"/><text x="6" y="106" fill="#cbd6e2">decoupled sfc layer</text>
   <path d="M10 90 H270" stroke="var(--warm)" stroke-width="7" opacity=".35"/><line x1="20" y1="90" x2="285" y2="90" stroke="var(--warm)" stroke-width="2.4" marker-end="url(#mw)"/>
   <text x="60" y="82" fill="#e8a0a0">nocturnal low-level jet</text><text x="80" y="128" fill="#cbd6e2">moisture &amp; warm advection ↑</text></svg></div>
+  <div class="realfig"><img src="/images/wx_systems/llj_2008.png" alt="Nocturnal low-level jet ERA5 t850 z500"><div class="cap">ERA5 · 2008-06-22 06Z</div></div>
   <div class="bd"><span class="chip">Boundary layer · inertial</span><h3>Nocturnal low-level jet</h3>
   <p class="lead">After sunset the surface decouples and a fast wind ribbon accelerates just above it.</p>
   <dl class="mech"><dt>Cause</dt><dd>Frictional decoupling lets the low-level wind undergo an inertial oscillation and accelerate into a jet.</dd>
   <dt>Affects</dt><dd>Rapid overnight moisture and warm-air transport; feeds dew, fog, elevated convection.</dd>
   <dt>Leads to</dt><dd>Overnight MCS development and the midnight warm-up.</dd></dl>
   <p class="diag"><b>Diagnose with:</b> VAD wind profile, 925/850-hPa wind max, decoupling time.</p>
-  <p class="ex"><span class="d">Warm season · overnight</span><i>strongest over the Plains; its moisture plume reaches the NE ahead of warm fronts.</i></p></div></article>
+  <p class="ex"><span class="d"><a href="https://mesonet.agron.iastate.edu/cgi-bin/afos/retrieve.py?pil=AFDOKX&sdate=2008-06-22&edate=2008-06-23&fmt=text">2008-06-22 · New York (OKX) — source</a></span><i>"training of storms possible as the low level jet aligns with upper flow."</i></p></div></article>
 
 </div>
 
@@ -286,13 +293,14 @@ collection: portfolio
   <rect x="8" y="8" width="142" height="152" fill="var(--cold)" opacity=".10"/><rect x="150" y="8" width="142" height="152" fill="var(--warm)" opacity=".08"/>
   <path d="M112 12 L128 44 L188 78 L150 112 L120 158" fill="none" stroke="var(--ink)" stroke-width="2"/>
   <text class="wm" x="176" y="72">warm nose &gt;0</text><text class="cl" x="30" y="150">cold surface &lt;0</text><text x="18" y="20">snow</text><text x="196" y="96">melts→rain</text><text class="cl" x="60" y="130">refreezes</text></svg></div>
+  <div class="realfig"><img src="/images/wx_systems/freezingrain_2008.png" alt="Freezing rain &amp; ice storms ERA5 t850 z500"><div class="cap">ERA5 · 2008-01-03 12Z</div></div>
   <div class="bd"><span class="chip">Winter · thermal profile</span><h3>Freezing rain &amp; ice storms</h3>
   <p class="lead">Snow melts in a warm layer aloft, then the rain refreezes on a sub-freezing surface.</p>
   <dl class="mech"><dt>Cause</dt><dd>A shallow surface cold layer (often CAD) beneath an elevated <em>warm nose</em> &gt; 0 °C; precip melts then supercools.</dd>
   <dt>Affects</dt><dd>Rain that freezes on contact — ice accretion on every surface.</dd>
   <dt>Leads to</dt><dd>Damaging ice storms; the depth of the cold layer is the whole forecast.</dd></dl>
   <p class="diag"><b>Diagnose with:</b> the vertical T sounding (twice crossing 0 °C), surface wet-bulb, CAD strength.</p>
-  <p class="ex"><span class="d">DJF · LWX / PHI / OKX</span><i>the Piedmont / interior-NE ice-storm corridor east of the mountains.</i></p></div></article>
+  <p class="ex"><span class="d"><a href="https://mesonet.agron.iastate.edu/cgi-bin/afos/retrieve.py?pil=AFDBOX&sdate=2008-01-03&edate=2008-01-04&fmt=text">2008-01-03 · Boston (BOX) — source</a></span><i>"southern NH where the deep snowpack may provide sufficient low level cold air for the risk of a period of freezing rain/drizzle."</i></p></div></article>
 
 <article class="sys"><div class="fig"><svg viewBox="0 0 300 168" role="img" aria-label="Bomb cyclone">
   <rect width="300" height="168" fill="var(--sky)"/><g fill="none" stroke="var(--soft)" stroke-width="1.1"><ellipse cx="160" cy="88" rx="14" ry="12"/><ellipse cx="160" cy="88" rx="30" ry="26"/><ellipse cx="160" cy="88" rx="48" ry="42"/><ellipse cx="160" cy="88" rx="68" ry="60"/></g>
@@ -314,13 +322,14 @@ collection: portfolio
   <g fill="none" stroke="var(--soft)" stroke-width="1.1"><ellipse cx="150" cy="72" rx="12" ry="10"/><ellipse cx="150" cy="72" rx="24" ry="20"/></g>
   <text x="145" y="76" font-size="12" font-weight="700" fill="var(--cold)">L</text>
   <text x="30" y="26" class="hi">fast NW → SE track</text><text class="cl" x="20" y="150">arctic air surges behind</text></svg></div>
+  <div class="realfig"><img src="/images/wx_systems/clipper_2008.png" alt="Alberta clipper ERA5 t850 z500"><div class="cap">ERA5 · 2008-01-19 12Z</div></div>
   <div class="bd"><span class="chip">Synoptic · fast mover</span><h3>Alberta clipper</h3>
   <p class="lead">A fast, moisture-starved shortwave low diving southeast out of Canada.</p>
   <dl class="mech"><dt>Cause</dt><dd>A quick Canadian shortwave with little Gulf moisture races SE across the northern tier.</dd>
   <dt>Affects</dt><dd>A swath of light, fluffy snow followed by a sharp shot of arctic cold and gusty NW winds.</dd>
   <dt>Leads to</dt><dd>Temperature crashes and wind chill behind the system.</dd></dl>
   <p class="diag"><b>Diagnose with:</b> 500-hPa shortwave speed, thickness fall, post-frontal wind.</p>
-  <p class="ex"><span class="d">DJF · northern tier → NE</span><i>little snow, big cold — the drop behind it is the story.</i></p></div></article>
+  <p class="ex"><span class="d"><a href="https://mesonet.agron.iastate.edu/cgi-bin/afos/retrieve.py?pil=AFDBOX&sdate=2008-01-19&edate=2008-01-20&fmt=text">2008-01-19 · Boston (BOX) — source</a></span><i>"a clipper moves across the region Tue… suspect might be a little too optimistic with the high temps."</i></p></div></article>
 
 </div>
 
@@ -334,13 +343,14 @@ collection: portfolio
   <path d="M170 132 C 130 128, 90 128, 40 130 L40 150 L170 150 Z" fill="var(--cold)" opacity=".4"/>
   <line x1="40" y1="126" x2="40" y2="150" stroke="var(--cold)" stroke-width="2"/><polygon points="40,130 32,135 40,140" fill="var(--cold)"/>
   <text x="150" y="60" fill="var(--panel)">downdraft</text><text class="cl" x="60" y="146">cold pool</text><text class="hi" x="6" y="124">gust front →</text></svg></div>
+  <div class="realfig"><img src="/images/wx_systems/gustfront_2013.png" alt="Gust front / cold pool ERA5 t850 z500"><div class="cap">ERA5 · 2013-07-08 18Z</div></div>
   <div class="bd"><span class="chip">Storm-scale · outflow</span><h3>Gust front / cold pool</h3>
   <p class="lead">A thunderstorm's rain-cooled downdraft spreads out as a cold, gusty density current.</p>
   <dl class="mech"><dt>Cause</dt><dd>Evaporative cooling in the downdraft builds a cold pool that surges outward.</dd>
   <dt>Affects</dt><dd>An abrupt wind shift, gust, and temperature drop at the leading gust front.</dd>
   <dt>Leads to</dt><dd>New convection along the convergence, and micro-timing of T2m a coarse model smears.</dd></dl>
   <p class="diag"><b>Diagnose with:</b> radar thin-line, pressure jump &amp; temperature drop, mesonet.</p>
-  <p class="ex"><span class="d">Warm season · afternoon/evening</span><i>a passing outflow can knock 10–15 °F off in minutes, then recover.</i></p></div></article>
+  <p class="ex"><span class="d"><a href="https://mesonet.agron.iastate.edu/cgi-bin/afos/retrieve.py?pil=AFDBOX&sdate=2013-07-08&edate=2013-07-09&fmt=text">2013-07-08 · Boston (BOX) — source</a></span><i>"surface analysis shows a weak boundary… perhaps outflow from morning convection is moving through."</i></p></div></article>
 
 <article class="sys"><div class="fig"><svg viewBox="0 0 300 168" role="img" aria-label="Derecho bow echo">
   <rect width="300" height="168" fill="var(--sky)"/><path d="M70 30 C 140 20, 200 40, 220 84 C 200 128, 140 148, 70 138 C 120 100, 120 68, 70 30 Z" fill="var(--warm)" opacity=".30" stroke="var(--warm)" stroke-width="1.2"/>
@@ -360,6 +370,7 @@ collection: portfolio
   <line x1="150" y1="16" x2="150" y2="152" stroke="var(--warm)" stroke-width="2" stroke-dasharray="2 3"/>
   <text x="20" y="150">dry desert air</text><text x="176" y="150" fill="#3a7d3a">moist Gulf air (high Td)</text>
   <g fill="var(--soft)" opacity=".8"><ellipse cx="150" cy="44" rx="16" ry="10"/><ellipse cx="150" cy="70" rx="12" ry="8"/></g><text class="wm" x="122" y="26">dryline</text></svg></div>
+  <div class="realfig"><img src="/images/wx_systems/dryline_2013.png" alt="Dryline ERA5 t850 z500"><div class="cap">ERA5 · 2013-05-20 21Z (Moore, OK)</div></div>
   <div class="bd"><span class="chip">Mesoscale · moisture boundary</span><h3>Dryline</h3>
   <p class="lead">A sharp moisture gradient in the southern Plains that focuses severe convection.</p>
   <dl class="mech"><dt>Cause</dt><dd>Moist Gulf air meets dry, well-mixed desert air; the boundary mixes east by day, retreats at night.</dd>
