@@ -293,7 +293,7 @@ div.pnx .verdict__row p{margin:0; font-size:.92rem; color:var(--ink-2)}
 <td>equiangular, Gaussian, HEALPix, unstructured</td>
 <td>The filter is a compactly supported basis expansion integrated by sparse quadrature; the grid only supplies sample locations and weights.</td></tr>
 
-<tr><th><a href="https://github.com/NVIDIA/torch-harmonics/blob/main/torch_harmonics/attention/attention.py">AttentionS2</a> / NeighborhoodAttentionS2<small>spherical attention</small></th>
+<tr><th><a href="https://arxiv.org/abs/2505.11157">AttentionS2</a> / NeighborhoodAttentionS2<small><a href="https://github.com/NVIDIA/torch-harmonics/blob/main/torch_harmonics/attention/attention.py">attention/attention.py</a></small></th>
 <td><b>Any grid with quadrature weights</b></td>
 <td>same as DISCO</td>
 <td>Log-quadrature-weights are added to the pre-softmax scores, turning attention into a discretized continuous integral over the sphere.</td></tr>
@@ -333,7 +333,7 @@ div.pnx .verdict__row p{margin:0; font-size:.92rem; color:var(--ink-2)}
       <p class="panel__name">DISCO convolution<span><a href="https://github.com/NVIDIA/torch-harmonics/blob/main/torch_harmonics/disco/convolution.py">disco/convolution.py</a></span></p>
       <p class="panel__note">A compactly supported filter written as a learnable combination of fixed basis functions, integrated by sparse quadrature at <b>O(N)</b>. Locality and equivariance together. The kernel shape is fixed after training.</p></div>
     <div class="panel"><svg id="o-nas2" viewBox="0 0 210 200" role="img" aria-label="Spherical neighborhood attention"></svg>
-      <p class="panel__name">NeighborhoodAttentionS2<span><a href="https://github.com/NVIDIA/torch-harmonics/tree/main/torch_harmonics/attention">torch_harmonics/attention</a></span></p>
+      <p class="panel__name">NeighborhoodAttentionS2<span><a href="https://arxiv.org/abs/2505.11157">Bonev et al. 2025</a> &middot; <a href="https://github.com/NVIDIA/torch-harmonics/tree/main/torch_harmonics/attention">torch_harmonics/attention</a></span></p>
       <p class="panel__note">The same geodesic disk <code>d(x,x') &le; &theta;</code> in great-circle distance, but the weights inside it are <b>set by the data</b> rather than by a fixed basis. O(kN), and the only local operator here with an adaptive kernel.</p></div>
     <div class="panel"><svg id="o-mesh" viewBox="0 0 210 200" role="img" aria-label="Multi-mesh message passing edges"></svg>
       <p class="panel__name">Multi-mesh message passing<span><a href="https://github.com/NVIDIA/physicsnemo/tree/main/physicsnemo/models/graphcast">models/graphcast</a></span></p>
@@ -378,13 +378,39 @@ div.pnx .verdict__row p{margin:0; font-size:.92rem; color:var(--ink-2)}
 </table>
 </div>
 
+<h4>Does the geometry actually buy you a later blow-up?</h4>
+
+<p>This is testable, and it has been tested independently. <a href="https://arxiv.org/abs/2605.30184">Lehmann et al. (2026)</a> roll nine models out for two years &mdash; 2,920 autoregressive six-hourly steps from a 1 January 2021 initialisation &mdash; and define blow-up as the onset of unbounded exponential growth in the spatial extremes: the first 30-day window in which the global minimum or maximum grows log-linearly with R&sup2; &gt; 0.9. Metrics and notebooks: <a href="https://github.com/lehmannfa/ai-weather-stability"><code>lehmannfa/ai-weather-stability</code></a>.</p>
+
+<div class="scroller">
+<table>
+<thead><tr><th>Model</th><th>Family</th><th>T2m</th><th>U10m</th><th>MSLP</th><th>Z500</th></tr></thead>
+<tbody>
+<tr><th><a href="https://arxiv.org/abs/2306.03838">SFNO</a></th><td>spherical harmonics</td><td class="y">&gt; 730</td><td class="y">&gt; 730</td><td class="y">&gt; 730</td><td class="y">&gt; 730</td></tr>
+<tr><th><a href="https://www.nature.com/articles/s41586-025-09005-y">Aurora</a></th><td>3-D Swin, lat&ndash;lon</td><td class="y">&gt; 730</td><td class="y">&gt; 730</td><td class="y">&gt; 730</td><td class="y">&gt; 730</td></tr>
+<tr><th><a href="https://arxiv.org/abs/2211.02556">Pangu</a></th><td>3-D Swin, lat&ndash;lon</td><td class="y">&gt; 730</td><td class="y">&gt; 730</td><td class="y">&gt; 730</td><td class="y">&gt; 730</td></tr>
+<tr><th><a href="https://arxiv.org/abs/2212.12794">GraphCast</a></th><td>icosahedral GNN</td><td class="p">360</td><td class="p">379</td><td class="p">287</td><td class="p">274</td></tr>
+<tr><th>GenCast</th><td>diffusion, icosahedral</td><td class="p">76</td><td class="y">&gt; 725</td><td class="p">76</td><td class="p">71</td></tr>
+<tr><th>AIFS</th><td>graph transformer</td><td class="p">41</td><td class="y">&gt; 730</td><td class="y">&gt; 730</td><td class="n">16</td></tr>
+<tr><th>FuXi</th><td>Swin, lat&ndash;lon</td><td class="p">431</td><td class="n">10</td><td class="y">&gt; 725</td><td class="p">491</td></tr>
+<tr><th><a href="https://arxiv.org/abs/2202.11214">FourCastNet</a></th><td>AFNO, planar FFT</td><td class="n">8</td><td class="n">8</td><td class="n">8</td><td class="n">9</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>Days until blow-up; higher is better, and <code>&gt; 730</code> means it never blew up inside the test window. The AFNO model fails at <b>8 to 9 days</b>. SFNO survives the whole two years on all nine variables the study tracks. That is at least a ninety-fold gap, and it is a lower bound.</p>
+
+<p><strong>But the causal story is not "spherical geometry, therefore stable."</strong> Look at the same table again: <a href="https://arxiv.org/abs/2211.02556">Pangu</a> is a 3-D Swin transformer on a plain equirectangular grid with no spherical machinery whatsoever, and it is exactly as stable as SFNO. Sphericity is evidently sufficient but not necessary. Lehmann et al. locate the mechanism elsewhere &mdash; in the treatment of small spatio-temporal scales, where unstable models amplify high-frequency energy while stable ones behave as denoisers when noise is injected into their inputs. Their ablations on window size, shifting, patch size, normalisation, vertical levels, static fields and time embedding all leave stability unchanged. Earlier work in the same direction: <a href="https://arxiv.org/abs/2306.10619">McCabe et al. (2023)</a> traced autoregressive error growth partly to the Double Fourier Sphere trick creating artificial discontinuities and unphysical cross-polar communication, and reported an 800% forecast-horizon improvement on ERA5 from controlling instability-inducing operations.</p>
+
+<p>Two caveats on scope. The blow-up benchmark covers no spherical-attention model, so <a href="https://arxiv.org/abs/2505.11157">Attention on the Sphere</a> (which validates on shallow water, spherical segmentation and depth estimation) has no equivalent year-scale evidence yet. And <a href="https://arxiv.org/abs/2507.12144">FourCastNet 3</a>, which does report 60-day rollouts with no large-scale blow-up and invariant spectral slopes, gets there with spherical <em>convolutions</em>, local and global, rather than attention.</p>
+
 <h4>Which is best for the sphere</h4>
 
 <div class="verdict">
   <div class="verdict__row"><div class="verdict__key">Best geometry</div><div>
     <p><b>NeighborhoodAttentionS2 on a HEALPix or Gaussian quadrature grid.</b> Local, approximately equivariant, resolution-agnostic, O(kN), and the kernel adapts to the data &mdash; something neither SFNO nor DISCO offers. The cost is a torch-harmonics dependency, CUDA-kernel availability, and the memory for precomputed neighbourhoods.</p></div></div>
   <div class="verdict__row"><div class="verdict__key">Best rollout</div><div>
-    <p><b><a href="https://arxiv.org/abs/2306.03838">SFNO</a>.</b> Strict equivariance plus the absence of polar aliasing is the structural reason it holds together over long autoregressive rollouts, not a tuning artefact; spectral truncation also damps small-scale blow-up. The cost is O(N<sup>3/2</sup>) and a quadrature-compatible grid.</p></div></div>
+    <p><b><a href="https://arxiv.org/abs/2306.03838">SFNO</a>.</b> It survives two years of six-hourly rollout without blowing up, against 8 to 9 days for the AFNO model, and spectral truncation damps small-scale growth. Be careful with the causal claim, though: strict equivariance and the absence of polar aliasing are a <em>sufficient</em> route to that stability, not the only one &mdash; Pangu reaches the same result on a plain lat&ndash;lon grid. The cost is O(N<sup>3/2</sup>) and a quadrature-compatible grid.</p></div></div>
   <div class="verdict__row"><div class="verdict__key">Best grid</div><div>
     <p><b>HEALPix.</b> The only one that is simultaneously equal-area, iso-latitude (so spherical harmonics stay cheap), four-fold nested (so U-Nets pool cleanly), and consistently oriented (so one convolution kernel works everywhere). The cost is special-casing eight three-valent vertices and the face-padding machinery.</p></div></div>
   <div class="verdict__row"><div class="verdict__key">Cheapest</div><div>
@@ -490,7 +516,7 @@ div.pnx .verdict__row p{margin:0; font-size:.92rem; color:var(--ink-2)}
 </div>
 
 <p style="font-family:var(--mono); font-size:.78rem; line-height:1.75; color:var(--ink-3); border-top:1px solid var(--rule); padding-top:16px; margin-top:2.5em;">
-Sources: <a href="https://github.com/NVIDIA/physicsnemo">NVIDIA/physicsnemo</a> and <a href="https://github.com/NVIDIA/torch-harmonics">NVIDIA/torch-harmonics</a> <code>main</code> branch source and docstrings, read 2 August 2026; <a href="https://www.gfdl.noaa.gov/shield/">GFDL SHiELD</a> configuration tables for the X-SHiELD cross-check.
+Sources: <a href="https://github.com/NVIDIA/physicsnemo">NVIDIA/physicsnemo</a> and <a href="https://github.com/NVIDIA/torch-harmonics">NVIDIA/torch-harmonics</a> <code>main</code> branch source and docstrings, read 2 August 2026; <a href="https://www.gfdl.noaa.gov/shield/">GFDL SHiELD</a> configuration tables for the X-SHiELD cross-check; rollout blow-up times from <a href="https://arxiv.org/abs/2605.30184">Lehmann et al. 2026</a> (Table 1) and its companion repository <a href="https://github.com/lehmannfa/ai-weather-stability">lehmannfa/ai-weather-stability</a>.
 </p>
 
 <script>
