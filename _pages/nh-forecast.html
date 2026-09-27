@@ -32,11 +32,11 @@ author_profile: false
   <p class="bp-backlink jn-small"><a href="{{ base_path }}/blocking-plots/">&larr; Blocking Plots</a> &nbsp;|&nbsp; <a href="{{ base_path }}/blocking-plots/composites/">Blocking composite viewer</a></p>
   <div class="jn-runhead"><span>Operational forecast &middot; Northern Hemisphere</span><span id="nh-runinfo">loading index&hellip;</span></div>
 
-  <p class="jn-abstract"><b>Data.</b> Latest complete run of the NOAA GFS 0.25&deg; or the ECMWF AIFS-single 0.25&deg; (open data, CC BY 4.0), subsampled to 0.5&deg; over 0&ndash;90&deg;N, forecast hours 0&ndash;240 every 6 h, preceded by the analyses (f000) of the previous five days. Variables <i>u</i>, <i>v</i>, <i>T</i>, <i>Z</i>, <i>&omega;</i>, <i>q</i> at 850, 500 and 250 hPa; wind speed and the 500-hPa height anomaly (relative to the 1991&ndash;2020 NCEP/NCAR daily climatology) are derived in the browser. Cyclone (L) and anticyclone (H) centres are extrema of the smoothed 500-hPa height (or of its anomaly), linked between 6-h steps. Updated every 6 h from <a href="https://huggingface.co/datasets/yanxingjianken/nh-forecast-6hourly">this dataset</a>.</p>
+  <p class="jn-abstract"><b>Data.</b> Latest complete run of the NOAA GFS 0.25&deg;, the ECMWF AIFS-single 0.25&deg; or the ECMWF IFS 0.25&deg; (open data, CC BY 4.0; the 06/18 UTC IFS cycles end at 144 h), subsampled to 0.5&deg; over 0&ndash;90&deg;N, forecast hours 0&ndash;240 every 6 h, preceded by the analyses (f000) of the previous five days. Variables <i>u</i>, <i>v</i>, <i>T</i>, <i>Z</i>, <i>&omega;</i>, <i>q</i> at 850, 500 and 250 hPa; wind speed and the 500-hPa height anomaly (relative to the 1991&ndash;2020 NCEP/NCAR daily climatology) are derived in the browser. Cyclone (L) and anticyclone (H) centres are extrema of the smoothed 500-hPa height (or of its anomaly), linked between 6-h steps. Updated every 6 h from <a href="https://huggingface.co/datasets/yanxingjianken/nh-forecast-6hourly">this dataset</a>.</p>
 
   <div class="jn-controls">
     <div class="jn-ctl"><label for="nh-model">Model</label>
-      <select id="nh-model"><option value="gfs">GFS 0.25&deg; (NCEP)</option><option value="aifs">AIFS-single 0.25&deg; (ECMWF)</option></select></div>
+      <select id="nh-model"><option value="gfs">GFS 0.25&deg; (NCEP)</option><option value="aifs">AIFS-single 0.25&deg; (ECMWF)</option><option value="ifs">IFS 0.25&deg; (ECMWF)</option></select></div>
     <div class="jn-ctl"><label for="nh-view">Projection</label>
       <select id="nh-view"><option value="rect">Rectangular, 0&ndash;90&deg;N</option><option value="disk">Polar stereographic disk</option></select></div>
     <div class="jn-ctl"><label for="nh-clon">Central longitude</label>
@@ -93,7 +93,7 @@ author_profile: false
   var HF_BASE = 'https://huggingface.co/datasets/yanxingjianken/nh-forecast-6hourly/resolve/main';
   var qs = new URLSearchParams(location.search);
   var BASE = qs.get('base') || HF_BASE;
-  var LAND_URL = 'https://cdn.jsdelivr.net/npm/world-atlas@2/land-50m.json';
+  var LAND_URLS = ['https://cdn.jsdelivr.net/npm/world-atlas@2/land-50m.json', 'https://unpkg.com/world-atlas@2/land-50m.json', 'https://cdn.jsdelivr.net/npm/world-atlas@2/land-110m.json'];
 
   var VARS = {
     z:   {label: 'geopotential height', short: 'Z', units: 'gpm', factor: 1},
@@ -275,36 +275,40 @@ author_profile: false
   function setupProjection() {
     var wrap = $('nh-mapwrap');
     var W = Math.max(320, Math.floor(wrap.clientWidth) - 2);
-    S.W = W;
+    /* margins hold the coordinate labels, outside the shaded map area */
+    var M = S.view === 'rect' ? {l: 40, r: 8, t: 6, b: 20} : {l: 36, r: 36, t: 22, b: 26};
+    var Win = W - M.l - M.r, Hin;
     if (S.view === 'rect') {
-      S.H = Math.round(W * 1.5 / 4);          /* 360 deg x (90 deg * 1.5) */
-      var scale = W / (2 * Math.PI);
-      S.proj = d3.geoProjection(rawRect).rotate([-S.clon, 0]).scale(scale).translate([W / 2, S.H]).precision(0.1)
-        .clipExtent([[0, 0], [W, S.H]]);
+      Hin = Math.round(Win * 1.5 / 4);          /* 360 deg x (90 deg * 1.5) */
+      S.proj = d3.geoProjection(rawRect).rotate([-S.clon, 0]).scale(Win / (2 * Math.PI)).translate([M.l + Win / 2, M.t + Hin]).precision(0.1)
+        .clipExtent([[M.l, M.t], [M.l + Win, M.t + Hin]]);
     } else {
-      S.H = W;
-      var R = W / 2 - 4;
-      S.proj = d3.geoStereographic().rotate([-S.clon, -90]).clipAngle(90).scale(R).translate([W / 2, S.H / 2]).precision(0.1);
+      Hin = Win;
+      var R = Win / 2 - 2;
+      S.proj = d3.geoStereographic().rotate([-S.clon, -90]).clipAngle(90).scale(R).translate([M.l + Win / 2, M.t + Hin / 2]).precision(0.1);
     }
+    S.W = W; S.H = M.t + Hin + M.b; S.M = M;
+    S.area = {x0: M.l, y0: M.t, x1: M.l + Win, y1: M.t + Hin, w: Win, h: Hin, cx: M.l + Win / 2, cy: M.t + Hin / 2, R: Win / 2 - 2};
     S.path = d3.geoPath(S.proj);
-    var cv = $('nh-canvas'); cv.width = W; cv.height = S.H; cv.style.width = W + 'px'; cv.style.height = S.H + 'px';
+    var cv = $('nh-canvas'); cv.width = Win; cv.height = Hin; cv.style.width = Win + 'px'; cv.style.height = Hin + 'px'; cv.style.left = M.l + 'px'; cv.style.top = M.t + 'px';
     var svg = $('nh-svg'); svg.setAttribute('width', W); svg.setAttribute('height', S.H); svg.setAttribute('viewBox', '0 0 ' + W + ' ' + S.H);
     S.pixmap = null;
   }
 
-  /* inverse map for every 2x2 pixel block -> lon/lat (cached per projection) */
+  function inArea(xy, pad) { var a = S.area; pad = pad || 0; return xy && xy[0] >= a.x0 + pad && xy[0] <= a.x1 - pad && xy[1] >= a.y0 + pad && xy[1] <= a.y1 - pad; }
+  function inDisk(xy, pad) { var a = S.area, dx = xy[0] - a.cx, dy = xy[1] - a.cy; return dx * dx + dy * dy <= (a.R - (pad || 0)) * (a.R - (pad || 0)); }
+
+  /* inverse map for every 2x2 canvas pixel block -> lon/lat (cached per projection) */
   function buildPixmap() {
-    var B = 2, W = S.W, H = S.H, nxb = Math.ceil(W / B), nyb = Math.ceil(H / B);
+    var B = 2, a = S.area, nxb = Math.ceil(a.w / B), nyb = Math.ceil(a.h / B);
     var lon = new Float32Array(nxb * nyb), lat = new Float32Array(nxb * nyb);
     var inv = S.proj.invert;
     for (var by = 0; by < nyb; by++) for (var bx = 0; bx < nxb; bx++) {
-      var p = inv([bx * B + B / 2, by * B + B / 2]);
+      var sx = a.x0 + bx * B + B / 2, sy = a.y0 + by * B + B / 2;
       var k = by * nxb + bx;
+      if (S.view === 'disk' && !inDisk([sx, sy], 0)) { lat[k] = NaN; lon[k] = NaN; continue; }
+      var p = inv([sx, sy]);
       if (!p || !isFinite(p[0]) || !isFinite(p[1]) || p[1] < 0 || p[1] > 90) { lat[k] = NaN; lon[k] = NaN; continue; }
-      if (S.view === 'disk') {  /* outside the clip circle the inverse lands on the far hemisphere */
-        var dx = bx * B + B / 2 - W / 2, dy = by * B + B / 2 - H / 2;
-        if (dx * dx + dy * dy > (W / 2 - 4) * (W / 2 - 4)) { lat[k] = NaN; lon[k] = NaN; continue; }
-      }
       lon[k] = p[0]; lat[k] = p[1];
     }
     S.pixmap = {B: B, nxb: nxb, nyb: nyb, lon: lon, lat: lat};
@@ -353,7 +357,7 @@ author_profile: false
     ctx.clearRect(0, 0, cv.width, cv.height);
     if (!fld || !sc) return;
     if (!S.pixmap) buildPixmap();
-    var pm = S.pixmap, B = pm.B, img = ctx.createImageData(cv.width, cv.height), px = img.data, W = cv.width, H = cv.height;
+    var pm = S.pixmap, B = pm.B, img = ctx.createImageData(cv.width, cv.height), px = img.data, W = cv.width, H = cv.height;  /* canvas = map area only */
     var rgb = sc.cols.map(function (c) { var o = d3.rgb(c); return [o.r, o.g, o.b]; });
     var f = sc.factor, lo = sc.lo, st = sc.st, n = sc.n;
     for (var by = 0; by < pm.nyb; by++) for (var bx = 0; bx < pm.nxb; bx++) {
@@ -403,14 +407,15 @@ author_profile: false
   function drawMapLayers(shadeFld, contFld) {
     var svg = d3.select('#nh-svg'); svg.selectAll('*').remove();
     var W = S.W, H = S.H, path = S.path, proj = S.proj;
+    var A = S.area;
     var defs = svg.append('defs');
-    defs.append('clipPath').attr('id', 'nh-clip').append('path').attr('d', S.view === 'rect' ? ('M0,0H' + W + 'V' + H + 'H0Z') : path({type: 'Sphere'}));
+    defs.append('clipPath').attr('id', 'nh-clip').append('path').attr('d', S.view === 'rect' ? ('M' + A.x0 + ',' + A.y0 + 'H' + A.x1 + 'V' + A.y1 + 'H' + A.x0 + 'Z') : path({type: 'Sphere'}));
     var g = svg.append('g').attr('clip-path', 'url(#nh-clip)');
     /* graticule */
     var grat = d3.geoGraticule().step([30, 15]).extent([[-180, 0], [180, 90.01]]);
     g.append('path').datum(grat()).attr('d', path).attr('fill', 'none').attr('stroke', '#777').attr('stroke-width', 0.4).attr('stroke-dasharray', '2,2');
     /* coastlines */
-    if (S.land) g.append('path').datum(S.land).attr('d', path).attr('fill', 'none').attr('stroke', '#000').attr('stroke-width', 0.55);
+    if (S.land) g.append('path').datum(S.land).attr('d', path).attr('fill', 'none').attr('stroke', '#000').attr('stroke-width', 0.9).attr('stroke-linejoin', 'round');
     /* contours */
     if (contFld) {
       var s = parseSel(S.cont), cl = contourLines(contFld, S.cont), ci = CI[s.v][s.lev];
@@ -429,8 +434,8 @@ author_profile: false
           if (labels.length > 70 || line.length < 80) return;
           for (var tries = 0; tries < 3; tries++) {
             var p = line[Math.floor(line.length * (tries + 1) / 4)];
-            var xy = proj(p); if (!xy || xy[0] < 10 || xy[0] > W - 10 || xy[1] < 10 || xy[1] > H - 10) continue;
-            if (S.view === 'disk') { var dx = xy[0] - W / 2, dy = xy[1] - H / 2; if (dx * dx + dy * dy > (W / 2 - 12) * (W / 2 - 12)) continue; }
+              var xy = proj(p); if (!inArea(xy, 10)) continue;
+            if (S.view === 'disk' && !inDisk(xy, 12)) continue;
             if (!farEnough(xy)) continue;
             gl.append('text').attr('x', xy[0]).attr('y', xy[1] + 3).attr('text-anchor', 'middle')
               .style('font-family', 'Helvetica, Arial, sans-serif').style('font-size', '7.5pt').style('paint-order', 'stroke')
@@ -440,30 +445,32 @@ author_profile: false
         });
       });
     }
-    /* frame + axis labels */
+    /* frame + coordinate labels in the margins */
+    var gl2 = svg.append('g').style('font-family', 'Helvetica, Arial, sans-serif').style('font-size', '7.5pt');
     if (S.view === 'rect') {
-      svg.append('rect').attr('x', 0.5).attr('y', 0.5).attr('width', W - 1).attr('height', H - 1).attr('fill', 'none').attr('stroke', '#000').attr('stroke-width', 1);
-      var ga = svg.append('g').style('font-family', 'Helvetica, Arial, sans-serif').style('font-size', '7.5pt');
-      [15, 30, 45, 60, 75].forEach(function (la) {
+      svg.append('rect').attr('x', A.x0 + 0.5).attr('y', A.y0 + 0.5).attr('width', A.w - 1).attr('height', A.h - 1).attr('fill', 'none').attr('stroke', '#000').attr('stroke-width', 1);
+      [0, 15, 30, 45, 60, 75, 90].forEach(function (la) {
         var xy = proj([S.clon, la]); if (!xy) return;
-        ga.append('text').attr('x', 3).attr('y', xy[1] + 3).style('paint-order', 'stroke').attr('stroke', '#fff').attr('stroke-width', 2).attr('fill', '#000').text(fmtLat(la));
+        gl2.append('line').attr('x1', A.x0 - 3).attr('x2', A.x0).attr('y1', xy[1]).attr('y2', xy[1]).attr('stroke', '#000').attr('stroke-width', 0.8);
+        gl2.append('text').attr('x', A.x0 - 5).attr('y', xy[1] + 3).attr('text-anchor', 'end').attr('fill', '#000').text(fmtLat(la));
       });
-      for (var lo = -150; lo <= 180; lo += 30) {
-        var xy2 = proj([S.clon + lo, 3]); if (!xy2 || xy2[0] < 12 || xy2[0] > W - 12) continue;
-        ga.append('text').attr('x', xy2[0]).attr('y', H - 4).attr('text-anchor', 'middle').style('paint-order', 'stroke').attr('stroke', '#fff').attr('stroke-width', 2).attr('fill', '#000').text(fmtLon(S.clon + lo));
+      for (var lo = -180; lo <= 180; lo += 30) {
+        var xy2 = proj([S.clon + lo, 3]); if (!xy2 || xy2[0] < A.x0 - 1 || xy2[0] > A.x1 + 1) continue;
+        gl2.append('line').attr('x1', xy2[0]).attr('x2', xy2[0]).attr('y1', A.y1).attr('y2', A.y1 + 3).attr('stroke', '#000').attr('stroke-width', 0.8);
+        gl2.append('text').attr('x', xy2[0]).attr('y', A.y1 + 13).attr('text-anchor', 'middle').attr('fill', '#000').text(fmtLon(S.clon + lo));
       }
     } else {
       svg.append('path').attr('d', path({type: 'Sphere'})).attr('fill', 'none').attr('stroke', '#000').attr('stroke-width', 1);
-      var gd = svg.append('g').style('font-family', 'Helvetica, Arial, sans-serif').style('font-size', '7.5pt');
       for (var lo2 = 0; lo2 < 360; lo2 += 30) {
-        var xy3 = proj([lo2, 1.5]); if (!xy3) continue;
-        var ang = Math.atan2(xy3[1] - H / 2, xy3[0] - W / 2), rr = W / 2 - 4 - 13;
-        gd.append('text').attr('x', W / 2 + rr * Math.cos(ang)).attr('y', H / 2 + rr * Math.sin(ang) + 3).attr('text-anchor', 'middle')
-          .style('paint-order', 'stroke').attr('stroke', '#fff').attr('stroke-width', 2.5).attr('fill', '#000').text(fmtLon(lo2));
+        var xy3 = proj([lo2, 0.5]); if (!xy3) continue;
+        var ang = Math.atan2(xy3[1] - A.cy, xy3[0] - A.cx), rr = A.R + 4, rt = A.R + 12;
+        gl2.append('line').attr('x1', A.cx + A.R * Math.cos(ang)).attr('y1', A.cy + A.R * Math.sin(ang)).attr('x2', A.cx + rr * Math.cos(ang)).attr('y2', A.cy + rr * Math.sin(ang)).attr('stroke', '#000').attr('stroke-width', 0.8);
+        var tx = A.cx + rt * Math.cos(ang), ty = A.cy + rt * Math.sin(ang), anchor = Math.abs(Math.cos(ang)) < 0.3 ? 'middle' : (Math.cos(ang) > 0 ? 'start' : 'end');
+        gl2.append('text').attr('x', tx).attr('y', ty + (Math.sin(ang) > 0.3 ? 8 : (Math.sin(ang) < -0.3 ? -1 : 3))).attr('text-anchor', anchor).attr('fill', '#000').text(fmtLon(lo2));
       }
       [30, 60].forEach(function (la) {
         var xy4 = proj([S.clon + 180, la]); if (!xy4) return;
-        gd.append('text').attr('x', xy4[0] + 3).attr('y', xy4[1] - 3).style('paint-order', 'stroke').attr('stroke', '#fff').attr('stroke-width', 2.5).attr('fill', '#000').text(fmtLat(la));
+        gl2.append('text').attr('x', xy4[0] + 3).attr('y', xy4[1] - 3).style('paint-order', 'stroke').attr('stroke', '#fff').attr('stroke-width', 2.5).attr('fill', '#000').text(fmtLat(la));
       });
     }
     svg.append('g').attr('id', 'nh-tracks').attr('clip-path', 'url(#nh-clip)');
@@ -646,7 +653,9 @@ author_profile: false
     Object.keys(S.index.models).forEach(function (mid) { var o = document.createElement('option'); o.value = mid; o.textContent = S.index.models[mid].label || mid.toUpperCase(); sel.appendChild(o); });
     if (!S.index.models[S.model]) S.model = Object.keys(S.index.models)[0];
     sel.value = S.model;
-    try { var topo = await fetchJSON(LAND_URL); S.land = topojson.feature(topo, topo.objects.land); } catch (e) { S.land = null; }
+    S.land = null;
+    for (var li = 0; li < LAND_URLS.length && !S.land; li++) { try { var topo = await fetchJSON(LAND_URLS[li]); S.land = topojson.feature(topo, topo.objects.land); } catch (e) { S.land = null; } }
+    if (!S.land) status('coastline data could not be loaded', true);
     setupProjection();
     await selectModel(S.model);
   }

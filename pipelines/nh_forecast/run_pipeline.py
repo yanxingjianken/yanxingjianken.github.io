@@ -3,7 +3,7 @@
 Usage (GitHub Actions, hourly):  python run_pipeline.py --repo yanxingjianken/nh-forecast-6hourly
 Local dry run:                   python run_pipeline.py --dry-run --models gfs --max-step 24 --out /tmp/x
 
-Models: gfs (NOAA GFS 0.25) and aifs (ECMWF AIFS-single 0.25).  For each model
+Models: gfs (NOAA GFS 0.25), aifs (ECMWF AIFS-single 0.25) and ifs (ECMWF IFS 0.25).  For each model
 the script finds the newest run whose last step is available, skips it if the
 dataset already holds it (idempotent, so the job can run hourly), otherwise
 downloads the 18 fields for every 6-h step, encodes them, tracks Z500 centres
@@ -43,8 +43,9 @@ import climatology  # noqa: E402
 import tracking  # noqa: E402
 import model_gfs  # noqa: E402
 import model_aifs  # noqa: E402
+import model_ifs  # noqa: E402
 
-MODELS = {"gfs": model_gfs, "aifs": model_aifs}
+MODELS = {"gfs": model_gfs, "aifs": model_aifs, "ifs": model_ifs}
 N_ANALYSIS_DAYS = 5
 VAR_UNITS = {v: u for _s, (v, u) in VARS.items()}
 
@@ -149,11 +150,12 @@ def process_model(mid, args, api, index, tmp_root):
         init = M.latest_complete_run(max_step=args.max_step)
     run_id = M.run_id(init)
     cur = (index or {}).get("models", {}).get(mid, {})
-    if not args.force and cur.get("latest_run") == run_id and cur.get("steps", [None])[-1] == args.max_step:
+    max_step = M.last_step(init, args.max_step) if hasattr(M, "last_step") else args.max_step
+    if not args.force and cur.get("latest_run") == run_id and cur.get("steps", [None])[-1] == max_step:
         log(f"{mid}: run {run_id} already published; nothing to do")
         return None
-    steps = list(range(0, args.max_step + 1, args.step_hours))
-    log(f"{mid}: run {run_id}, {len(steps)} steps to f{args.max_step:03d}")
+    steps = list(range(0, max_step + 1, args.step_hours))
+    log(f"{mid}: run {run_id}, {len(steps)} steps to f{max_step:03d}")
     out_root = os.path.join(tmp_root, mid, "publish")
     run_dir = os.path.join(out_root, mid, "runs", run_id)
     os.makedirs(run_dir, exist_ok=True)
@@ -269,7 +271,7 @@ def publish(mid, res, args, api, index, existing):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--repo", default=os.environ.get("HF_DATASET", "yanxingjianken/nh-forecast-6hourly"))
-    ap.add_argument("--models", default="gfs,aifs")
+    ap.add_argument("--models", default="gfs,aifs,ifs")
     ap.add_argument("--run", help="force a run id YYYYMMDDHH (applies to every selected model)")
     ap.add_argument("--max-step", type=int, default=240)
     ap.add_argument("--step-hours", type=int, default=6)
