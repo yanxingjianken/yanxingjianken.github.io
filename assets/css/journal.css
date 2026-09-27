@@ -1,0 +1,164 @@
+/* ---------------------------------------------------------------------------
+   journal.css — shared styling for the forecast-viewer pages
+   (Blocking Plots > Northern Hemisphere forecast; WxChallenge).
+
+   Design intent: the look of a printed AMS/AGU journal article, not a web
+   dashboard.  Serif body text (as in the article body), Helvetica/Arial in
+   figures (as AMS figure guidelines require), thin black rules, no rounded
+   corners, no shadows, no gradients, a single restrained accent colour, and
+   figure captions in the journal "Fig. N." style.
+   --------------------------------------------------------------------------- */
+.jn {
+  --jn-serif: "STIX Two Text", "Times New Roman", Times, "Nimbus Roman", "Liberation Serif", serif;
+  --jn-sans: Helvetica, Arial, "Nimbus Sans", "Liberation Sans", sans-serif;
+  --jn-mono: "Courier New", Courier, "Nimbus Mono PS", monospace;
+  --jn-ink: #000000;
+  --jn-ink-2: #333333;
+  --jn-ink-3: #666666;
+  --jn-rule: #000000;
+  --jn-rule-light: #999999;
+  --jn-paper: #ffffff;
+  --jn-accent: #1b3a6b;        /* dark blue, used sparingly for links / active state */
+  --jn-cyclone: #b2182b;       /* "L"  (red, NWS convention)   */
+  --jn-anticyclone: #2166ac;   /* "H"  (blue, NWS convention)  */
+  font-family: var(--jn-serif);
+  color: var(--jn-ink);
+  background: var(--jn-paper);
+  font-size: 11pt;
+  line-height: 1.45;
+  -webkit-font-smoothing: auto;
+}
+.jn h1, .jn h2, .jn h3, .jn h4 { font-family: var(--jn-serif); font-weight: 700; color: var(--jn-ink); letter-spacing: 0; }
+.jn h2 { font-size: 13pt; margin: 1.6em 0 0.5em 0; text-transform: none; border: 0; }
+.jn h3 { font-size: 11.5pt; margin: 1.2em 0 0.4em 0; font-style: italic; font-weight: 700; }
+.jn p  { margin: 0 0 0.7em 0; }
+.jn a  { color: var(--jn-accent); text-decoration: none; border-bottom: 1px solid #b8c2d4; }
+.jn a:hover { border-bottom-color: var(--jn-accent); }
+.jn small, .jn .jn-small { font-size: 9pt; }
+.jn .jn-muted { color: var(--jn-ink-3); }
+.jn .jn-mono { font-family: var(--jn-mono); font-size: 9.5pt; }
+
+/* Section rules, as between an article's sections */
+.jn hr, .jn .jn-rule { border: 0; border-top: 1px solid var(--jn-rule); margin: 1.4em 0; }
+.jn .jn-rule-light { border-top: 1px solid var(--jn-rule-light); }
+.jn .jn-rule-double { border-top: 3px double var(--jn-rule); }
+
+/* Running head / abstract-style header block */
+.jn .jn-runhead {
+  font-family: var(--jn-sans);
+  font-size: 8.5pt;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--jn-ink-2);
+  border-bottom: 1px solid var(--jn-rule);
+  padding-bottom: 4px;
+  margin-bottom: 10px;
+  display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+}
+.jn .jn-abstract { font-size: 10pt; margin: 0.6em 0 1em 0; }
+.jn .jn-abstract b { font-weight: 700; }
+
+/* Controls: a plain "Table 1"-like control strip.  Native selects, square
+   corners, hairline borders, sans-serif labels as in figure annotations. */
+.jn .jn-controls {
+  font-family: var(--jn-sans);
+  font-size: 9pt;
+  display: flex; flex-wrap: wrap; gap: 6px 18px; align-items: flex-end;
+  border-top: 1px solid var(--jn-rule); border-bottom: 1px solid var(--jn-rule-light);
+  padding: 8px 0;
+  margin: 10px 0 14px 0;
+}
+.jn .jn-controls .jn-ctl { display: flex; flex-direction: column; gap: 3px; min-width: 90px; }
+.jn .jn-controls .jn-ctl-row { display: flex; flex-direction: row; gap: 8px; align-items: center; }
+.jn .jn-controls label { font-family: var(--jn-sans); font-size: 8.5pt; color: var(--jn-ink-2); font-weight: 400; margin: 0; }
+.jn select, .jn input[type=text], .jn input[type=search], .jn input[type=number] {
+  font-family: var(--jn-sans); font-size: 9.5pt; color: var(--jn-ink);
+  background: var(--jn-paper); border: 1px solid var(--jn-ink-2); border-radius: 0;
+  padding: 2px 4px; height: 24px; box-shadow: none; margin: 0;
+}
+.jn select:focus, .jn input:focus { outline: 1px solid var(--jn-accent); outline-offset: 0; border-color: var(--jn-accent); }
+.jn button, .jn .jn-btn {
+  font-family: var(--jn-sans); font-size: 9pt; color: var(--jn-ink);
+  background: var(--jn-paper); border: 1px solid var(--jn-ink); border-radius: 0;
+  padding: 3px 10px; height: 24px; cursor: pointer; box-shadow: none; text-shadow: none; margin: 0;
+  line-height: 1;
+}
+.jn button:hover, .jn .jn-btn:hover { background: #f2f2f2; color: var(--jn-ink); }
+.jn button[aria-pressed="true"], .jn .jn-btn.is-active { background: var(--jn-ink); color: var(--jn-paper); border-color: var(--jn-ink); }
+.jn button:disabled { color: var(--jn-ink-3); border-color: var(--jn-rule-light); cursor: default; background: var(--jn-paper); }
+.jn input[type=range] { accent-color: var(--jn-ink); }
+.jn input[type=checkbox], .jn input[type=radio] { accent-color: var(--jn-ink); margin: 0 4px 0 0; }
+.jn .jn-btngroup { display: inline-flex; }
+.jn .jn-btngroup button { margin-left: -1px; }
+.jn .jn-btngroup button:first-child { margin-left: 0; }
+
+/* Figures */
+.jn figure.jn-fig { margin: 0 0 1.6em 0; padding: 0; }
+.jn figure.jn-fig .jn-fig-body { position: relative; }
+.jn figure.jn-fig svg, .jn figure.jn-fig canvas { display: block; max-width: 100%; height: auto; }
+.jn figcaption {
+  font-family: var(--jn-serif); font-size: 9.5pt; line-height: 1.35; color: var(--jn-ink);
+  margin-top: 6px; text-align: justify;
+}
+.jn figcaption .jn-figno { font-weight: 700; }
+.jn .jn-fig-title {
+  font-family: var(--jn-sans); font-size: 9.5pt; font-weight: 700; margin: 0 0 4px 0; color: var(--jn-ink);
+}
+.jn .jn-fig-sub { font-family: var(--jn-sans); font-size: 8.5pt; color: var(--jn-ink-2); margin: 0 0 4px 0; }
+
+/* Figure text (inside SVGs we set these classes) */
+.jn .fig-text, .jn text { font-family: var(--jn-sans); fill: var(--jn-ink); }
+.jn .fig-axis { font-size: 8pt; }
+.jn .fig-label { font-size: 8.5pt; }
+.jn .fig-title { font-size: 9.5pt; font-weight: 700; }
+.jn .fig-annot { font-size: 7.5pt; }
+
+/* Two-column figure rows */
+.jn .jn-row { display: flex; gap: 18px; flex-wrap: wrap; }
+.jn .jn-row > * { flex: 1 1 320px; min-width: 0; }
+
+/* Tables: journal style (rules above/below header and at bottom only) */
+.jn table.jn-table { border-collapse: collapse; width: 100%; font-family: var(--jn-serif); font-size: 9.5pt; margin: 6px 0 12px 0; border: 0; background: none; }
+.jn table.jn-table th, .jn table.jn-table td { border: 0; padding: 3px 8px; text-align: left; vertical-align: top; background: none; }
+.jn table.jn-table thead th { border-top: 1px solid var(--jn-rule); border-bottom: 1px solid var(--jn-rule); font-weight: 700; font-family: var(--jn-sans); font-size: 8.5pt; }
+.jn table.jn-table tbody tr:last-child td { border-bottom: 1px solid var(--jn-rule); }
+.jn table.jn-table td.num, .jn table.jn-table th.num { text-align: right; font-variant-numeric: tabular-nums; }
+.jn .jn-tabcap { font-family: var(--jn-serif); font-size: 9.5pt; margin: 0 0 4px 0; }
+.jn .jn-tabcap b { font-weight: 700; }
+
+/* Status / notes */
+.jn .jn-status { font-family: var(--jn-sans); font-size: 8.5pt; color: var(--jn-ink-2); margin: 4px 0 8px 0; min-height: 1.2em; }
+.jn .jn-note { font-size: 9pt; color: var(--jn-ink-2); border-left: 2px solid var(--jn-rule-light); padding-left: 8px; margin: 8px 0; }
+.jn .jn-err { color: #8b0000; }
+
+/* Landing "contents" list (used on the Blocking Plots index page) */
+.jn .jn-contents { list-style: none; padding: 0; margin: 0; }
+.jn .jn-contents li { border-top: 1px solid var(--jn-rule-light); padding: 12px 0; margin: 0; }
+.jn .jn-contents li:last-child { border-bottom: 1px solid var(--jn-rule); }
+.jn .jn-contents .jn-item-no { font-family: var(--jn-sans); font-size: 8.5pt; color: var(--jn-ink-3); letter-spacing: 0.04em; }
+.jn .jn-contents .jn-item-title { font-size: 12pt; font-weight: 700; display: block; margin: 2px 0 4px 0; border: 0; }
+.jn .jn-contents .jn-item-desc { font-size: 10pt; margin: 0; }
+
+/* Tooltip / popover for clicked vortex centres etc. */
+.jn .jn-pop {
+  position: absolute; z-index: 20; pointer-events: auto;
+  background: var(--jn-paper); border: 1px solid var(--jn-ink); padding: 6px 8px;
+  font-family: var(--jn-sans); font-size: 8.5pt; line-height: 1.35; color: var(--jn-ink);
+  max-width: 260px; box-shadow: none; border-radius: 0;
+}
+.jn .jn-pop b { font-weight: 700; }
+.jn .jn-pop .jn-pop-close { float: right; border: 0; height: auto; padding: 0 0 0 8px; font-size: 10pt; line-height: 1; background: none; }
+
+/* Loading indicator: plain text, no spinner */
+.jn .jn-loading { font-family: var(--jn-sans); font-size: 8.5pt; color: var(--jn-ink-2); }
+
+/* Keep the theme's page title consistent with the journal look on these pages */
+.jn-page .page__title { font-family: "STIX Two Text", "Times New Roman", Times, serif; font-weight: 700; }
+
+@media (max-width: 700px) {
+  .jn { font-size: 10.5pt; }
+  .jn .jn-controls { gap: 6px 12px; }
+}
+@media print {
+  .jn .jn-controls, .jn .jn-status, .jn .jn-runhead { display: none; }
+}
