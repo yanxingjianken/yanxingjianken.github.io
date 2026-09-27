@@ -2,22 +2,21 @@
 main:
   - title: "Research"
     url: /portfolio/
-        
+
   - title: "Publications"
     url: /publications/
-    
-  - title: "Software"
-    url: /software/
-  
+
   - title: "Talks"
-    url: /talks/    
+    url: /talks/
 
   - title: "Notes"
-    url: /teaching/    
-    
+    url: /teaching/
+
   - title: "Blocking Plots"
     url: /blocking-plots/
-    
-    
+
+  - title: "WxChallenge"
+    url: /wxchallenge/
+
   # - title: "Guide"
   #   url: /markdown/
