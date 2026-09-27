@@ -4,4 +4,4 @@ xarray>=2024.1
 cfgrib>=0.9.14
 eccodes>=2.37
 requests>=2.31
-huggingface_hub>=0.26
+huggingface_hub>=1.0,<3

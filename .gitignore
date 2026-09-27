@@ -14,3 +14,6 @@ package-lock.json
 # Ignore bundler files
 .bundle/
 vendor/
+# Python bytecode from the pipelines
+__pycache__/
+*.pyc

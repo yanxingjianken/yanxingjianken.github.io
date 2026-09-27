@@ -1,0 +1,38 @@
+name: WxChallenge schedule and station catalogue
+
+# Weekly refresh of the competition schedule (wxchallenge.com has no CORS, so the
+# browser cannot read it) and of the US ASOS station list.  Commits only when
+# something changed.  These commits also keep the repository "active" so that
+# GitHub does not disable the scheduled NH-forecast workflow after 60 idle days.
+on:
+  schedule:
+    - cron: "20 12 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Refresh schedule
+        run: python pipelines/wxchallenge/update_schedule.py
+      - name: Refresh station catalogue (first week of each month, or on manual run)
+        run: |
+          if [ "$(date -u +%d)" -le 7 ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            python pipelines/wxchallenge/build_station_catalogue.py
+          fi
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/data/wxchallenge_schedule.json assets/data/asos_stations.json
+          if git diff --cached --quiet; then echo "no changes"; else
+            git commit -m "Refresh WxChallenge schedule / station catalogue"
+            git push
+          fi

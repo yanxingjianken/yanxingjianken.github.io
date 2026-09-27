@@ -1,0 +1,825 @@
+---
+layout: archive
+title: "WxChallenge Meteograms"
+permalink: /wxchallenge/
+author_profile: false
+---
+
+{% include base_path %}
+<link rel="stylesheet" href="{{ base_path }}/assets/css/journal.css">
+<style>.page__title { font-family: "STIX Two Text", "Times New Roman", Times, serif; font-weight: 700; }</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson-client/3.1.0/topojson-client.min.js"></script>
+
+<style>
+  .wx .wx-station-row { display: flex; gap: 8px; align-items: flex-end; flex-wrap: wrap; }
+  .wx input#wx-station { width: 90px; text-transform: uppercase; }
+  .wx .wx-period { font-family: Helvetica, Arial, sans-serif; font-size: 8.5pt; color: #333; margin: 2px 0 8px 0; }
+  .wx .wx-period b { font-weight: 700; }
+  .wx .wx-map-row { display: flex; gap: 14px; flex-wrap: wrap; }
+  .wx .wx-map-row > div { flex: 1 1 300px; min-width: 0; }
+  .wx .wx-map { position: relative; border: 1px solid #000; background: #fff; }
+  .wx .wx-map canvas { position: absolute; left: 0; top: 0; }
+  .wx .wx-map svg { position: relative; display: block; }
+  .wx .wx-cbar { display: block; margin-top: 4px; }
+  .wx .wx-plot { border: 1px solid #000; background: #fff; }
+  .wx .wx-plot svg { display: block; }
+  .wx .wx-chartsel { display: flex; flex-wrap: wrap; gap: 4px 6px; margin: 6px 0; }
+  .wx .wx-chartsel button { font-size: 8.5pt; padding: 2px 8px; height: 22px; }
+  .wx .wx-legend { font-family: Helvetica, Arial, sans-serif; font-size: 8pt; margin: 4px 0; }
+  .wx .wx-legend span { display: inline-block; margin-right: 12px; white-space: nowrap; }
+  .wx .wx-legend i { display: inline-block; width: 18px; height: 0; border-top: 1.5px solid #000; vertical-align: middle; margin-right: 4px; }
+  .wx .wx-legend i.sq { width: 8px; height: 8px; border: 1px solid #000; }
+  .wx .wx-legend i.diamond { width: 7px; height: 7px; transform: rotate(45deg); border: 0; }
+  .wx table.jn-table td.num, .wx table.jn-table th.num { text-align: right; }
+  .wx .wx-corner-table { max-width: 520px; }
+  .wx .wx-hover { position: absolute; pointer-events: none; background: #fff; border: 1px solid #000; padding: 3px 6px; font-family: Helvetica, Arial, sans-serif; font-size: 8pt; z-index: 10; white-space: nowrap; }
+  .wx .wx-src { font-family: Helvetica, Arial, sans-serif; font-size: 8pt; color: #333; }
+  .wx .wx-clock { font-family: Helvetica, Arial, sans-serif; font-size: 8.5pt; color: #333; }
+  .wx .wx-sec { margin-top: 18px; }
+  .wx datalist { display: none; }
+</style>
+
+<div class="jn wx" id="wx-app">
+  <div class="jn-runhead"><span>Forecast guidance for the WxChallenge</span><span id="wx-clock"></span></div>
+
+  <p class="jn-abstract"><b>Purpose.</b> Model guidance for the <a href="https://www.wxchallenge.com/">WxChallenge</a> forecast variables (06&ndash;06 UTC maximum and minimum 2-m temperature, maximum sustained 10-m wind, liquid precipitation) at any US ASOS station, defaulting to the current competition city. Three sections: (1) the model grid around the station, with the four grid points that surround it, at 850, 500 and 250 hPa; (2) surface time series with METAR observations and MOS; (3) time&ndash;height sections. GFS, HRRR, RRFS and NAM come from the Iowa Environmental Mesonet BUFKIT archive (full model levels); ECMWF IFS and AIFS from Open-Meteo (13 pressure levels). The layout follows <a href="https://wxchallenge.yolandgao.com/">Yoland Gao&rsquo;s meteogram site</a>.</p>
+
+  <div class="jn-controls">
+    <div class="jn-ctl"><label for="wx-station">Station (ICAO)</label>
+      <div class="wx-station-row"><input type="text" id="wx-station" list="wx-stations" maxlength="4" autocomplete="off" spellcheck="false"><button id="wx-go">Go</button><button id="wx-comp" title="current WxChallenge city">Competition city</button></div>
+      <datalist id="wx-stations"></datalist></div>
+    <div class="jn-ctl"><label for="wx-model">Model</label>
+      <select id="wx-model">
+        <option value="GFS">GFS (BUFKIT)</option>
+        <option value="HRRR">HRRR (BUFKIT)</option>
+        <option value="RRFS">RRFS (BUFKIT)</option>
+        <option value="NAM">NAM (BUFKIT, retires 14 Oct 2026)</option>
+        <option value="IFS">ECMWF IFS 0.25&deg; (Open-Meteo)</option>
+        <option value="AIFS">ECMWF AIFS-single (Open-Meteo)</option>
+      </select></div>
+    <div class="jn-ctl"><label for="wx-date">Run (UTC)</label>
+      <div class="jn-ctl-row"><input type="date" id="wx-date"><select id="wx-hour"></select></div></div>
+    <div class="jn-ctl"><label>&nbsp;</label>
+      <div class="jn-btngroup"><button id="wx-prev" title="previous run">&lt; run</button><button id="wx-latest">latest</button><button id="wx-next" title="next run">run &gt;</button></div></div>
+    <div class="jn-ctl"><label for="wx-window">Time-series window</label>
+      <select id="wx-window"><option value="60">60 h (competition days 1&ndash;2)</option><option value="0">full run</option></select></div>
+  </div>
+  <div class="wx-period" id="wx-period"></div>
+  <div class="jn-status" id="wx-status"></div>
+  <div class="wx-src" id="wx-stinfo"></div>
+
+  <!-- ------------------------------------------------------------ 1. station map -->
+  <div class="wx-sec">
+    <h2>1. Model grid around the station</h2>
+    <div class="jn-controls">
+      <div class="jn-ctl"><label for="wx-mapmodel">Gridded field</label><select id="wx-mapmodel"></select></div>
+      <div class="jn-ctl"><label for="wx-mapvar">Variable</label>
+        <select id="wx-mapvar">
+          <option value="z">geopotential height Z</option><option value="t" selected>temperature T</option><option value="u">zonal wind u</option>
+          <option value="v">meridional wind v</option><option value="q">specific humidity q</option><option value="w">vertical velocity &omega;</option><option value="spd">wind speed |V|</option>
+        </select></div>
+      <div class="jn-ctl"><label for="wx-maplev">Level</label>
+        <select id="wx-maplev"><option value="850" selected>850 hPa</option><option value="500">500 hPa</option><option value="250">250 hPa</option></select></div>
+      <div class="jn-ctl"><label for="wx-mapcont">Contours</label>
+        <select id="wx-mapcont"><option value="z">Z (same level)</option><option value="same">same variable</option><option value="none">none</option></select></div>
+      <div class="jn-ctl" style="flex:1 1 220px"><label for="wx-mapstep">Forecast hour <span id="wx-mapstep-label"></span></label>
+        <input type="range" id="wx-mapstep" min="0" max="0" value="0" step="1"></div>
+    </div>
+    <div class="jn-status" id="wx-mapstatus"></div>
+    <figure class="jn-fig">
+      <div class="jn-fig-title" id="wx-maptitle"></div>
+      <div class="wx-map-row">
+        <div><div class="jn-fig-sub">(a) synoptic and smaller scales (&plusmn;3.5&deg; longitude, &plusmn;2.5&deg; latitude)</div><div class="wx-map" id="wx-map-a"><canvas></canvas><svg></svg></div></div>
+        <div><div class="jn-fig-sub">(b) large-scale set-up (&plusmn;22&deg; longitude, &plusmn;15&deg; latitude)</div><div class="wx-map" id="wx-map-b"><canvas></canvas><svg></svg></div></div>
+      </div>
+      <svg class="wx-cbar" id="wx-cbar"></svg>
+      <figcaption id="wx-mapcap"></figcaption>
+    </figure>
+    <div class="jn-tabcap"><b>Table 1.</b> Values at the four grid points surrounding the station and the bilinear interpolation to the station.</div>
+    <table class="jn-table wx-corner-table" id="wx-cornertab"><thead><tr><th>Grid point</th><th class="num">Lat (&deg;N)</th><th class="num">Lon (&deg;E)</th><th class="num">Distance (km)</th><th class="num" id="wx-corner-valhead">Value</th></tr></thead><tbody></tbody></table>
+    <div class="jn-note" id="wx-gridnote"></div>
+  </div>
+
+  <!-- ------------------------------------------------------------ 2. time series -->
+  <div class="wx-sec">
+    <h2>2. Surface time series</h2>
+    <div class="wx-chartsel" id="wx-tssel">
+      <button data-chart="t2m" aria-pressed="true">2-m T &amp; T<sub>d</sub></button><button data-chart="wind">10-m wind</button><button data-chart="precip">Accumulated precipitation</button>
+      <button data-chart="cape">CAPE</button><button data-chart="lik">LI &amp; K index</button><button data-chart="pwat">Precipitable water</button>
+    </div>
+    <figure class="jn-fig">
+      <div class="jn-fig-title" id="wx-tstitle"></div>
+      <div class="wx-plot" id="wx-ts"><svg></svg></div>
+      <div class="wx-legend" id="wx-tslegend"></div>
+      <figcaption id="wx-tscap"></figcaption>
+    </figure>
+    <div class="jn-tabcap"><b>Table 2.</b> WxChallenge-day summary (06&ndash;06 UTC): model values from the hourly series, MOS from the same cycle where available, observations to date from METARs.</div>
+    <table class="jn-table" id="wx-daytab"><thead><tr><th>Forecast day</th><th class="num">Max T (&deg;F)</th><th class="num">Min T (&deg;F)</th><th class="num">Max wind (kt)</th><th class="num">Precip (in)</th><th class="num">MOS max/min</th><th class="num">Obs so far max/min/wind/precip</th></tr></thead><tbody></tbody></table>
+  </div>
+
+  <!-- ------------------------------------------------------------ 3. time-height -->
+  <div class="wx-sec">
+    <h2>3. Time&ndash;height sections</h2>
+    <div class="wx-chartsel" id="wx-thsel">
+      <button data-field="temp" aria-pressed="true">Temperature</button><button data-field="theta">Potential temperature</button><button data-field="thetae">Equivalent potential temperature</button>
+      <button data-field="wind">Wind speed</button><button data-field="lowwind">Lower-tropospheric wind</button><button data-field="rh">Relative humidity</button><button data-field="omega">Vertical velocity</button><button data-field="cloud">Cloud fraction</button>
+    </div>
+    <figure class="jn-fig">
+      <div class="jn-fig-title" id="wx-thtitle"></div>
+      <div class="wx-plot" id="wx-th"><svg></svg></div>
+      <svg class="wx-cbar" id="wx-thcbar"></svg>
+      <figcaption id="wx-thcap"></figcaption>
+    </figure>
+  </div>
+
+  <details>
+    <summary class="jn-small">Method notes and sources</summary>
+    <div class="jn-note">
+      <p><b>BUFKIT models</b> (GFS, HRRR, RRFS, NAM): Iowa Environmental Mesonet <code>api/1/nws/bufkit.json</code>. Surface series: T2MS, TD2M (&deg;C&rarr;&deg;F), UWND/VWND (m s<sup>&minus;1</sup>&rarr;kt), P01M/C01M (mm&rarr;in), CAPE, LIFT, KINX, PWAT (mm&rarr;in), precipitation type from the WXTR/WXTS/WXTZ/WXTP flags. Boundary-layer wind: maximum and pressure-weighted mean of the profile wind from the surface to the level where &theta; first exceeds the surface value by 0.4 K. Profiles are interpolated in ln&nbsp;<i>p</i> to a fixed 60-level grid (1000&ndash;100 hPa); levels below the model surface are masked.</p>
+      <p><b>Open-Meteo models</b> (ECMWF IFS 0.25&deg;, AIFS-single): hourly 2-m temperature and dew point, 10-m wind, precipitation, CAPE (IFS only) and 12 pressure levels (1000&ndash;100 hPa) of temperature, relative humidity, wind, geopotential height, vertical velocity (converted to &omega; = &minus;<i>w p g</i>/(<i>R<sub>d</sub> T</i>)) and cloud cover; &theta; and &theta;<sub>e</sub> (Bolton 1980) are computed here. Specific runs come from the Open-Meteo single-runs API. Lifted and K indices are not available for these models.</p>
+      <p><b>MOS</b> (GFS MAV; NAM MET at 00/12 UTC): IEM <code>api/1/mos.json</code>; red diamonds mark the MOS daily maximum/minimum (N/X). <b>Observations:</b> IEM ASOS/METAR archive (routine and special reports). The stochastic-wind ensemble of the original site is server-side and is not reproduced.</p>
+      <p><b>Grid panel:</b> fields from the 6-hourly GFS / AIFS dataset behind the <a href="{{ base_path }}/blocking-plots/nh-forecast/">Northern Hemisphere viewer</a> (0.25&deg; CONUS window, 0.5&deg; elsewhere). The four surrounding 0.25&deg; grid points are exact model grid nodes; for HRRR/RRFS the 3-km Lambert-conformal cell nodes around the station are drawn from the published grid definition (no field values). <b>Competition city:</b> from wxchallenge.com, refreshed weekly; fallback KBOS.</p>
+    </div>
+  </details>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ================================================================ config */
+  var BASE_PATH = '{{ base_path }}';
+  var HF_BASE = 'https://huggingface.co/datasets/yanxingjianken/nh-forecast-6hourly/resolve/main';
+  var qs = new URLSearchParams(location.search);
+  var HF = qs.get('base') || HF_BASE;
+  var IEM = 'https://mesonet.agron.iastate.edu';
+  var OM_RUNS = 'https://single-runs-api.open-meteo.com/v1/forecast';
+  var OM_META = 'https://api.open-meteo.com/data/';
+  var STATIONS_URL = BASE_PATH + '/assets/data/asos_stations.json';
+  var SCHEDULE_URL = BASE_PATH + '/assets/data/wxchallenge_schedule.json';
+  var LAND_URL = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json';
+  var STATES_URL = 'https://cdn.jsdelivr.net/gh/PublicaMundi/MappingAPI@master/data/geojson/us-states.json';
+
+  var MODELS = {
+    GFS:  {label: 'GFS', src: 'bufkit', bufkit: 'GFS',  cycles: [0, 6, 12, 18], stepH: 6, mos: 'GFS', hasCloud: false, hasCape: true},
+    HRRR: {label: 'HRRR', src: 'bufkit', bufkit: 'HRRR', cycles: null, stepH: 1, mos: null, hasCloud: true, hasCape: true},
+    RRFS: {label: 'RRFS', src: 'bufkit', bufkit: 'RRFS', cycles: null, stepH: 1, mos: null, hasCloud: true, hasCape: true},
+    NAM:  {label: 'NAM', src: 'bufkit', bufkit: 'NAM',  cycles: [0, 6, 12, 18], stepH: 6, mos: 'NAM', hasCloud: true, hasCape: true},
+    IFS:  {label: 'ECMWF IFS 0.25°', src: 'openmeteo', om: 'ecmwf_ifs025', cycles: [0, 6, 12, 18], stepH: 6, mos: null, hasCloud: true, hasCape: true},
+    AIFS: {label: 'ECMWF AIFS-single', src: 'openmeteo', om: 'ecmwf_aifs025_single', cycles: [0, 6, 12, 18], stepH: 6, mos: null, hasCloud: true, hasCape: false}
+  };
+  var OM_LEVELS = [1000, 925, 850, 700, 600, 500, 400, 300, 250, 200, 150, 100];
+  var PGRID = (function () { var out = []; var n = 60; for (var i = 0; i < n; i++) out.push(Math.exp(Math.log(1000) + (Math.log(100) - Math.log(1000)) * i / (n - 1))); return out; })();
+  var C = {model: '#000000', mos: '#b2182b', obs: '#2166ac', obs2: '#1b7837', extrema: '#b2182b', day: '#999999', td: '#4d4d4d',
+           rain: '#66c2a5', snow: '#8da0cb', frz: '#e78ac3', ice: '#a6761d', unk: '#bdbdbd', conv: '#e6ab02'};
+  var G = 9.80665, RD = 287.058;
+
+  /* ================================================================ state */
+  var S = {stations: [], byId: {}, schedule: null, station: null, model: 'GFS', init: null, run: null, obs: null, mos: null,
+           chart: 't2m', field: 'temp', window: 60, hfIndex: null, mapModel: null, mapVar: 't', mapLev: 850, mapCont: 'z', mapK: 0,
+           land: null, states: null, cache: {}, seq: 0};
+
+  function $(id) { return document.getElementById(id); }
+  function status(id, msg, err) { var s = $(id); s.textContent = msg || ''; s.className = 'jn-status' + (err ? ' jn-err' : ''); }
+  function pad(n, w) { n = String(n); while (n.length < (w || 2)) n = '0' + n; return n; }
+  var MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  function fmtTime(d) { d = new Date(d); return pad(d.getUTCHours()) + '00 UTC ' + d.getUTCDate() + ' ' + MON[d.getUTCMonth()] + ' ' + d.getUTCFullYear(); }
+  function fmtTick(d) { return d.getUTCDate() + ' ' + MON[d.getUTCMonth()] + ' ' + pad(d.getUTCHours()) + 'Z'; }
+  function isoRun(d) { return d.toISOString().slice(0, 13) + ':00Z'; }
+  function fmtLon(l) { l = ((l + 180) % 360 + 360) % 360 - 180; return Math.abs(l).toFixed(2) + '°' + (l < 0 ? 'W' : 'E'); }
+  function c2f(c) { return c == null ? null : c * 1.8 + 32; }
+  function haversine(la1, lo1, la2, lo2) { var R = 6371, p1 = la1 * Math.PI / 180, p2 = la2 * Math.PI / 180, dl = (lo2 - lo1) * Math.PI / 180; var a = Math.sin((p2 - p1) / 2) ** 2 + Math.cos(p1) * Math.cos(p2) * Math.sin(dl / 2) ** 2; return 2 * R * Math.asin(Math.sqrt(a)); }
+  async function getJSON(url, opts) { if (S.cache[url]) return S.cache[url]; var r = await fetch(url, opts || {}); if (!r.ok) throw new Error('HTTP ' + r.status + ' (' + url.split('?')[0].split('/').slice(-2).join('/') + ')'); var j = await r.json(); S.cache[url] = j; return j; }
+  async function getText(url) { if (S.cache[url]) return S.cache[url]; var r = await fetch(url); if (!r.ok) throw new Error('HTTP ' + r.status); var t = await r.text(); S.cache[url] = t; return t; }
+
+  /* ================================================================ thermodynamics */
+  function theta(tc, p) { return (tc + 273.15) * Math.pow(1000 / p, 0.2857); }
+  function esat(tc) { return 6.112 * Math.exp(17.67 * tc / (tc + 243.5)); }
+  function thetaE(tc, tdc, p) {   /* Bolton (1980) */
+    var e = esat(tdc), r = 0.622 * e / (p - e), tk = tc + 273.15;
+    var tl = 1 / (1 / (tdc + 273.15 - 56) + Math.log(tk / (tdc + 273.15)) / 800) + 56;
+    var th = tk * Math.pow(1000 / p, 0.2854 * (1 - 0.28 * r));
+    return th * Math.exp((3.376 / tl - 0.00254) * r * 1000 * (1 + 0.81 * r));
+  }
+  function rhFrom(tc, tdc) { return Math.max(0, Math.min(100, 100 * esat(tdc) / esat(tc))); }
+  function dewFromRH(tc, rh) { var a = Math.log(Math.max(rh, 0.1) / 100) + 17.67 * tc / (243.5 + tc); return 243.5 * a / (17.67 - a); }
+
+  /* interpolate a profile (arrays p desc or asc, v) onto PGRID in ln p; NaN outside */
+  function toGrid(p, v) {
+    var pts = [];
+    for (var i = 0; i < p.length; i++) if (p[i] != null && v[i] != null && isFinite(v[i]) && p[i] > 0) pts.push([Math.log(p[i]), v[i]]);
+    pts.sort(function (a, b) { return b[0] - a[0]; });        /* high p (surface) first */
+    var out = new Array(PGRID.length).fill(NaN);
+    if (pts.length < 2) return out;
+    for (var k = 0; k < PGRID.length; k++) {
+      var lp = Math.log(PGRID[k]);
+      if (lp > pts[0][0] || lp < pts[pts.length - 1][0]) continue;
+      for (var j = 0; j < pts.length - 1; j++) {
+        if (lp <= pts[j][0] && lp >= pts[j + 1][0]) { var t = (pts[j][0] - lp) / (pts[j][0] - pts[j + 1][0] || 1e-9); out[k] = pts[j][1] + t * (pts[j + 1][1] - pts[j][1]); break; }
+      }
+    }
+    return out;
+  }
+
+  /* ================================================================ adapters */
+  function emptyRun(model, init) { return {model: model, label: MODELS[model].label, init: init, hours: [], profiles: null, sfcP: [], lat: null, lon: null, elev: null, name: null}; }
+
+  async function loadBufkit(model, station, init) {
+    var M = MODELS[model];
+    var url = IEM + '/api/1/nws/bufkit.json?model=' + M.bufkit + '&station=' + station + '&fall=1' + (init ? '&runtime=' + isoRun(init) : '');
+    var d = await getJSON(url);
+    var profs = d.profiles || [];
+    if (!profs.length) throw new Error('no BUFKIT profiles for ' + station + ' (' + M.bufkit + ')');
+    var run = emptyRun(model, new Date((d.source && d.source.run_time) || profs[0].time));
+    var p0 = profs[0].parameters || {};
+    run.lat = p0.SLAT; run.lon = p0.SLON; run.elev = p0.SELV;
+    var accum = 0;
+    profs.forEach(function (pr, i) {
+      var q = pr.parameters || {}, t = new Date(pr.time);
+      var pr1 = q.P01M == null ? null : q.P01M / 25.4, cv = q.C01M == null ? null : q.C01M / 25.4;
+      if (pr1 != null && i > 0) accum += pr1;
+      var ptype = null;
+      if (q.WXTS) ptype = 'snow'; else if (q.WXTZ) ptype = 'freezing'; else if (q.WXTP) ptype = 'ice'; else if (q.WXTR) ptype = 'rain';
+      var wspd = (q.UWND != null && q.VWND != null) ? Math.hypot(q.UWND, q.VWND) * 1.94384 : null;
+      var wdir = (q.UWND != null && q.VWND != null) ? ((270 - Math.atan2(q.VWND, q.UWND) * 180 / Math.PI) % 360 + 360) % 360 : null;
+      var lev = pr.levels || [];
+      /* boundary-layer wind: to the level where theta exceeds the surface theta by 0.4 K */
+      var bl = null;
+      if (lev.length > 2 && lev[0].PRES != null) {
+        var th0 = theta(lev[0].TMPC, lev[0].PRES), mx = 0, sum = 0, wsum = 0;
+        for (var k = 0; k < lev.length; k++) {
+          var L = lev[k]; if (L.SKNT == null || L.PRES == null || L.TMPC == null) continue;
+          if (k > 0 && theta(L.TMPC, L.PRES) > th0 + 0.4) break;
+          var w = k > 0 ? Math.abs(lev[k - 1].PRES - L.PRES) : 1;
+          mx = Math.max(mx, L.SKNT); sum += L.SKNT * w; wsum += w;
+        }
+        bl = {max: mx, mean: wsum > 0 ? sum / wsum : mx};
+      }
+      run.hours.push({t: t, t2m: c2f(q.T2MS), td2m: c2f(q.TD2M), wspd: wspd, wdir: wdir, gust: null, precip1h: pr1, conv1h: cv, accum: accum, ptype: ptype,
+                      cape: q.CAPE, cin: q.CINS, lift: q.LIFT, kidx: q.KINX, pwat: q.PWAT == null ? null : q.PWAT / 25.4, blmax: bl ? bl.max : null, blmean: bl ? bl.mean : null, sfcp: q.PRES});
+    });
+    /* profiles (first 72 h, hourly) */
+    var pf = {times: [], temp: [], theta: [], thetae: [], wind: [], rh: [], omega: [], cloud: [], sfcP: []};
+    var t0 = run.hours[0].t.getTime();
+    profs.forEach(function (pr) {
+      var t = new Date(pr.time); if (t - t0 > 72 * 3.6e6) return;
+      var lev = pr.levels || [];
+      var P = lev.map(function (L) { return L.PRES; });
+      pf.times.push(t); pf.sfcP.push(P[0]);
+      pf.temp.push(toGrid(P, lev.map(function (L) { return L.TMPC; })));
+      pf.theta.push(toGrid(P, lev.map(function (L) { return (L.TMPC != null && L.PRES != null) ? theta(L.TMPC, L.PRES) : null; })));
+      pf.thetae.push(toGrid(P, lev.map(function (L) { return L.THTE != null ? L.THTE : ((L.TMPC != null && L.DWPC != null) ? thetaE(L.TMPC, L.DWPC, L.PRES) : null); })));
+      pf.wind.push(toGrid(P, lev.map(function (L) { return L.SKNT; })));
+      pf.rh.push(toGrid(P, lev.map(function (L) { return (L.TMPC != null && L.DWPC != null) ? rhFrom(L.TMPC, L.DWPC) : null; })));
+      pf.omega.push(toGrid(P, lev.map(function (L) { return L.OMEG; })));
+      pf.cloud.push(M.hasCloud ? toGrid(P, lev.map(function (L) { return L.CFRL; })) : new Array(PGRID.length).fill(NaN));
+    });
+    run.profiles = pf;
+    return run;
+  }
+
+  async function omLatestRun(model) {
+    var meta = await getJSON(OM_META + MODELS[model].om + '/static/meta.json', {cache: 'no-cache'});
+    return new Date(meta.last_run_initialisation_time * 1000);
+  }
+
+  async function loadOpenMeteo(model, st, init) {
+    var M = MODELS[model];
+    if (!init) init = await omLatestRun(model);
+    var sfc = ['temperature_2m', 'dew_point_2m', 'wind_speed_10m', 'wind_direction_10m', 'wind_gusts_10m', 'precipitation', 'snowfall', 'rain', 'cape', 'surface_pressure', 'cloud_cover'];
+    var pl = [];
+    OM_LEVELS.forEach(function (L) { ['temperature', 'relative_humidity', 'wind_speed', 'wind_direction', 'geopotential_height', 'vertical_velocity', 'cloud_cover'].forEach(function (v) { pl.push(v + '_' + L + 'hPa'); }); });
+    var url = OM_RUNS + '?latitude=' + st.lat + '&longitude=' + st.lon + '&models=' + M.om + '&run=' + init.toISOString().slice(0, 16) +
+      '&hourly=' + sfc.concat(pl).join(',') + '&wind_speed_unit=ms&forecast_days=7&timezone=UTC';
+    var d = await getJSON(url);
+    var h = d.hourly || {}, times = h.time || [];
+    if (!times.length) throw new Error('empty Open-Meteo response');
+    var run = emptyRun(model, init);
+    run.lat = d.latitude; run.lon = d.longitude; run.elev = d.elevation; run.gridNote = 'Open-Meteo grid cell centre ' + d.latitude.toFixed(2) + '°N, ' + fmtLon(d.longitude);
+    var accum = 0, pf = {times: [], temp: [], theta: [], thetae: [], wind: [], rh: [], omega: [], cloud: [], sfcP: []};
+    var t0 = new Date(times[0] + 'Z').getTime();
+    for (var i = 0; i < times.length; i++) {
+      var t = new Date(times[i] + 'Z'); if (t < init) continue;
+      var pr = h.precipitation ? h.precipitation[i] : null;  /* mm */
+      var pin = pr == null ? null : pr / 25.4;
+      if (pin != null) accum += pin;
+      var snow = h.snowfall ? h.snowfall[i] : 0;
+      var ptype = pin > 0 ? ((snow || 0) > 0 ? 'snow' : 'rain') : null;
+      run.hours.push({t: t, t2m: c2f(h.temperature_2m[i]), td2m: c2f(h.dew_point_2m[i]), wspd: h.wind_speed_10m[i] == null ? null : h.wind_speed_10m[i] * 1.94384,
+                      wdir: h.wind_direction_10m[i], gust: h.wind_gusts_10m && h.wind_gusts_10m[i] != null ? h.wind_gusts_10m[i] * 1.94384 : null,
+                      precip1h: pin, conv1h: null, accum: accum, ptype: ptype, cape: M.hasCape && h.cape ? h.cape[i] : null, cin: null, lift: null, kidx: null, pwat: null,
+                      blmax: null, blmean: null, sfcp: h.surface_pressure ? h.surface_pressure[i] : null});
+      if (t - init <= 72 * 3.6e6) {
+        var sp = h.surface_pressure ? h.surface_pressure[i] : 1013;
+        var P = [], T = [], TH = [], THE = [], W = [], RH = [], OM = [], CL = [];
+        OM_LEVELS.forEach(function (L) {
+          if (sp != null && L > sp) return;
+          var tc = h['temperature_' + L + 'hPa'][i], rh = h['relative_humidity_' + L + 'hPa'][i], ws = h['wind_speed_' + L + 'hPa'][i];
+          var wv = h['vertical_velocity_' + L + 'hPa'] ? h['vertical_velocity_' + L + 'hPa'][i] : null, cc = h['cloud_cover_' + L + 'hPa'] ? h['cloud_cover_' + L + 'hPa'][i] : null;
+          if (tc == null) return;
+          P.push(L); T.push(tc); TH.push(theta(tc, L)); THE.push(rh != null ? thetaE(tc, dewFromRH(tc, rh), L) : null);
+          W.push(ws == null ? null : ws * 1.94384); RH.push(rh); OM.push(wv == null ? null : -wv * L * 100 * G / (RD * (tc + 273.15))); CL.push(cc);
+        });
+        pf.times.push(t); pf.sfcP.push(sp);
+        pf.temp.push(toGrid(P, T)); pf.theta.push(toGrid(P, TH)); pf.thetae.push(toGrid(P, THE)); pf.wind.push(toGrid(P, W)); pf.rh.push(toGrid(P, RH)); pf.omega.push(toGrid(P, OM)); pf.cloud.push(toGrid(P, CL));
+      }
+    }
+    run.profiles = pf;
+    return run;
+  }
+
+  async function loadObs(st, from, to) {
+    var f = new Date(from), t = new Date(to);
+    var url = IEM + '/cgi-bin/request/asos.py?station=' + st.id + '&data=tmpf,dwpf,sknt,drct,gust,p01i&tz=Etc/UTC&format=onlycomma&latlon=no&missing=M&trace=T&report_type=3,4' +
+      '&year1=' + f.getUTCFullYear() + '&month1=' + (f.getUTCMonth() + 1) + '&day1=' + f.getUTCDate() + '&hour1=' + f.getUTCHours() + '&minute1=0' +
+      '&year2=' + t.getUTCFullYear() + '&month2=' + (t.getUTCMonth() + 1) + '&day2=' + t.getUTCDate() + '&hour2=' + t.getUTCHours() + '&minute2=59';
+    var txt = await getText(url);
+    var rows = txt.trim().split('\n').slice(1), out = [];
+    rows.forEach(function (r) {
+      var c = r.split(','); if (c.length < 8) return;
+      var v = function (x) { return (x === 'M' || x === '') ? null : (x === 'T' ? 0.0001 : +x); };
+      out.push({t: new Date(c[1].replace(' ', 'T') + 'Z'), t2m: v(c[2]), td2m: v(c[3]), wspd: v(c[4]), wdir: v(c[5]), gust: v(c[6]), p01i: v(c[7])});
+    });
+    out.sort(function (a, b) { return a.t - b.t; });
+    return out;
+  }
+
+  async function loadMOS(model, station, init) {
+    var M = MODELS[model]; if (!M.mos) return null;
+    var rt = new Date(init);
+    if (M.mos === 'NAM') { var hh = rt.getUTCHours(); rt.setUTCHours(hh >= 12 ? 12 : 0, 0, 0, 0); }
+    var url = IEM + '/api/1/mos.json?station=' + station + '&model=' + M.mos + '&runtime=' + isoRun(rt);
+    try {
+      var d = await getJSON(url), rows = (d.data || []).map(function (r) { return {t: new Date(r.ftime.replace(' ', 'T') + 'Z'), tmp: r.tmp, dpt: r.dpt, wsp: r.wsp, nx: r.n_x}; });
+      return rows.length ? {runtime: rt, rows: rows} : null;
+    } catch (e) { return null; }
+  }
+
+  /* ================================================================ station + schedule */
+  function findStation(id) {
+    id = (id || '').trim().toUpperCase(); if (!id) return null;
+    return S.byId[id] || S.byId['K' + id] || null;
+  }
+  function competitionStation() {
+    var sch = S.schedule; if (!sch) return {icao: 'KBOS', why: 'no schedule loaded'};
+    var today = new Date().toISOString().slice(0, 10);
+    var per = sch.periods || [], cur = null, next = null;
+    per.forEach(function (p) { if (p.start <= today && today < p.end) cur = p; if (!next && p.start > today) next = p; });
+    if (cur && cur.station) return {icao: cur.station, period: cur, why: 'current period'};
+    if (next && next.station && (new Date(next.start) - new Date(today)) <= 7 * 8.64e7) return {icao: next.station, period: next, why: 'period starts ' + next.start};
+    return {icao: sch.fallback_station || 'KBOS', period: cur || next, why: cur ? 'city not yet announced for the current period' : 'no active period'};
+  }
+  function describePeriod() {
+    var comp = competitionStation(), el = $('wx-period');
+    var txt = '';
+    if (comp.period && comp.period.station) txt = '<b>WxChallenge ' + (S.schedule.season || '') + ':</b> ' + comp.period.city + ' (' + comp.period.station + '), ' + comp.period.start + ' to ' + comp.period.end + (comp.period.climo ? '; climatology ' + comp.period.climo : '') + '.';
+    else txt = '<b>WxChallenge ' + (S.schedule ? S.schedule.season : '') + ':</b> ' + comp.why + '; showing ' + comp.icao + ' by default.';
+    if (comp.period && !comp.period.station) txt += ' Next period ' + comp.period.start + '&ndash;' + comp.period.end + ' (city to be announced).';
+    el.innerHTML = txt + ' Forecasts are due by 00 UTC and verify 06&ndash;06 UTC.';
+  }
+
+  /* ================================================================ run selection */
+  function availableHours(model) { var M = MODELS[model]; return M.cycles || Array.from({length: 24}, function (_, i) { return i; }); }
+  function fillHours(model, keepH) {
+    var sel = $('wx-hour'); sel.innerHTML = '';
+    availableHours(model).forEach(function (h) { var o = document.createElement('option'); o.value = h; o.textContent = pad(h) + 'Z'; sel.appendChild(o); });
+    if (keepH != null) sel.value = String(keepH);
+    if (sel.selectedIndex < 0) sel.selectedIndex = sel.options.length - 1;
+  }
+  function selectedInit() {
+    var d = $('wx-date').value; if (!d) return null;
+    return new Date(d + 'T' + pad(+$('wx-hour').value) + ':00:00Z');
+  }
+  function setRunControls(init) { $('wx-date').value = init.toISOString().slice(0, 10); fillHours(S.model, init.getUTCHours()); }
+
+  /* ================================================================ main load */
+  async function loadAll(opts) {
+    opts = opts || {};
+    var seq = ++S.seq;
+    var st = S.station; if (!st) return;
+    var init = opts.latest ? null : selectedInit();
+    status('wx-status', 'loading ' + MODELS[S.model].label + ' for ' + st.icao + '…');
+    try {
+      var run = MODELS[S.model].src === 'bufkit' ? await loadBufkit(S.model, st.icao, init) : await loadOpenMeteo(S.model, st, init);
+      if (seq !== S.seq) return;
+      S.run = run; S.init = run.init; setRunControls(run.init);
+      var pObs = loadObs(st, new Date(run.init.getTime() - 30 * 3.6e6), new Date(Math.min(Date.now(), run.init.getTime() + 84 * 3.6e6)));
+      var pMos = loadMOS(S.model, st.icao, run.init);
+      var res = await Promise.allSettled([pObs, pMos]);
+      if (seq !== S.seq) return;
+      S.obs = res[0].status === 'fulfilled' ? res[0].value : []; S.mos = res[1].status === 'fulfilled' ? res[1].value : null;
+      var srcTxt = MODELS[S.model].src === 'bufkit' ? 'IEM BUFKIT ' + MODELS[S.model].bufkit : 'Open-Meteo ' + MODELS[S.model].om;
+      $('wx-stinfo').innerHTML = '<b>' + st.icao + '</b> ' + st.name + ', ' + st.state + ' · ' + st.lat.toFixed(4) + '°N, ' + fmtLon(st.lon) + ', ' + Math.round(st.elev) + ' m · time zone ' + st.tz +
+        ' · ' + srcTxt + ' run ' + fmtTime(run.init) + (run.lat != null ? ' (model site ' + (+run.lat).toFixed(2) + '°N, ' + fmtLon(+run.lon) + (run.elev != null ? ', ' + Math.round(run.elev) + ' m' : '') + ')' : '') +
+        (res[0].status !== 'fulfilled' ? ' · <span class="jn-err">observations unavailable (' + res[0].reason.message + ')</span>' : ' · ' + S.obs.length + ' METAR reports');
+      status('wx-status', '');
+      history.replaceState(null, '', '?station=' + st.icao + '&model=' + S.model + '&run=' + run.init.toISOString().slice(0, 13) + 'Z');
+      drawTS(); drawTH(); drawDayTable();
+      loadMap();
+    } catch (e) {
+      if (seq !== S.seq) return;
+      status('wx-status', 'Could not load ' + MODELS[S.model].label + ' for ' + st.icao + ': ' + e.message, true);
+    }
+  }
+
+  /* ================================================================ WxChallenge days */
+  function wxDays(run) {   /* 06Z-06Z periods overlapping the run */
+    var t0 = run.hours[0].t, tEnd = run.hours[run.hours.length - 1].t, days = [];
+    var d = new Date(Date.UTC(t0.getUTCFullYear(), t0.getUTCMonth(), t0.getUTCDate(), 6));
+    if (d <= t0) d = new Date(d.getTime() + 24 * 3.6e6);
+    while (d < tEnd) { days.push({start: d, end: new Date(d.getTime() + 24 * 3.6e6)}); d = new Date(d.getTime() + 24 * 3.6e6); }
+    return days;
+  }
+  function inWin(t, a, b) { return t > a && t <= b; }
+  function drawDayTable() {
+    var run = S.run, tb = $('wx-daytab').querySelector('tbody'); tb.innerHTML = '';
+    if (!run) return;
+    var days = wxDays(run).slice(0, S.window ? 3 : 8), now = new Date();
+    days.forEach(function (dy, i) {
+      var H = run.hours.filter(function (h) { return inWin(h.t, dy.start, dy.end) || h.t.getTime() === dy.start.getTime(); });
+      var tmax = d3.max(H, function (h) { return h.t2m; }), tmin = d3.min(H, function (h) { return h.t2m; }), wmax = d3.max(H, function (h) { return h.wspd; });
+      var pr = d3.sum(H.filter(function (h) { return h.t > dy.start; }), function (h) { return h.precip1h || 0; });
+      var mosTxt = '—';
+      if (S.mos) { var nx = S.mos.rows.filter(function (r) { return r.nx != null && inWin(r.t, dy.start, dy.end); }); if (nx.length) mosTxt = nx.map(function (r) { return r.nx; }).join(' / '); }
+      var obsTxt = '—';
+      if (S.obs && now > dy.start) {
+        var O = S.obs.filter(function (o) { return inWin(o.t, dy.start, dy.end); });
+        if (O.length) obsTxt = [d3.max(O, function (o) { return o.t2m; }), d3.min(O, function (o) { return o.t2m; }), d3.max(O, function (o) { return o.wspd; }), d3.sum(O.filter(function (o) { return o.t.getUTCMinutes() >= 50; }), function (o) { return o.p01i || 0; }).toFixed(2)].map(function (x) { return x == null ? '—' : x; }).join(' / ');
+      }
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td>Day ' + (i + 1) + ': ' + fmtTick(dy.start) + '–' + fmtTick(dy.end) + (H.length < 20 ? ' (partial)' : '') + '</td><td class="num">' + (tmax == null ? '—' : tmax.toFixed(1)) + '</td><td class="num">' + (tmin == null ? '—' : tmin.toFixed(1)) + '</td><td class="num">' + (wmax == null ? '—' : wmax.toFixed(1)) + '</td><td class="num">' + pr.toFixed(2) + '</td><td class="num">' + mosTxt + '</td><td class="num">' + obsTxt + '</td>';
+      tb.appendChild(tr);
+    });
+  }
+
+  /* ================================================================ time series */
+  function chartSpec(chart) {
+    return {
+      t2m: {title: '2-m temperature and dew point', ylab: 'Temperature (°F)'},
+      wind: {title: '10-m wind', ylab: 'Wind speed (kt)'},
+      precip: {title: 'Accumulated precipitation', ylab: 'Precipitation (in)'},
+      cape: {title: 'Convective available potential energy', ylab: 'CAPE (J kg⁻¹)'},
+      lik: {title: 'Lifted index and K index', ylab: 'Index'},
+      pwat: {title: 'Precipitable water', ylab: 'Precipitable water (in)'}
+    }[chart];
+  }
+  function drawTS() {
+    var run = S.run, box = $('wx-ts'), svg = d3.select(box).select('svg'); svg.selectAll('*').remove();
+    if (!run) return;
+    var W = Math.max(320, box.clientWidth - 2), H = 300; svg.attr('width', W).attr('height', H).attr('viewBox', '0 0 ' + W + ' ' + H).style('font-family', 'Helvetica, Arial, sans-serif').style('font-size', '8pt');
+    var m = {l: 46, r: 14, t: 12, b: 34};
+    var t0 = run.hours[0].t, tEnd = S.window ? new Date(t0.getTime() + S.window * 3.6e6) : run.hours[run.hours.length - 1].t;
+    var Hs = run.hours.filter(function (h) { return h.t <= tEnd; });
+    var x = d3.scaleUtc().domain([t0, tEnd]).range([m.l, W - m.r]);
+    var chart = S.chart, series = [], obsS = [], yl = chartSpec(chart).ylab, extra = [];
+    function ser(name, key, arr, style) { var pts = (arr || Hs).filter(function (h) { return h[key] != null && isFinite(h[key]); }).map(function (h) { return {t: h.t, v: h[key]}; }); if (pts.length) series.push({name: name, pts: pts, style: style}); }
+    var obsWin = (S.obs || []).filter(function (o) { return o.t > t0 && o.t <= tEnd; });
+    if (chart === 't2m') {
+      ser(run.label + ' 2-m T', 't2m', null, {color: C.model, marker: 'circle'}); ser(run.label + ' 2-m Tₓ', 'td2m', null, {color: C.td, marker: 'circle', dash: '4,2'});
+      if (S.mos) { var mr = S.mos.rows.filter(function (r) { return r.t > t0 && r.t <= tEnd; }); series.push({name: MODELS[S.model].mos + ' MOS T', pts: mr.filter(function (r) { return r.tmp != null; }).map(function (r) { return {t: r.t, v: r.tmp}; }), style: {color: C.mos, marker: 'x'}}); series.push({name: MODELS[S.model].mos + ' MOS Tₓ', pts: mr.filter(function (r) { return r.dpt != null; }).map(function (r) { return {t: r.t, v: r.dpt}; }), style: {color: C.mos, marker: 'x', dash: '4,2'}});
+        extra = mr.filter(function (r) { return r.nx != null; }).map(function (r) { return {t: r.t, v: r.nx}; }); }
+      obsS = [{name: 'observed T', pts: obsWin.filter(function (o) { return o.t2m != null; }).map(function (o) { return {t: o.t, v: o.t2m}; }), color: C.obs}, {name: 'observed Tₓ', pts: obsWin.filter(function (o) { return o.td2m != null; }).map(function (o) { return {t: o.t, v: o.td2m}; }), color: C.obs2}];
+    } else if (chart === 'wind') {
+      ser(run.label + ' 10-m wind', 'wspd', null, {color: C.model, marker: 'circle'}); ser('boundary-layer max', 'blmax', null, {color: '#e08214', marker: 'none'}); ser('boundary-layer mean', 'blmean', null, {color: '#8073ac', marker: 'none', dash: '4,2'}); ser(run.label + ' gust', 'gust', null, {color: '#4d4d4d', marker: 'none', dash: '1,2'});
+      if (S.mos) series.push({name: MODELS[S.model].mos + ' MOS wind', pts: S.mos.rows.filter(function (r) { return r.wsp != null && r.t > t0 && r.t <= tEnd; }).map(function (r) { return {t: r.t, v: r.wsp}; }), style: {color: C.mos, marker: 'x'}});
+      obsS = [{name: 'observed sustained wind', pts: obsWin.filter(function (o) { return o.wspd != null; }).map(function (o) { return {t: o.t, v: o.wspd}; }), color: C.obs}];
+    } else if (chart === 'precip') {
+      ser(run.label + ' accumulated', 'accum', null, {color: C.model, marker: 'circle'});
+      var acc = 0, op = [];
+      obsWin.forEach(function (o) { if (o.t.getUTCMinutes() >= 50 && o.p01i != null) { acc += o.p01i; op.push({t: new Date(o.t.getTime() + (60 - o.t.getUTCMinutes()) * 60000), v: acc}); } });
+      obsS = [{name: 'observed accumulated (hourly reports)', pts: op, color: C.obs}];
+    } else if (chart === 'cape') { ser(run.label + ' CAPE', 'cape', null, {color: C.model, marker: 'circle'}); }
+    else if (chart === 'lik') { ser(run.label + ' lifted index', 'lift', null, {color: C.model, marker: 'circle'}); ser(run.label + ' K index', 'kidx', null, {color: '#4d4d4d', marker: 'circle', dash: '4,2'}); }
+    else if (chart === 'pwat') { ser(run.label + ' precipitable water', 'pwat', null, {color: C.model, marker: 'circle'}); }
+    var all = [];
+    series.forEach(function (s) { s.pts.forEach(function (p) { all.push(p.v); }); }); obsS.forEach(function (s) { s.pts.forEach(function (p) { all.push(p.v); }); }); extra.forEach(function (p) { all.push(p.v); });
+    if (chart === 'precip') Hs.forEach(function (h) { if (h.precip1h != null) all.push(h.precip1h); });
+    if (!all.length) { svg.append('text').attr('x', W / 2).attr('y', H / 2).attr('text-anchor', 'middle').text('no data for this chart in the ' + run.label + ' run'); $('wx-tslegend').innerHTML = ''; $('wx-tstitle').textContent = ''; return; }
+    var lo = d3.min(all), hi = d3.max(all), padv = (chart === 'precip') ? 0.05 : (chart === 'cape' ? 30 : (chart === 'pwat' ? 0.3 : 3));
+    if (chart === 'precip' || chart === 'cape' || chart === 'pwat' || chart === 'wind') lo = 0;
+    var y = d3.scaleLinear().domain([lo - (lo === 0 ? 0 : padv), hi + padv]).nice().range([H - m.b, m.t]);
+    /* grid + day rules */
+    var g = svg.append('g');
+    var days = wxDays(run).filter(function (d) { return d.start < tEnd; });
+    days.forEach(function (d, i) { g.append('line').attr('x1', x(d.start)).attr('x2', x(d.start)).attr('y1', m.t).attr('y2', H - m.b).attr('stroke', C.day).attr('stroke-width', 0.8).attr('stroke-dasharray', '3,3'); g.append('text').attr('x', x(d.start) + 3).attr('y', m.t + 9).attr('fill', '#666').style('font-size', '7pt').text('day ' + (i + 1) + ' →'); });
+    g.append('g').attr('transform', 'translate(0,' + (H - m.b) + ')').call(d3.axisBottom(x).ticks(Math.min(12, Math.round(W / 80))).tickFormat(fmtTick).tickSize(4)).call(function (ax) { ax.selectAll('text').style('font-size', '7.5pt'); ax.selectAll('path,line').attr('stroke', '#000'); });
+    g.append('g').attr('transform', 'translate(' + m.l + ',0)').call(d3.axisLeft(y).ticks(7).tickSize(4)).call(function (ax) { ax.selectAll('text').style('font-size', '7.5pt'); ax.selectAll('path,line').attr('stroke', '#000'); });
+    g.append('g').attr('transform', 'translate(' + m.l + ',0)').call(d3.axisLeft(y).ticks(7).tickSize(-(W - m.l - m.r)).tickFormat('')).call(function (ax) { ax.selectAll('line').attr('stroke', '#000').attr('stroke-opacity', 0.08); ax.select('path').remove(); });
+    svg.append('rect').attr('x', m.l).attr('y', m.t).attr('width', W - m.l - m.r).attr('height', H - m.t - m.b).attr('fill', 'none').attr('stroke', '#000').attr('stroke-width', 0.8);
+    svg.append('text').attr('transform', 'rotate(-90)').attr('x', -(m.t + (H - m.t - m.b) / 2)).attr('y', 12).attr('text-anchor', 'middle').text(yl);
+    svg.append('text').attr('x', m.l + (W - m.l - m.r) / 2).attr('y', H - 4).attr('text-anchor', 'middle').text('Valid time (UTC)');
+    /* precip bars */
+    if (chart === 'precip') {
+      var bw = Math.max(1, (x(new Date(t0.getTime() + 3.6e6)) - x(t0)) * 0.8);
+      Hs.forEach(function (h) { if (!h.precip1h) return; var col = {rain: C.rain, snow: C.snow, freezing: C.frz, ice: C.ice}[h.ptype] || C.unk; g.append('rect').attr('x', x(h.t) - bw / 2).attr('y', y(h.precip1h)).attr('width', bw).attr('height', y(0) - y(h.precip1h)).attr('fill', col).attr('stroke', 'none'); if (h.conv1h) g.append('rect').attr('x', x(h.t) - bw / 2).attr('y', y(h.conv1h)).attr('width', bw).attr('height', y(0) - y(h.conv1h)).attr('fill', C.conv).attr('stroke', 'none'); });
+    }
+    var line = d3.line().x(function (p) { return x(p.t); }).y(function (p) { return y(p.v); });
+    series.forEach(function (s) {
+      g.append('path').datum(s.pts).attr('d', line).attr('fill', 'none').attr('stroke', s.style.color).attr('stroke-width', 1.1).attr('stroke-dasharray', s.style.dash || null);
+      if (s.style.marker === 'circle') s.pts.forEach(function (p) { if (Hs.length > 80 && p.t.getUTCHours() % 3) return; g.append('circle').attr('cx', x(p.t)).attr('cy', y(p.v)).attr('r', 1.8).attr('fill', '#fff').attr('stroke', s.style.color).attr('stroke-width', 0.9); });
+      if (s.style.marker === 'x') s.pts.forEach(function (p) { g.append('path').attr('d', 'M-3,-3L3,3M-3,3L3,-3').attr('transform', 'translate(' + x(p.t) + ',' + y(p.v) + ')').attr('stroke', s.style.color).attr('stroke-width', 1.2); });
+    });
+    obsS.forEach(function (s) { s.pts.forEach(function (p) { g.append('path').attr('d', 'M0,-3.2L3.2,0L0,3.2L-3.2,0Z').attr('transform', 'translate(' + x(p.t) + ',' + y(p.v) + ')').attr('fill', s.color).attr('stroke', 'none'); }); });
+    extra.forEach(function (p) { g.append('path').attr('d', 'M0,-5.5L5.5,0L0,5.5L-5.5,0Z').attr('transform', 'translate(' + x(p.t) + ',' + y(p.v) + ')').attr('fill', C.extrema).attr('stroke', '#fff').attr('stroke-width', 0.8); });
+    /* hover readout */
+    var hov = document.createElement('div'); hov.className = 'wx-hover'; hov.style.display = 'none'; box.style.position = 'relative'; box.appendChild(hov);
+    var allPts = []; series.forEach(function (s) { s.pts.forEach(function (p) { allPts.push({x: x(p.t), y: y(p.v), txt: s.name + ': ' + (+p.v).toFixed(1) + ' at ' + fmtTick(p.t)}); }); }); obsS.forEach(function (s) { s.pts.forEach(function (p) { allPts.push({x: x(p.t), y: y(p.v), txt: s.name + ': ' + (+p.v).toFixed(1) + ' at ' + fmtTick(p.t)}); }); });
+    svg.on('mousemove', function (ev) { var pt = d3.pointer(ev); var best = null, bd = 400; allPts.forEach(function (p) { var d = (p.x - pt[0]) ** 2 + (p.y - pt[1]) ** 2; if (d < bd) { bd = d; best = p; } }); if (best) { hov.style.display = 'block'; hov.style.left = Math.min(best.x + 8, W - 200) + 'px'; hov.style.top = Math.max(0, best.y - 22) + 'px'; hov.textContent = best.txt; } else hov.style.display = 'none'; }).on('mouseleave', function () { hov.style.display = 'none'; });
+    /* legend + caption */
+    var leg = series.map(function (s) { return '<span><i style="border-color:' + s.style.color + (s.style.dash ? ';border-top-style:dashed' : '') + '"></i>' + s.name + (s.style.marker === 'x' ? ' (×)' : '') + '</span>'; })
+      .concat(obsS.map(function (s) { return '<span><i class="diamond" style="background:' + s.color + '"></i>' + s.name + '</span>'; }));
+    if (extra.length) leg.push('<span><i class="diamond" style="background:' + C.extrema + ';width:9px;height:9px"></i>MOS daily max/min (N/X)</span>');
+    if (chart === 'precip') leg.push('<span><i class="sq" style="background:' + C.rain + '"></i>rain</span><span><i class="sq" style="background:' + C.snow + '"></i>snow</span><span><i class="sq" style="background:' + C.frz + '"></i>freezing rain</span><span><i class="sq" style="background:' + C.ice + '"></i>ice pellets</span><span><i class="sq" style="background:' + C.conv + '"></i>convective part</span>');
+    $('wx-tslegend').innerHTML = leg.join('');
+    $('wx-tstitle').textContent = chartSpec(chart).title + ', ' + S.station.icao + ', ' + run.label + ' run ' + fmtTime(run.init) + '.';
+    $('wx-tscap').innerHTML = '<span class="jn-figno">Fig. 2.</span> ' + chartSpec(chart).title + ' at ' + S.station.icao + ' (' + S.station.name + ') from the ' + run.label + ' run of ' + fmtTime(run.init) + (S.window ? ', first ' + S.window + ' h' : ', full run') + '. Dashed vertical lines mark 0600 UTC, the WxChallenge day boundaries.' + (obsS.length ? ' Diamonds: METAR observations (IEM ASOS archive).' : '') + (S.mos ? ' ×: ' + MODELS[S.model].mos + ' MOS from the same cycle.' : '');
+  }
+
+  /* ================================================================ time-height sections */
+  var FIELDS = {
+    temp: {label: 'Temperature', units: '°C', ci: 2, cmap: function (t) { return d3.interpolateRdYlBu(1 - t); }, top: 100},
+    theta: {label: 'Potential temperature', units: 'K', ci: 2, cmap: d3.interpolateYlOrRd, top: 100},
+    thetae: {label: 'Equivalent potential temperature', units: 'K', ci: 2, cmap: d3.interpolateYlGnBu, top: 100},
+    wind: {label: 'Wind speed', units: 'kt', ci: 5, cmap: d3.interpolateBuPu, top: 100},
+    lowwind: {label: 'Lower-tropospheric wind speed', units: 'kt', ci: 2, cmap: d3.interpolateBuPu, top: 700, key: 'wind'},
+    rh: {label: 'Relative humidity', units: '%', ci: 10, cmap: d3.interpolateBrBG, top: 100, fixed: [0, 100]},
+    omega: {label: 'Vertical velocity ω', units: 'Pa s⁻¹', ci: 0.2, cmap: function (t) { return d3.interpolateRdBu(1 - t); }, top: 100, fixed: [-2, 2]},
+    cloud: {label: 'Cloud fraction', units: '%', ci: 10, cmap: d3.interpolateGreys, top: 100, fixed: [0, 100]}
+  };
+  function drawTH() {
+    var run = S.run, box = $('wx-th'), svg = d3.select(box).select('svg'); svg.selectAll('*').remove(); d3.select('#wx-thcbar').selectAll('*').remove();
+    if (!run || !run.profiles || !run.profiles.times.length) return;
+    var F = FIELDS[S.field], key = F.key || S.field, pf = run.profiles;
+    var W = Math.max(320, box.clientWidth - 2), H = 340; svg.attr('width', W).attr('height', H).attr('viewBox', '0 0 ' + W + ' ' + H).style('font-family', 'Helvetica, Arial, sans-serif').style('font-size', '8pt');
+    var m = {l: 46, r: 14, t: 12, b: 34};
+    var nt = pf.times.length, zIdx = PGRID.map(function (p, i) { return p >= F.top ? i : -1; }).filter(function (i) { return i >= 0; }), nz = zIdx.length;
+    var vals = new Float64Array(nt * nz), all = [];
+    for (var i = 0; i < nt; i++) for (var k = 0; k < nz; k++) { var v = pf[key][i][zIdx[k]]; vals[k * nt + i] = (v == null || !isFinite(v)) ? NaN : v; if (isFinite(v)) all.push(v); }
+    if (!all.length) { svg.append('text').attr('x', W / 2).attr('y', H / 2).attr('text-anchor', 'middle').text(F.label + ' is not available for ' + run.label); $('wx-thtitle').textContent = ''; return; }
+    var lo = F.fixed ? F.fixed[0] : Math.floor(d3.min(all) / F.ci) * F.ci, hi = F.fixed ? F.fixed[1] : Math.ceil(d3.max(all) / F.ci) * F.ci;
+    if (hi <= lo) hi = lo + F.ci;
+    var thr = []; for (var v0 = lo; v0 <= hi + 1e-9; v0 += F.ci) thr.push(+v0.toFixed(6));
+    if (thr.length > 40) { var stp = Math.ceil(thr.length / 40); thr = thr.filter(function (_, j) { return j % stp === 0; }); }
+    var x = d3.scaleLinear().domain([0, nt - 1]).range([m.l, W - m.r]), y = d3.scaleLog().domain([PGRID[zIdx[0]], PGRID[zIdx[nz - 1]]]).range([H - m.b, m.t]);
+    var xi = function (i) { return x(i); }, yk = function (k) { return y(PGRID[zIdx[Math.max(0, Math.min(nz - 1, Math.round(k)))]]); };
+    function yf(kf) { var k0 = Math.max(0, Math.min(nz - 1, Math.floor(kf))), k1 = Math.min(nz - 1, k0 + 1), t = kf - k0; var lp = Math.log(PGRID[zIdx[k0]]) * (1 - t) + Math.log(PGRID[zIdx[k1]]) * t; return y(Math.exp(lp)); }
+    var fill = new Float64Array(vals.length); for (var q = 0; q < vals.length; q++) fill[q] = isNaN(vals[q]) ? -1e9 : vals[q];
+    var cont = d3.contours().size([nt, nz]).thresholds(thr)(fill);
+    var g = svg.append('g');
+    var clip = svg.append('defs').append('clipPath').attr('id', 'wx-thclip'); clip.append('rect').attr('x', m.l).attr('y', m.t).attr('width', W - m.l - m.r).attr('height', H - m.t - m.b);
+    var gc = g.append('g').attr('clip-path', 'url(#wx-thclip)');
+    var cols = thr.map(function (v, j) { return d3.color(F.cmap((j + 0.5) / thr.length)).formatHex(); });
+    function toPath(geom) { return d3.geoPath()(({type: geom.type, coordinates: geom.coordinates.map(function (poly) { return poly.map(function (ring) { return ring.map(function (p) { return [xi(p[0] - 0.5), yf(p[1] - 0.5)]; }); }); })})); }
+    cont.forEach(function (c, j) { gc.append('path').attr('d', toPath(c)).attr('fill', cols[j]).attr('stroke', 'none'); });
+    cont.forEach(function (c, j) { gc.append('path').attr('d', toPath(c)).attr('fill', 'none').attr('stroke', '#000').attr('stroke-width', (F.fixed && Math.abs(c.value) < 1e-9) ? 1.2 : 0.5); });
+    /* below-ground mask from the surface pressure of each profile */
+    var sfc = pf.sfcP.map(function (p, i) { return [xi(i), y(Math.min(PGRID[zIdx[0]], Math.max(p || PGRID[zIdx[0]], PGRID[zIdx[nz - 1]])))]; });
+    var mask = 'M' + sfc.map(function (p) { return p[0] + ',' + p[1]; }).join('L') + 'L' + (W - m.r) + ',' + (H - m.b) + 'L' + m.l + ',' + (H - m.b) + 'Z';
+    gc.append('path').attr('d', mask).attr('fill', '#d9d9d9').attr('stroke', '#000').attr('stroke-width', 0.6);
+    /* labels: one per contour at its longest segment */
+    var labs = 0;
+    cont.forEach(function (c) { c.coordinates.forEach(function (poly) { var ring = poly[0]; if (!ring || ring.length < 25 || labs > 40) return; var p = ring[Math.floor(ring.length / 2)]; var px = xi(p[0] - 0.5), py = yf(p[1] - 0.5); if (px < m.l + 12 || px > W - m.r - 12 || py < m.t + 8 || py > H - m.b - 8) return; gc.append('text').attr('x', px).attr('y', py + 3).attr('text-anchor', 'middle').style('font-size', '7pt').style('paint-order', 'stroke').attr('stroke', '#fff').attr('stroke-width', 2).attr('fill', '#000').text(fmtV(c.value)); labs++; }); });
+    /* axes */
+    var tick = Math.max(1, Math.round(nt / Math.min(12, Math.round(W / 80))));
+    var xt = []; for (var i2 = 0; i2 < nt; i2 += tick) xt.push(i2);
+    g.append('g').attr('transform', 'translate(0,' + (H - m.b) + ')').call(d3.axisBottom(x).tickValues(xt).tickFormat(function (i) { return fmtTick(pf.times[i]); }).tickSize(4)).call(function (ax) { ax.selectAll('text').style('font-size', '7.5pt'); ax.selectAll('path,line').attr('stroke', '#000'); });
+    var yt = [1000, 925, 850, 700, 600, 500, 400, 300, 250, 200, 150, 100].filter(function (p) { return p >= F.top && p <= PGRID[zIdx[0]]; });
+    g.append('g').attr('transform', 'translate(' + m.l + ',0)').call(d3.axisLeft(y).tickValues(yt).tickFormat(d3.format('d')).tickSize(4)).call(function (ax) { ax.selectAll('text').style('font-size', '7.5pt'); ax.selectAll('path,line').attr('stroke', '#000'); });
+    wxDays(run).forEach(function (d) { var i = (d.start - pf.times[0]) / (pf.times[1] - pf.times[0]); if (i > 0 && i < nt - 1) g.append('line').attr('x1', x(i)).attr('x2', x(i)).attr('y1', m.t).attr('y2', H - m.b).attr('stroke', C.day).attr('stroke-width', 0.8).attr('stroke-dasharray', '3,3'); });
+    svg.append('rect').attr('x', m.l).attr('y', m.t).attr('width', W - m.l - m.r).attr('height', H - m.t - m.b).attr('fill', 'none').attr('stroke', '#000').attr('stroke-width', 0.8);
+    svg.append('text').attr('transform', 'rotate(-90)').attr('x', -(m.t + (H - m.t - m.b) / 2)).attr('y', 12).attr('text-anchor', 'middle').text('Pressure (hPa)');
+    svg.append('text').attr('x', m.l + (W - m.l - m.r) / 2).attr('y', H - 4).attr('text-anchor', 'middle').text('Valid time (UTC)');
+    /* hover */
+    var hov = document.createElement('div'); hov.className = 'wx-hover'; hov.style.display = 'none'; box.style.position = 'relative'; box.appendChild(hov);
+    svg.on('mousemove', function (ev) { var pt = d3.pointer(ev); var i = Math.round(x.invert(pt[0])), pr = y.invert(pt[1]); if (i < 0 || i >= nt || pt[1] < m.t || pt[1] > H - m.b) { hov.style.display = 'none'; return; } var k = 0, bd = 1e9; zIdx.forEach(function (zi, kk) { var d = Math.abs(Math.log(PGRID[zi]) - Math.log(pr)); if (d < bd) { bd = d; k = kk; } }); var v = vals[k * nt + i]; hov.style.display = 'block'; hov.style.left = Math.min(pt[0] + 8, W - 190) + 'px'; hov.style.top = Math.max(0, pt[1] - 22) + 'px'; hov.textContent = fmtTick(pf.times[i]) + ', ' + Math.round(pr) + ' hPa: ' + (isNaN(v) ? 'below ground' : fmtV(v) + ' ' + F.units); }).on('mouseleave', function () { hov.style.display = 'none'; });
+    drawCbar('#wx-thcbar', W, thr, cols, F.label + ' (' + F.units + ')');
+    $('wx-thtitle').textContent = F.label + ' (' + F.units + '), time–height section, ' + S.station.icao + ', ' + run.label + ' run ' + fmtTime(run.init) + '.';
+    $('wx-thcap').innerHTML = '<span class="jn-figno">Fig. 3.</span> Time–height section of ' + F.label.toLowerCase() + ' (' + F.units + ', contour interval ' + F.ci + ') at ' + S.station.icao + ' from the ' + run.label + ' run of ' + fmtTime(run.init) + ', first ' + Math.round((pf.times[nt - 1] - pf.times[0]) / 3.6e6) + ' h. The pressure axis is logarithmic; grey marks levels below the model surface. Dashed lines mark 0600 UTC.';
+  }
+  function fmtV(v) { return Math.abs(v) >= 10 || Number.isInteger(v) ? String(Math.round(v)) : String(+v.toFixed(1)); }
+  function drawCbar(sel, W, thr, cols, label) {
+    var svg = d3.select(sel); svg.selectAll('*').remove();
+    var ml = 46, mr = 30, h = 9; svg.attr('width', W).attr('height', 44).attr('viewBox', '0 0 ' + W + ' 44').style('font-family', 'Helvetica, Arial, sans-serif');
+    var x = d3.scaleLinear().domain([thr[0], thr[thr.length - 1]]).range([ml, W - mr]);
+    cols.forEach(function (c, i) { if (i < thr.length - 1) svg.append('rect').attr('x', x(thr[i])).attr('y', 4).attr('width', x(thr[i + 1]) - x(thr[i])).attr('height', h).attr('fill', c); });
+    svg.append('rect').attr('x', ml).attr('y', 4).attr('width', W - ml - mr).attr('height', h).attr('fill', 'none').attr('stroke', '#000').attr('stroke-width', 0.6);
+    var every = Math.max(1, Math.ceil(thr.length / 12));
+    thr.forEach(function (v, i) { if (i % every) return; svg.append('line').attr('x1', x(v)).attr('x2', x(v)).attr('y1', 4 + h).attr('y2', 4 + h + 3).attr('stroke', '#000').attr('stroke-width', 0.6); svg.append('text').attr('x', x(v)).attr('y', 4 + h + 12).attr('text-anchor', 'middle').style('font-size', '7.5pt').text(fmtV(v)); });
+    svg.append('text').attr('x', ml).attr('y', 4 + h + 25).style('font-size', '8pt').text(label);
+  }
+
+  /* ================================================================ station map (HF gridded fields) */
+  var MAPVARS = {z: {label: 'geopotential height', units: 'gpm', f: 1, cmap: function (t) { return d3.interpolateRdYlBu(1 - t); }}, t: {label: 'temperature', units: 'K', f: 1, cmap: function (t) { return d3.interpolateRdYlBu(1 - t); }},
+                 u: {label: 'zonal wind', units: 'm s⁻¹', f: 1, cmap: function (t) { return d3.interpolateRdBu(1 - t); }}, v: {label: 'meridional wind', units: 'm s⁻¹', f: 1, cmap: function (t) { return d3.interpolateRdBu(1 - t); }},
+                 q: {label: 'specific humidity', units: 'g kg⁻¹', f: 1000, cmap: d3.interpolateYlGnBu}, w: {label: 'vertical velocity ω', units: 'Pa s⁻¹', f: 1, cmap: function (t) { return d3.interpolateBrBG(1 - t); }}, spd: {label: 'wind speed', units: 'm s⁻¹', f: 1, cmap: d3.interpolateYlOrRd}};
+  var MAPRANGE = {z: {850: [1200, 1620, 30], 500: [4860, 6000, 60], 250: [9600, 11160, 120]}, t: {850: [250, 310, 5], 500: [228, 276, 4], 250: [200, 240, 4]}, u: {850: [-30, 30, 5], 500: [-50, 50, 10], 250: [-80, 80, 10]}, v: {850: [-30, 30, 5], 500: [-50, 50, 10], 250: [-60, 60, 10]}, w: {850: [-1.2, 1.2, 0.2], 500: [-1.2, 1.2, 0.2], 250: [-0.6, 0.6, 0.1]}, q: {850: [0, 20, 2], 500: [0, 5, 0.5], 250: [0, 0.5, 0.05]}, spd: {850: [0, 40, 5], 500: [0, 60, 10], 250: [0, 90, 10]}};
+  var MAPCI = {z: {850: 30, 500: 60, 250: 120}, t: {850: 2, 500: 2, 250: 2}, u: {850: 5, 500: 10, 250: 10}, v: {850: 5, 500: 10, 250: 10}, w: {850: 0.2, 500: 0.2, 250: 0.1}, q: {850: 1, 500: 0.5, 250: 0.05}, spd: {850: 5, 500: 10, 250: 10}};
+  var mapCache = {};
+  async function fetchU16(url) {
+    if (mapCache[url]) return mapCache[url];
+    var r = await fetch(url); if (!r.ok) throw new Error('HTTP ' + r.status + ' for ' + url.split('/').slice(-3).join('/'));
+    var buf = await r.arrayBuffer(), u8 = new Uint8Array(buf);
+    if (u8[0] === 0x1f && u8[1] === 0x8b) { buf = await new Response(new Blob([buf]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer(); u8 = new Uint8Array(buf); }
+    var nl = u8.indexOf(10), hdr = JSON.parse(new TextDecoder().decode(u8.subarray(0, nl))), body = buf.slice(nl + 1), u16 = new Uint16Array(body);
+    var out;
+    if (hdr.kind === 'pack') {   /* several fields in one file */
+      out = {hdr: hdr, fields: {}}; var n = hdr.ny * hdr.nx;
+      hdr.fields.forEach(function (fe, k) { var f = new Float32Array(n); for (var i = 0; i < n; i++) { var q = u16[k * n + i]; f[i] = q === 65535 ? NaN : fe.offset + fe.scale * q; } out.fields[fe.var + fe.level] = {hdr: Object.assign({}, hdr, fe), data: f}; });
+    } else { var f2 = new Float32Array(u16.length); for (var j = 0; j < u16.length; j++) f2[j] = u16[j] === 65535 ? NaN : hdr.offset + hdr.scale * u16[j]; out = {hdr: hdr, data: f2}; }
+    mapCache[url] = out; return out;
+  }
+  function sample(fld, lon, lat) {
+    var h = fld.hdr, fj = (lat - h.lat0) / h.dlat; if (fj < 0 || fj > h.ny - 1) return NaN;
+    var lonr = ((lon - h.lon0) % 360 + 360) % 360, fi = lonr / h.dlon; if (fi > h.nx - 1 && h.nx * h.dlon < 359) return NaN;
+    var j0 = Math.min(h.ny - 2, Math.floor(fj)), tj = fj - j0, i0 = Math.floor(fi) % h.nx, ti = fi - Math.floor(fi), i1 = (i0 + 1) % h.nx, d = fld.data, nx = h.nx;
+    var a = d[j0 * nx + i0], b = d[j0 * nx + i1], c = d[(j0 + 1) * nx + i0], e = d[(j0 + 1) * nx + i1];
+    return (a * (1 - ti) + b * ti) * (1 - tj) + (c * (1 - ti) + e * ti) * tj;
+  }
+  function nodeValue(fld, i, j) { var h = fld.hdr; if (j < 0 || j >= h.ny) return NaN; return fld.data[j * h.nx + ((i % h.nx) + h.nx) % h.nx]; }
+
+  async function loadHFIndex() {
+    try { var r = await fetch(HF + '/index.json', {cache: 'no-cache'}); if (!r.ok) throw new Error('HTTP ' + r.status); var sha = r.headers.get('x-repo-commit'); if (sha && HF === HF_BASE) HF = HF_BASE.replace(/\/resolve\/main$/, '/resolve/' + sha); S.hfIndex = await r.json(); }
+    catch (e) { S.hfIndex = null; status('wx-mapstatus', 'Gridded fields unavailable (' + e.message + '); the dataset is produced by the 6-hourly pipeline.', true); return; }
+    var sel = $('wx-mapmodel'); sel.innerHTML = '';
+    Object.keys(S.hfIndex.models).forEach(function (mid) { var o = document.createElement('option'); o.value = mid; o.textContent = S.hfIndex.models[mid].label || mid.toUpperCase(); sel.appendChild(o); });
+    S.mapModel = sel.value = (S.hfIndex.models[S.mapModel] ? S.mapModel : Object.keys(S.hfIndex.models)[0]);
+    var m = S.hfIndex.models[S.mapModel]; $('wx-mapstep').max = m.steps.length - 1; S.mapK = Math.min(m.steps.length - 1, 4); $('wx-mapstep').value = S.mapK;
+  }
+  var mapSeq = 0;
+  async function loadMap() {
+    var seq = ++mapSeq; if (!S.hfIndex || !S.station) return;
+    var m = S.hfIndex.models[S.mapModel], step = m.steps[S.mapK], dir = HF + '/' + S.mapModel + '/runs/' + m.latest_run + '/f' + pad(step, 3);
+    $('wx-mapstep-label').textContent = '(f' + pad(step, 3) + ', valid ' + fmtTime(new Date(new Date(m.init).getTime() + step * 3.6e6)) + ')';
+    status('wx-mapstatus', 'loading ' + (m.label || S.mapModel) + ' f' + pad(step, 3) + '…');
+    var st = S.station, vr = S.mapVar, lev = S.mapLev, contVar = S.mapCont === 'z' ? 'z' : (S.mapCont === 'same' ? vr : null);
+    try {
+      var need = {}; [vr, contVar].forEach(function (v) { if (!v) return; if (v === 'spd') { need.u = 1; need.v = 1; } else need[v] = 1; });
+      var nh = {}, cn = null;
+      for (var v in need) nh[v] = await fetchU16(dir + '/' + v + lev + '.u16.gz');
+      var g = m.grids.conus, inConus = st.lat >= g.lat0 + 1 && st.lat <= g.lat0 + g.dlat * (g.ny - 1) - 1 && ((st.lon + 360) % 360) >= g.lon0 + 1 && ((st.lon + 360) % 360) <= g.lon0 + g.dlon * (g.nx - 1) - 1;
+      if (inConus) { try { cn = await fetchU16(dir + '/conus.u16.gz'); } catch (e) { cn = null; } }
+      if (seq !== mapSeq) return;
+      function fieldOf(src, v) { if (!src) return null; if (v === 'spd') { var u = src[Object.keys(src).length ? 'u' : 'u']; var U = src.u, V = src.v; if (!U || !V) return null; var f = new Float32Array(U.data.length); for (var i = 0; i < f.length; i++) f[i] = Math.hypot(U.data[i], V.data[i]); return {hdr: Object.assign({}, U.hdr, {var: 'spd'}), data: f}; } return src[v] || null; }
+      var nhS = fieldOf(nh, vr), nhC = contVar ? fieldOf(nh, contVar) : null;
+      var cnFields = cn ? {u: cn.fields['u' + lev], v: cn.fields['v' + lev], z: cn.fields['z' + lev], t: cn.fields['t' + lev], q: cn.fields['q' + lev], w: cn.fields['w' + lev]} : null;
+      var cnS = cnFields ? fieldOf(cnFields, vr) : null, cnC = (cnFields && contVar) ? fieldOf(cnFields, contVar) : null;
+      var sc = mapScale(vr, lev);
+      drawMapPanel('wx-map-a', st, 3.5, 2.5, cnS || nhS, cnC || nhC, sc, contVar, true, m);
+      drawMapPanel('wx-map-b', st, 22, 15, nhS, nhC, sc, contVar, false, m);
+      drawMapCbar(sc);
+      cornerTable(st, cnS || nhS, sc, m, step);
+      var MV = MAPVARS[vr];
+      $('wx-maptitle').textContent = lev + '-hPa ' + MV.label + ' (shaded, ' + MV.units + ')' + (contVar ? '; ' + lev + '-hPa ' + MAPVARS[contVar].label + ' (contours)' : '') + '. ' + (m.label || S.mapModel) + ' run ' + fmtTime(m.init) + ', f' + pad(step, 3) + '.';
+      $('wx-mapcap').innerHTML = '<span class="jn-figno">Fig. 1.</span> ' + (m.label || S.mapModel) + ' forecast (run ' + fmtTime(m.init) + ', f' + pad(step, 3) + ') of ' + lev + '-hPa ' + MV.label + ' (shaded, ' + MV.units + ')' + (contVar ? ' and ' + MAPVARS[contVar].label + ' (contours, interval ' + MAPCI[contVar][lev] + ' ' + MAPVARS[contVar].units + ')' : '') + ' around ' + st.icao + ' (star). (a) Grid nodes of the ' + (cnS ? '0.25°' : '0.5°') + ' field are drawn as dots; the four nodes surrounding the station are filled and labelled with their values' + (MODELS[S.model].src === 'bufkit' && (S.model === 'HRRR' || S.model === 'RRFS') ? '; open squares are the four 3-km ' + S.model + ' Lambert-conformal grid nodes around the station' : '') + '. (b) Same field on the 0.5° grid over the large-scale set-up. Plate carrée projection.';
+      status('wx-mapstatus', '');
+    } catch (e) { if (seq === mapSeq) status('wx-mapstatus', 'Could not load gridded fields: ' + e.message, true); }
+  }
+  function mapScale(vr, lev) { var r = MAPRANGE[vr][lev], MV = MAPVARS[vr], n = Math.round((r[1] - r[0]) / r[2]), cols = [], thr = []; for (var i = 0; i < n; i++) cols.push(d3.color(MV.cmap((i + 0.5) / n)).formatHex()); for (var j = 0; j <= n; j++) thr.push(+(r[0] + j * r[2]).toFixed(6)); return {lo: r[0], hi: r[1], st: r[2], n: n, cols: cols, thr: thr, f: MV.f, units: MV.units, vr: vr, lev: lev}; }
+  function drawMapCbar(sc) { drawCbar('#wx-cbar', Math.max(320, $('wx-map-a').clientWidth * 2), sc.thr, sc.cols, sc.lev + '-hPa ' + MAPVARS[sc.vr].label + ' (' + sc.units + ')'); }
+
+  /* HRRR / RRFS 3-km CONUS Lambert conformal grid (NCEP grid definition) */
+  var LCC = {lat1: 38.5, lat2: 38.5, lon0: -97.5, lat0: 38.5, R: 6371229, dx: 3000, lat_sw: 21.138123, lon_sw: -122.719528, nx: 1799, ny: 1059};
+  function lccFwd(lat, lon) {
+    var d2r = Math.PI / 180, n = Math.sin(LCC.lat1 * d2r), F = Math.cos(LCC.lat1 * d2r) * Math.pow(Math.tan(Math.PI / 4 + LCC.lat1 * d2r / 2), n) / n;
+    var rho = function (la) { return LCC.R * F / Math.pow(Math.tan(Math.PI / 4 + la * d2r / 2), n); };
+    var th = n * ((lon - LCC.lon0 + 540) % 360 - 180) * d2r, r = rho(lat), r0 = rho(LCC.lat0);
+    return [r * Math.sin(th), r0 - r * Math.cos(th)];
+  }
+  function lccInv(x, y) {
+    var d2r = Math.PI / 180, n = Math.sin(LCC.lat1 * d2r), F = Math.cos(LCC.lat1 * d2r) * Math.pow(Math.tan(Math.PI / 4 + LCC.lat1 * d2r / 2), n) / n;
+    var r0 = LCC.R * F / Math.pow(Math.tan(Math.PI / 4 + LCC.lat0 * d2r / 2), n);
+    var yy = r0 - y, r = Math.sign(n) * Math.sqrt(x * x + yy * yy), th = Math.atan2(x, yy);
+    var lat = (2 * Math.atan(Math.pow(LCC.R * F / r, 1 / n)) - Math.PI / 2) / d2r, lon = LCC.lon0 + th / n / d2r;
+    return [lat, lon];
+  }
+  function lccNodes(lat, lon) {
+    var sw = lccFwd(LCC.lat_sw, LCC.lon_sw), p = lccFwd(lat, lon), fi = (p[0] - sw[0]) / LCC.dx, fj = (p[1] - sw[1]) / LCC.dx;
+    if (fi < 0 || fj < 0 || fi > LCC.nx - 1 || fj > LCC.ny - 1) return null;
+    var out = []; [[0, 0], [1, 0], [0, 1], [1, 1]].forEach(function (d) { var i = Math.floor(fi) + d[0], j = Math.floor(fj) + d[1]; var ll = lccInv(sw[0] + i * LCC.dx, sw[1] + j * LCC.dx); out.push({i: i, j: j, lat: ll[0], lon: ll[1]}); }); return out;
+  }
+
+  function drawMapPanel(id, st, dlon, dlat, shade, cont, sc, contVar, zoom, m) {
+    var box = $(id), cv = box.querySelector('canvas'), svg = d3.select(box).select('svg'); svg.selectAll('*').remove();
+    var W = Math.max(280, box.clientWidth - 2), H = Math.round(W * (2 * dlat) / (2 * dlon) * 1.15); cv.width = W; cv.height = H; svg.attr('width', W).attr('height', H).attr('viewBox', '0 0 ' + W + ' ' + H).style('font-family', 'Helvetica, Arial, sans-serif').style('font-size', '7.5pt');
+    var lon0 = st.lon - dlon, lon1 = st.lon + dlon, lat0 = Math.max(0, st.lat - dlat), lat1 = Math.min(89.5, st.lat + dlat);
+    var x = d3.scaleLinear().domain([lon0, lon1]).range([0, W]), y = d3.scaleLinear().domain([lat0, lat1]).range([H, 0]);
+    var proj = d3.geoTransform({point: function (lo, la) { lo = ((lo - st.lon + 540) % 360) - 180 + st.lon; this.stream.point(x(lo), y(la)); }}), path = d3.geoPath(proj);
+    /* shading raster */
+    var ctx = cv.getContext('2d'); ctx.clearRect(0, 0, W, H);
+    if (shade) {
+      var img = ctx.createImageData(W, H), px = img.data, rgb = sc.cols.map(function (c) { var o = d3.rgb(c); return [o.r, o.g, o.b]; }), B = 2;
+      for (var yy = 0; yy < H; yy += B) for (var xx = 0; xx < W; xx += B) {
+        var val = sample(shade, x.invert(xx + B / 2), y.invert(yy + B / 2)) * sc.f; if (isNaN(val)) continue;
+        var bi = Math.max(0, Math.min(sc.n - 1, Math.floor((val - sc.lo) / sc.st))), c = rgb[bi];
+        for (var y2 = yy; y2 < Math.min(H, yy + B); y2++) for (var x2 = xx; x2 < Math.min(W, xx + B); x2++) { var o = (y2 * W + x2) * 4; px[o] = c[0]; px[o + 1] = c[1]; px[o + 2] = c[2]; px[o + 3] = 255; }
+      }
+      ctx.putImageData(img, 0, 0);
+    }
+    var g = svg.append('g');
+    /* geography */
+    if (S.land) g.append('path').datum(S.land).attr('d', path).attr('fill', 'none').attr('stroke', '#000').attr('stroke-width', 0.7);
+    if (S.states) g.append('path').datum(S.states).attr('d', path).attr('fill', 'none').attr('stroke', '#000').attr('stroke-width', 0.35);
+    /* contours from the field's own grid restricted to the box */
+    if (cont) {
+      var h = cont.hdr, ci = MAPCI[contVar][sc.lev], f = MAPVARS[contVar].f;
+      var i0 = Math.floor((((lon0 - h.lon0) % 360) + 360) % 360 / h.dlon) - 1, ni = Math.ceil(2 * dlon / h.dlon) + 3, j0 = Math.max(0, Math.floor((lat0 - h.lat0) / h.dlat) - 1), j1 = Math.min(h.ny - 1, Math.ceil((lat1 - h.lat0) / h.dlat) + 1), nj = j1 - j0 + 1;
+      if (h.nx * h.dlon < 359) { i0 = Math.max(0, i0); ni = Math.min(ni, h.nx - i0); }
+      var vals = new Float64Array(ni * nj), vmin = Infinity, vmax = -Infinity;
+      for (var j = 0; j < nj; j++) for (var i = 0; i < ni; i++) { var vv = nodeValue(cont, i0 + i, j0 + j) * f; vals[j * ni + i] = isNaN(vv) ? -1e9 : vv; if (!isNaN(vv)) { vmin = Math.min(vmin, vv); vmax = Math.max(vmax, vv); } }
+      if (isFinite(vmin)) {
+        var thr = []; for (var v0 = Math.floor(vmin / ci) * ci; v0 <= vmax; v0 += ci) thr.push(+v0.toFixed(6));
+        var lonAt = function (i) { return h.lon0 + (i0 + i - 0.5) * h.dlon; }, latAt = function (j) { return h.lat0 + (j0 + j - 0.5) * h.dlat; };
+        d3.contours().size([ni, nj]).thresholds(thr)(vals).forEach(function (c) {
+          var lines = [];
+          c.coordinates.forEach(function (poly) { poly.forEach(function (ring) { var cur = []; ring.forEach(function (p) { if (p[0] <= 0 || p[0] >= ni || p[1] <= 0 || p[1] >= nj) { if (cur.length > 1) lines.push(cur); cur = []; return; } cur.push([lonAt(p[0]), latAt(p[1])]); }); if (cur.length > 1) lines.push(cur); }); });
+          var bold = contVar === 'z' && Math.abs((c.value / ci) % 5) < 1e-6;
+          g.append('path').datum({type: 'MultiLineString', coordinates: lines}).attr('d', path).attr('fill', 'none').attr('stroke', '#000').attr('stroke-width', bold ? 1.1 : 0.6).attr('stroke-dasharray', c.value < 0 ? '4,2' : null);
+          lines.forEach(function (ln) { if (ln.length < 12) return; var p = ln[Math.floor(ln.length / 2)]; var xp = x(((p[0] - st.lon + 540) % 360) - 180 + st.lon), yp = y(p[1]); if (xp < 10 || xp > W - 10 || yp < 8 || yp > H - 8) return; g.append('text').attr('x', xp).attr('y', yp + 3).attr('text-anchor', 'middle').style('font-size', '7pt').style('paint-order', 'stroke').attr('stroke', '#fff').attr('stroke-width', 2).attr('fill', '#000').text(contVar === 'z' ? String(Math.round(c.value / 10)) : fmtV(c.value)); });
+        });
+      }
+    }
+    /* grid nodes (zoom panel) */
+    if (zoom && shade) {
+      var hs = shade.hdr, cornerIJ = corners(shade, st);
+      for (var la = Math.ceil(lat0 / hs.dlat) * hs.dlat; la <= lat1; la += hs.dlat) for (var lo = Math.ceil((lon0 - hs.lon0) / hs.dlon) * hs.dlon + hs.lon0; lo <= lon1 + 1e-9; lo += hs.dlon) {
+        var isC = cornerIJ.some(function (c) { return Math.abs(c.lat - la) < 1e-6 && Math.abs(((c.lon - lo + 540) % 360) - 180) < 1e-6; });
+        g.append('circle').attr('cx', x(((lo - st.lon + 540) % 360) - 180 + st.lon)).attr('cy', y(la)).attr('r', isC ? 3.2 : 1.4).attr('fill', isC ? '#000' : '#fff').attr('stroke', '#000').attr('stroke-width', 0.7);
+      }
+      cornerIJ.forEach(function (c, k) { var xp = x(((c.lon - st.lon + 540) % 360) - 180 + st.lon), yp = y(c.lat); g.append('text').attr('x', xp + (k % 2 ? 5 : -5)).attr('y', yp + (k < 2 ? 12 : -6)).attr('text-anchor', k % 2 ? 'start' : 'end').style('font-size', '7.5pt').style('font-weight', '700').style('paint-order', 'stroke').attr('stroke', '#fff').attr('stroke-width', 2.5).attr('fill', '#000').text(fmtV(c.val * sc.f)); });
+      if (S.model === 'HRRR' || S.model === 'RRFS') { var nodes = lccNodes(st.lat, st.lon); if (nodes) nodes.forEach(function (nd) { g.append('rect').attr('x', x(nd.lon) - 3).attr('y', y(nd.lat) - 3).attr('width', 6).attr('height', 6).attr('fill', '#fff').attr('stroke', '#b2182b').attr('stroke-width', 1); }); }
+    }
+    /* station */
+    g.append('path').attr('d', d3.symbol(d3.symbolStar).size(zoom ? 140 : 90)()).attr('transform', 'translate(' + x(st.lon) + ',' + y(st.lat) + ')').attr('fill', '#ffd700').attr('stroke', '#000').attr('stroke-width', 0.9);
+    g.append('text').attr('x', x(st.lon) + 8).attr('y', y(st.lat) - 6).style('font-weight', '700').style('paint-order', 'stroke').attr('stroke', '#fff').attr('stroke-width', 2.5).attr('fill', '#000').text(st.icao);
+    /* frame + graticule labels */
+    var gstep = zoom ? 1 : 5;
+    for (var gl = Math.ceil(lon0 / gstep) * gstep; gl <= lon1; gl += gstep) { g.append('line').attr('x1', x(gl)).attr('x2', x(gl)).attr('y1', 0).attr('y2', H).attr('stroke', '#777').attr('stroke-width', 0.4).attr('stroke-dasharray', '2,2'); g.append('text').attr('x', x(gl)).attr('y', H - 3).attr('text-anchor', 'middle').style('paint-order', 'stroke').attr('stroke', '#fff').attr('stroke-width', 2).text(fmtLon(gl).replace('.00', '')); }
+    for (var gla = Math.ceil(lat0 / gstep) * gstep; gla <= lat1; gla += gstep) { g.append('line').attr('x1', 0).attr('x2', W).attr('y1', y(gla)).attr('y2', y(gla)).attr('stroke', '#777').attr('stroke-width', 0.4).attr('stroke-dasharray', '2,2'); g.append('text').attr('x', 3).attr('y', y(gla) - 2).style('paint-order', 'stroke').attr('stroke', '#fff').attr('stroke-width', 2).text(gla + '°N'); }
+    svg.append('rect').attr('x', 0.5).attr('y', 0.5).attr('width', W - 1).attr('height', H - 1).attr('fill', 'none').attr('stroke', '#000');
+  }
+  function corners(fld, st) {
+    var h = fld.hdr, lonr = ((st.lon - h.lon0) % 360 + 360) % 360, fi = lonr / h.dlon, fj = (st.lat - h.lat0) / h.dlat, i0 = Math.floor(fi), j0 = Math.floor(fj), out = [];
+    [[0, 0], [1, 0], [0, 1], [1, 1]].forEach(function (d) { var i = i0 + d[0], j = j0 + d[1]; var lon = h.lon0 + i * h.dlon, lat = h.lat0 + j * h.dlat; out.push({i: i, j: j, lat: lat, lon: ((lon + 180) % 360 + 360) % 360 - 180, val: nodeValue(fld, i, j), dist: haversine(st.lat, st.lon, lat, lon)}); });
+    return out;
+  }
+  function cornerTable(st, fld, sc, m, step) {
+    var tb = $('wx-cornertab').querySelector('tbody'); tb.innerHTML = ''; if (!fld) return;
+    $('wx-corner-valhead').textContent = sc.lev + '-hPa ' + MAPVARS[sc.vr].label + ' (' + sc.units + ')';
+    var cs = corners(fld, st), names = ['SW', 'SE', 'NW', 'NE'];
+    cs.forEach(function (c, k) { var tr = document.createElement('tr'); tr.innerHTML = '<td>' + names[k] + ' node (' + fld.hdr.dlon + '° grid)</td><td class="num">' + c.lat.toFixed(2) + '</td><td class="num">' + c.lon.toFixed(2) + '</td><td class="num">' + c.dist.toFixed(1) + '</td><td class="num">' + (isNaN(c.val) ? '—' : (c.val * sc.f).toFixed(sc.f === 1000 ? 2 : 1)) + '</td>'; tb.appendChild(tr); });
+    var tr2 = document.createElement('tr'); var bil = sample(fld, st.lon, st.lat) * sc.f; tr2.innerHTML = '<td><b>Station (bilinear)</b></td><td class="num">' + st.lat.toFixed(2) + '</td><td class="num">' + st.lon.toFixed(2) + '</td><td class="num">0</td><td class="num"><b>' + (isNaN(bil) ? '—' : bil.toFixed(sc.f === 1000 ? 2 : 1)) + '</b></td>'; tb.appendChild(tr2);
+    var note = 'Grid: ' + (m.label || S.mapModel) + ' ' + fld.hdr.dlon + '° nodes (' + (fld.hdr.dlon === 0.25 ? 'native model grid' : 'subsampled from 0.25°') + '). Nearest node ' + d3.min(cs, function (c) { return c.dist; }).toFixed(1) + ' km from the station.';
+    if (S.model === 'HRRR' || S.model === 'RRFS') { var nd = lccNodes(st.lat, st.lon); if (nd) note += ' ' + S.model + ' 3-km Lambert-conformal nodes around the station: ' + nd.map(function (n) { return '(' + n.lat.toFixed(3) + '°N, ' + fmtLon(n.lon) + ', ' + haversine(st.lat, st.lon, n.lat, n.lon).toFixed(2) + ' km)'; }).join(', ') + '; the BUFKIT profile is the nearest node.'; }
+    if (MODELS[S.model].src === 'openmeteo' && S.run && S.run.gridNote) note += ' ' + S.run.gridNote + ' (Open-Meteo returns the model cell containing the station).';
+    $('wx-gridnote').textContent = note;
+  }
+
+  /* ================================================================ UI wiring */
+  function setStation(icao) {
+    var st = findStation(icao); if (!st) { status('wx-status', 'Unknown station "' + icao + '". Use a 4-letter ICAO id of a US ASOS station (e.g. KBOS).', true); return false; }
+    S.station = st; $('wx-station').value = st.icao; return true;
+  }
+  $('wx-go').addEventListener('click', function () { if (setStation($('wx-station').value)) loadAll({latest: true}); });
+  $('wx-station').addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); $('wx-go').click(); } });
+  $('wx-station').addEventListener('change', function () { if (S.byId[this.value.toUpperCase()]) $('wx-go').click(); });
+  $('wx-comp').addEventListener('click', function () { setStation(competitionStation().icao); loadAll({latest: true}); });
+  $('wx-model').addEventListener('change', function () { S.model = this.value; fillHours(S.model, null); loadAll({latest: true}); });
+  $('wx-date').addEventListener('change', function () { fillHours(S.model, +$('wx-hour').value); loadAll(); });
+  $('wx-hour').addEventListener('change', function () { loadAll(); });
+  $('wx-latest').addEventListener('click', function () { loadAll({latest: true}); });
+  $('wx-prev').addEventListener('click', function () { var i = selectedInit() || S.init; if (!i) return; var n = new Date(i.getTime() - MODELS[S.model].stepH * 3.6e6); setRunControls(n); loadAll(); });
+  $('wx-next').addEventListener('click', function () { var i = selectedInit() || S.init; if (!i) return; var n = new Date(i.getTime() + MODELS[S.model].stepH * 3.6e6); if (n > new Date()) return; setRunControls(n); loadAll(); });
+  $('wx-window').addEventListener('change', function () { S.window = +this.value; drawTS(); drawDayTable(); });
+  Array.from($('wx-tssel').querySelectorAll('button')).forEach(function (b) { b.addEventListener('click', function () { S.chart = this.dataset.chart; Array.from($('wx-tssel').querySelectorAll('button')).forEach(function (o) { o.setAttribute('aria-pressed', o === b ? 'true' : 'false'); }); drawTS(); }); });
+  Array.from($('wx-thsel').querySelectorAll('button')).forEach(function (b) { b.addEventListener('click', function () { S.field = this.dataset.field; Array.from($('wx-thsel').querySelectorAll('button')).forEach(function (o) { o.setAttribute('aria-pressed', o === b ? 'true' : 'false'); }); drawTH(); }); });
+  $('wx-mapmodel').addEventListener('change', function () { S.mapModel = this.value; var m = S.hfIndex.models[S.mapModel]; $('wx-mapstep').max = m.steps.length - 1; S.mapK = Math.min(S.mapK, m.steps.length - 1); loadMap(); });
+  $('wx-mapvar').addEventListener('change', function () { S.mapVar = this.value; loadMap(); });
+  $('wx-maplev').addEventListener('change', function () { S.mapLev = +this.value; loadMap(); });
+  $('wx-mapcont').addEventListener('change', function () { S.mapCont = this.value; loadMap(); });
+  $('wx-mapstep').addEventListener('input', function () { S.mapK = +this.value; loadMap(); });
+  var rto = null; window.addEventListener('resize', function () { clearTimeout(rto); rto = setTimeout(function () { drawTS(); drawTH(); loadMap(); }, 300); });
+  setInterval(function () { var d = new Date(); var loc = ''; if (S.station && S.station.tz) { try { loc = ' · local ' + new Intl.DateTimeFormat('en-US', {timeZone: S.station.tz, hour: '2-digit', minute: '2-digit', hour12: false, timeZoneName: 'short'}).format(d); } catch (e) { loc = ''; } } $('wx-clock').textContent = pad(d.getUTCHours()) + ':' + pad(d.getUTCMinutes()) + ' UTC' + loc; }, 1000);
+
+  /* ================================================================ init */
+  async function init() {
+    status('wx-status', 'loading station catalogue…');
+    try {
+      var cat = await getJSON(STATIONS_URL); S.stations = cat.stations; S.stations.forEach(function (s) { S.byId[s.icao] = s; S.byId[s.id] = S.byId[s.id] || s; });
+      var dl = $('wx-stations'); var frag = document.createDocumentFragment();
+      S.stations.forEach(function (s) { var o = document.createElement('option'); o.value = s.icao; o.label = s.name + ', ' + s.state; frag.appendChild(o); }); dl.appendChild(frag);
+    } catch (e) { status('wx-status', 'station catalogue unavailable: ' + e.message, true); }
+    try { S.schedule = await getJSON(SCHEDULE_URL, {cache: 'no-cache'}); } catch (e) { S.schedule = null; }
+    describePeriod();
+    try { var topo = await getJSON(LAND_URL); S.land = topojson.mesh(topo, topo.objects.countries); } catch (e) { S.land = null; }
+    try { S.states = await getJSON(STATES_URL); } catch (e) { S.states = null; }
+    var model = qs.get('model'); if (model && MODELS[model.toUpperCase()]) S.model = model.toUpperCase(); $('wx-model').value = S.model;
+    fillHours(S.model, null);
+    var st = qs.get('station'); if (!st || !setStation(st)) setStation(competitionStation().icao);
+    loadHFIndex().then(function () { if (S.run) loadMap(); });
+    var run = qs.get('run');
+    if (run && /^\d{4}-\d{2}-\d{2}T\d{2}/.test(run)) { setRunControls(new Date(run.slice(0, 13) + ':00:00Z')); loadAll(); } else loadAll({latest: true});
+  }
+  init();
+})();
+</script>

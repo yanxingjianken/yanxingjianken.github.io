@@ -1,21 +1,28 @@
-name: NH forecast dataset (6-hourly)
+name: NH forecast dataset (6-hourly runs, checked hourly)
 
-# GFS 0.25 deg runs are complete on AWS ~4 h after initialisation; the crons
-# below run ~4.5 h after each synoptic time.  All data go to the Hugging Face
-# dataset; nothing is committed to this repository by this workflow.
+# GFS 0.25 deg is complete on AWS ~4.7 h after each synoptic time; ECMWF AIFS-single
+# ~5.5 h.  GitHub's cron is best-effort (delays of hours happen), so the job runs
+# hourly and is idempotent: it publishes a model only when a newer complete run
+# exists than the one recorded in index.json on the Hub, otherwise it exits in
+# under a minute.  All data go to the Hugging Face dataset; nothing is committed
+# to this repository by this workflow.
 on:
   schedule:
-    - cron: "35 4,10,16,22 * * *"
+    - cron: "50 * * * *"
   workflow_dispatch:
     inputs:
+      models:
+        description: "Comma-separated models (gfs,aifs)"
+        required: false
+        default: "gfs,aifs"
       run:
         description: "Force run id YYYYMMDDHH (blank = latest complete run)"
         required: false
         default: ""
-      max_step:
-        description: "Last forecast hour"
+      force:
+        description: "Republish even if already on the Hub (true/false)"
         required: false
-        default: "240"
+        default: "false"
 
 concurrency:
   group: nh-forecast
@@ -24,7 +31,7 @@ concurrency:
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
         with:
@@ -40,12 +47,12 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           HF_DATASET: yanxingjianken/nh-forecast-6hourly
-          HF_HUB_ENABLE_HF_TRANSFER: "0"
+          HF_HUB_DISABLE_PROGRESS_BARS: "1"
         run: |
           cd pipelines/nh_forecast
-          EXTRA=""
+          EXTRA="--models ${{ github.event.inputs.models || 'gfs,aifs' }}"
           if [ -n "${{ github.event.inputs.run }}" ]; then EXTRA="$EXTRA --run ${{ github.event.inputs.run }}"; fi
-          if [ -n "${{ github.event.inputs.max_step }}" ]; then EXTRA="$EXTRA --max-step ${{ github.event.inputs.max_step }}"; fi
-          # squash the dataset history once a week (Sunday 00Z run) to keep storage small
-          if [ "$(date -u +%u)" = "7" ] && [ "$(date -u +%H)" = "04" ]; then EXTRA="$EXTRA --squash"; fi
+          if [ "${{ github.event.inputs.force }}" = "true" ]; then EXTRA="$EXTRA --force"; fi
+          # squash the dataset history once a week (Sunday, 05Z hour) to keep storage small
+          if [ "$(date -u +%u)" = "7" ] && [ "$(date -u +%H)" = "05" ]; then EXTRA="$EXTRA --squash"; fi
           python run_pipeline.py $EXTRA

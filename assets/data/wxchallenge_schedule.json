@@ -1,0 +1,96 @@
+{
+ "season": "2026-27",
+ "source": "https://www.wxchallenge.com/schedule.php",
+ "fetched": "2026-09-27T03:25:15Z",
+ "fallback_station": "KBOS",
+ "periods": [
+  {
+   "city": "Tampa, FL",
+   "station": "KTPA",
+   "climo": "88/73/12/0.09",
+   "start": "2026-09-28",
+   "end": "2026-10-12",
+   "tournament": false
+  },
+  {
+   "city": null,
+   "station": null,
+   "climo": null,
+   "start": "2026-10-12",
+   "end": "2026-10-26",
+   "tournament": false
+  },
+  {
+   "city": null,
+   "station": null,
+   "climo": null,
+   "start": "2026-10-26",
+   "end": "2026-11-09",
+   "tournament": false
+  },
+  {
+   "city": null,
+   "station": null,
+   "climo": null,
+   "start": "2026-11-09",
+   "end": "2026-11-23",
+   "tournament": false
+  },
+  {
+   "city": null,
+   "station": null,
+   "climo": null,
+   "start": "2026-11-30",
+   "end": "2026-12-14",
+   "tournament": false
+  },
+  {
+   "city": "Denver, CO",
+   "station": "KDEN",
+   "climo": "44/19/8/0.02",
+   "start": "2027-01-18",
+   "end": "2027-02-01",
+   "tournament": false
+  },
+  {
+   "city": null,
+   "station": null,
+   "climo": null,
+   "start": "2027-02-01",
+   "end": "2027-02-15",
+   "tournament": false
+  },
+  {
+   "city": null,
+   "station": null,
+   "climo": null,
+   "start": "2027-02-15",
+   "end": "2027-03-01",
+   "tournament": false
+  },
+  {
+   "city": null,
+   "station": null,
+   "climo": null,
+   "start": "2027-03-01",
+   "end": "2027-03-15",
+   "tournament": false
+  },
+  {
+   "city": null,
+   "station": null,
+   "climo": null,
+   "start": "2027-03-15",
+   "end": "2027-03-29",
+   "tournament": false
+  },
+  {
+   "city": null,
+   "station": null,
+   "climo": null,
+   "start": "2027-03-29",
+   "end": "2027-04-26",
+   "tournament": true
+  }
+ ]
+}

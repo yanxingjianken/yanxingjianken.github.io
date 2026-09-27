@@ -7,6 +7,7 @@ author_profile: false
 
 {% include base_path %}
 <link rel="stylesheet" href="{{ base_path }}/assets/css/journal.css">
+<style>.page__title { font-family: "STIX Two Text", "Times New Roman", Times, serif; font-weight: 700; }</style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson-client/3.1.0/topojson-client.min.js"></script>
 
@@ -31,11 +32,11 @@ author_profile: false
   <p class="bp-backlink jn-small"><a href="{{ base_path }}/blocking-plots/">&larr; Blocking Plots</a> &nbsp;|&nbsp; <a href="{{ base_path }}/blocking-plots/composites/">Blocking composite viewer</a></p>
   <div class="jn-runhead"><span>Operational forecast &middot; Northern Hemisphere</span><span id="nh-runinfo">loading index&hellip;</span></div>
 
-  <p class="jn-abstract"><b>Data.</b> Latest complete NOAA GFS 0.25&deg; run, subsampled to 0.5&deg; over 0&ndash;90&deg;N, forecast hours 0&ndash;240 every 6 h, preceded by the analyses (f000) of the previous five days. Variables <i>u</i>, <i>v</i>, <i>T</i>, <i>Z</i>, <i>&omega;</i>, <i>q</i> at 850, 500 and 250 hPa; wind speed and the 500-hPa height anomaly (relative to the 1991&ndash;2020 NCEP/NCAR daily climatology) are derived in the browser. Cyclone (L) and anticyclone (H) centres are extrema of the smoothed 500-hPa height (or of its anomaly), linked between 6-h steps. Updated every 6 h from <a href="https://huggingface.co/datasets/yanxingjianken/nh-forecast-6hourly">this dataset</a>.</p>
+  <p class="jn-abstract"><b>Data.</b> Latest complete run of the NOAA GFS 0.25&deg; or the ECMWF AIFS-single 0.25&deg; (open data, CC BY 4.0), subsampled to 0.5&deg; over 0&ndash;90&deg;N, forecast hours 0&ndash;240 every 6 h, preceded by the analyses (f000) of the previous five days. Variables <i>u</i>, <i>v</i>, <i>T</i>, <i>Z</i>, <i>&omega;</i>, <i>q</i> at 850, 500 and 250 hPa; wind speed and the 500-hPa height anomaly (relative to the 1991&ndash;2020 NCEP/NCAR daily climatology) are derived in the browser. Cyclone (L) and anticyclone (H) centres are extrema of the smoothed 500-hPa height (or of its anomaly), linked between 6-h steps. Updated every 6 h from <a href="https://huggingface.co/datasets/yanxingjianken/nh-forecast-6hourly">this dataset</a>.</p>
 
   <div class="jn-controls">
     <div class="jn-ctl"><label for="nh-model">Model</label>
-      <select id="nh-model"><option value="gfs">GFS 0.25&deg; (NCEP)</option></select></div>
+      <select id="nh-model"><option value="gfs">GFS 0.25&deg; (NCEP)</option><option value="aifs">AIFS-single 0.25&deg; (ECMWF)</option></select></div>
     <div class="jn-ctl"><label for="nh-view">Projection</label>
       <select id="nh-view"><option value="rect">Rectangular, 0&ndash;90&deg;N</option><option value="disk">Polar stereographic disk</option></select></div>
     <div class="jn-ctl"><label for="nh-clon">Central longitude</label>
@@ -153,6 +154,8 @@ author_profile: false
   async function fetchIndex() {
     var r = await fetch(BASE + '/index.json', {cache: 'no-cache'});
     if (!r.ok) throw new Error('index.json: HTTP ' + r.status);
+    var sha = r.headers.get('x-repo-commit');
+    if (sha && BASE === HF_BASE) BASE = HF_BASE.replace(/\/resolve\/main$/, '/resolve/' + sha);   /* consistent snapshot */
     return r.json();
   }
   async function fetchJSON(url) { var r = await fetch(url, {cache: 'no-cache'}); if (!r.ok) throw new Error(url + ': HTTP ' + r.status); return r.json(); }
@@ -558,10 +561,10 @@ author_profile: false
     var parts = [];
     if (shadeSel !== 'none') { var a = parseSel(shadeSel); parts.push(a.lev + '-hPa ' + VARS[a.v].label + ' (shaded, ' + VARS[a.v].units + ')'); }
     if (contSel !== 'none') { var b = parseSel(contSel); parts.push(b.lev + '-hPa ' + VARS[b.v].label + ' (contours, ' + VARS[b.v].units + ', interval ' + CI[b.v][b.lev] + (b.v === 'z' ? ', labels in dam, every fifth contour bold' : '') + ')'); }
-    $('nh-figtitle').textContent = parts.join('; ') + '. ' + S.model.toUpperCase() + ' run ' + fmtTime(m.init) + ', valid ' + fmtTime(slot.t) + ' (' + lead + ').'; 
+    $('nh-figtitle').textContent = parts.join('; ') + '. ' + (m.label || S.model.toUpperCase()) + ' run ' + fmtTime(m.init) + ', valid ' + fmtTime(slot.t) + ' (' + lead + ').'; 
     var trk = $('nh-trk').checked ? ' Red L (blue H): 500-hPa cyclone (anticyclone) centres detected on the ' + (S.basis === 'total' ? 'total height' : 'height anomaly') +
       '; solid lines with filled markers (circles for L, squares for H; open at 0000 UTC) show the preceding 6-hourly positions over up to five days, dashed lines with open markers the forecast positions; the underlined number is the central height in dam. Click a centre for its displacement over the last five days.' : '';
-    $('nh-caption').innerHTML = '<span class="jn-figno">Fig. 1.</span> ' + S.model.toUpperCase() + ' forecast initialized ' + fmtTime(m.init) + ', valid ' + fmtTime(slot.t) + ' (' + lead + '). ' + parts.join('; ') + '.' + trk +
+    $('nh-caption').innerHTML = '<span class="jn-figno">Fig. 1.</span> ' + (m.label || S.model.toUpperCase()) + ' forecast initialized ' + fmtTime(m.init) + ', valid ' + fmtTime(slot.t) + ' (' + lead + '). ' + parts.join('; ') + '.' + trk +
       ' Projection: ' + (S.view === 'rect' ? 'plate carrée, 0–90°N, centred on ' + fmtLon(S.clon) : 'polar stereographic, equator at the rim, ' + fmtLon(S.clon) + ' at the bottom') + '. Data: NOAA GFS 0.25° (0.5° shown).';
     $('nh-legend').innerHTML = $('nh-trk').checked ? '<span><i class="L"></i>cyclone (L) track, analyses; dots every 6 h, open at 0000 UTC</span><span><i class="L dash"></i>cyclone track, forecast</span><span><i class="H"></i>anticyclone (H) track, analyses; squares</span><span><i class="H dash"></i>anticyclone track, forecast</span><span>Underlined value: central Z<sub>500</sub> (dam). Click a centre to pin it.</span>' : '';
   }
@@ -624,9 +627,10 @@ author_profile: false
     if (h.get('shade')) S.shade = h.get('shade');
     if (h.get('cont')) S.cont = h.get('cont');
     if (h.get('basis')) S.basis = h.get('basis');
+    if (h.get('model')) S.model = h.get('model');
   }
   function writeHash() {
-    var h = new URLSearchParams(); h.set('view', S.view); h.set('clon', S.clon); h.set('shade', S.shade); h.set('cont', S.cont); h.set('basis', S.basis);
+    var h = new URLSearchParams(); h.set('model', S.model); h.set('view', S.view); h.set('clon', S.clon); h.set('shade', S.shade); h.set('cont', S.cont); h.set('basis', S.basis);
     history.replaceState(null, '', '#' + h.toString());
   }
 
@@ -637,20 +641,34 @@ author_profile: false
     try {
       S.index = await fetchIndex();
     } catch (e) { status('The forecast dataset is not available yet (' + e.message + '). It is produced every 6 h by the GitHub Actions pipeline.', true); return; }
+    /* model list from the index */
+    var sel = $('nh-model'); sel.innerHTML = '';
+    Object.keys(S.index.models).forEach(function (mid) { var o = document.createElement('option'); o.value = mid; o.textContent = S.index.models[mid].label || mid.toUpperCase(); sel.appendChild(o); });
+    if (!S.index.models[S.model]) S.model = Object.keys(S.index.models)[0];
+    sel.value = S.model;
+    try { var topo = await fetchJSON(LAND_URL); S.land = topojson.feature(topo, topo.objects.land); } catch (e) { S.land = null; }
+    setupProjection();
+    await selectModel(S.model);
+  }
+
+  async function selectModel(mid) {
+    S.model = mid; S.selected = null; S.playing = false; clearInterval(S.timer); $('nh-play').innerHTML = '&#9654;';
     var m = S.index.models[S.model];
+    var prevT = S.slots.length ? S.slots[S.k].t : null;
     S.slots = buildSlots(S.index);
     $('nh-t').max = S.slots.length - 1;
-    var k0 = S.slots.findIndex(function (s) { return s.kind === 'fcst'; }); S.k = k0 < 0 ? 0 : k0; $('nh-t').value = S.k;
-    $('nh-runinfo').textContent = S.model.toUpperCase() + ' run ' + fmtTime(m.init) + ' · dataset updated ' + fmtTime(S.index.updated);
-    try { var topo = await fetchJSON(LAND_URL); S.land = topojson.feature(topo, topo.objects.land); } catch (e) { S.land = null; }
-    try { S.tracks = await fetchJSON(BASE + '/' + (m.tracks || 'gfs/tracks/latest.json')); } catch (e) { S.tracks = null; status('tracks unavailable: ' + e.message, true); }
-    setupProjection();
+    var k0 = S.slots.findIndex(function (s) { return s.kind === 'fcst'; });
+    if (prevT) { var kk = S.slots.findIndex(function (s) { return s.t === prevT; }); if (kk >= 0) k0 = kk; }
+    S.k = k0 < 0 ? 0 : k0; $('nh-t').value = S.k;
+    $('nh-runinfo').textContent = (m.label || S.model.toUpperCase()) + ' run ' + fmtTime(m.init) + ' \u00B7 dataset updated ' + fmtTime(S.index.updated);
+    S.tracks = null;
+    try { S.tracks = await fetchJSON(BASE + '/' + (m.tracks || (S.model + '/tracks/latest.json'))); } catch (e) { status('tracks unavailable: ' + e.message, true); }
+    writeHash();
     render();
-    /* prefetch neighbouring times in the background */
     (async function prefetch() {
       for (var d = 1; d < S.slots.length; d++) {
-        var kk = S.k + d; if (kk >= S.slots.length) break;
-        try { await getField(S.shade, kk); await getField(S.cont, kk); } catch (e) { break; }
+        var kk2 = S.k + d; if (kk2 >= S.slots.length) break;
+        try { await getField(S.shade, kk2); await getField(S.cont, kk2); } catch (e) { break; }
       }
     })();
   }
@@ -662,6 +680,7 @@ author_profile: false
   $('nh-first').addEventListener('click', function () { setTime(0); });
   $('nh-last').addEventListener('click', function () { setTime(S.slots.length - 1); });
   $('nh-play').addEventListener('click', play);
+  $('nh-model').addEventListener('change', function () { selectModel(this.value); });
   $('nh-view').addEventListener('change', function () { S.view = this.value; setupProjection(); writeHash(); render(); });
   $('nh-clon').addEventListener('change', function () { S.clon = +this.value; setupProjection(); writeHash(); render(); });
   $('nh-shade').addEventListener('change', function () { S.shade = this.value; writeHash(); render(); });

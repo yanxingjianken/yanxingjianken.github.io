@@ -6,138 +6,37 @@ author_profile: false
 ---
 
 {% include base_path %}
+<link rel="stylesheet" href="{{ base_path }}/assets/css/journal.css">
+<style>.page__title { font-family: "STIX Two Text", "Times New Roman", Times, serif; font-weight: 700; }</style>
 
-<p class="bp-backlink"><a href="{{ base_path }}/blocking-plots/">&larr; Blocking Plots</a> &nbsp;|&nbsp; <a href="{{ base_path }}/blocking-plots/nh-forecast/">Northern Hemisphere forecast viewer &rarr;</a></p>
+<div class="jn">
+<p class="bp-backlink jn-small"><a href="{{ base_path }}/blocking-plots/">&larr; Blocking Plots</a> &nbsp;|&nbsp; <a href="{{ base_path }}/blocking-plots/nh-forecast/">Northern Hemisphere forecast viewer &rarr;</a></p>
 
 <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
 
 <style>
-  .bc-controls {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    align-items: center;
-    margin-bottom: 12px;
-  }
-  .bc-controls label {
-    font-size: 14px;
-    font-weight: 600;
-    margin-right: 4px;
-  }
-  .bc-controls select {
-    font-size: 14px;
-    padding: 4px 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    height: 32px;
-  }
-  .bc-event-count {
-    font-size: 14px;
-    color: #555;
-    margin-bottom: 10px;
-  }
-  #loading {
-    font-size: 16px;
-    color: #1f77b4;
-    padding: 20px;
-    text-align: center;
-  }
-  .bc-spinner {
-    display: inline-block;
-    width: 18px;
-    height: 18px;
-    border: 3px solid #ccc;
-    border-top-color: #1f77b4;
-    border-radius: 50%;
-    animation: bc-spin 0.8s linear infinite;
-    vertical-align: middle;
-    margin-right: 8px;
-  }
-  @keyframes bc-spin {
-    to { transform: rotate(360deg); }
-  }
-  .bc-panels {
-    display: flex;
-    gap: 10px;
-    width: 100%;
-    margin-bottom: 20px;
-  }
-  .bc-panels > div {
-    min-width: 0;
-    flex: 1 1 0;
-  }
-  @media (max-width: 900px) {
-    .bc-panels {
-      flex-direction: column;
-      align-items: center;
-    }
-    .bc-panels > div {
-      width: 100%;
-      max-width: 500px;
-    }
-  }
-  #projection-panel {
-    margin-top: 16px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    padding: 10px;
-    background: #fafafa;
-  }
-  #projection-panel summary {
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 15px;
-    color: #1f77b4;
-  }
-  #proj-info {
-    font-family: monospace;
-    font-size: 14px;
-    margin: 10px 0;
-    line-height: 1.7;
-  }
-  .bc-proj-panels {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-  .bc-proj-row {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    width: 100%;
-    margin-bottom: 6px;
-  }
-  .bc-proj-row > div {
-    flex: 1 1 0;
-    min-width: 0;
-  }
-  .bc-proj-row-3 > div {
-    flex: 1 1 0;
-    min-width: 0;
-  }
-  .bc-proj-panels > div {
-    width: 100%;
-  }
-  .bc-proj-controls {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    margin: 8px 0;
-    font-size: 14px;
-  }
-  .bc-proj-controls label {
-    font-weight: 600;
-  }
-  .bc-proj-controls select {
-    font-size: 14px;
-    padding: 2px 6px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
+  .jn .bc-controls { font-family: Helvetica, Arial, sans-serif; font-size: 9pt; display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: center;
+    border-top: 1px solid #000; border-bottom: 1px solid #999; padding: 8px 0; margin: 10px 0 0 0; }
+  .jn .bc-controls + .bc-controls { border-top: 0; margin-top: 0; }
+  .jn .bc-controls label { font-size: 8.5pt; color: #333; font-weight: 400; margin-right: 4px; }
+  .jn .bc-event-count { font-family: Helvetica, Arial, sans-serif; font-size: 8.5pt; color: #333; margin: 8px 0; }
+  .jn #loading { font-family: Helvetica, Arial, sans-serif; font-size: 8.5pt; color: #333; padding: 6px 0; }
+  .jn .bc-spinner { display: none; }
+  .jn .bc-panels { display: flex; gap: 8px; width: 100%; margin-bottom: 12px; }
+  .jn .bc-panels > div { min-width: 0; flex: 1 1 0; }
+  @media (max-width: 900px) { .jn .bc-panels { flex-direction: column; align-items: center; } .jn .bc-panels > div { width: 100%; max-width: 500px; } }
+  .jn #projection-panel { margin-top: 12px; border: 0; border-top: 1px solid #000; border-radius: 0; padding: 8px 0 0 0; background: none; }
+  .jn #projection-panel summary { cursor: pointer; font-family: "STIX Two Text", "Times New Roman", Times, serif; font-weight: 700; font-size: 11.5pt; color: #000; }
+  .jn #proj-info { font-family: "Courier New", Courier, monospace; font-size: 9pt; margin: 8px 0; line-height: 1.6; }
+  .jn .bc-proj-panels { display: flex; flex-direction: column; gap: 6px; }
+  .jn .bc-proj-controls { display: flex; gap: 12px; align-items: center; margin: 6px 0; font-family: Helvetica, Arial, sans-serif; font-size: 9pt; flex-wrap: wrap; }
+  .jn .bc-proj-controls label { font-size: 8.5pt; color: #333; font-weight: 400; }
+  .jn .bc-figcap { font-family: "STIX Two Text", "Times New Roman", Times, serif; font-size: 9.5pt; margin: 4px 0 14px 0; text-align: justify; }
+  .jn .bc-figcap b { font-weight: 700; }
 </style>
 
 <div id="loading" style="display:none;">
-  <span class="bc-spinner"></span> Loading composite data... (~8 MB)
+  Loading composite data (about 8 MB)…
 </div>
 
 <div class="bc-controls">
@@ -195,7 +94,7 @@ author_profile: false
     <select id="sel-arrows"></select>
   </span>
   <span>
-    <button id="btn-generate" style="font-size:14px;padding:6px 18px;border:1px solid #1f77b4;border-radius:4px;background:#1f77b4;color:#fff;cursor:pointer;font-weight:600;height:32px;">Generate</button>
+    <button id="btn-generate">Generate</button>
   </span>
 </div>
 
@@ -208,7 +107,7 @@ author_profile: false
 </div>
 
 <details id="projection-panel">
-  <summary>&#9654; Project onto orthogonal basis</summary>
+  <summary>Projection onto the orthogonal basis</summary>
   <div class="bc-proj-controls">
     <label for="sel-proj-dh">Decompose at:</label>
     <select id="sel-proj-dh">
@@ -218,11 +117,11 @@ author_profile: false
     </select>
     <span style="margin-left: 16px;">
       <input type="checkbox" id="chk-lap" checked>
-      <label for="chk-lap" style="font-size:13px;">Include Laplacian basis (6 modes)</label>
+      <label for="chk-lap">Include Laplacian basis (6 modes)</label>
     </span>
     <span style="margin-left: 16px;">
       <input type="checkbox" id="chk-all-events">
-      <label for="chk-all-events" style="font-size:13px;">Use all-event composited bases</label>
+      <label for="chk-all-events">Use all-event composited bases</label>
     </span>
   </div>
   <div id="proj-info"></div>
@@ -239,12 +138,43 @@ author_profile: false
     </div>
   </div>
 </details>
+</div>
 
 <script>
 (function() {
   'use strict';
 
   var BASE = 'https://huggingface.co/datasets/yanxingjianken/blocking-composites/resolve/main';
+  /* Journal figure defaults for every Plotly panel (Helvetica, black frame, no logo). */
+  var JN_FONT = {family: 'Helvetica, Arial, sans-serif', size: 10, color: '#000'};
+  function jnAxis(extra) {
+    return Object.assign({showline: true, linecolor: '#000', linewidth: 1, mirror: true, ticks: 'outside', ticklen: 3,
+                          tickcolor: '#000', tickfont: {size: 9}, gridcolor: 'rgba(0,0,0,0.08)', zeroline: false,
+                          title: {font: {size: 10}}}, extra || {});
+  }
+  function jnLayout(layout) {
+    layout.font = JN_FONT; layout.paper_bgcolor = '#fff'; layout.plot_bgcolor = '#fff';
+    if (layout.title && typeof layout.title === 'string') layout.title = {text: layout.title};
+    if (layout.title) layout.title = Object.assign({font: {size: 11}, x: 0.02, xanchor: 'left'}, layout.title);
+    ['xaxis', 'yaxis'].forEach(function (ax) {
+      var a = layout[ax] || {};
+      if (typeof a.title === 'string') a.title = {text: a.title};
+      layout[ax] = jnAxis(a);
+      if (a.title) layout[ax].title = Object.assign({font: {size: 10}}, a.title);
+    });
+    return layout;
+  }
+  var JN_CONFIG = {responsive: true, displaylogo: false, modeBarButtonsToRemove: ['select2d', 'lasso2d', 'autoScale2d', 'toggleSpikelines']};
+  /* Give every panel of a row the same plotted width (plotW px) whatever its
+     margins, so that with a fixed data aspect ratio all panels have the same
+     size; autoexpand is off so the colorbar does not shrink the last panel. */
+  function jnEqualWidth(layout, panelW, plotW) {
+    var avail = Math.max(1, panelW - layout.margin.l - layout.margin.r);
+    var frac = Math.min(1, plotW / avail), padf = (1 - frac) / 2;
+    layout.xaxis = Object.assign({}, layout.xaxis, {domain: [padf, padf + frac]});
+    layout.margin = Object.assign({}, layout.margin, {autoexpand: false});
+    return layout;
+  }
   var DATA_CACHE = new Map();
 
   var CONTOUR_GROUPS = ['contour_base', 'contour_omega', 'contour_tendency', 'contour_diabatic', 'contour_pv_grad'];
@@ -749,7 +679,7 @@ author_profile: false
             thickness: 10, len: 0.85,
             x: 1.02, xanchor: 'left', xpad: 4,
             exponentformat: 'power',
-            tickfont: {size: 9},
+            tickfont: {size: 9}, outlinewidth: 0.6, outlinecolor: '#000',
             title: {text: sLabel, font: {size: 10}}
           };
         } else {
@@ -782,13 +712,13 @@ author_profile: false
 
       /* Asymmetric margins: compact gaps; all heatmaps equal height via normPlotW */
       var margins = i === 0 ? { t: 35, b: 45, l: 55, r: 10 }
-                  : i === dhKeys.length - 1 ? { t: 35, b: 45, l: 10, r: 55 }
+                  : i === dhKeys.length - 1 ? { t: 35, b: 45, l: 10, r: 72 }
                   : { t: 35, b: 45, l: 10, r: 10 };
 
       /* Dynamic height: normalize to outer-panel inner width (cw-65) so all heatmaps equal height */
       var el = document.getElementById('panel-' + i);
       var cw = el.getBoundingClientRect().width || 300;
-      var plotW = Math.max(cw - 65, 50);
+      var plotW = Math.max(cw - 82, 50);
       var dynH = Math.max(Math.round(plotW * dataAR + margins.t + margins.b), 200);
 
       var layout = {
@@ -806,7 +736,7 @@ author_profile: false
       };
 
       /* Always fully regenerate to avoid stale traces/annotations from previous selections. */
-      Plotly.newPlot('panel-' + i, traces, layout, {responsive: true});
+      Plotly.newPlot('panel-' + i, traces, jnEqualWidth(jnLayout(layout), cw, plotW), JN_CONFIG);
     });
   }
 
@@ -1063,14 +993,14 @@ author_profile: false
     var projMargins = [
       { t: 35, b: 45, l: 55, r: 10 },
       { t: 35, b: 45, l: 10, r: 10 },
-      { t: 35, b: 45, l: 10, r: 55 }
+      { t: 35, b: 45, l: 10, r: 72 }
     ];
 
     /* Compute height from container width, normalized to outer-panel inner width */
     var projContainer = document.querySelector('.bc-proj-panels .bc-panels');
     var fullCW = projContainer ? projContainer.getBoundingClientRect().width : 720;
     var perPanelW = (fullCW - 20) / 3;  /* subtract 2 gaps of 10px */
-    var projW = Math.max(perPanelW - 65, 80);  /* 65 = max total margin (55+10) */
+    var projW = Math.max(perPanelW - 82, 80);  /* 82 = max total margin (72+10) */
     var projHeight = Math.max(Math.round(projW * projAR + 35 + 45), 250);
 
     /* Compute shared color range for top row */
@@ -1100,14 +1030,14 @@ author_profile: false
           thickness: 10, len: 0.85,
           x: 1.02, xanchor: 'left', xpad: 4,
           exponentformat: 'power',
-          tickfont: {size: 9},
+          tickfont: {size: 9}, outlinewidth: 0.6, outlinecolor: '#000',
           title: {text: si.unit, font: {size: 10}}
         };
       } else {
         traceObj.showscale = false;
       }
-      Plotly.react(pp.id, [traceObj], {
-        title: {text: pp.label, font: {size: 12}},
+      Plotly.react(pp.id, [traceObj], jnEqualWidth(jnLayout({
+        title: {text: pp.label, font: {size: 11}},
         xaxis: { title: idx === 1 ? 'Rel. Longitude (°)' : '', constrain: 'domain' },
         yaxis: {
           title: idx === 0 ? 'Rel. Latitude (°)' : '',
@@ -1116,7 +1046,7 @@ author_profile: false
         },
         margin: projMargins[idx],
         height: projHeight
-      }, {responsive: true});
+      }), perPanelW, projW), JN_CONFIG);
     });
 
     /* Bottom row: shared vmin/vmax from original field */
@@ -1144,14 +1074,14 @@ author_profile: false
           thickness: 10, len: 0.85,
           x: 1.02, xanchor: 'left', xpad: 4,
           exponentformat: 'power',
-          tickfont: {size: 9},
+          tickfont: {size: 9}, outlinewidth: 0.6, outlinecolor: '#000',
           title: {text: si.unit, font: {size: 10}}
         };
       } else {
         traceObj.showscale = false;
       }
-      Plotly.react(bp.id, [traceObj], {
-        title: {text: bp.label, font: {size: 12}},
+      Plotly.react(bp.id, [traceObj], jnEqualWidth(jnLayout({
+        title: {text: bp.label, font: {size: 11}},
         xaxis: { title: idx === 1 ? 'Rel. Longitude (°)' : '', constrain: 'domain' },
         yaxis: {
           title: idx === 0 ? 'Rel. Latitude (°)' : '',
@@ -1160,7 +1090,7 @@ author_profile: false
         },
         margin: projMargins[idx],
         height: projHeight
-      }, {responsive: true});
+      }), perPanelW, projW), JN_CONFIG);
     });
   }
 

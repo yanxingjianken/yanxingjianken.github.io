@@ -1,7 +1,8 @@
 # Northern-Hemisphere forecast pipeline
 
-Runs every 6 h on GitHub Actions (`.github/workflows/nh_forecast.yml`), pulls the
-latest complete GFS 0.25° run, keeps u, v, T, Z, ω, q at 850/500/250 hPa for
+Runs hourly on GitHub Actions (`.github/workflows/nh_forecast.yml`) and publishes a
+model whenever a newer complete run exists (GFS 0.25° from NOAA Open Data, ECMWF
+AIFS-single 0.25° from ECMWF open data). For each run it keeps u, v, T, Z, ω, q at 850/500/250 hPa for
 0–90°N (0.5°) and a 0.25° CONUS window, tracks 500-hPa cyclones/anticyclones
 over the previous 5 days + the forecast, and publishes everything to the public
 Hugging Face dataset `yanxingjianken/nh-forecast-6hourly`.  The web page
@@ -12,7 +13,7 @@ temporary directory that is deleted when it finishes.
 
 Local dry run (nothing uploaded, output kept under /tmp/nhf_test):
 
-    python run_pipeline.py --dry-run --max-step 12 --out /tmp/nhf_test
+    python run_pipeline.py --dry-run --models gfs --max-step 12 --out /tmp/nhf_test
 
 One-off: rebuild the Z500 climatology used for anomalies
 
