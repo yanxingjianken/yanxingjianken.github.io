@@ -22,7 +22,7 @@ author_profile: false
   .wx .wx-map canvas { position: absolute; left: 0; top: 0; }
   .wx .wx-map svg { position: relative; display: block; }
   .wx .wx-cbar { display: block; margin-top: 4px; }
-  .wx .wx-plot { border: 1px solid #000; background: #fff; }
+  .wx .wx-plot { border: 1px solid #000; background: #fff; width: 100%; box-sizing: border-box; }
   .wx .wx-plot svg { display: block; }
   .wx .wx-chartsel { display: flex; flex-wrap: wrap; gap: 4px 6px; margin: 6px 0; }
   .wx .wx-chartsel button { font-size: 8.5pt; padding: 2px 8px; height: 22px; }
@@ -38,6 +38,23 @@ author_profile: false
   .wx .wx-clock { font-family: Helvetica, Arial, sans-serif; font-size: 8.5pt; color: #333; }
   .wx .wx-sec { margin-top: 18px; }
   .wx datalist { display: none; }
+  .wx .jn-tablewrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .wx .wx-map-row { justify-content: center; }
+  .wx .wx-map-row > div { flex: 1 1 320px; max-width: 640px; }
+  .wx .wx-plot, .wx .wx-map { max-width: 100%; }
+  .wx figure.jn-fig { margin-left: auto; margin-right: auto; }
+  .wx input[type=date] { max-width: 150px; }
+  @media (max-width: 700px) {
+    .wx .jn-controls { flex-direction: column; align-items: stretch; gap: 8px; }
+    .wx .jn-controls .jn-ctl { min-width: 0; }
+    .wx .jn-controls .jn-ctl-row { flex-wrap: wrap; }
+    .wx select, .wx input[type=text] { max-width: 100%; }
+    .wx .wx-chartsel button { flex: 1 1 45%; }
+    .wx table.jn-table { font-size: 8.5pt; }
+    .wx table.jn-table th, .wx table.jn-table td { padding: 3px 5px; }
+    .wx .wx-runbtns-label { display: none; }
+  }
+  .wx #wx-daytab td:first-child, .wx #wx-cornertab td:first-child { white-space: nowrap; }
 </style>
 
 <div class="jn wx" id="wx-app">
@@ -60,7 +77,7 @@ author_profile: false
       </select></div>
     <div class="jn-ctl"><label for="wx-date">Run (UTC)</label>
       <div class="jn-ctl-row"><input type="date" id="wx-date"><select id="wx-hour"></select></div></div>
-    <div class="jn-ctl"><label>&nbsp;</label>
+    <div class="jn-ctl wx-runbtns"><label class="wx-runbtns-label">&nbsp;</label>
       <div class="jn-btngroup"><button id="wx-prev" title="previous run">&lt; run</button><button id="wx-latest">latest</button><button id="wx-next" title="next run">run &gt;</button></div></div>
     <div class="jn-ctl"><label for="wx-window">Time-series window</label>
       <select id="wx-window"><option value="60">60 h (competition days 1&ndash;2)</option><option value="0">full run</option></select></div>
@@ -83,6 +100,8 @@ author_profile: false
         <select id="wx-maplev"><option value="850" selected>850 hPa</option><option value="500">500 hPa</option><option value="250">250 hPa</option></select></div>
       <div class="jn-ctl"><label for="wx-mapcont">Contours</label>
         <select id="wx-mapcont"><option value="z">Z (same level)</option><option value="same">same variable</option><option value="none">none</option></select></div>
+      <div class="jn-ctl"><label>Surface elevation</label>
+        <div class="jn-ctl-row"><label><input type="checkbox" id="wx-elev" checked> contours (ETOPO 2022)</label></div></div>
       <div class="jn-ctl" style="flex:1 1 220px"><label for="wx-mapstep">Forecast hour <span id="wx-mapstep-label"></span></label>
         <input type="range" id="wx-mapstep" min="0" max="0" value="0" step="1"></div>
     </div>
@@ -97,7 +116,7 @@ author_profile: false
       <figcaption id="wx-mapcap"></figcaption>
     </figure>
     <div class="jn-tabcap"><b>Table 1.</b> Values at the four grid points surrounding the station and the bilinear interpolation to the station.</div>
-    <table class="jn-table wx-corner-table" id="wx-cornertab"><thead><tr><th>Grid point</th><th class="num">Lat (&deg;N)</th><th class="num">Lon (&deg;E)</th><th class="num">Distance (km)</th><th class="num" id="wx-corner-valhead">Value</th></tr></thead><tbody></tbody></table>
+    <div class="jn-tablewrap"><table class="jn-table wx-corner-table" id="wx-cornertab"><thead><tr><th>Grid point</th><th class="num">Lat (&deg;N)</th><th class="num">Lon (&deg;E)</th><th class="num">Distance (km)</th><th class="num" id="wx-corner-valhead">Value</th></tr></thead><tbody></tbody></table></div>
     <div class="jn-note" id="wx-gridnote"></div>
   </div>
 
@@ -115,7 +134,7 @@ author_profile: false
       <figcaption id="wx-tscap"></figcaption>
     </figure>
     <div class="jn-tabcap"><b>Table 2.</b> WxChallenge-day summary (06&ndash;06 UTC): model values from the hourly series, MOS from the same cycle where available, observations to date from METARs.</div>
-    <table class="jn-table" id="wx-daytab"><thead><tr><th>Forecast day</th><th class="num">Max T (&deg;F)</th><th class="num">Min T (&deg;F)</th><th class="num">Max wind (kt)</th><th class="num">Precip (in)</th><th class="num">MOS max/min</th><th class="num">Obs so far max/min/wind/precip</th></tr></thead><tbody></tbody></table>
+    <div class="jn-tablewrap"><table class="jn-table" id="wx-daytab"><thead><tr><th>Forecast day</th><th class="num">Max T (&deg;F)</th><th class="num">Min T (&deg;F)</th><th class="num">Max wind (kt)</th><th class="num">Precip (in)</th><th class="num">MOS max/min</th><th class="num">Obs so far max/min/wind/precip</th></tr></thead><tbody></tbody></table></div>
   </div>
 
   <!-- ------------------------------------------------------------ 3. time-height -->
@@ -178,7 +197,7 @@ author_profile: false
   /* ================================================================ state */
   var S = {stations: [], byId: {}, schedule: null, station: null, model: 'GFS', init: null, run: null, obs: null, mos: null,
            chart: 't2m', field: 'temp', window: 60, hfIndex: null, mapModel: null, mapVar: 't', mapLev: 850, mapCont: 'z', mapK: 0,
-           land: null, states: null, cache: {}, seq: 0};
+           land: null, states: null, elev: null, elevNH: null, showElev: true, cache: {}, seq: 0};
 
   function $(id) { return document.getElementById(id); }
   function status(id, msg, err) { var s = $(id); s.textContent = msg || ''; s.className = 'jn-status' + (err ? ' jn-err' : ''); }
@@ -508,7 +527,7 @@ author_profile: false
     var g = svg.append('g');
     var days = wxDays(run).filter(function (d) { return d.start < tEnd; });
     days.forEach(function (d, i) { g.append('line').attr('x1', x(d.start)).attr('x2', x(d.start)).attr('y1', m.t).attr('y2', H - m.b).attr('stroke', C.day).attr('stroke-width', 0.8).attr('stroke-dasharray', '3,3'); g.append('text').attr('x', x(d.start) + 3).attr('y', m.t + 9).attr('fill', '#666').style('font-size', '7pt').text('day ' + (i + 1) + ' →'); });
-    g.append('g').attr('transform', 'translate(0,' + (H - m.b) + ')').call(d3.axisBottom(x).ticks(Math.min(12, Math.round(W / 80))).tickFormat(fmtTick).tickSize(4)).call(function (ax) { ax.selectAll('text').style('font-size', '7.5pt'); ax.selectAll('path,line').attr('stroke', '#000'); });
+    g.append('g').attr('transform', 'translate(0,' + (H - m.b) + ')').call(d3.axisBottom(x).ticks(Math.max(3, Math.min(12, Math.round(W / 110)))).tickFormat(fmtTick).tickSize(4)).call(function (ax) { ax.selectAll('text').style('font-size', '7.5pt'); ax.selectAll('path,line').attr('stroke', '#000'); });
     g.append('g').attr('transform', 'translate(' + m.l + ',0)').call(d3.axisLeft(y).ticks(7).tickSize(4)).call(function (ax) { ax.selectAll('text').style('font-size', '7.5pt'); ax.selectAll('path,line').attr('stroke', '#000'); });
     g.append('g').attr('transform', 'translate(' + m.l + ',0)').call(d3.axisLeft(y).ticks(7).tickSize(-(W - m.l - m.r)).tickFormat('')).call(function (ax) { ax.selectAll('line').attr('stroke', '#000').attr('stroke-opacity', 0.08); ax.select('path').remove(); });
     svg.append('rect').attr('x', m.l).attr('y', m.t).attr('width', W - m.l - m.r).attr('height', H - m.t - m.b).attr('fill', 'none').attr('stroke', '#000').attr('stroke-width', 0.8);
@@ -586,7 +605,7 @@ author_profile: false
     var labs = 0;
     cont.forEach(function (c) { c.coordinates.forEach(function (poly) { var ring = poly[0]; if (!ring || ring.length < 25 || labs > 40) return; var p = ring[Math.floor(ring.length / 2)]; var px = xi(p[0] - 0.5), py = yf(p[1] - 0.5); if (px < m.l + 12 || px > W - m.r - 12 || py < m.t + 8 || py > H - m.b - 8) return; gc.append('text').attr('x', px).attr('y', py + 3).attr('text-anchor', 'middle').style('font-size', '7pt').style('paint-order', 'stroke').attr('stroke', '#fff').attr('stroke-width', 2).attr('fill', '#000').text(fmtV(c.value)); labs++; }); });
     /* axes */
-    var tick = Math.max(1, Math.round(nt / Math.min(12, Math.round(W / 80))));
+    var tick = Math.max(1, Math.round(nt / Math.max(3, Math.min(12, Math.round(W / 110)))));
     var xt = []; for (var i2 = 0; i2 < nt; i2 += tick) xt.push(i2);
     g.append('g').attr('transform', 'translate(0,' + (H - m.b) + ')').call(d3.axisBottom(x).tickValues(xt).tickFormat(function (i) { return fmtTick(pf.times[i]); }).tickSize(4)).call(function (ax) { ax.selectAll('text').style('font-size', '7.5pt'); ax.selectAll('path,line').attr('stroke', '#000'); });
     var yt = [1000, 925, 850, 700, 600, 500, 400, 300, 250, 200, 150, 100].filter(function (p) { return p >= F.top && p <= PGRID[zIdx[0]]; });
@@ -670,13 +689,15 @@ author_profile: false
       var cnFields = cn ? {u: cn.fields['u' + lev], v: cn.fields['v' + lev], z: cn.fields['z' + lev], t: cn.fields['t' + lev], q: cn.fields['q' + lev], w: cn.fields['w' + lev]} : null;
       var cnS = cnFields ? fieldOf(cnFields, vr) : null, cnC = (cnFields && contVar) ? fieldOf(cnFields, contVar) : null;
       var sc = mapScale(vr, lev);
+      if (S.showElev) await ensureElevation(st);
+      if (seq !== mapSeq) return;
       drawMapPanel('wx-map-a', st, 3.5, 2.5, cnS || nhS, cnC || nhC, sc, contVar, true, m);
       drawMapPanel('wx-map-b', st, 22, 15, nhS, nhC, sc, contVar, false, m);
       drawMapCbar(sc);
       cornerTable(st, cnS || nhS, sc, m, step);
       var MV = MAPVARS[vr];
       $('wx-maptitle').textContent = lev + '-hPa ' + MV.label + ' (shaded, ' + MV.units + ')' + (contVar ? '; ' + lev + '-hPa ' + MAPVARS[contVar].label + ' (contours)' : '') + '. ' + (m.label || S.mapModel) + ' run ' + fmtTime(m.init) + ', f' + pad(step, 3) + '.';
-      $('wx-mapcap').innerHTML = '<span class="jn-figno">Fig. 1.</span> ' + (m.label || S.mapModel) + ' forecast (run ' + fmtTime(m.init) + ', f' + pad(step, 3) + ') of ' + lev + '-hPa ' + MV.label + ' (shaded, ' + MV.units + ')' + (contVar ? ' and ' + MAPVARS[contVar].label + ' (contours, interval ' + MAPCI[contVar][lev] + ' ' + MAPVARS[contVar].units + ')' : '') + ' around ' + st.icao + ' (star). (a) Grid nodes of the ' + (cnS ? '0.25°' : '0.5°') + ' field are drawn as dots; the four nodes surrounding the station are filled and labelled with their values' + (MODELS[S.model].src === 'bufkit' && (S.model === 'HRRR' || S.model === 'RRFS') ? '; open squares are the four 3-km ' + S.model + ' Lambert-conformal grid nodes around the station' : '') + '. (b) Same field on the 0.5° grid over the large-scale set-up. Plate carrée projection.';
+      $('wx-mapcap').innerHTML = '<span class="jn-figno">Fig. 1.</span> ' + (m.label || S.mapModel) + ' forecast (run ' + fmtTime(m.init) + ', f' + pad(step, 3) + ') of ' + lev + '-hPa ' + MV.label + ' (shaded, ' + MV.units + ')' + (contVar ? ' and ' + MAPVARS[contVar].label + ' (contours, interval ' + MAPCI[contVar][lev] + ' ' + MAPVARS[contVar].units + ')' : '') + ' around ' + st.icao + ' (star). (a) Grid nodes of the ' + (cnS ? '0.25°' : '0.5°') + ' field are drawn as dots; the four nodes surrounding the station are filled and labelled with their values' + (MODELS[S.model].src === 'bufkit' && (S.model === 'HRRR' || S.model === 'RRFS') ? '; open squares are the four 3-km ' + S.model + ' Lambert-conformal grid nodes around the station' : '') + '. (b) Same field on the 0.5° grid over the large-scale set-up. Grey lines: coastlines and state borders' + (S.showElev ? '; thin grey contours: surface elevation (ETOPO 2022; 200, 500, 1000, 1500, 2000, 2500, 3000, 3500 and 4000 m)' : '') + '. Plate carrée projection.';
       status('wx-mapstatus', '');
     } catch (e) { if (seq === mapSeq) status('wx-mapstatus', 'Could not load gridded fields: ' + e.message, true); }
   }
@@ -723,8 +744,10 @@ author_profile: false
     }
     var g = svg.append('g');
     /* geography */
-    if (S.land) { var landD = path(S.land); g.append('path').attr('d', landD).attr('fill', 'none').attr('stroke', '#fff').attr('stroke-width', 2).attr('stroke-opacity', 0.85); g.append('path').attr('d', landD).attr('fill', 'none').attr('stroke', '#000').attr('stroke-width', 0.9); }
-    if (S.states) g.append('path').datum(S.states).attr('d', path).attr('fill', 'none').attr('stroke', '#000').attr('stroke-width', 0.35);
+    if (S.land) { var landD = path(S.land); g.append('path').attr('d', landD).attr('fill', 'none').attr('stroke', '#fff').attr('stroke-width', 2).attr('stroke-opacity', 0.7); g.append('path').attr('d', landD).attr('fill', 'none').attr('stroke', '#5a5a5a').attr('stroke-width', 0.9); }
+    if (S.states) g.append('path').datum(S.states).attr('d', path).attr('fill', 'none').attr('stroke', '#7a7a7a').attr('stroke-width', 0.4);
+    /* surface elevation contours (ETOPO 2022), grey, drawn beneath the meteorological contours */
+    if (S.showElev) drawElevation(g, path, x, y, st, lon0, lon1, lat0, lat1, zoom, W, H);
     /* contours from the field's own grid restricted to the box */
     if (cont) {
       var h = cont.hdr, ci = MAPCI[contVar][sc.lev], f = MAPVARS[contVar].f;
@@ -755,14 +778,44 @@ author_profile: false
       if (S.model === 'HRRR' || S.model === 'RRFS') { var nodes = lccNodes(st.lat, st.lon); if (nodes) nodes.forEach(function (nd) { g.append('rect').attr('x', x(nd.lon) - 3).attr('y', y(nd.lat) - 3).attr('width', 6).attr('height', 6).attr('fill', '#fff').attr('stroke', '#b2182b').attr('stroke-width', 1); }); }
     }
     /* station */
-    g.append('path').attr('d', d3.symbol(d3.symbolStar).size(zoom ? 140 : 90)()).attr('transform', 'translate(' + x(st.lon) + ',' + y(st.lat) + ')').attr('fill', '#ffd700').attr('stroke', '#000').attr('stroke-width', 0.9);
-    g.append('text').attr('x', x(st.lon) + 8).attr('y', y(st.lat) - 6).style('font-weight', '700').style('paint-order', 'stroke').attr('stroke', '#fff').attr('stroke-width', 2.5).attr('fill', '#000').text(st.icao);
+    g.append('path').attr('d', d3.symbol(d3.symbolStar).size(zoom ? 55 : 40)()).attr('transform', 'translate(' + x(st.lon) + ',' + y(st.lat) + ')').attr('fill', '#ffd700').attr('stroke', '#000').attr('stroke-width', 0.8);
+    g.append('text').attr('x', x(st.lon) + 6).attr('y', y(st.lat) - 5).style('font-weight', '700').style('paint-order', 'stroke').attr('stroke', '#fff').attr('stroke-width', 2.5).attr('fill', '#000').text(st.icao);
     /* frame + graticule labels */
     var gstep = zoom ? 1 : 5;
     for (var gl = Math.ceil(lon0 / gstep) * gstep; gl <= lon1; gl += gstep) { g.append('line').attr('x1', x(gl)).attr('x2', x(gl)).attr('y1', 0).attr('y2', H).attr('stroke', '#777').attr('stroke-width', 0.4).attr('stroke-dasharray', '2,2'); g.append('text').attr('x', x(gl)).attr('y', H - 3).attr('text-anchor', 'middle').style('paint-order', 'stroke').attr('stroke', '#fff').attr('stroke-width', 2).text(fmtLon(gl).replace('.00', '')); }
     for (var gla = Math.ceil(lat0 / gstep) * gstep; gla <= lat1; gla += gstep) { g.append('line').attr('x1', 0).attr('x2', W).attr('y1', y(gla)).attr('y2', y(gla)).attr('stroke', '#777').attr('stroke-width', 0.4).attr('stroke-dasharray', '2,2'); g.append('text').attr('x', 3).attr('y', y(gla) - 2).style('paint-order', 'stroke').attr('stroke', '#fff').attr('stroke-width', 2).text(gla + '°N'); }
     svg.append('rect').attr('x', 0.5).attr('y', 0.5).attr('width', W - 1).attr('height', H - 1).attr('fill', 'none').attr('stroke', '#000');
   }
+  /* ---- surface elevation (ETOPO 2022 subsets stored with the site: 0.05 deg CONUS window, 0.25 deg NH) */
+  var ELEV_CONUS = BASE_PATH + '/assets/data/elev_conus_0p05.u16.gz', ELEV_NH = BASE_PATH + '/assets/data/elev_nh_0p25.u16.gz';
+  var ELEV_LEVELS = [200, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000];
+  async function ensureElevation(st) {
+    if (!S.elevNH) { try { S.elevNH = await fetchU16(ELEV_NH); } catch (e) { S.elevNH = null; } }
+    if (!S.elev) { try { S.elev = await fetchU16(ELEV_CONUS); } catch (e) { S.elev = null; } }
+  }
+  function drawElevation(g, path, x, y, st, lon0, lon1, lat0, lat1, zoom, W, H) {
+    var fld = null;
+    if (zoom && S.elev) { var h0 = S.elev.hdr, lonr0 = ((st.lon - h0.lon0) % 360 + 360) % 360; if (st.lat > h0.lat0 + 1 && st.lat < h0.lat0 + h0.dlat * (h0.ny - 1) - 1 && lonr0 > 1 && lonr0 < h0.dlon * (h0.nx - 1) - 1) fld = S.elev; }
+    if (!fld) fld = S.elevNH;
+    if (!fld) return;
+    var h = fld.hdr, span = lon1 - lon0;
+    var i0 = Math.floor((((lon0 - h.lon0) % 360) + 360) % 360 / h.dlon) - 1, ni = Math.ceil(span / h.dlon) + 3, j0 = Math.max(0, Math.floor((lat0 - h.lat0) / h.dlat) - 1), j1 = Math.min(h.ny - 1, Math.ceil((lat1 - h.lat0) / h.dlat) + 1), nj = j1 - j0 + 1;
+    if (h.nx * h.dlon < 359) { i0 = Math.max(0, i0); ni = Math.min(ni, h.nx - i0); }
+    if (ni < 3 || nj < 3) return;
+    var vals = new Float64Array(ni * nj), vmax = -Infinity;
+    for (var j = 0; j < nj; j++) for (var i = 0; i < ni; i++) { var v = nodeValue(fld, i0 + i, j0 + j); vals[j * ni + i] = isNaN(v) ? -1e9 : v; if (!isNaN(v)) vmax = Math.max(vmax, v); }
+    var thr = ELEV_LEVELS.filter(function (l) { return l < vmax; }); if (!thr.length) return;
+    var lonAt = function (i) { return h.lon0 + (i0 + i - 0.5) * h.dlon; }, latAt = function (j) { return h.lat0 + (j0 + j - 0.5) * h.dlat; };
+    var ge = g.append('g');
+    d3.contours().size([ni, nj]).thresholds(thr)(vals).forEach(function (c) {
+      var lines = [];
+      c.coordinates.forEach(function (poly) { poly.forEach(function (ring) { var cur = []; ring.forEach(function (p) { if (p[0] <= 0 || p[0] >= ni || p[1] <= 0 || p[1] >= nj) { if (cur.length > 1) lines.push(cur); cur = []; return; } cur.push([lonAt(p[0]), latAt(p[1])]); }); if (cur.length > 1) lines.push(cur); }); });
+      ge.append('path').datum({type: 'MultiLineString', coordinates: lines}).attr('d', path).attr('fill', 'none').attr('stroke', '#6d6d6d').attr('stroke-width', c.value >= 1000 && c.value % 1000 === 0 ? 0.7 : 0.4).attr('stroke-opacity', 0.9);
+      var labelled = 0;
+      lines.forEach(function (ln) { if (labelled > 3 || ln.length < (zoom ? 30 : 60)) return; var p = ln[Math.floor(ln.length / 2)]; var xp = x(((p[0] - st.lon + 540) % 360) - 180 + st.lon), yp = y(p[1]); if (xp < 14 || xp > W - 14 || yp < 8 || yp > H - 8) return; ge.append('text').attr('x', xp).attr('y', yp + 2.5).attr('text-anchor', 'middle').style('font-size', '6.5pt').style('paint-order', 'stroke').attr('stroke', '#fff').attr('stroke-width', 2).attr('fill', '#6d6d6d').text(c.value + ' m'); labelled++; });
+    });
+  }
+
   function corners(fld, st) {
     var h = fld.hdr, lonr = ((st.lon - h.lon0) % 360 + 360) % 360, fi = lonr / h.dlon, fj = (st.lat - h.lat0) / h.dlat, i0 = Math.floor(fi), j0 = Math.floor(fj), out = [];
     [[0, 0], [1, 0], [0, 1], [1, 1]].forEach(function (d) { var i = i0 + d[0], j = j0 + d[1]; var lon = h.lon0 + i * h.dlon, lat = h.lat0 + j * h.dlat; out.push({i: i, j: j, lat: lat, lon: ((lon + 180) % 360 + 360) % 360 - 180, val: nodeValue(fld, i, j), dist: haversine(st.lat, st.lon, lat, lon)}); });
@@ -803,6 +856,7 @@ author_profile: false
   $('wx-maplev').addEventListener('change', function () { S.mapLev = +this.value; loadMap(); });
   $('wx-mapcont').addEventListener('change', function () { S.mapCont = this.value; loadMap(); });
   $('wx-mapstep').addEventListener('input', function () { S.mapK = +this.value; loadMap(); });
+  $('wx-elev').addEventListener('change', function () { S.showElev = this.checked; loadMap(); });
   var rto = null; window.addEventListener('resize', function () { clearTimeout(rto); rto = setTimeout(function () { drawTS(); drawTH(); loadMap(); }, 300); });
   setInterval(function () { var d = new Date(); var loc = ''; if (S.station && S.station.tz) { try { loc = ' · local ' + new Intl.DateTimeFormat('en-US', {timeZone: S.station.tz, hour: '2-digit', minute: '2-digit', hour12: false, timeZoneName: 'short'}).format(d); } catch (e) { loc = ''; } } $('wx-clock').textContent = pad(d.getUTCHours()) + ':' + pad(d.getUTCMinutes()) + ' UTC' + loc; }, 1000);
 

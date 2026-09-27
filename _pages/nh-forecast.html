@@ -422,8 +422,8 @@ author_profile: false
     /* coastlines */
     if (S.land) {   /* coastlines: white casing under a black line so they read against shading and contours */
       var landD = path(S.land);
-      g.append('path').attr('d', landD).attr('fill', 'none').attr('stroke', '#fff').attr('stroke-width', 2.2).attr('stroke-linejoin', 'round').attr('stroke-opacity', 0.85);
-      g.append('path').attr('d', landD).attr('fill', 'none').attr('stroke', '#000').attr('stroke-width', 1.0).attr('stroke-linejoin', 'round');
+      g.append('path').attr('d', landD).attr('fill', 'none').attr('stroke', '#fff').attr('stroke-width', 2.0).attr('stroke-linejoin', 'round').attr('stroke-opacity', 0.7);
+      g.append('path').attr('d', landD).attr('fill', 'none').attr('stroke', '#5a5a5a').attr('stroke-width', 0.9).attr('stroke-linejoin', 'round');
     }
     /* contours */
     if (contFld) {

@@ -69,7 +69,8 @@
   margin: 10px 0 14px 0;
 }
 .jn .jn-controls .jn-ctl { display: flex; flex-direction: column; gap: 3px; min-width: 90px; }
-.jn .jn-controls .jn-ctl-row { display: flex; flex-direction: row; gap: 8px; align-items: center; }
+.jn .jn-controls .jn-ctl-row { display: flex; flex-direction: row; gap: 8px; align-items: center; flex-wrap: wrap; }
+.jn .jn-controls .jn-ctl-row label { white-space: nowrap; }
 .jn .jn-controls label { font-family: var(--jn-sans); font-size: 8.5pt; color: var(--jn-ink-2); font-weight: 400; margin: 0; }
 .jn select, .jn input[type=text], .jn input[type=search], .jn input[type=number] {
   font-family: var(--jn-sans); font-size: 9.5pt; color: var(--jn-ink);
@@ -92,8 +93,9 @@
 .jn .jn-btngroup button { margin-left: -1px; }
 .jn .jn-btngroup button:first-child { margin-left: 0; }
 
-/* Figures */
-.jn figure.jn-fig { margin: 0 0 1.6em 0; padding: 0; }
+/* Figures (the site theme makes <figure> a flex row; force block so plots fill the column) */
+.jn figure.jn-fig { display: block; width: 100%; margin: 0 0 1.6em 0; padding: 0; }
+.jn figure.jn-fig > * { max-width: 100%; }
 .jn figure.jn-fig .jn-fig-body { position: relative; }
 .jn figure.jn-fig svg, .jn figure.jn-fig canvas { display: block; max-width: 100%; height: auto; }
 .jn figcaption {
