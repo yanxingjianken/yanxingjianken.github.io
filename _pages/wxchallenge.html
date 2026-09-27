@@ -9,7 +9,7 @@ author_profile: false
 <link rel="stylesheet" href="{{ base_path }}/assets/css/journal.css">
 <style>.page__title { font-family: "STIX Two Text", "Times New Roman", Times, serif; font-weight: 700; }</style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson-client/3.1.0/topojson-client.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
 
 <style>
   .wx .wx-station-row { display: flex; gap: 8px; align-items: flex-end; flex-wrap: wrap; }
@@ -193,6 +193,11 @@ author_profile: false
   async function getJSON(url, opts) { if (S.cache[url]) return S.cache[url]; var r = await fetch(url, opts || {}); if (!r.ok) throw new Error('HTTP ' + r.status + ' (' + url.split('?')[0].split('/').slice(-2).join('/') + ')'); var j = await r.json(); S.cache[url] = j; return j; }
   async function getText(url) { if (S.cache[url]) return S.cache[url]; var r = await fetch(url); if (!r.ok) throw new Error('HTTP ' + r.status); var t = await r.text(); S.cache[url] = t; return t; }
 
+  /* topojson-client: make sure it is present (fallback CDN if the script tag failed) */
+  function ensureTopojson() {
+    if (typeof topojson !== 'undefined') return Promise.resolve();
+    return new Promise(function (res, rej) { var s = document.createElement('script'); s.src = 'https://unpkg.com/topojson-client@3/dist/topojson-client.min.js'; s.onload = res; s.onerror = rej; document.head.appendChild(s); });
+  }
   /* ================================================================ thermodynamics */
   function theta(tc, p) { return (tc + 273.15) * Math.pow(1000 / p, 0.2857); }
   function esat(tc) { return 6.112 * Math.exp(17.67 * tc / (tc + 243.5)); }
@@ -718,7 +723,7 @@ author_profile: false
     }
     var g = svg.append('g');
     /* geography */
-    if (S.land) g.append('path').datum(S.land).attr('d', path).attr('fill', 'none').attr('stroke', '#000').attr('stroke-width', 0.7);
+    if (S.land) { var landD = path(S.land); g.append('path').attr('d', landD).attr('fill', 'none').attr('stroke', '#fff').attr('stroke-width', 2).attr('stroke-opacity', 0.85); g.append('path').attr('d', landD).attr('fill', 'none').attr('stroke', '#000').attr('stroke-width', 0.9); }
     if (S.states) g.append('path').datum(S.states).attr('d', path).attr('fill', 'none').attr('stroke', '#000').attr('stroke-width', 0.35);
     /* contours from the field's own grid restricted to the box */
     if (cont) {
@@ -811,7 +816,7 @@ author_profile: false
     } catch (e) { status('wx-status', 'station catalogue unavailable: ' + e.message, true); }
     try { S.schedule = await getJSON(SCHEDULE_URL, {cache: 'no-cache'}); } catch (e) { S.schedule = null; }
     describePeriod();
-    try { var topo = await getJSON(LAND_URL); S.land = topojson.mesh(topo, topo.objects.countries); } catch (e) { S.land = null; }
+    try { await ensureTopojson(); var topo = await getJSON(LAND_URL); S.land = topojson.mesh(topo, topo.objects.countries); } catch (e) { S.land = null; }
     try { S.states = await getJSON(STATES_URL); } catch (e) { S.states = null; }
     var model = qs.get('model'); if (model && MODELS[model.toUpperCase()]) S.model = model.toUpperCase(); $('wx-model').value = S.model;
     fillHours(S.model, null);

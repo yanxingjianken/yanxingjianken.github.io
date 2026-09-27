@@ -9,7 +9,7 @@ author_profile: false
 <link rel="stylesheet" href="{{ base_path }}/assets/css/journal.css">
 <style>.page__title { font-family: "STIX Two Text", "Times New Roman", Times, serif; font-weight: 700; }</style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson-client/3.1.0/topojson-client.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
 
 <style>
   .nh-map-wrap { position: relative; width: 100%; border: 1px solid #000; background: #fff; }
@@ -151,6 +151,11 @@ author_profile: false
   function fmtKm(x) { return (Math.round(x)).toLocaleString('en-US') + ' km'; }
 
   /* ------------------------------------------------------------------ data */
+  /* topojson-client: make sure it is present (fallback CDN if the script tag failed) */
+  function ensureTopojson() {
+    if (typeof topojson !== 'undefined') return Promise.resolve();
+    return new Promise(function (res, rej) { var s = document.createElement('script'); s.src = 'https://unpkg.com/topojson-client@3/dist/topojson-client.min.js'; s.onload = res; s.onerror = rej; document.head.appendChild(s); });
+  }
   async function fetchIndex() {
     var r = await fetch(BASE + '/index.json', {cache: 'no-cache'});
     if (!r.ok) throw new Error('index.json: HTTP ' + r.status);
@@ -415,7 +420,11 @@ author_profile: false
     var grat = d3.geoGraticule().step([30, 15]).extent([[-180, 0], [180, 90.01]]);
     g.append('path').datum(grat()).attr('d', path).attr('fill', 'none').attr('stroke', '#777').attr('stroke-width', 0.4).attr('stroke-dasharray', '2,2');
     /* coastlines */
-    if (S.land) g.append('path').datum(S.land).attr('d', path).attr('fill', 'none').attr('stroke', '#000').attr('stroke-width', 0.9).attr('stroke-linejoin', 'round');
+    if (S.land) {   /* coastlines: white casing under a black line so they read against shading and contours */
+      var landD = path(S.land);
+      g.append('path').attr('d', landD).attr('fill', 'none').attr('stroke', '#fff').attr('stroke-width', 2.2).attr('stroke-linejoin', 'round').attr('stroke-opacity', 0.85);
+      g.append('path').attr('d', landD).attr('fill', 'none').attr('stroke', '#000').attr('stroke-width', 1.0).attr('stroke-linejoin', 'round');
+    }
     /* contours */
     if (contFld) {
       var s = parseSel(S.cont), cl = contourLines(contFld, S.cont), ci = CI[s.v][s.lev];
@@ -593,7 +602,7 @@ author_profile: false
       drawMapLayers(res[0], res[1]);
       drawTracks();
       updateCaption(shadeSel, contSel);
-      status('');
+      status(S.landError || '', !!S.landError);
     } catch (e) {
       if (seq !== renderSeq) return;
       status('Could not load fields: ' + e.message, true);
@@ -654,8 +663,9 @@ author_profile: false
     if (!S.index.models[S.model]) S.model = Object.keys(S.index.models)[0];
     sel.value = S.model;
     S.land = null;
-    for (var li = 0; li < LAND_URLS.length && !S.land; li++) { try { var topo = await fetchJSON(LAND_URLS[li]); S.land = topojson.feature(topo, topo.objects.land); } catch (e) { S.land = null; } }
-    if (!S.land) status('coastline data could not be loaded', true);
+    try { await ensureTopojson(); } catch (e) {}
+    for (var li = 0; li < LAND_URLS.length && !S.land; li++) { try { var topo = await fetchJSON(LAND_URLS[li]); S.land = topojson.mesh(topo, topo.objects.land); } catch (e) { S.land = null; } }
+    S.landError = S.land ? '' : 'coastline data could not be loaded';
     setupProjection();
     await selectModel(S.model);
   }
