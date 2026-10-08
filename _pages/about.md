@@ -19,10 +19,10 @@ I am interested in [climate](https://eaps.mit.edu/reseach-concentrations/climate
 Currently, I'm working on 2 projects:
 
 ### Atmospheric blocking events - Quasi-stationarity, linkage to Rossby wave breakings, and an extension to the PV tendency framework. 
-See my talk at [AMS AOFD 2026, Houston, TX](https://ams.confex.com/ams/106ANNUAL/meetingapp.cgi/Paper/466152)!
+See my talks at [AGU 2026, San Francisco, CA](https://studio.m-anage.com/agu/agu26/meetingapp.cgi/Paper/2085623) & [AMS AOFD 2026, Houston, TX](https://ams.confex.com/ams/106ANNUAL/meetingapp.cgi/Paper/466152)!
 
 ### ML Downscaling Methods for Extreme Precipitation in Puerto Rico, and their changes with climate. 
-See my talk at [AGU 2025, New Orleans, LA](https://agu.confex.com/agu/agu25/meetingapp.cgi/Paper/1880140)!
+See my talks at [AGU 2026, San Francisco, CA](https://studio.m-anage.com/agu/agu26/meetingapp.cgi/Paper/2092478) & [AGU 2025, New Orleans, LA](https://agu.confex.com/agu/agu25/meetingapp.cgi/Paper/1880140)!
 
 ___
 
