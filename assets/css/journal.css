@@ -70,7 +70,8 @@
 }
 .jn .jn-controls .jn-ctl { display: flex; flex-direction: column; gap: 3px; min-width: 90px; }
 .jn .jn-controls .jn-ctl-row { display: flex; flex-direction: row; gap: 8px; align-items: center; flex-wrap: wrap; }
-.jn .jn-controls .jn-ctl-row label { white-space: nowrap; }
+.jn .jn-controls .jn-ctl-row label { white-space: nowrap; display: inline-flex; align-items: center; gap: 3px; margin: 0; }
+.jn .jn-controls .jn-ctl-row > input, .jn .jn-controls .jn-ctl-row > select { margin: 0; }
 .jn .jn-controls label { font-family: var(--jn-sans); font-size: 8.5pt; color: var(--jn-ink-2); font-weight: 400; margin: 0; }
 .jn select, .jn input[type=text], .jn input[type=search], .jn input[type=number] {
   font-family: var(--jn-sans); font-size: 9.5pt; color: var(--jn-ink);
@@ -109,7 +110,9 @@
 .jn .jn-fig-sub { font-family: var(--jn-sans); font-size: 8.5pt; color: var(--jn-ink-2); margin: 0 0 4px 0; }
 
 /* Figure text (inside SVGs we set these classes) */
-.jn .fig-text, .jn text { font-family: var(--jn-sans); fill: var(--jn-ink); }
+.jn .fig-text, .jn text { font-family: var(--jn-sans); }
+/* default ink only where the figure code did not set a fill (a CSS fill would override SVG fill attributes) */
+.jn text:not([fill]) { fill: var(--jn-ink); }
 .jn .fig-axis { font-size: 8pt; }
 .jn .fig-label { font-size: 8.5pt; }
 .jn .fig-title { font-size: 9.5pt; font-weight: 700; }
@@ -159,6 +162,7 @@
 
 @media (max-width: 700px) {
   .jn { font-size: 10.5pt; }
+  .jn figcaption { text-align: left; }
   .jn .jn-controls { gap: 6px 12px; }
 }
 @media print {

@@ -10,7 +10,7 @@ from datetime import datetime, timedelta, timezone
 
 import requests
 
-from gribio import read_fields
+from gribio import check_fields, read_fields
 
 MODEL_ID = "gfs"
 LABEL = "GFS 0.25° (NCEP)"
@@ -20,6 +20,8 @@ MAX_STEP = 240
 AWS = "https://noaa-gfs-bdp-pds.s3.amazonaws.com"
 NOMADS_FILTER = "https://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p25.pl"
 WANT = re.compile(r":(UGRD|VGRD|TMP|HGT|VVEL|SPFH):(850|500|250) mb:")
+WANT_SFC = re.compile(r":(TMP|DPT):2 m above ground:|:(UGRD|VGRD):10 m above ground:|:PRMSL:mean sea level:")
+TP_TO_MM = 1.0          # APCP is kg m-2 = mm (converted in gribio.read_fields if needed)
 SESSION = requests.Session()
 SESSION.headers["User-Agent"] = "nh-forecast-pipeline (github.com/yanxingjianken)"
 
@@ -72,6 +74,14 @@ def _fetch_aws(init, step) -> bytes:
     ranges = [(s, e) for (line, s, e) in recs if WANT.search(line)]
     if len(ranges) != 18:
         raise RuntimeError(f"expected 18 records in {key}.idx, found {len(ranges)}")
+    sfc = [(s, e) for (line, s, e) in recs if WANT_SFC.search(line)]
+    if len(sfc) != 5:
+        raise RuntimeError(f"expected 5 surface records in {key}.idx, found {len(sfc)}")
+    ranges += sfc
+    if step > 0:   # the 6-h precipitation bucket ending at this step (first of duplicate records)
+        apcp = [(s, e) for (line, s, e) in recs if f":APCP:surface:{step - 6}-{step} hour acc" in line]
+        if apcp:
+            ranges.append(apcp[0])
 
     def one(rng):
         s, e = rng
@@ -84,7 +94,9 @@ def _fetch_aws(init, step) -> bytes:
 def _fetch_nomads(init, step) -> bytes:
     params = {"dir": f"/gfs.{init:%Y%m%d}/{init:%H}/atmos", "file": f"gfs.t{init:%H}z.pgrb2.0p25.f{step:03d}",
               "var_HGT": "on", "var_TMP": "on", "var_UGRD": "on", "var_VGRD": "on", "var_VVEL": "on", "var_SPFH": "on",
-              "lev_850_mb": "on", "lev_500_mb": "on", "lev_250_mb": "on",
+              "var_DPT": "on", "var_PRMSL": "on", "var_APCP": "on",
+              "lev_850_mb": "on", "lev_500_mb": "on", "lev_250_mb": "on", "lev_2_m_above_ground": "on",
+              "lev_10_m_above_ground": "on", "lev_mean_sea_level": "on", "lev_surface": "on",
               "subregion": "", "toplat": "90", "leftlon": "0", "rightlon": "360", "bottomlat": "0"}
     r = SESSION.get(NOMADS_FILTER, params=params, timeout=300)
     if r.status_code != 200 or not r.content.startswith(b"GRIB"):
@@ -113,6 +125,4 @@ def fetch_fields(init: datetime, step: int, cache_dir: str | None = None) -> dic
 
 
 def _check(fields):
-    if len(fields) != 18:
-        raise RuntimeError(f"decoded {len(fields)} of 18 fields: {sorted(fields)}")
-    return fields
+    return check_fields(fields)

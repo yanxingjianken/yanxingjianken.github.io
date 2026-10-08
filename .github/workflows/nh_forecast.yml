@@ -53,6 +53,6 @@ jobs:
           EXTRA="--models ${{ github.event.inputs.models || 'gfs,aifs,ifs' }}"
           if [ -n "${{ github.event.inputs.run }}" ]; then EXTRA="$EXTRA --run ${{ github.event.inputs.run }}"; fi
           if [ "${{ github.event.inputs.force }}" = "true" ]; then EXTRA="$EXTRA --force"; fi
-          # squash the dataset history once a week (Sunday, 05Z hour) to keep storage small
-          if [ "$(date -u +%u)" = "7" ] && [ "$(date -u +%H)" = "05" ]; then EXTRA="$EXTRA --squash"; fi
+          # squash the dataset history once a day (05Z hour) so storage stays near one day of runs
+          if [ "$(date -u +%H)" = "05" ]; then EXTRA="$EXTRA --squash"; fi
           python run_pipeline.py $EXTRA

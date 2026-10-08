@@ -41,6 +41,7 @@ sys.path.insert(0, HERE)
 from common import CONUS_QTR, LEVELS, NH_HALF, VARS, decode_field, encode_field, field_filename, write_json  # noqa: E402
 import climatology  # noqa: E402
 import tracking  # noqa: E402
+from gribio import derive_surface  # noqa: E402
 import model_gfs  # noqa: E402
 import model_aifs  # noqa: E402
 import model_ifs  # noqa: E402
@@ -48,6 +49,10 @@ import model_ifs  # noqa: E402
 MODELS = {"gfs": model_gfs, "aifs": model_aifs, "ifs": model_ifs}
 N_ANALYSIS_DAYS = 5
 VAR_UNITS = {v: u for _s, (v, u) in VARS.items()}
+# near-surface fields, stored with level "sfc" (files <var>sfc.u16.gz): 2-m temperature and dew point,
+# 10-m wind, mean-sea-level pressure and precipitation over the 6 h ending at the valid time
+SFC_UNITS = {"t2m": "K", "d2m": "K", "u10": "m s-1", "v10": "m s-1", "msl": "hPa", "tp6": "mm"}
+VAR_UNITS.update(SFC_UNITS)
 
 
 def log(msg):
@@ -72,19 +77,21 @@ def write_nh_fields(fields, dirpath, hdr_base):
                    lon0=NH_HALF.lon0, dlon=NH_HALF.dlon)
         with open(os.path.join(dirpath, field_filename(vid, lev)), "wb") as f:
             f.write(encode_field(arr, hdr))
-    return sub[("z", 500)]
+    return sub.get(("z", 500))
 
 
 def write_conus_pack(fields, dirpath, hdr_base):
-    """All 18 CONUS fields in one gzip file: JSON header line + concatenated uint16 blocks."""
+    """All CONUS fields (18 pressure-level + 6 surface) in one gzip file: JSON header line + concatenated uint16 blocks; 65535 = missing."""
     os.makedirs(dirpath, exist_ok=True)
     sub = subsample(fields, CONUS_QTR)
     blocks, entries = [], []
     for (vid, lev), arr in sub.items():
         a = np.asarray(arr, dtype=np.float64)
-        vmin, vmax = float(np.nanmin(a)), float(np.nanmax(a))
+        fin = np.isfinite(a)
+        vmin, vmax = (float(a[fin].min()), float(a[fin].max())) if fin.any() else (0.0, 0.0)
         scale = (vmax - vmin) / 65000.0 if vmax > vmin else 1.0
-        q = np.round((a - vmin) / scale).astype("<u2")
+        q = np.full(a.shape, 65535, dtype="<u2")
+        q[fin] = np.round((a[fin] - vmin) / scale).astype("<u2")
         entries.append({"var": vid, "level": lev, "units": VAR_UNITS[vid], "offset": vmin, "scale": scale,
                         "vmin": vmin, "vmax": vmax})
         blocks.append(q.tobytes())
@@ -162,17 +169,21 @@ def process_model(mid, args, api, index, tmp_root):
     t_model = time.time()
 
     z500_fcst = []
+    tp_state = {}
     for step in steps:
         t0 = time.time()
         fields = M.fetch_fields(init, step, cache_dir=args.cache_dir)
+        sfc = derive_surface(fields, step, tp_state, M.TP_TO_MM)
+        fields = {k: v for k, v in fields.items() if isinstance(k[1], int)}
         valid = init + timedelta(hours=step)
         hdr = {"model": mid, "init": init.strftime("%Y-%m-%dT%H:00Z"), "valid": valid.strftime("%Y-%m-%dT%H:00Z"), "step": step}
         d = os.path.join(run_dir, f"f{step:03d}")
         z500_fcst.append(write_nh_fields(fields, d, hdr))
-        write_conus_pack(fields, d, hdr)
+        write_nh_fields(sfc, d, hdr)
+        write_conus_pack({**fields, **sfc}, d, hdr)
         log(f"  f{step:03d} done ({time.time() - t0:.1f}s)")
     anl_dir = os.path.join(out_root, mid, "analyses", run_id)
-    shutil.copytree(os.path.join(run_dir, "f000"), anl_dir, ignore=shutil.ignore_patterns("conus.u16.gz"))
+    shutil.copytree(os.path.join(run_dir, "f000"), anl_dir, ignore=shutil.ignore_patterns("conus.u16.gz", "*sfc.u16.gz"))
 
     # ---- analysis history (last 5 days) --------------------------------------
     n_anl = N_ANALYSIS_DAYS * 24 // 6
@@ -186,6 +197,7 @@ def process_model(mid, args, api, index, tmp_root):
         try:
             log(f"  fetching missing analysis {rid}")
             fields = M.fetch_fields(t, 0, cache_dir=args.cache_dir)
+            fields = {k: v for k, v in fields.items() if isinstance(k[1], int)}
             hdr = {"model": mid, "init": t.strftime("%Y-%m-%dT%H:00Z"), "valid": t.strftime("%Y-%m-%dT%H:00Z"), "step": 0}
             z500_anl.append(write_nh_fields(fields, os.path.join(out_root, mid, "analyses", rid), hdr))
         except Exception as e:
@@ -217,7 +229,7 @@ def process_model(mid, args, api, index, tmp_root):
     write_json(os.path.join(out_root, mid, "tracks", f"tracks_{run_id}.json"), tracks_obj)
 
     # ---- meta ------------------------------------------------------------------
-    fields_list = [f"{v}{l}" for _s, (v, _u) in VARS.items() for l in LEVELS]
+    fields_list = [f"{v}{l}" for _s, (v, _u) in VARS.items() for l in LEVELS] + [f"{v}sfc" for v in SFC_UNITS]
     meta = {"model": mid, "label": M.LABEL, "run": run_id, "init": init.strftime("%Y-%m-%dT%H:00Z"), "steps": steps,
             "fields": fields_list, "grids": {"nh": NH_HALF.__dict__, "conus": CONUS_QTR.__dict__}, "source": M.SOURCE,
             "generated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")}
@@ -301,7 +313,7 @@ def main():
                 continue
             index = publish(mid, res, args, api, index, existing)
             published += 1
-        if published and api and args.squash:
+        if api and args.squash:
             log("squashing history")
             api.super_squash_history(repo_id=args.repo, repo_type="dataset")
         log(f"done in {(time.time() - t_start) / 60:.1f} min ({published} model run(s) published)")

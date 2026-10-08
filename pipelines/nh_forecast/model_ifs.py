@@ -13,7 +13,7 @@ from datetime import datetime, timedelta, timezone
 
 import requests
 
-from gribio import read_fields
+from gribio import check_fields, read_fields
 
 MODEL_ID = "ifs"
 LABEL = "IFS 0.25° (ECMWF)"
@@ -23,6 +23,8 @@ MAX_STEP = 240
 ROOTS = ["https://ecmwf-forecasts.s3.eu-central-1.amazonaws.com", "https://data.ecmwf.int/forecasts"]
 PARAMS = {"gh", "t", "u", "v", "w", "q"}
 LEVELS = {"850", "500", "250"}
+SFC_PARAMS = {"2t", "2d", "10u", "10v", "msl", "tp"}
+TP_TO_MM = 1.0          # tp is converted to mm when decoded (gribio.read_fields); accumulated from the run start
 SESSION = requests.Session()
 SESSION.headers["User-Agent"] = "nh-forecast-pipeline (github.com/yanxingjianken)"
 
@@ -87,6 +89,7 @@ def fetch_fields(init: datetime, step: int, cache_dir: str | None = None) -> dic
             want = [r for r in recs if r.get("levtype") == "pl" and r.get("param") in PARAMS and str(r.get("levelist")) in LEVELS]
             if len(want) != 18:
                 raise RuntimeError(f"expected 18 index records, found {len(want)}")
+            want += [r for r in recs if r.get("levtype") == "sfc" and r.get("param") in SFC_PARAMS]
 
             def one(r):
                 s, e = r["_offset"], r["_offset"] + r["_length"] - 1
@@ -109,6 +112,4 @@ def fetch_fields(init: datetime, step: int, cache_dir: str | None = None) -> dic
 
 
 def _check(fields):
-    if len(fields) != 18:
-        raise RuntimeError(f"decoded {len(fields)} of 18 fields: {sorted(fields)}")
-    return fields
+    return check_fields(fields)

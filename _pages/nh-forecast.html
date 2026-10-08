@@ -6,7 +6,7 @@ author_profile: false
 ---
 
 {% include base_path %}
-<link rel="stylesheet" href="{{ base_path }}/assets/css/journal.css">
+<link rel="stylesheet" href="{{ base_path }}/assets/css/journal.css?v={{ site.time | date: "%s" }}">
 <style>.page__title { font-family: "STIX Two Text", "Times New Roman", Times, serif; font-weight: 700; }</style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
@@ -32,7 +32,8 @@ author_profile: false
   <p class="bp-backlink jn-small"><a href="{{ base_path }}/blocking-plots/">&larr; Blocking Plots</a> &nbsp;|&nbsp; <a href="{{ base_path }}/blocking-plots/composites/">Blocking composite viewer</a></p>
   <div class="jn-runhead"><span>Operational forecast &middot; Northern Hemisphere</span><span id="nh-runinfo">loading index&hellip;</span></div>
 
-  <p class="jn-abstract"><b>Data.</b> Latest complete run of the NOAA GFS 0.25&deg;, the ECMWF AIFS-single 0.25&deg; or the ECMWF IFS 0.25&deg; (open data, CC BY 4.0; the 06/18 UTC IFS cycles end at 144 h), subsampled to 0.5&deg; over 0&ndash;90&deg;N, forecast hours 0&ndash;240 every 6 h, preceded by the analyses (f000) of the previous five days. Variables <i>u</i>, <i>v</i>, <i>T</i>, <i>Z</i>, <i>&omega;</i>, <i>q</i> at 850, 500 and 250 hPa; wind speed and the 500-hPa height anomaly (relative to the 1991&ndash;2020 NCEP/NCAR daily climatology) are derived in the browser. Cyclone (L) and anticyclone (H) centres are extrema of the smoothed 500-hPa height (or of its anomaly), linked between 6-h steps. Updated every 6 h from <a href="https://huggingface.co/datasets/yanxingjianken/nh-forecast-6hourly">this dataset</a>.</p>
+  <p class="jn-abstract"><b>Purpose.</b> Shows the large-scale weather pattern over the Northern Hemisphere for the past five days and the next ten, and follows the upper-level lows (L) and highs (H) at about 5.5 km altitude (500 hPa) as they move. Choose a field to shade and one to contour, then use the slider or the arrow keys to step through time; click an L or H to see how far it has travelled. Variables: <i>u</i> and <i>v</i>, the west&ndash;east and south&ndash;north wind; <i>T</i>, temperature; <i>Z</i>, geopotential height (the altitude of a pressure surface); <i>&omega;</i>, vertical motion in pressure units (negative = rising); <i>q</i>, specific humidity.</p>
+  <p class="jn-abstract"><b>Data.</b> Latest complete run of the NOAA GFS 0.25&deg;, the ECMWF AIFS-single 0.25&deg; or the ECMWF IFS 0.25&deg; (open data, CC BY 4.0; the 06/18 UTC IFS cycles end at 144 h), subsampled to 0.5&deg; over 0&ndash;90&deg;N, forecast hours 0&ndash;240 every 6 h, preceded by the analyses (f000) of the previous five days. Variables <i>u</i>, <i>v</i>, <i>T</i>, <i>Z</i>, <i>&omega;</i>, <i>q</i> at 850, 500 and 250 hPa; wind speed and the 500-hPa height anomaly (relative to the 1991&ndash;2020 NCEP/NCAR daily climatology) are derived in the browser. Upper-level low (L) and high (H) centres are extrema of the smoothed 500-hPa height (or of its anomaly), linked between 6-h steps. Updated every 6 h from <a href="https://huggingface.co/datasets/yanxingjianken/nh-forecast-6hourly">this dataset</a>.</p>
 
   <div class="jn-controls">
     <div class="jn-ctl"><label for="nh-model">Model</label>
@@ -45,22 +46,22 @@ author_profile: false
       <select id="nh-shade"></select></div>
     <div class="jn-ctl"><label for="nh-cont">Contours</label>
       <select id="nh-cont"></select></div>
-    <div class="jn-ctl"><label>Tracks (500-hPa centres)</label>
+    <div class="jn-ctl"><label>Tracks of 500-hPa lows (L) and highs (H)</label>
       <div class="jn-ctl-row">
         <label><input type="checkbox" id="nh-trk" checked> show</label>
         <label><input type="checkbox" id="nh-trk-L" checked> L</label>
         <label><input type="checkbox" id="nh-trk-H" checked> H</label>
         <label><input type="checkbox" id="nh-trk-fc" checked> forecast part</label>
       </div></div>
-    <div class="jn-ctl"><label for="nh-basis">Detection basis</label>
-      <select id="nh-basis"><option value="anom">Z500 anomaly (default)</option><option value="total">total Z500</option></select></div>
+    <div class="jn-ctl"><label for="nh-basis">Centres found from</label>
+      <select id="nh-basis"><option value="anom">500-hPa height anomaly (default)</option><option value="total">500-hPa height</option></select></div>
   </div>
 
   <div class="nh-time">
     <div class="jn-btngroup">
       <button id="nh-first" title="first">|&lt;</button><button id="nh-prev" title="-6 h">&lt;</button><button id="nh-play" title="play/pause">&#9654;</button><button id="nh-next" title="+6 h">&gt;</button><button id="nh-last" title="last">&gt;|</button>
     </div>
-    <input type="range" id="nh-t" min="0" max="0" value="0" step="1">
+    <input type="range" id="nh-t" min="0" max="0" value="0" step="1" list="nh-ticks" aria-label="time: past analyses to the left of the tick, forecast to the right"><datalist id="nh-ticks"></datalist>
     <span class="nh-tlabel" id="nh-tlabel">&nbsp;</span>
   </div>
   <div class="jn-status" id="nh-status"></div>
@@ -98,8 +99,8 @@ author_profile: false
   var VARS = {
     z:   {label: 'geopotential height', short: 'Z', units: 'gpm', factor: 1},
     t:   {label: 'temperature',         short: 'T', units: 'K',   factor: 1},
-    u:   {label: 'zonal wind',          short: 'u', units: 'm s⁻¹', factor: 1},
-    v:   {label: 'meridional wind',     short: 'v', units: 'm s⁻¹', factor: 1},
+    u:   {label: 'west\u2013east wind u',          short: 'u', units: 'm s⁻¹', factor: 1},
+    v:   {label: 'south\u2013north wind v',     short: 'v', units: 'm s⁻¹', factor: 1},
     w:   {label: 'vertical velocity ω', short: 'ω', units: 'Pa s⁻¹', factor: 1},
     q:   {label: 'specific humidity',   short: 'q', units: 'g kg⁻¹', factor: 1000},
     spd: {label: 'wind speed',          short: '|V|', units: 'm s⁻¹', factor: 1, derived: ['u', 'v']},
@@ -437,10 +438,11 @@ author_profile: false
       });
       /* labels: one per long ring, white halo, no overlaps */
       var labels = [], gl = g.append('g');
-      function farEnough(xy) { for (var q = 0; q < labels.length; q++) { var dx = labels[q][0] - xy[0], dy = labels[q][1] - xy[1]; if (dx * dx + dy * dy < 26 * 26) return false; } return true; }
+      function farEnough(xy) { for (var q = 0; q < labels.length; q++) { var dx = labels[q][0] - xy[0], dy = labels[q][1] - xy[1]; if (dx * dx + dy * dy < SEP * SEP) return false; } return true; }
+      var SEP = S.W < 500 ? 44 : 26, MAXLAB = S.W < 500 ? 18 : 70;
       cl.forEach(function (c) {
         c.geom.coordinates.forEach(function (line) {
-          if (labels.length > 70 || line.length < 80) return;
+          if (labels.length > MAXLAB || line.length < 80) return;
           for (var tries = 0; tries < 3; tries++) {
             var p = line[Math.floor(line.length * (tries + 1) / 4)];
               var xy = proj(p); if (!inArea(xy, 10)) continue;
@@ -463,10 +465,10 @@ author_profile: false
         gl2.append('line').attr('x1', A.x0 - 3).attr('x2', A.x0).attr('y1', xy[1]).attr('y2', xy[1]).attr('stroke', '#000').attr('stroke-width', 0.8);
         gl2.append('text').attr('x', A.x0 - 5).attr('y', xy[1] + 3).attr('text-anchor', 'end').attr('fill', '#000').text(fmtLat(la));
       });
-      for (var lo = -180; lo <= 180; lo += 30) {
+      for (var lo = -180; lo <= 180; lo += (A.w < 500 ? 60 : 30)) {
         var xy2 = proj([S.clon + lo, 3]); if (!xy2 || xy2[0] < A.x0 - 1 || xy2[0] > A.x1 + 1) continue;
         gl2.append('line').attr('x1', xy2[0]).attr('x2', xy2[0]).attr('y1', A.y1).attr('y2', A.y1 + 3).attr('stroke', '#000').attr('stroke-width', 0.8);
-        gl2.append('text').attr('x', xy2[0]).attr('y', A.y1 + 13).attr('text-anchor', 'middle').attr('fill', '#000').text(fmtLon(S.clon + lo));
+        gl2.append('text').attr('x', Math.min(Math.max(xy2[0], A.x0 + 8), A.x1 - 8)).attr('y', A.y1 + 13).attr('text-anchor', xy2[0] > A.x1 - 12 ? 'end' : (xy2[0] < A.x0 + 12 ? 'start' : 'middle')).attr('fill', '#000').text(fmtLon(S.clon + lo));
       }
     } else {
       svg.append('path').attr('d', path({type: 'Sphere'})).attr('fill', 'none').attr('stroke', '#000').attr('stroke-width', 1);
@@ -528,14 +530,15 @@ author_profile: false
       var pc = tr.points[idx], xyc = proj([pc.lon, pc.lat]); if (!xyc) return;
       var gc = gt.append('g').attr('class', 'nh-vortex').style('cursor', 'pointer')
         .on('click', function (ev) { ev.stopPropagation(); S.selected = (S.selected === tr.id) ? null : tr.id; drawTracks(); if (S.selected) showPopover(tr, idx, xyc); });
+      gc.append('circle').attr('cx', xyc[0]).attr('cy', xyc[1]).attr('r', 13).attr('fill', '#fff').attr('fill-opacity', 0.001);
       gc.append('text').attr('x', xyc[0]).attr('y', xyc[1] + 4.5).attr('text-anchor', 'middle')
         .style('font-family', 'Helvetica, Arial, sans-serif').style('font-size', '12.5pt').style('font-weight', '700').style('paint-order', 'stroke')
         .attr('stroke', '#fff').attr('stroke-width', 3).attr('fill', col).text(tr.kind);
       if (tr.kind === 'L') gc.append('text').attr('x', xyc[0]).attr('y', xyc[1] + 2).attr('text-anchor', 'middle').style('font-family', 'Helvetica, Arial, sans-serif').style('font-size', '7pt').attr('fill', col).text('×');
-      gc.append('text').attr('x', xyc[0]).attr('y', xyc[1] + 14).attr('text-anchor', 'middle').attr('text-decoration', 'underline')
+      if (S.W >= 500 || sel) gc.append('text').attr('x', xyc[0]).attr('y', xyc[1] + 14).attr('text-anchor', 'middle').attr('text-decoration', 'underline')
         .style('font-family', 'Helvetica, Arial, sans-serif').style('font-size', '7.5pt').style('paint-order', 'stroke').attr('stroke', '#fff').attr('stroke-width', 2).attr('fill', col)
         .text(String(Math.round(pc.z / 10)));
-      gc.append('text').attr('x', xyc[0] + 9).attr('y', xyc[1] - 6).style('font-family', 'Helvetica, Arial, sans-serif').style('font-size', '6.5pt').style('paint-order', 'stroke').attr('stroke', '#fff').attr('stroke-width', 2).attr('fill', '#333').text(tr.id);
+      if (S.W >= 500 || sel) gc.append('text').attr('x', xyc[0] + 9).attr('y', xyc[1] - 6).style('font-family', 'Helvetica, Arial, sans-serif').style('font-size', '6.5pt').style('paint-order', 'stroke').attr('stroke', '#fff').attr('stroke-width', 2).attr('fill', '#333').text(tr.id);
     });
   }
 
@@ -550,15 +553,15 @@ author_profile: false
     var net = Math.sqrt(dx * dx + dy * dy), brg = (Math.atan2(dx, dy) * 180 / Math.PI + 360) % 360;
     var secs = hrs * 3600, spd = hrs > 0 ? dist * 1000 / secs : 0, uu = hrs > 0 ? dx * 1000 / secs : 0, vv = hrs > 0 ? dy * 1000 / secs : 0;
     var age = hoursBetween(tr.points[0].t, p.t), ageTxt = Math.floor(age / 24) + ' d ' + (age % 24) + ' h';
-    var kindTxt = tr.kind === 'L' ? '500-hPa cyclone' : '500-hPa anticyclone';
+    var kindTxt = tr.kind === 'L' ? '500-hPa low' : '500-hPa high';
     var sgn = function (x) { return (x >= 0 ? '+' : '−') + Math.abs(x); };
     var html = '<button class="jn-pop-close" aria-label="close">&times;</button><b>' + tr.id + ' — ' + kindTxt + '</b><br>' +
       'Valid ' + fmtTime(p.t) + ' · age ' + ageTxt + ' (first detected ' + fmtTime(tr.points[0].t) + (tr.points[0].src === 'anl' ? '' : ', forecast') + ')<br>' +
-      'Position ' + p.lat.toFixed(1) + '°N, ' + fmtLon(p.lon) + ' · Z<sub>500</sub> ' + Math.round(p.z) + ' m' + (p.anom != null ? ' · anomaly ' + sgn(Math.round(p.anom)) + ' m' : '') + ' · depth ' + Math.round(p.depth) + ' m<br>' +
+      'Position ' + p.lat.toFixed(1) + '°N, ' + fmtLon(p.lon) + ' · 500-hPa height ' + Math.round(p.z) + ' m (' + Math.round(p.z / 10) + ' dam)' + (p.anom != null ? ' · anomaly ' + sgn(Math.round(p.anom)) + ' m' : '') + ' · depth (difference from the surroundings within about 1000 km) ' + Math.round(p.depth) + ' m<br>' +
       '<span class="jn-muted">' + (i0 === 0 ? 'Since first detection' : 'Last 5 d') + ' (' + fmtTime(p0.t) + ' → ' + fmtTime(p.t) + ', ' + hrs + ' h):</span><br>' +
       '<table class="jn-table" style="margin:2px 0 4px 0;font-size:8.5pt"><tbody>' +
-      '<tr><td>Zonal</td><td class="num">Δx = ' + sgn(Math.round(dx)) + ' km</td><td>(' + sgn(+dlon.toFixed(1)) + '° lon, ' + (dx >= 0 ? 'eastward' : 'westward') + ')</td></tr>' +
-      '<tr><td>Meridional</td><td class="num">Δy = ' + sgn(Math.round(dy)) + ' km</td><td>(' + sgn(+dlat.toFixed(1)) + '° lat, ' + (dy >= 0 ? 'northward' : 'southward') + ')</td></tr>' +
+      '<tr><td>West\u2013east</td><td class="num">Δx = ' + sgn(Math.round(dx)) + ' km</td><td>(' + sgn(+dlon.toFixed(1)) + '° lon, ' + (dx >= 0 ? 'eastward' : 'westward') + ')</td></tr>' +
+      '<tr><td>South\u2013north</td><td class="num">Δy = ' + sgn(Math.round(dy)) + ' km</td><td>(' + sgn(+dlat.toFixed(1)) + '° lat, ' + (dy >= 0 ? 'northward' : 'southward') + ')</td></tr>' +
       '<tr><td>Net</td><td class="num">' + fmtKm(net) + '</td><td>toward ' + pad(Math.round(brg), 3) + '° · path ' + fmtKm(dist) + '</td></tr>' +
       '<tr><td>Mean speed</td><td class="num">' + spd.toFixed(1) + ' m s<sup>−</sup><sup>1</sup></td><td>(u ' + uu.toFixed(1) + ', v ' + vv.toFixed(1) + ' m s<sup>−</sup><sup>1</sup>)</td></tr>' +
       '</tbody></table>' +
@@ -573,16 +576,17 @@ author_profile: false
   /* ------------------------------------------------------------------ captions */
   function updateCaption(shadeSel, contSel) {
     var m = S.index.models[S.model], slot = S.slots[S.k];
-    var lead = slot.kind === 'fcst' ? ('+' + slot.step + ' h') : ('analysis, ' + hoursBetween(slot.t, m.init) + ' h before initialization');
+    var lead = slot.kind === 'fcst' ? ('+' + slot.step + ' h') : ('analysis, ' + hoursBetween(slot.t, m.init) + ' h before the run');
     var parts = [];
     if (shadeSel !== 'none') { var a = parseSel(shadeSel); parts.push(a.lev + '-hPa ' + VARS[a.v].label + ' (shaded, ' + VARS[a.v].units + ')'); }
     if (contSel !== 'none') { var b = parseSel(contSel); parts.push(b.lev + '-hPa ' + VARS[b.v].label + ' (contours, ' + VARS[b.v].units + ', interval ' + CI[b.v][b.lev] + (b.v === 'z' ? ', labels in dam, every fifth contour bold' : '') + ')'); }
-    $('nh-figtitle').textContent = parts.join('; ') + '. ' + (m.label || S.model.toUpperCase()) + ' run ' + fmtTime(m.init) + ', valid ' + fmtTime(slot.t) + ' (' + lead + ').'; 
-    var trk = $('nh-trk').checked ? ' Red L (blue H): 500-hPa cyclone (anticyclone) centres detected on the ' + (S.basis === 'total' ? 'total height' : 'height anomaly') +
-      '; solid lines with filled markers (circles for L, squares for H; open at 0000 UTC) show the preceding 6-hourly positions over up to five days, dashed lines with open markers the forecast positions; the underlined number is the central height in dam. Click a centre for its displacement over the last five days.' : '';
-    $('nh-caption').innerHTML = '<span class="jn-figno">Fig. 1.</span> ' + (m.label || S.model.toUpperCase()) + ' forecast initialized ' + fmtTime(m.init) + ', valid ' + fmtTime(slot.t) + ' (' + lead + '). ' + parts.join('; ') + '.' + trk +
-      ' Projection: ' + (S.view === 'rect' ? 'plate carrée, 0–90°N, centred on ' + fmtLon(S.clon) : 'polar stereographic, equator at the rim, ' + fmtLon(S.clon) + ' at the bottom') + '. Data: NOAA GFS 0.25° (0.5° shown).';
-    $('nh-legend').innerHTML = $('nh-trk').checked ? '<span><i class="L"></i>cyclone (L) track, analyses; dots every 6 h, open at 0000 UTC</span><span><i class="L dash"></i>cyclone track, forecast</span><span><i class="H"></i>anticyclone (H) track, analyses; squares</span><span><i class="H dash"></i>anticyclone track, forecast</span><span>Underlined value: central Z<sub>500</sub> (dam). Click a centre to pin it.</span>' : '';
+    var when = slot.kind === 'fcst' ? ((m.label || S.model.toUpperCase()) + ' forecast from the run of ' + fmtTime(m.init) + ', valid ' + fmtTime(slot.t) + ' (+' + slot.step + ' h)') : ((m.label || S.model.toUpperCase()) + ' analysis for ' + fmtTime(slot.t) + ' (' + Math.round(hoursBetween(slot.t, m.init) / 24 * 10) / 10 + ' days before the run of ' + fmtTime(m.init) + ')');
+    $('nh-figtitle').textContent = parts.join('; ') + '. ' + when + '.';
+    var trk = $('nh-trk').checked ? ' Red L (blue H): centres of upper-level lows (highs) at 500 hPa, found as minima (maxima) of the ' + (S.basis === 'total' ? '500-hPa height' : '500-hPa height anomaly, the departure from the 1991\u20132020 average for the date') +
+      '. Solid lines with filled markers (circles for L, squares for H; open at 0000 UTC) show each centre\u2019s 6-hourly positions over the preceding five days, dashed lines with open markers its forecast positions; the underlined number is the central height in decametres (dam; 552 = 5520 m); labels such as L15 identify each tracked centre, and the small numbers along a selected track give the day of the month. Click a centre for its displacement over the last five days.' : '';
+    $('nh-caption').innerHTML = '<span class="jn-figno">Fig. 1.</span> ' + when + '. ' + parts.join('; ') + '.' + trk +
+      ' Projection: ' + (S.view === 'rect' ? 'latitude\u2013longitude grid, 0\u201390\u00B0N, centred on ' + fmtLon(S.clon) + ', latitude stretched 1.5\u00D7 for legibility' : 'polar stereographic, equator at the rim, ' + fmtLon(S.clon) + ' at the bottom') + '. Data: NOAA GFS 0.25° (0.5° shown).';
+    $('nh-legend').innerHTML = $('nh-trk').checked ? '<span><i class="L"></i>low (L) track, past five days; dots every 6 h, open at 0000 UTC</span><span><i class="L dash"></i>low track, forecast</span><span><i class="H"></i>high (H) track, past five days; squares</span><span><i class="H dash"></i>high track, forecast</span><span>Underlined value: central 500-hPa height (dam). Click a centre to pin it.</span>' : '';
   }
 
   /* ------------------------------------------------------------------ update */
@@ -628,7 +632,7 @@ author_profile: false
       LEVELS.forEach(function (l) {
         var og = document.createElement('optgroup'); og.label = l + ' hPa';
         opts.filter(function (o) { return o.val.split(':')[1] == l; }).forEach(function (o) {
-          var e = document.createElement('option'); e.value = o.val; e.textContent = o.txt.replace(l + ' hPa ', ''); og.appendChild(e);
+          var e = document.createElement('option'); e.value = o.val; e.textContent = o.txt.replace(l + ' hPa ', l + '-hPa '); og.appendChild(e);
         });
         sel.appendChild(og);
       });
@@ -638,6 +642,7 @@ author_profile: false
 
   function readHash() {
     var h = new URLSearchParams(location.hash.replace(/^#/, ''));
+    if (!h.get('view') && window.innerWidth < 600) S.view = 'disk';
     if (h.get('view')) S.view = h.get('view');
     if (h.get('clon')) S.clon = +h.get('clon');
     if (h.get('shade')) S.shade = h.get('shade');
@@ -676,6 +681,7 @@ author_profile: false
     var prevT = S.slots.length ? S.slots[S.k].t : null;
     S.slots = buildSlots(S.index);
     $('nh-t').max = S.slots.length - 1;
+    var dlist = $('nh-ticks'); if (dlist) { dlist.innerHTML = ''; var k00 = S.slots.findIndex(function (s) { return s.kind === 'fcst'; }); if (k00 >= 0) { var op = document.createElement('option'); op.value = k00; dlist.appendChild(op); } }
     var k0 = S.slots.findIndex(function (s) { return s.kind === 'fcst'; });
     if (prevT) { var kk = S.slots.findIndex(function (s) { return s.t === prevT; }); if (kk >= 0) k0 = kk; }
     S.k = k0 < 0 ? 0 : k0; $('nh-t').value = S.k;

@@ -6,24 +6,25 @@ author_profile: false
 ---
 
 {% include base_path %}
-<link rel="stylesheet" href="{{ base_path }}/assets/css/journal.css">
+<link rel="stylesheet" href="{{ base_path }}/assets/css/journal.css?v={{ site.time | date: "%s" }}">
 <style>.page__title { font-family: "STIX Two Text", "Times New Roman", Times, serif; font-weight: 700; }</style>
 
 <div class="jn">
   <div class="jn-runhead"><span>Interactive figures</span><span>X. Yan &middot; MIT EAPS</span></div>
 
+  <p class="jn-abstract"><b>Atmospheric blocking</b> is a large, persistent high-pressure system that stalls the usual west-to-east progression of weather for days to weeks, often bringing heat waves, cold spells or drought. These pages show how blocks form and decay, and what the weather pattern looks like now.</p>
   <p class="jn-abstract"><b>Contents.</b> Two viewers. The first shows composite fields of Northern Hemisphere blocking and propagating anticyclones from the PV-tendency analysis (ERA5). The second shows the latest operational forecast over the Northern Hemisphere at 850, 500 and 250 hPa, updated every 6 h, with 500-hPa cyclone and anticyclone centres tracked over the preceding five days.</p>
 
   <ul class="jn-contents">
     <li>
       <span class="jn-item-no">1</span>
       <a class="jn-item-title" href="{{ base_path }}/blocking-plots/composites/">Blocking composite viewer</a>
-      <p class="jn-item-desc">Onset, peak and decay composites of blocking and propagating anticyclones (all events, anticyclonic and cyclonic wave-breaking subsets), with PV-tendency terms, vertical motion, diabatic heating and the orthogonal-basis projection. Data: ERA5 composites hosted on Hugging Face.</p>
+      <p class="jn-item-desc">Averages over many past blocking events (and over moving highs) at their onset, peak and decay, from the ERA5 reanalysis (a reconstruction of past weather). Fields include the terms that change potential vorticity (PV, a measure of the rotation and stability of the air), vertical motion and heating by condensation and radiation, split by how the upper-level waves break (anticyclonic or cyclonic wave breaking). A decomposition into intensification, movement and deformation patterns is also available.</p>
     </li>
     <li>
       <span class="jn-item-no">2</span>
       <a class="jn-item-title" href="{{ base_path }}/blocking-plots/nh-forecast/">Northern Hemisphere forecast viewer</a>
-      <p class="jn-item-desc">Latest GFS, ECMWF AIFS-single or ECMWF IFS forecast, 0&ndash;240 h, for <i>u</i>, <i>v</i>, <i>T</i>, <i>Z</i>, <i>&omega;</i> and <i>q</i> at 850, 500 and 250 hPa. Rectangular (0&ndash;90&deg;N) or polar-stereographic view; one shaded and one contoured variable at a time; 500-hPa cyclone and anticyclone centres with their five-day tracks. Click a centre for its zonal and meridional displacement.</p>
+      <p class="jn-item-desc">Latest GFS, ECMWF AIFS-single or ECMWF IFS forecast, 0&ndash;240 h (IFS runs from 06 and 18 UTC: 0&ndash;144 h), of wind (<i>u</i>, <i>v</i>), temperature (<i>T</i>), geopotential height (<i>Z</i>), vertical motion (<i>&omega;</i>) and humidity (<i>q</i>) at 850, 500 and 250 hPa (about 1.5, 5.5 and 10 km). Rectangular (0&ndash;90&deg;N) or polar-stereographic view; one shaded and one contoured variable at a time; the upper-level lows and highs at 500 hPa with their tracks over the past five days. Click a centre for how far it has moved west&ndash;east and south&ndash;north.</p>
     </li>
   </ul>
 </div>
