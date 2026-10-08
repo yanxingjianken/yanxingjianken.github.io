@@ -1,0 +1,446 @@
+[
+ {
+  "file": "cad_2004.png",
+  "system": "Cold-air damming (Appalachian wedge)",
+  "time_utc": "2004-01-26 18:00",
+  "extent": [
+   -89.0,
+   -67.0,
+   30.5,
+   47.5
+  ],
+  "panels": [
+   {
+    "label": "(a) MSLP (hPa), 2-m T (°C), 10-m wind (kt)",
+    "shading": "2-m temperature, 2 °C interval",
+    "contours": "MSLP every 4 hPa",
+    "barbs": "10-m wind, every 10th grid point (2.5°)",
+    "units": "°C; hPa; kt"
+   },
+   {
+    "label": "(b) T (°C), θ (K), wind (kt) along 36.5°N",
+    "shading": "temperature, 2 °C interval, on 14 pressure levels 1000–600 hPa, averaged 36.25–36.75°N, 86–76°W",
+    "contours": "potential temperature every 3 K; thick line 0 °C isotherm",
+    "barbs": "horizontal wind at 975, 925, 875, 825, 775, 700, 650 hPa, every 4th grid point (1°)",
+    "units": "°C; K; kt; pressure on a log axis"
+   }
+  ],
+  "caption": "Cold air trapped east of the Appalachians at 1800 UTC (1 p.m. EST) 26 Jan 2004, in ERA5. Look for the isobars bending south in a U along the mountains and the below-freezing air lying under warmer air. (a) Mean sea level pressure (contours, 4 hPa), 2-m temperature (shading, °C) and 10-m wind (barbs, kt); the dashed line marks the section in (b). (b) West–east section along 36.5°N of temperature (shading, °C; thick line 0 °C), potential temperature (contours, 3 K) and wind (barbs, kt); terrain is grey.",
+  "key_point": "",
+  "numbers": {
+   "T2m_GSO_C": -6.0,
+   "T2m_RDU_C": -3.8,
+   "T2m_DCA_C": -5.2,
+   "T2m_IAD_C": -6.4,
+   "T2m_ROA_C": -5.4,
+   "T2m_TYS_C": 8.6,
+   "T2m_TRI_C": 8.6,
+   "T2m_ORF_C": 2.6,
+   "MSLP_GSO_hPa": 1020.7,
+   "MSLP_TYS_hPa": 1011.1,
+   "MSLP_IAD_hPa": 1024.2,
+   "MSLP_ORF_hPa": 1018.9,
+   "Hmax_hPa": 1038.9,
+   "Hmax_lon": -73.75,
+   "Hmax_lat": 51.0,
+   "wdir10_GSO_deg": 35,
+   "wspd10_GSO_kt": 6,
+   "wdir10_IAD_deg": 50,
+   "wdir10_ROA_deg": 77,
+   "wdir10_TYS_deg": 224,
+   "wdir925_GSO_deg": 89,
+   "wspd925_GSO_kt": 12,
+   "wdir850_GSO_deg": 224,
+   "wspd850_GSO_kt": 14,
+   "psfc_GSO_hPa": 988.0,
+   "Tprofile_GSO_C": {
+    "975": -6.9,
+    "950": -7.0,
+    "925": -1.0,
+    "900": 2.0,
+    "875": 4.0,
+    "850": 5.6,
+    "825": 6.3,
+    "800": 5.7,
+    "775": 4.7,
+    "750": 3.5,
+    "700": 0.6,
+    "650": -3.6,
+    "600": -7.4
+   },
+   "Tmax_aloft_GSO_C": 6.3,
+   "Tmax_aloft_GSO_hPa": 825,
+   "T2m_section_min_C": -5.5,
+   "T2m_section_min_lon": -79.75,
+   "T2m_section_max_west_C": 9.9
+  },
+  "notes": "Replaces the 2 Apr 2007 New England case, which ERA5 showed as a back-door cold surge without a U-shaped ridge. Case choice: the 25–27 Jan 2004 wedge and ice storm in Virginia and the Carolinas. Screened in ERA5 against 4–5 Dec 2002, 9 Dec 2018, 12 Feb 2014 and 14 Feb 2007; 1800 UTC 26 Jan 2004 had the largest east–west contrast (Greensboro −6.0 °C vs Knoxville +8.6 °C at 2 m; −1.0 vs +6.8 °C at 925 hPa) and the clearest U-shaped MSLP ridge (Greensboro 1020.7 hPa vs Knoxville 1011.1 hPa). Parent high 1038.9 hPa at 51.0°N, 73.75°W (Quebec), north of the map frame. Greensboro column: surface 988 hPa, −7.0 °C at 950 hPa, −1.0 °C at 925, +6.3 °C maximum at 825 hPa (inversion of ~13 K between 950 and 825 hPa); wind NE at 10 m (35°, 6 kt), E at 925 hPa (89°, 12 kt), SW at 850 hPa (224°, 14 kt). Cold air reaches Washington (DCA −5.2 °C, 10-m wind 44°). AFDs explicitly naming the feature: RNK 312 AM EST 26 Jan 2004 ('wedge'), LWX 430 PM EST 26 Jan 2004 ('COLD AIR DAMMING FIRMLY IN PLACE ACROSS THE REGION'), GSP 400 AM 26 Jan ('TRAPPED LOW LEVEL COLD AIR IN THE WEDGE'). Quote used (verified at https://mesonet.agron.iastate.edu/p.php?pid=200401260813-KRNK-FXUS61-AFDRNK, NWS Blacksburg, 312 AM EST Mon Jan 26 2004): \"ANOTHER SHOT OF WINTRY WEATHER THIS AFTN-TONIGHT...AND NOT THE KIND THAT IS FRIENDLY TO POWER LINES OR TREES. LOOKING AT SIGNIFICANT ICING (A QUARTER INCH OR MORE) GENERALLY EAST OF THE BLUE RIDGE. ... TEMPS TODAY WILL STRUGGLE TO REACH 30...EXCEPT OUTSIDE THE WEDGE. HIGHER RIDGES IN THE SW COULD EXCEED 40 AS 8H TEMPS RISE TO +7.\" ERA5 at 825 hPa over Greensboro (+6.3 °C) matches the AFD's +7 °C at 850 hPa. Not in Bell and Bosart (1988) or Bailey et al. (2003), whose case lists end before 2004; documentation is the AFDs. In (b), pressure-level values below the ERA5 surface are replaced by the lowest above-ground value and then covered by the grey terrain (ERA5 orography, smoothed by the 0.25° grid; the Blue Ridge crest appears near 905 hPa). The section does not reach below 1000 hPa although coastal surface pressure is ~1019 hPa. Script: wxfig/fig_cad_2004.py."
+ },
+ {
+  "file": "downslope_2008.png",
+  "system": "Downslope / lee warming",
+  "time_utc": "2008-06-08 18:00",
+  "extent": [
+   -82.0,
+   -66.0,
+   37.0,
+   47.5
+  ],
+  "panels": [
+   {
+    "label": "(a) Temperature (°C), pressure (hPa), wind",
+    "shading": "2-m temperature, 2 °C interval",
+    "contours": "MSLP every 2 hPa",
+    "barbs": "10-m wind, every 8th grid point",
+    "units": "°C; hPa; kt"
+   },
+   {
+    "label": "(b) Sinking air, 850 hPa (hPa h⁻¹), terrain",
+    "shading": "850-hPa vertical velocity ω (positive = sinking), lightly smoothed (one 3×3 pass)",
+    "contours": "ERA5 surface elevation, 400 m",
+    "barbs": null,
+    "units": "hPa h⁻¹; m"
+   }
+  ],
+  "caption": "ERA5 at 1800 UTC 8 Jun 2008. (a) 2-m temperature (shading, °C), mean sea level pressure (contours, 2 hPa) and 10-m wind (barbs, kt). (b) 850-hPa temperature (shading, °C) and wind (barbs, kt). (c) 850-hPa vertical velocity ω (shading, hPa h⁻¹; positive is sinking) and the 400-m terrain contour. The 850-hPa flow is westerly (box mean 270°, 19 kt). Air rises on the upwind (western) side of the Adirondacks and Catskills (ω down to −25.4 hPa h⁻¹) and sinks on their eastern slopes (up to +24.6 hPa h⁻¹). 2-m temperatures reach 30.3 °C at Boston, 32.7 °C at Hartford and 34.4 °C at Philadelphia. ERA5's 0.25° grid smooths the Berkshires and Worcester Hills, so descent on their lee slopes is only partly resolved.",
+  "key_point": "Red patches in (c) just east of the mountains are air sinking down the lee slopes and warming as it descends; even Boston, on the coast, reaches 30 °C.",
+  "numbers": {
+   "T2m_BOS_C": 30.3,
+   "dTd_12to18_BOS_K": -1.8,
+   "T2m_ALB_C": 30.5,
+   "dTd_12to18_ALB_K": 0.6,
+   "T2m_BDL_C": 32.7,
+   "dTd_12to18_BDL_K": -1.9,
+   "T2m_NYC_C": 31.5,
+   "dTd_12to18_NYC_K": 0.6,
+   "T2m_PHL_C": 34.4,
+   "dTd_12to18_PHL_K": 0.1,
+   "wdir850_mean_box_deg": 270,
+   "wspd850_mean_box_kt": 19,
+   "T2m_max_box_C": 37.5,
+   "omega850_max_east_of_Adirondacks_Catskills_hPa_h": 24.6,
+   "omega850_max_lon": -74.0,
+   "omega850_max_lat": 43.5,
+   "omega850_min_Catskills_Adirondacks_hPa_h": -25.4
+  },
+  "notes": "Same date and hour as the card. Discrepancies: the card's 'falling dewpoint' is not evident — ERA5 2-m dewpoint changed by only -1.8 K at Boston and -1.9 K at Hartford between 12 and 18 UTC (+0.6 K at NYC), so no dewpoint panel is shown; an '850-hPa thermal ridge' is also not distinct (850-hPa T is a nearly uniform 18–20 °C plume). ω at 850 hPa in a hot summer afternoon also contains convective/boundary-layer noise; the lee-descent signal is the dipole tied to terrain, not every red patch. The descent maximum the annotation points to is at 74.0°W, 43.5°N (southeast flank of the Adirondacks). Quote (verified, https://mesonet.agron.iastate.edu/cgi-bin/afos/retrieve.py?pil=AFDBOX&sdate=2008-06-08T08:00Z&edate=2008-06-08T09:00Z&fmt=text, 412 AM EDT Sun Jun 8 2008): \"HIGHS FOR TODAY WERE NUDGED UPWARD A FEW DEGREES...SINCE TEMPERATURES HAVE NOT DROPPED OFF MUCH OVERNIGHT AND W DOWNSLOPING FLOW IS EXPECTED.\" Per the fact-check, the beach-heat clause in the AFD is attributed to the lack of a sea breeze, not to downslope warming."
+ },
+ {
+  "file": "lakeeffect_2014.png",
+  "system": "Lake-effect snow (Buffalo, 'Snowvember')",
+  "time_utc": "2014-11-18 21:00",
+  "extent": [
+   -86.0,
+   -74.0,
+   40.5,
+   46.0
+  ],
+  "panels": [
+   {
+    "label": "(a) Lake minus 850-hPa temperature (K)",
+    "shading": "ERA5 lake mixed-layer temperature minus 850-hPa temperature, lake points only (lake cover > 0.5), 2 K interval",
+    "contours": null,
+    "barbs": "850-hPa wind, every 6th grid point",
+    "units": "K; kt"
+   },
+   {
+    "label": "(b) Precip. (mm h⁻¹), pressure (hPa)",
+    "shading": "total precipitation in the hour ending 2100 UTC (0.1, 0.2, 0.5, 1, 2 mm h⁻¹)",
+    "contours": "MSLP every 4 hPa",
+    "barbs": null,
+    "units": "mm h⁻¹; hPa"
+   },
+   {
+    "label": "(c) Boundary-layer depth (km)",
+    "shading": "ERA5 boundary-layer height, 0.25 km interval",
+    "contours": null,
+    "barbs": null,
+    "units": "km"
+   }
+  ],
+  "caption": "ERA5 at 2100 UTC 18 Nov 2014. (a) Lake-surface temperature minus 850-hPa temperature (shading over the lakes, K) and 850-hPa wind (barbs, kt). (b) Precipitation in the hour ending 2100 UTC (shading, mm h⁻¹) and mean sea level pressure (contours, 4 hPa). (c) Boundary-layer height (km). Over Lake Erie the lake is 6.2 °C and the 850-hPa air −16.9 °C, a difference of 22.6 K (20.9 K over Lake Ontario), well above the ~13 K lake-effect threshold (Niziol et al. 1995). The 850-hPa wind blows along the long axis of Lake Erie (260°, 33 kt), and the boundary layer over the lake is 1.41 km deep. ERA5 spreads the precipitation along the lake, reaching 1.0 mm h⁻¹ around the eastern end of the lake and Buffalo; the observed band, only ~20–30 km wide, is not resolved by the 0.25° grid.",
+  "key_point": "Lake Erie (red) is more than 20 °C warmer than the air 1.5 km up, and the wind runs straight down the lake toward Buffalo — the recipe for a lake-effect snow band.",
+  "numbers": {
+   "Erie_mean_Tlake_C": 6.2,
+   "Erie_mean_T850_C": -16.9,
+   "Erie_mean_dT_K": 22.6,
+   "Ontario_mean_dT_K": 20.9,
+   "lake_dT_min_K_in_box": 15.3,
+   "lake_dT_max_K_in_box": 24.4,
+   "Erie_mean_wdir850_deg": 260,
+   "Erie_mean_wspd850_kt": 33,
+   "max_precip_mm_h_in_box": 1.51,
+   "max_precip_mm_h_east_of_Erie": 1.0,
+   "max_blh_km_in_box": 2.33,
+   "Erie_mean_blh_km": 1.41,
+   "max_precip_lon": -80.5,
+   "max_precip_lat": 44.75
+  },
+  "notes": "Case changed per lead/fact-check from 2014-11-07 12Z (BOX, shortwave-driven squalls) to the Buffalo 'Snowvember' event; date 2014-11-18, hour 2100 UTC chosen because it matches the AFD time (444 PM EST = 2144 UTC) and the 850-hPa flow is along Lake Erie's axis (hours 06, 12, 18, 21 UTC all had ΔT > 22 K over Erie; 21 UTC had the largest precipitation east of Erie). File name kept as lakeeffect_2014.png. ERA5's lake temperature comes from its FLake lake model and may be colder than observed Lake Erie water; T850 (-16.9 °C) matches the AFD's '-16C'. ERA5 does not reproduce the narrow band's location south of Buffalo; the domain-maximum hourly precipitation is actually over Lake Huron/Georgian Bay (1.51 mm h⁻¹ at -80.5°, 44.75°N). Quote (verified, https://mesonet.agron.iastate.edu/cgi-bin/afos/retrieve.py?pil=AFDBUF&sdate=2014-11-18T21:40Z&edate=2014-11-18T21:50Z&fmt=text, 444 PM EST Tue Nov 18 2014): \"THE NORTHERN EDGE OF THIS LAKE EFFECT BAND IS SO SHARPLY DEFINED THAT SNOW AMOUNTS ACROSS THE TOWN OF CHEEKTOWAGA RANGE FROM JUST A FEW INCHES ON THE NORTH SIDE ... TO 4 FEET ACROSS THE SOUTHERN PORTION OF THE TOWN.\" Threshold citation: Niziol, Snyder & Waldstreicher 1995, Wea. Forecasting 10, 61–77."
+ },
+ {
+  "file": "radcool_2016.png",
+  "system": "Radiational cooling and cold pools",
+  "time_utc": "2016-01-06 09:00",
+  "extent": [
+   -82.0,
+   -66.0,
+   37.0,
+   47.5
+  ],
+  "panels": [
+   {
+    "label": "(a) Cloud cover (%), pressure (hPa)",
+    "shading": "total cloud cover, 10 % interval (grey scale starts at mid-grey for clear sky)",
+    "contours": "MSLP every 2 hPa, every second labelled",
+    "barbs": null,
+    "units": "%; hPa"
+   },
+   {
+    "label": "(b) Temperature (°C), wind",
+    "shading": "2-m temperature, 2 °C interval",
+    "contours": null,
+    "barbs": "10-m wind, every 10th grid point",
+    "units": "°C; kt"
+   },
+   {
+    "label": "(c) Near-surface inversion strength (K)",
+    "shading": "T(p_s − 50 hPa) − T(2 m), i.e. temperature ~400 m above the ground minus 2-m temperature, log-p interpolation between pressure levels, 2 K interval",
+    "contours": null,
+    "barbs": null,
+    "units": "K"
+   }
+  ],
+  "caption": "ERA5 at 0900 UTC 6 Jan 2016 (0400 EST). (a) Total cloud cover (shading, %) and mean sea level pressure (contours, 2 hPa). (b) 2-m temperature (shading, °C) and 10-m wind (barbs, kt). (c) Temperature about 400 m above the ground (50 hPa above the surface) minus 2-m temperature (K); positive values are a surface-based inversion. High pressure (1037.3 hPa, centred near the Virginia–West Virginia border) gives clear skies (mean cloud cover 1 % over interior New York and New England) and light winds (median 10-m wind 5.6 kt). The coldest grid point, −24.0 °C, lies in the upper Connecticut River valley (72.0°W, 44.0°N); inversions reach 9.5 K at Concord, NH and 7.4 K at Albany, while over the warmer ocean there is no inversion (blue). ERA5 at 0.25° cannot resolve individual valley cold pools; the minima shown are grid-box averages.",
+  "key_point": "Under clear skies and calm winds the ground loses heat fastest: the interior turns deep red in (c), meaning the air a few hundred metres up is 5–10 °C warmer than at the ground.",
+  "numbers": {
+   "MSLP_max_hPa": 1037.3,
+   "MSLP_max_lon": -80.0,
+   "MSLP_max_lat": 37.5,
+   "T2m_min_C": -24.0,
+   "T2m_min_lon": -72.0,
+   "T2m_min_lat": 44.0,
+   "T2m_SLK_C": -11.5,
+   "inv_Tps50_minus_T2m_SLK_K": 5.5,
+   "wind10_SLK_kt": 10.0,
+   "cloud_SLK_pct": 0,
+   "blh_SLK_m": 379,
+   "T2m_ALB_C": -12.5,
+   "inv_Tps50_minus_T2m_ALB_K": 7.4,
+   "wind10_ALB_kt": 2.0,
+   "cloud_ALB_pct": 0,
+   "blh_ALB_m": 38,
+   "T2m_CON_C": -12.3,
+   "inv_Tps50_minus_T2m_CON_K": 9.5,
+   "wind10_CON_kt": 5.4,
+   "cloud_CON_pct": 0,
+   "blh_CON_m": 142,
+   "T2m_BOS_C": -6.4,
+   "inv_Tps50_minus_T2m_BOS_K": 5.1,
+   "wind10_BOS_kt": 7.6,
+   "cloud_BOS_pct": 0,
+   "blh_BOS_m": 193,
+   "T2m_BTV_C": -10.9,
+   "inv_Tps50_minus_T2m_BTV_K": 5.9,
+   "wind10_BTV_kt": 6.0,
+   "cloud_BTV_pct": 0,
+   "blh_BTV_m": 191,
+   "T2m_ORH_C": -9.2,
+   "inv_Tps50_minus_T2m_ORH_K": 6.6,
+   "wind10_ORH_kt": 5.1,
+   "cloud_ORH_pct": 0,
+   "blh_ORH_m": 128,
+   "interiorNE_mean_cloud_pct": 1,
+   "interiorNE_median_wind10_kt": 5.6,
+   "interiorNE_max_inv_K": 19.1,
+   "interiorNE_median_blh_m": 110
+  },
+  "notes": "Date/hour changed per lead/fact-check: the card's 0600 UTC 5 Jan 2016 was a gusty NW cold-air outbreak; the quoted AFD (940 PM EST Tue Jan 5 2016, FXUS61 KBOX 060241) describes the night of 5–6 Jan, so 0900 UTC 6 Jan (0400 EST, near the minimum) is shown. 1200 UTC was also checked and is very similar. Quote (verified, https://mesonet.agron.iastate.edu/cgi-bin/afos/retrieve.py?pil=AFDBOX&sdate=2016-01-06T02:30Z&edate=2016-01-06T03:00Z&fmt=text): \"HIGH PRESSURE OVERHEAD ALONG WITH CLEAR SKIES/LIGHT WINDS WAS LEADING TO AN IDEAL NIGHT OF RADIATIONAL COOLING.\" The MSLP maximum inside the map is in the southwest corner (80.0°W, 37.5°N); no 'H' is drawn because it would sit on the frame. The card's other diagnostics (liquid water path, surface radiation, snow cover) are not shown; boundary-layer height is in the numbers but not plotted."
+ },
+ {
+  "file": "capping_2012.png",
+  "system": "Morning inversion and mixing out (card to be renamed from 'Capping inversion')",
+  "time_utc": "2012-03-20 12:00 and 18:00",
+  "extent": [
+   -82.0,
+   -66.0,
+   37.0,
+   47.5
+  ],
+  "panels": [
+   {
+    "label": "(a) Near-surface inversion (K), 12 UTC",
+    "shading": "T(p_s − 50 hPa) − T(2 m), ~400 m above ground minus 2 m, 1 K interval",
+    "contours": "low cloud cover 80 %",
+    "barbs": null,
+    "units": "K; %"
+   },
+   {
+    "label": "(b) Near-surface inversion (K), 18 UTC",
+    "shading": "as (a), 1800 UTC",
+    "contours": "low cloud cover 80 %",
+    "barbs": null,
+    "units": "K; %"
+   },
+   {
+    "label": "(c) Temperature at LaGuardia, NYC",
+    "shading": null,
+    "contours": null,
+    "barbs": null,
+    "units": "°C vs pressure (hPa, log axis); ERA5 2-m value plotted at surface pressure; squares = LGA ASOS observations"
+   }
+  ],
+  "caption": "ERA5 at 1200 and 1800 UTC 20 Mar 2012. (a, b) Temperature about 400 m above the ground minus 2-m temperature (shading, K; positive = inversion) and the 80 % low-cloud contour. (c) Temperature profile at the ERA5 grid point nearest LaGuardia Airport at 1200 UTC (solid) and 1800 UTC (dashed), with the 2-m value plotted at the surface pressure; squares are LaGuardia hourly observations at 1151 and 1751 UTC. At 1200 UTC (0800 EDT) fog and low cloud (100 % low cloud in ERA5) sit under an inversion: 2-m temperature 11.5 °C, 975 hPa 14.4 °C. By 1800 UTC the inversion has mixed out (2-m temperature 17.6 °C, temperature now decreasing with height). Observed temperature rose from 10.6 °C at 0751 EDT to 18.9 °C at 1351 EDT; ERA5 is about 1 K too warm in the fog and 1.3 K too cool after mixing.",
+  "key_point": "In the morning the air near the ground around New York is colder than the air just above it (red), trapping fog; once the sun mixes that layer out (blue by afternoon), the surface temperature jumps.",
+  "numbers": {
+   "LGA_ERA5_T2m_12UTC_C": 11.5,
+   "LGA_ERA5_T975_12UTC_C": 14.4,
+   "LGA_ERA5_Tps50_minus_T2m_12UTC_K": 2.9,
+   "LGA_ERA5_lowcloud_12UTC_pct": 100,
+   "LGA_ERA5_T2m_18UTC_C": 17.6,
+   "LGA_ERA5_T975_18UTC_C": 15.1,
+   "LGA_ERA5_Tps50_minus_T2m_18UTC_K": -2.6,
+   "LGA_ERA5_lowcloud_18UTC_pct": 55,
+   "LGA_ERA5_surface_pressure_hPa": 1024.1,
+   "LGA_ASOS_T_0751EDT_C": 10.6,
+   "LGA_ASOS_T_1351EDT_C": 18.9,
+   "LGA_ASOS_T_1451EDT_F": 72.0
+  },
+  "notes": "New case per lead: the card's 2007-07-24 elevated-mixed-layer case failed the EML test and its quote was spliced. New file name capping_2012.png (the .md must be updated to point to it). Quote (verified, https://mesonet.agron.iastate.edu/cgi-bin/afos/retrieve.py?pil=AFDOKX&sdate=2012-03-20T11:40Z&edate=2012-03-20T11:50Z&fmt=text, 743 AM EDT Tue Mar 20 2012, FXUS61 KOKX 201143): \"THERE IS AN INVERSION ABOVE THE SURFACE UP TO AROUND 950 MB. LIGHT SOUTHEASTERLY FLOW HELPS TRAP MOISTURE BENEATH THIS INVERSION.\" and \"WE START TO MIX OUT TOWARDS AFTERNOON ONCE INVERSION BREAKS. THIS WOULD PROMOTE INCREASED DAYTIME WARMTH AS CLOUD COVER DECREASES.\" ASOS LGA: 51–52 °F under fog/OVC003 from 0551 to 0951 EDT, 55 °F at 1051, 62 °F at 1151, 72 °F at 1451 EDT (jump between 1051 and 1151 EDT). The 12Z OKX sounding put the inversion top near 988 hPa (~300 m), below ERA5's 975-hPa level, so ERA5 places the warm nose at 975 hPa and smooths it. A marine inversion persists over Long Island and the coastal waters at 1800 UTC (red in b). The ERA5 inversion measure is blank nowhere because it follows the terrain."
+ },
+ {
+  "file": "warmadv_2022.png",
+  "system": "Overrunning / warm advection and the near-midnight high",
+  "time_utc": "2022-02-23 03:00 (maps); 2022-02-22 05 UTC to 2022-02-23 12 UTC (station series)",
+  "extent": [
+   -82.0,
+   -66.0,
+   37.0,
+   47.5
+  ],
+  "panels": [
+   {
+    "label": "(a) Temperature (°C), pressure (hPa)",
+    "shading": "2-m temperature, 2 °C interval",
+    "contours": "MSLP every 2 hPa, every second labelled",
+    "barbs": "10-m wind, every 8th grid point",
+    "units": "°C; hPa; kt"
+   },
+   {
+    "label": "(b) Warm-air advection, 850 hPa (K h⁻¹)",
+    "shading": "850-hPa horizontal temperature advection −V·∇T (temperature smoothed with two 3×3 passes), 0.25 K h⁻¹ interval",
+    "contours": "850-hPa temperature every 2 °C (dashed below 0), every second labelled",
+    "barbs": "850-hPa wind, every 8th grid point",
+    "units": "K h⁻¹; °C; kt"
+   },
+   {
+    "label": "(c) Hourly temperature, Boston (°C)",
+    "shading": "grey bands = night (sunset 1727 EST, sunrise 0629 EST)",
+    "contours": null,
+    "barbs": null,
+    "units": "°C vs hour (EST); dashed line = midnight; triangle = calendar-day maximum"
+   }
+  ],
+  "caption": "(a, b) ERA5 at 0300 UTC 23 Feb 2022 (2200 EST 22 Feb). (a) 2-m temperature (shading, °C), mean sea level pressure (contours, 2 hPa) and 10-m wind (barbs, kt). (b) 850-hPa temperature advection (shading, K h⁻¹; red is warm advection), 850-hPa temperature (contours, 2 °C) and wind (barbs, kt). (c) Hourly temperature observed at Boston Logan Airport (ASOS) from midnight 22 Feb to 0700 EST 23 Feb; grey shading marks night and the dashed line midnight. A strong south-southwesterly flow at 850 hPa over Boston (213°, 75 kt in ERA5) carries warm air north across southern New England as a warm front lifts through. Boston sat at 5.6 °C through the afternoon, then warmed after dark as the front passed, reaching the calendar-day maximum of 12.8 °C (55 °F) at 2354 EST and 13.9 °C by 0254 EST.",
+  "key_point": "Boston's warmest reading of 22 February came just before midnight, not in the afternoon, because warm air was being blown in from the south all evening.",
+  "numbers": {
+   "BOS_ERA5_T2m_C": 11.3,
+   "BOS_ERA5_adv850_K_per_h": 0.54,
+   "BOS_ERA5_wdir850_deg": 213,
+   "BOS_ERA5_wspd850_kt": 75,
+   "adv850_max_K_per_h_box": 7.4,
+   "ASOS_BOS_calday_max_F": 55.0,
+   "ASOS_BOS_calday_max_time_LST": "2022-02-22 23:54:00",
+   "ASOS_BOS_T_1654LST_F": 42.0,
+   "ASOS_BOS_T_2354LST_F": 55.0,
+   "ASOS_BOS_T_0254LST_23Feb_F": 57.0,
+   "ASOS_BOS_calday_min_F": 33.0,
+   "sunset_LST": "17:27",
+   "sunrise_23Feb_LST": "06:29"
+  },
+  "notes": "New case per lead (old: 2008-08-04, a summer rain-timing quote). New file name warmadv_2022.png (the .md must be updated). Official NWS CLIBOS: maximum 55 °F at 1157 PM, minimum 30 °F at 403 AM (ASOS hourly min plotted is 33 °F). Quote (verified, https://mesonet.agron.iastate.edu/cgi-bin/afos/retrieve.py?pil=AFDBOX&sdate=2022-02-22T20:00Z&edate=2022-02-22T21:00Z&fmt=text, 347 PM EST Tue Feb 22 2022, FXUS61 KBOX 222047): \"Lastly, will see non-diurnal temperature trend due to the strong warm air advection as we are within the warm sector.\" ... \"Temperatures will increase as the night progresses with most in the 50s after midnight.\" Caveats: most of the evening rise at BOS is a step at the warm-front passage (42 → 53 °F between 1754 and 1954 EST) rather than a smooth ramp; the night window plotted contains no post-sunrise heating (sunrise 0629 EST). The domain maximum of ERA5 850-hPa advection (7.4 K h⁻¹) is a frontal-zone derivative extreme and is not used in the caption. Per fact-check, most ~20 % 'midnight highs' at BOS/NYC are start-of-day cold-advection highs; this case is the end-of-day warm-advection kind."
+ },
+ {
+  "file": "llj_2017.png",
+  "system": "Nocturnal low-level jet",
+  "time_utc": "2017-06-10 21:00 and 2017-06-11 08:00",
+  "extent": [
+   -82.0,
+   -66.0,
+   37.0,
+   47.5
+  ],
+  "panels": [
+   {
+    "label": "(a) Wind at 900 hPa (kt), 21 UTC 10 Jun",
+    "shading": "900-hPa wind speed, 5 kt interval (blank where the ground is above 900 hPa)",
+    "contours": null,
+    "barbs": "900-hPa wind, every 8th grid point",
+    "units": "kt"
+   },
+   {
+    "label": "(b) Wind at 900 hPa (kt), 08 UTC 11 Jun",
+    "shading": "as (a)",
+    "contours": null,
+    "barbs": "as (a)",
+    "units": "kt"
+   },
+   {
+    "label": "(c) Wind profile at Elmira, NY",
+    "shading": null,
+    "contours": null,
+    "barbs": null,
+    "units": "wind speed (kt) vs pressure (hPa, log axis); lowest point = 10-m wind at surface pressure; dotted = geostrophic speed from smoothed geopotential, 0800 UTC"
+   }
+  ],
+  "caption": "ERA5 900-hPa wind speed (shading, kt) and wind (barbs, kt) at (a) 2100 UTC 10 Jun 2017 (1700 EDT) and (b) 0800 UTC 11 Jun 2017 (0400 EDT). (c) Wind-speed profiles at the ERA5 grid point nearest Elmira, NY, at 2100 UTC (dashed) and 0800 UTC (solid), with the 0800 UTC geostrophic wind (dotted); the lowest point of each profile is the 10-m wind. Overnight the 900-hPa wind at Elmira doubles from 19.0 to 37.8 kt and exceeds the geostrophic value (27.2 kt), while the 10-m wind stays near 7.9 kt. Over land the 900-hPa maximum grows from 31.1 to 53.9 kt. The jet nose (about 1 km above sea level, 600–700 m above the ground) is resolved by only a few ERA5 pressure levels.",
+  "key_point": "A few hours after sunset the wind about half a kilometre above Elmira roughly doubles and becomes faster than the pressure pattern alone would drive, while the wind at the ground stays light — that is the nocturnal jet.",
+  "numbers": {
+   "ELM_surface_pressure_hPa": 965.7,
+   "ELM_wind_profile_21UTC_kt": {
+    "963": 7.3,
+    "950": 12.4,
+    "925": 16.5,
+    "900": 19.0,
+    "850": 21.7,
+    "800": 22.0,
+    "750": 24.4,
+    "700": 29.8
+   },
+   "ELM_wind_profile_08UTC_kt": {
+    "966": 7.9,
+    "950": 19.5,
+    "925": 30.7,
+    "900": 37.8,
+    "850": 34.4,
+    "800": 30.4,
+    "750": 26.5,
+    "700": 20.7
+   },
+   "ELM_geostrophic_08UTC_kt": {
+    "950": 28.8,
+    "925": 27.7,
+    "900": 27.2,
+    "850": 26.2,
+    "800": 24.4,
+    "750": 21.0,
+    "700": 18.1
+   },
+   "ELM_900_21UTC_kt": 19.0,
+   "ELM_900_08UTC_kt": 37.8,
+   "ELM_10m_21UTC_kt": 7.3,
+   "ELM_10m_08UTC_kt": 7.9,
+   "max_900_land_21UTC_kt": 31.1,
+   "max_900_land_21UTC_lonlat": [
+    -81.0,
+    42.5
+   ],
+   "max_900_land_08UTC_kt": 53.9,
+   "max_900_land_08UTC_lonlat": [
+    -76.0,
+    44.5
+   ]
+  },
+  "notes": "New case per lead (old: 2008-06-22 06Z OKX, a daytime synoptic jet with the maximum offshore). New file name llj_2017.png (the .md must be updated). Quote (verified, https://mesonet.agron.iastate.edu/cgi-bin/afos/retrieve.py?pil=AFDBGM&sdate=2017-06-10T18:00Z&edate=2017-06-10T19:00Z&fmt=text, 252 PM EDT Sat Jun 10 2017, FXUS61 KBGM 101852): \"Mostly clear night foreseen, with decoupling wind at the surface as southwesterly low level jet develops just aloft.\" Aviation section of the same product: \"...a developing 34-38 knot low level jet around 2 kft agl out of the west- southwest as warm air overspreads the region.\" ERA5 at Elmira at 0800 UTC: 30.7 kt at 925 hPa and 37.8 kt at 900 hPa, consistent with the forecast 34–38 kt. Not a pure Blackadar jet: a building ridge with synoptic warm advection also contributes (AFD). The geostrophic wind uses three 3×3 smoothing passes of the geopotential; its value is sensitive to that choice by a few kt. Old figure's 'wind ÷ geostrophic' panel had a plotting error and is not reproduced. Supporting obs (from the case search, not plotted): BUF 925-hPa sounding 17.5 → 22.6 m s⁻¹ from 00 to 12 UTC; ASOS surface winds 0–5 kt from ~02–10 UTC at AVP, RME, ELM."
+ }
+]

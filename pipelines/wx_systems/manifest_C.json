@@ -1,0 +1,393 @@
+[
+ {
+  "file": "freezingrain_2008.png",
+  "system": "Freezing rain & ice storms",
+  "time_utc": "2008-12-12T09:00Z",
+  "extent": [
+   -79,
+   -67,
+   40,
+   47.5
+  ],
+  "panels": [
+   {
+    "label": "Warm air aloft, 2-m temperature (°C)",
+    "shading": "maximum temperature of the elevated >0 °C layer, only where 2-m T < 0 °C",
+    "contours": "2-m temperature every 2 °C (dashed < 0 °C; thick 0 °C)",
+    "barbs": null,
+    "units": "°C"
+   },
+   {
+    "label": "Melting, refreezing energy (J kg⁻¹)",
+    "shading": "melting energy PA of the elevated warm layer",
+    "contours": "refreezing energy NA of the surface cold layer, -25/-50/-100 J kg^-1 (dashed)",
+    "barbs": null,
+    "units": "J kg^-1"
+   },
+   {
+    "label": "Sounding, Manchester, NH",
+    "shading": "PA (red) and NA (blue) areas",
+    "contours": "T (solid), Td (dashed) vs log p, 1000-500 hPa",
+    "barbs": null,
+    "units": "°C, hPa"
+   }
+  ],
+  "caption": "ERA5 at 0900 UTC 12 Dec 2008, during the New England ice storm. (a) Maximum temperature in the elevated above-freezing layer (shaded, °C), drawn only where the 2-m temperature is below 0 °C, and 2-m temperature (contours every 2 °C; dashed below 0 °C, thick line 0 °C). (b) Melting energy PA (shaded, J kg^-1) and refreezing energy NA (dashed contours at -25, -50 and -100 J kg^-1), computed as R_d times the integral of (T - 0 °C) d ln p over the elevated warm layer and over the surface-based sub-freezing layer, respectively, from the 2-m temperature and the ERA5 pressure levels above the surface. (c) Temperature (solid) and dewpoint (dashed) at the grid point nearest Manchester, NH (43.0°N, 71.5°W): the profile crosses 0 °C twice, with a warm nose of 8.9 °C between 925 and 687 hPa (PA = 399 J kg^-1) above a shallow surface layer at -1.8 °C (NA = -25 J kg^-1); ERA5 precipitation there was 2.8 mm h^-1.",
+  "key_point": "Look for the band where air about a kilometre up is well above freezing (red) while the ground is still below freezing: snow melts in the warm layer and the rain refreezes on contact at the surface, as in the Manchester sounding that crosses 0 °C twice.",
+  "numbers": {
+   "site": "Manchester, NH",
+   "site_grid": [
+    -71.5,
+    43.0
+   ],
+   "site_T2m_C": -1.8,
+   "site_Td2m_C": -2.4,
+   "site_surface_pressure_hPa": 985.0,
+   "site_warm_nose_Tmax_C": 8.9,
+   "site_warm_layer_base_hPa": 925.0,
+   "site_warm_layer_top_hPa": 687.0,
+   "site_PA_J_per_kg": 399.0,
+   "site_NA_J_per_kg": -25.0,
+   "site_precip_mm_per_h": 2.8,
+   "domain_max_warm_nose_T_C": 11.3,
+   "n_gridpoints_fzra_profile_with_precip_gt_0p1": 256
+  },
+  "notes": "Date changed from the card's 2008-01-03 12Z per the lead's fact-check. Independently, ERA5 at 2008-01-03 00-18Z shows no warm nose over New England (southern NH profile entirely -14 to -35 °C; the only 'warm aloft over sub-freezing surface' points were below-terrain levels in the southern Appalachians). The 11-12 Dec 2008 ice storm was used instead; of 00/03/06/09/12Z on 12 Dec, 09Z had the most grid points in a central MA / southern NH / southern VT box with a warm nose over sub-freezing 2-m air and >0.2 mm/h precipitation. Card date, quote and AFD link must be updated (lead supplied AFDBOX 2008-12-11). ERA5 2-m temperatures in the cold layer are only -1 to -2 °C (Worcester grid point about 0 °C), probably warmer than observed, so NA is small. Bourgouin (2000) category thresholds are not applied. Energies use 16 pressure levels (1000-500 hPa) plus the 2-m point; levels below the surface pressure are discarded. Surface wet-bulb and CAD strength are not shown."
+ },
+ {
+  "file": "bomb_2018.png",
+  "system": "Bomb cyclone",
+  "time_utc": "2018-01-04T12:00Z (maps); 2018-01-03T10Z-2018-01-05T12Z hourly (time series)",
+  "extent": [
+   -82,
+   -58,
+   25,
+   48
+  ],
+  "panels": [
+   {
+    "label": "Sea-level pressure, 24-h change (hPa)",
+    "shading": "24-h MSLP change ending 1200 UTC 4 Jan",
+    "contours": "MSLP every 4 hPa (labels every 8 hPa); 6-hourly track of the low from 1200 UTC 3 Jan",
+    "barbs": null,
+    "units": "hPa"
+   },
+   {
+    "label": "300-hPa wind (kt), 500-hPa height (dam)",
+    "shading": "300-hPa wind speed",
+    "contours": "500-hPa geopotential height every 6 dam",
+    "barbs": null,
+    "units": "kt, dam"
+   },
+   {
+    "label": "Pressure at storm centre",
+    "shading": null,
+    "contours": "hourly ERA5 central MSLP (line); grey band = 24-h window of maximum deepening",
+    "barbs": null,
+    "units": "hPa"
+   }
+  ],
+  "caption": "ERA5 for the 3-5 Jan 2018 western Atlantic cyclone. (a) Mean sea level pressure at 1200 UTC 4 Jan (contours every 4 hPa) and its change over the previous 24 h (shaded, hPa); dots mark the 6-hourly position of the low from 1200 UTC 3 Jan. (b) 300-hPa wind speed (shaded, kt) and 500-hPa geopotential height (contours every 6 dam) at 1200 UTC 4 Jan. (c) Hourly central pressure of the low, tracked as the local MSLP minimum. Between 1200 UTC 3 Jan and 1200 UTC 4 Jan the central pressure fell from 1009.4 to 958.4 hPa, 51.0 hPa in 24 h (grey band). At the mean latitude of the low over that window (31.3°N) the Sanders and Gyakum (1980) criterion, 24 hPa x sin(φ)/sin(60°), is 14.4 hPa in 24 h, so the low deepened at 3.5 times the threshold rate. The minimum central pressure was 952.8 hPa at 1900 UTC 4 Jan.",
+  "key_point": "The pressure at the storm's centre dropped 51 hPa in one day (panel c), more than three times the rate that defines a 'bomb'; the deep blue patch in panel a shows where pressure fell most.",
+  "numbers": {
+   "max_24h_fall_hPa": 51.0,
+   "max_fall_window_utc": [
+    "2018-01-03 12:00:00",
+    "2018-01-04 12:00:00"
+   ],
+   "mean_lat_max_window_degN": 31.3,
+   "sanders_gyakum_threshold_max_window_hPa": 14.4,
+   "bergeron_ratio_max_window": 3.54,
+   "fall_3Jan12_to_4Jan12_hPa": 51.0,
+   "mean_lat_3Jan12_to_4Jan12_degN": 31.3,
+   "sanders_gyakum_threshold_card_window_hPa": 14.4,
+   "central_pressure_3Jan12_hPa": 1009.4,
+   "central_pressure_4Jan12_hPa": 958.4,
+   "min_central_pressure_hPa": 952.8,
+   "min_central_pressure_time": "2018-01-04 19:00:00",
+   "max_300hPa_wind_kt": 161.0
+  },
+  "notes": "Track starts at 1000 UTC 3 Jan, the first hour with a single closed centre east of Florida (earlier hours show a broad trough with several weak minima); each hour the minimum is searched within 2° of the previous position. The 24-h window of maximum fall equals the card's 1200 UTC 3 Jan-1200 UTC 4 Jan window. Sanders-Gyakum latitude = mean of the hourly centre latitudes over the window. The card's 'pressure fell > 50 hPa' agrees with ERA5 (51.0 hPa). 'Hurricane-force winds' was not checked. SST gradient and 500-hPa vorticity from the diagnose line are not shown; the 300-hPa jet is shown instead (max 161 kt in the box)."
+ },
+ {
+  "file": "clipper_2008.png",
+  "system": "Alberta clipper",
+  "time_utc": "2008-01-23T00:00Z (12-h change from 2008-01-22T12Z)",
+  "extent": [
+   -88,
+   -64,
+   34,
+   52
+  ],
+  "panels": [
+   {
+    "label": "Spin at 500 hPa, sea-level pressure",
+    "shading": "500-hPa relative vorticity (two passes of a 9-point smoother)",
+    "contours": "MSLP every 4 hPa",
+    "barbs": null,
+    "units": "10^-5 s^-1, hPa"
+   },
+   {
+    "label": "Thickness and its 12-h change (dam)",
+    "shading": "12-h 1000-500-hPa thickness change",
+    "contours": "1000-500-hPa thickness every 6 dam",
+    "barbs": null,
+    "units": "dam"
+   },
+   {
+    "label": "2-m temperature (°C), 10-m wind (kt)",
+    "shading": "2-m temperature",
+    "contours": null,
+    "barbs": "10-m wind (kt)",
+    "units": "°C, kt"
+   }
+  ],
+  "caption": "ERA5 at 0000 UTC 23 Jan 2008 (1900 EST 22 Jan) as an Alberta clipper crossed northern New York and New England. (a) 500-hPa relative vorticity (shaded, 10^-5 s^-1) and mean sea level pressure (contours every 4 hPa); L marks the surface low (1006.8 hPa). The strongest 500-hPa vorticity maximum near the low (13.6 x 10^-5 s^-1, over southern Ontario) lies 454 km west of the surface low, the arrangement documented by Thomas and Martin (2007, Wea. Forecasting, 22, 315-333). (b) 1000-500-hPa thickness (contours every 6 dam) and its 12-h change since 1200 UTC 22 Jan (shaded, dam); thickness fell by up to 11.5 dam behind the low. (c) 2-m temperature (shaded, °C) and 10-m wind (barbs, kt).",
+  "key_point": "The surface low (L) sits east of the upper-level spin (dark red patch over southern Ontario), and the blue area in panel b shows the air column cooling quickly behind the storm as colder air follows it.",
+  "numbers": {
+   "surface_low_lon": -74.25,
+   "surface_low_lat": 45.0,
+   "surface_low_mslp_hPa": 1006.8,
+   "vort500_max_lon": -80.0,
+   "vort500_max_lat": 44.75,
+   "vort500_max_1e5_per_s": 13.6,
+   "vortmax_to_low_distance_km": 454.0,
+   "vortmax_bearing_from_low_deg": 266.0,
+   "max_12h_thickness_fall_dam": 11.5,
+   "min_t2m_C": -31.0
+  },
+  "notes": "Date changed from the card's 2008-01-19 12Z per the lead's fact-check (19 Jan shows a maritime low near the Gulf of St Lawrence, not a clipper). The clipper anticipated in the 19 Jan BOX AFD ('a clipper moves across the region Tue') crossed on Tue 22 Jan; ERA5 tracks it from 50.25°N 93°W (12Z 22 Jan, 1012.6 hPa) to 45.5°N 79.75°W (18Z, 1008.7 hPa) to 45.0°N 74.25°W (00Z 23 Jan, 1006.8 hPa) to 46.25°N 70.5°W (06Z, 1004.5 hPa). 00Z 23 Jan used because the low is then at the NY/VT/Quebec border. Caveat on the offset: a second, weaker 500-hPa vorticity maximum (about 9 x 10^-5 s^-1) lies about 1° south of the surface low, and a jet-shear vorticity band (>16 x 10^-5 s^-1) crosses the lower-left corner; the 454 km / 266° offset refers to the strongest maximum within 4.5° of the low. The domain 2-m T minimum (-31 °C) is in northern Quebec; post-frontal cooling in New England is still modest at 00Z (the card's 'temperature crash' arrives after this time)."
+ },
+ {
+  "file": "gustfront_2013.png",
+  "system": "Gust front / cold pool",
+  "time_utc": "2013-07-08T18:00Z (precipitation accumulated 0600-1500 UTC)",
+  "extent": [
+   -79,
+   -67,
+   40,
+   47.5
+  ],
+  "panels": [
+   {
+    "label": "2-m temperature (°C), 10-m wind (kt)",
+    "shading": "2-m temperature",
+    "contours": null,
+    "barbs": "10-m wind (kt)",
+    "units": "°C, kt"
+   },
+   {
+    "label": "Morning rain (mm), 2-m temperature (°C)",
+    "shading": "precipitation accumulated 0600-1500 UTC (>= 0.5 mm)",
+    "contours": "1800 UTC 2-m temperature 24 and 28 °C",
+    "barbs": null,
+    "units": "mm, °C"
+   }
+  ],
+  "caption": "ERA5 at 1800 UTC 8 Jul 2013. A thunderstorm gust front is a few kilometres wide and evolves over minutes, below what ERA5 (about 31 km, hourly) can represent; the panels show the environment and the temperature boundary that ERA5 does resolve. (a) 2-m temperature (shaded, °C) and 10-m wind (barbs, kt); along 72°W the 2-m temperature drops from 26.3 °C to 20.1 °C across 1.5° of latitude centred near 44.0°N (arrow). (b) Precipitation accumulated 0600-1500 UTC (shaded, mm; up to 18.4 mm) and 1800 UTC 2-m temperature (contours, 24 and 28 °C): the cooler air lies under the area of morning rain. (c) CAPE (shaded, J kg^-1; maximum 1560) and the 10-m to 500-hPa bulk wind difference (barbs, kt; median 24 kt).",
+  "key_point": "ERA5 cannot see the gust front itself, but it shows cooler air north of a boundary across Vermont, New Hampshire and Maine, lying under the area where morning storms rained, with modest instability to the south for new afternoon storms.",
+  "numbers": {
+   "boundary_lat_at_72W": 44.0,
+   "t2m_0p75deg_south_C": 26.3,
+   "t2m_0p75deg_north_C": 20.1,
+   "max_cape_18Z_J_per_kg": 1560.0,
+   "max_shear_18Z_kt": 53.0,
+   "median_shear_18Z_kt": 24.0,
+   "max_precip_06_15Z_mm": 18.4,
+   "max_t2m_18Z_C": 32.0
+  },
+  "notes": "Kept the card's date and hour. ERA5 does not resolve a gust front, pressure jump or mesonet-scale temperature drop. The boundary in (a) coincides with the area of morning rain, consistent with the AFD's 'perhaps outflow from morning convection', but ERA5 cannot attribute it; marine air along the Maine coast also contributes to the cool region in the east. Shear is the 10-m to 500-hPa vector wind difference, a proxy for 0-6 km shear. CAPE clipped at 0 (ERA5 packing gives tiny negative values that otherwise leave blank patches)."
+ },
+ {
+  "file": "derecho_2012.png",
+  "system": "Derecho",
+  "time_utc": "2012-06-29T18:00Z (a, b); 2-m T change 2000-2300 UTC (c)",
+  "extent": [
+   -92,
+   -73,
+   32.5,
+   46
+  ],
+  "panels": [
+   {
+    "label": "Temperature (°C), 500-hPa height (dam)",
+    "shading": "850-hPa temperature",
+    "contours": "500-hPa height every 3 dam",
+    "barbs": null,
+    "units": "°C, dam"
+   },
+   {
+    "label": "Storm energy (CAPE), wind shear (kt)",
+    "shading": "CAPE",
+    "contours": null,
+    "barbs": "10-m to 500-hPa bulk wind difference (kt)",
+    "units": "J kg^-1, kt"
+   },
+   {
+    "label": "3-h change in 2-m temperature (K)",
+    "shading": "2-m temperature change 2000-2300 UTC",
+    "contours": "2300 UTC precipitation 2 mm h^-1",
+    "barbs": null,
+    "units": "K, mm h^-1"
+   }
+  ],
+  "caption": "ERA5 on 29 Jun 2012. A derecho's bow echo and rear-inflow jet (tens of kilometres, minutes) are below ERA5 resolution; the panels show the environment the system moved through. (a) 850-hPa temperature (shaded, °C) and 500-hPa height (contours every 3 dam) at 1800 UTC: the heat ridge (z500 up to 594.9 dam, 850-hPa temperature up to 26.4 °C) with the westerlies along its northern flank. (b) CAPE (shaded, J kg^-1; up to about 6040) and the 10-m to 500-hPa bulk wind difference (barbs, kt) at 1800 UTC; at the CAPE maximum the bulk difference is 36 kt. (c) Change in 2-m temperature from 2000 to 2300 UTC (shaded, K) with the 2 mm h^-1 precipitation contour at 2300 UTC: the cooling swath (to -11.4 K) across Ohio, West Virginia and Virginia is the smoothed ERA5 imprint of the storms' cold pool.",
+  "key_point": "Look at the very unstable air (dark red in b) along the northern edge of the heat dome (a); ERA5 cannot draw the bow-shaped line of storms, but it does show the band of sudden cooling the storms left behind (blue swath in c).",
+  "numbers": {
+   "max_cape_J_per_kg": 6040.0,
+   "max_t850_C": 26.4,
+   "max_z500_dam": 594.9,
+   "max_shear_kt": 57.0,
+   "shear_kt_at_max_cape": 36.0,
+   "max_gust_15_23Z_kt": 34.0,
+   "max_gust_lonlat": [
+    -78.0,
+    46.0
+   ],
+   "max_hourly_precip_15_23Z_mm": 5.1,
+   "min_dT2m_20_23Z_K": -11.4,
+   "min_dT2m_lonlat": [
+    -79.75,
+    36.25
+   ],
+   "max_precip_23Z_mm_per_h": 2.6
+  },
+  "notes": "Kept the card's date; 18Z for (a)-(b), and (c) uses 20-23Z of the same day, when the system crossed Ohio and West Virginia. ERA5 does not reproduce the derecho's winds: the largest hourly instantaneous 10-m gust in the box during 15-23 UTC is 34 kt, and not on the derecho path, versus observed gusts of 80+ mph; a gust panel was therefore dropped. Part of the 20-23 UTC cooling is diurnal (about 1-3 K elsewhere in the domain); the swath to about -10 K is the convective signal. ERA5 has one CAPE field (not MUCAPE). Shear is the 10-m to 500-hPa vector difference, a proxy for 0-6 km shear. The '850-hPa ring of fire' is shown as 850-hPa temperature under the z500 ridge; 850-hPa winds are not plotted."
+ },
+ {
+  "file": "dryline_2013.png",
+  "system": "Dryline",
+  "time_utc": "2013-05-20T21:00Z",
+  "extent": [
+   -104,
+   -92,
+   30,
+   40
+  ],
+  "panels": [
+   {
+    "label": "2-m dewpoint (°C), 10-m wind (kt)",
+    "shading": "2-m dewpoint",
+    "contours": null,
+    "barbs": "10-m wind (kt)",
+    "units": "°C, kt"
+   },
+   {
+    "label": "Convergence (blue), moisture (g kg⁻¹)",
+    "shading": "10-m divergence (one pass of a 9-point smoother)",
+    "contours": "2-m mixing ratio 6, 10, 14 g kg^-1",
+    "barbs": null,
+    "units": "10^-5 s^-1, g kg^-1"
+   },
+   {
+    "label": "Storm energy and inhibition (J kg⁻¹)",
+    "shading": "CAPE",
+    "contours": "CIN 50 and 200 J kg^-1 (dashed)",
+    "barbs": null,
+    "units": "J kg^-1"
+   }
+  ],
+  "caption": "ERA5 at 2100 UTC 20 May 2013; the open circle marks Moore, Oklahoma. ERA5 represents the dryline as a gradient a few grid lengths (about 30 km each) wide, broader than the observed boundary. (a) 2-m dewpoint (shaded, °C) and 10-m wind (barbs, kt). Along 35.25°N the dewpoint rises from 1.3 °C to 21.5 °C across the dryline near 98.5°W (arrow), where westerly to southwesterly winds on the dry side meet southerly winds on the moist side. (b) 10-m divergence (shaded, 10^-5 s^-1; negative is convergence, up to 16.3) and 2-m mixing ratio (contours, 6, 10 and 14 g kg^-1). (c) CAPE (shaded, J kg^-1) and convective inhibition (dashed contours, 50 and 200 J kg^-1); at Moore ERA5 has CAPE 1656 J kg^-1 and CIN 6 J kg^-1.",
+  "key_point": "The sharp edge between pale (dry) and dark blue (humid) air in panel a is the dryline; winds converge along it (blue band in b), and the humid air east of it is very unstable (c), which is where the Moore storm formed.",
+  "numbers": {
+   "dryline_lon_at_35p25N": -98.5,
+   "td_1p0_to_1p5deg_west_C": 1.3,
+   "td_1p0_to_1p5deg_east_C": 21.5,
+   "max_td_gradient_C_per_deg_lon": 21.3,
+   "max_10m_convergence_1e5_per_s": 16.3,
+   "moore_cape_J_per_kg": 1656.4,
+   "moore_cin_J_per_kg": 6.4,
+   "moore_td_C": 21.2,
+   "moore_t2_C": 27.2,
+   "max_cape_J_per_kg": 4390.0
+  },
+  "notes": "Kept the card's date and hour. The red/blue divergence dipole next to Moore in (b) is ERA5's parameterized convection near the storm, not the dryline. ERA5 CIN is undefined where CAPE is zero; those points were set to 0 for contouring. Mixing ratio computed from 2-m dewpoint and surface pressure. CAPE clipped at 0. The cap is shown as CIN, not as an inversion profile."
+ },
+ {
+  "file": "omegablock_2016.png",
+  "system": "Omega block",
+  "time_utc": "2016-04-15T12Z, 2016-04-16T12Z, 2016-04-17T12Z",
+  "extent": [
+   -120,
+   -56,
+   22,
+   64
+  ],
+  "panels": [
+   {
+    "label": "500-hPa height (dam), anomaly, 15 Apr",
+    "shading": "500-hPa height anomaly from the 1991-2020 ERA5 mean for 1200 UTC 16 Apr",
+    "contours": "500-hPa height every 6 dam; the 570-dam contour (outlines the omega) drawn thick",
+    "barbs": null,
+    "units": "dam"
+   },
+   {
+    "label": "500-hPa height (dam), anomaly, 16 Apr",
+    "shading": "500-hPa height anomaly from the 1991-2020 ERA5 mean for 1200 UTC 16 Apr",
+    "contours": "500-hPa height every 6 dam; the 570-dam contour (outlines the omega) drawn thick",
+    "barbs": null,
+    "units": "dam"
+   },
+   {
+    "label": "500-hPa height (dam), anomaly, 17 Apr",
+    "shading": "500-hPa height anomaly from the 1991-2020 ERA5 mean for 1200 UTC 16 Apr",
+    "contours": "500-hPa height every 6 dam; the 570-dam contour (outlines the omega) drawn thick",
+    "barbs": null,
+    "units": "dam"
+   }
+  ],
+  "caption": "ERA5 500-hPa geopotential height (contours every 6 dam) and its departure from the 1991-2020 ERA5 mean for 1200 UTC 16 April (shaded, dam) at 1200 UTC on (a) 15, (b) 16 and (c) 17 Apr 2016. H marks the closed high over the Great Lakes (574.4, 579.9 and 583.5 dam). From 16 Apr it is flanked by a cut-off low over the southern Rockies (548.7 dam near 35.5°N, 107.0°W) and another off the Carolinas (554.5 dam near 37.5°N, 61.75°W), giving the Ω-shaped flow; the height anomaly over the high reaches 26.8 dam on 16 Apr and 29.2 dam on 17 Apr.",
+  "key_point": "Follow the contours: they rise up and over the high (H) above the Great Lakes and dip into a closed low on each side, tracing the letter Ω, and the pattern barely moves from one day to the next.",
+  "numbers": {
+   "2016-04-15": {
+    "high_lon": -80.5,
+    "high_lat": 43.0,
+    "high_z500_dam": 574.4,
+    "west_low": [
+     -109.5,
+     47.0,
+     545.6
+    ],
+    "east_low": [
+     -65.0,
+     50.0,
+     551.1
+    ],
+    "max_anom_dam_near_high": 21.0
+   },
+   "2016-04-16": {
+    "high_lon": -82.5,
+    "high_lat": 43.0,
+    "high_z500_dam": 579.9,
+    "west_low": [
+     -107.0,
+     35.5,
+     548.7
+    ],
+    "east_low": [
+     -61.75,
+     37.5,
+     554.5
+    ],
+    "max_anom_dam_near_high": 26.8
+   },
+   "2016-04-17": {
+    "high_lon": -84.25,
+    "high_lat": 41.25,
+    "high_z500_dam": 583.5,
+    "west_low": [
+     -106.0,
+     38.75,
+     558.9
+    ],
+    "east_low": [
+     -64.25,
+     34.25,
+     556.9
+    ],
+    "max_anom_dam_near_high": 29.2
+   }
+  },
+  "notes": "Case changed per the lead's fact-check: ERA5 on 6 Jul 2012 is a broad central-US ridge with a cutoff low off New England, not an omega block. Checked the suggested mid-April 2016 case with daily 12Z z500 for 10-20 Apr: no closed high over the east on 10-14 Apr; a closed high over the Great Lakes/Ohio Valley from 15 Apr (574 dam, 43.0°N 80.5°W) through 18 Apr (583 dam, 39.0°N 85.25°W); a western cut-off low (549-562 dam, 35.5-40.25°N, 106-109°W) on 16-18 Apr and an eastern cut-off low off the Atlantic coast (554-557 dam, 33.5-37.5°N, 61.75-64.25°W) on 16-18 Apr; by 19-20 Apr the high had broken down. So the clean Ω persisted about 3 days (16-18 Apr), 4 counting its formation on 15 Apr. On 15 Apr the 'east_low' in numbers is the trough near Labrador, not yet the Atlantic cut-off. No other candidates were checked because this case passed. The anomaly uses one climatology (16 Apr 12Z, 30 years) for all three days. File is omegablock_2016.png (not _2012): the card's realfig src, caption ('2012-07-06 12Z, Jul 2012 heat') and example line ('Jul 2012 Northeast heat') need updating. Blocking indices and ridge-axis position are not plotted."
+ }
+]

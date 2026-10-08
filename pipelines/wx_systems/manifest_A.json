@@ -1,0 +1,550 @@
+[
+ {
+  "file": "seabreeze_2007.png",
+  "system": "Sea breeze",
+  "time_utc": "2007-03-27 18:00 and 20:00",
+  "extent": [
+   -73.5,
+   -69.5,
+   41,
+   43.5
+  ],
+  "panels": [
+   {
+    "label": "(a) 2-m temperature (°C), wind (kt)",
+    "shading": "2-m temperature, 1 °C interval, 18 UTC",
+    "contours": null,
+    "barbs": "10-m wind, every 2nd grid point, 18 UTC",
+    "units": "°C; kt"
+   },
+   {
+    "label": "(b) Converging air (blue), temp. (°C)",
+    "shading": "10-m horizontal divergence, 18 UTC",
+    "contours": "2-m temperature every 2 °C, 18 UTC",
+    "barbs": null,
+    "units": "10^-5 s^-1; °C"
+   },
+   {
+    "label": "(c) Temperature change, 18–20 UTC",
+    "shading": "2-m temperature at 20 UTC minus 18 UTC",
+    "contours": null,
+    "barbs": null,
+    "units": "K per 2 h"
+   }
+  ],
+  "caption": "ERA5 over eastern Massachusetts on 27 Mar 2007. (a) 2-m temperature (shading, °C) and 10-m wind (barbs, kt) at 1800 UTC. (b) 10-m horizontal divergence (shading, 10^-5 s^-1; blue is convergence) and 2-m temperature (contours, 2 °C) at 1800 UTC. (c) Change in 2-m temperature from 1800 to 2000 UTC (K). At 1800 UTC the grid point at Boston is 13.3 °C with a 6-kt north-northeasterly wind, 4.0 K cooler than Worcester (17.3 °C), and a band of 10-m convergence (minimum -8.8 x 10^-5 s^-1) lies along the coast in the temperature gradient. Between 1800 and 2000 UTC Boston cools by 2.0 K while Worcester warms by 0.7 K. The sea-breeze front is only a few grid lengths wide here (ERA5 grid spacing 0.25°, about 28 km), so its position is approximate.",
+  "key_point": "Cool air off the ocean (blue, panel a) keeps the coast about 4 °C colder than inland. The blue convergence band in panel b marks where the sea breeze meets the land air, and panel c shows the coast cooling after 18 UTC while inland keeps warming.",
+  "numbers": {
+   "Boston": {
+    "T2m_18Z_C": 13.3,
+    "T2m_20Z_C": 11.3,
+    "dT_18_20_K": -2.0,
+    "Td2m_18Z_C": 8.5,
+    "wind_dir_18Z_deg": 20,
+    "wind_kt_18Z": 6,
+    "T2m_hourly_15_21Z_C": [
+     11.3,
+     12.5,
+     13.9,
+     13.3,
+     11.9,
+     11.3,
+     10.8
+    ]
+   },
+   "Worcester": {
+    "T2m_18Z_C": 17.3,
+    "T2m_20Z_C": 18.1,
+    "dT_18_20_K": 0.7,
+    "Td2m_18Z_C": 9.2,
+    "wind_dir_18Z_deg": 330,
+    "wind_kt_18Z": 8,
+    "T2m_hourly_15_21Z_C": [
+     14.2,
+     14.7,
+     16.9,
+     17.3,
+     17.2,
+     18.1,
+     17.8
+    ]
+   },
+   "dT_Worcester_minus_Boston_18Z_K": 4.0,
+   "min_10m_div_E_MA_1e-5_s-1": -8.8,
+   "min_div_lonlat": [
+    -71.0,
+    42.25
+   ]
+  },
+  "notes": "Two times used (18 and 20 UTC), as the fact-check asked. The AFD quote describes 19 UTC observations (https://mesonet.agron.iastate.edu/p.php?pid=200703272035-KBOX-FXUS61-AFDBOX). The ERA5 grid point at Boston peaks at 13.9 °C at 17 UTC and falls to 10.8 °C by 21 UTC, while Worcester peaks at 18.1 °C at 20 UTC (hourly series in numbers). ERA5 Boston (11–14 °C, 52–57 °F) is warmer than the 'mid 40s' the AFD reports for coastal eastern Mass, because the 28-km grid cannot hold the narrow cold coastal strip. The card says the sea breeze raises dewpoint. In ERA5 the marine air over the ~5 °C March water is drier (2-m dewpoint ~4 °C over Massachusetts Bay vs 8–9 °C inland), so no dewpoint panel is used. The ~15-km thermodynamic/kinematic split on the card (Miller et al. 2003, after Atkins et al. 1995, Florida) is below ERA5 resolution and is not shown. Here the convergence band and the temperature gradient fall within the same grid box. Panel (c) replaces the old blank panel and has a ±3 K colour range."
+ },
+ {
+  "file": "backdoor_2018.png",
+  "system": "Backdoor cold front",
+  "time_utc": "2018-05-26 20:00 and 23:00",
+  "extent": [
+   -79,
+   -65,
+   38,
+   47
+  ],
+  "panels": [
+   {
+    "label": "(a) 20 UTC: pressure (hPa), 2-m temp., wind",
+    "shading": "2-m temperature, 2 °C interval",
+    "contours": "MSLP every 2 hPa (lightly smoothed)",
+    "barbs": "10-m wind, every 5th grid point",
+    "units": "°C; hPa; kt"
+   },
+   {
+    "label": "(b) 23 UTC: pressure (hPa), 2-m temp., wind",
+    "shading": "2-m temperature, 2 °C interval",
+    "contours": "MSLP every 2 hPa (lightly smoothed)",
+    "barbs": "10-m wind, every 5th grid point",
+    "units": "°C; hPa; kt"
+   }
+  ],
+  "caption": "ERA5 over New England on 26 May 2018. Mean sea level pressure (contours, 2 hPa), 2-m temperature (shading, °C) and 10-m wind (barbs, kt) at (a) 2000 UTC and (b) 2300 UTC. Between the two times, cool northeasterly flow off the Gulf of Maine advances southwestward across eastern Massachusetts. The Boston grid point cools from 28.6 to 22.2 °C as its wind turns from southwesterly (240°, 3 kt) to northeasterly (060°, 10 kt), while Worcester stays at 26.8 °C, 4.6 K warmer than Boston at 2300 UTC. Pressure is higher to the north (1014.6 hPa at Quebec City vs 1009.7 hPa at Boston at 2300 UTC).",
+  "key_point": "Compare the two panels: between 20 and 23 UTC the cooler air (blue) with northeast winds pushes southwest from the Gulf of Maine over Boston, while the interior stays hot.",
+  "numbers": {
+   "Boston": {
+    "20Z": {
+     "T2m_C": 28.6,
+     "Td2m_C": 16.4,
+     "wind_dir_deg": 240,
+     "wind_kt": 3
+    },
+    "23Z": {
+     "T2m_C": 22.2,
+     "Td2m_C": 17.9,
+     "wind_dir_deg": 60,
+     "wind_kt": 10
+    }
+   },
+   "Worcester": {
+    "20Z": {
+     "T2m_C": 29.9,
+     "Td2m_C": 13.5,
+     "wind_dir_deg": 270,
+     "wind_kt": 6
+    },
+    "23Z": {
+     "T2m_C": 26.8,
+     "Td2m_C": 17.9,
+     "wind_dir_deg": 20,
+     "wind_kt": 2
+    }
+   },
+   "Hartford": {
+    "20Z": {
+     "T2m_C": 30.5,
+     "Td2m_C": 15.5,
+     "wind_dir_deg": 270,
+     "wind_kt": 4
+    },
+    "23Z": {
+     "T2m_C": 27.5,
+     "Td2m_C": 22.4,
+     "wind_dir_deg": 220,
+     "wind_kt": 3
+    }
+   },
+   "Portland_ME": {
+    "20Z": {
+     "T2m_C": 19.0,
+     "Td2m_C": 15.5,
+     "wind_dir_deg": 70,
+     "wind_kt": 3
+    },
+    "23Z": {
+     "T2m_C": 16.9,
+     "Td2m_C": 15.9,
+     "wind_dir_deg": 20,
+     "wind_kt": 3
+    }
+   },
+   "MSLP_23Z_hPa": {
+    "Quebec_City": 1014.6,
+    "Boston": 1009.7,
+    "NYC": 1009.2
+   },
+   "dT_Boston_20Z_to_23Z_K": -6.4,
+   "dT_Worcester_minus_Boston_23Z_K": 4.6
+  },
+  "notes": "Case replaced (fact-check item 3). The page's 2008-03-08 case was a shallow cold wedge north of a warm front, ahead of a deep inland storm. The new case, 26 May 2018, was found from Boston ASOS 3-h temperature drops with a NE wind and confirmed in BOX AFDs. AFD 721 PM EDT Sat 26 May 2018 (https://mesonet.agron.iastate.edu/p.php?pid=201805262321-KBOX-FXUS61-AFDBOX), verbatim: \"Sea breeze aided backdoor front has already pushed through much of the BOS metro this evening and will continue to push SW through the evening.\" AFD 1040 PM EDT Fri 25 May 2018 (https://mesonet.agron.iastate.edu/p.php?pid=201805260240-KBOX-FXUS61-AFDBOX), verbatim (a forecast for Sunday 27 May): \"High pressure building over the Maritimes brings increasing east winds and a cool moist marine flow to Southern New England.\" IEM ASOS: KBOS 88 °F with a 260° wind at 2054 UTC, 77 °F / 060° 16 kt at 2154 UTC, 67 °F / 060° 13 kt at 2254 UTC. KORH stayed at 81–84 °F until 2254 UTC. ERA5 underestimates the Boston drop (6.4 K vs ~11 K observed in 2 h). At this time the high is still north of the domain (Quebec/Labrador), not over the Maritimes; the Maritimes high in the AFD is a next-day forecast. Dewpoint is not shown because it did not drop behind this front (ERA5 Boston 2-m dewpoint 16.4 -> 17.9 °C; observed 56 -> 56 °F), contrary to the card's 'dewpoint drop'. No 850-hPa temperature is shown. The new file name is backdoor_2018.png, so the page's img src must change. The 2008 script (fig_backdoor_2008.py) is kept, but its PNG is not delivered."
+ },
+ {
+  "file": "coastalfront_2008.png",
+  "system": "Coastal front",
+  "time_utc": "2008-01-27 12:00",
+  "extent": [
+   -73.5,
+   -69.5,
+   41,
+   43.5
+  ],
+  "panels": [
+   {
+    "label": "(a) Air minus sea temp. (K), air temp. (°C)",
+    "shading": "2-m temperature minus SST (over water only)",
+    "contours": "2-m temperature every 1 °C (dashed below 0 °C)",
+    "barbs": "10-m wind, every 2nd grid point",
+    "units": "K; °C; kt"
+   },
+   {
+    "label": "(b) Frontogenesis, 2-m temperature (°C)",
+    "shading": "2-D kinematic (Petterssen) frontogenesis of 2-m temperature from the total 10-m wind",
+    "contours": "2-m temperature every 1 °C",
+    "barbs": null,
+    "units": "K (100 km)^-1 (3 h)^-1; °C"
+   }
+  ],
+  "caption": "ERA5 over eastern Massachusetts at 1200 UTC 27 Jan 2008. (a) 2-m air temperature minus sea surface temperature over water (shading, K), 2-m temperature (contours, 1 °C; dashed below 0 °C) and 10-m wind (barbs, kt). (b) Kinematic frontogenesis of 2-m temperature computed from the total 10-m wind (shading, K (100 km)^-1 (3 h)^-1) and 2-m temperature (contours, 1 °C). (c) 850-hPa temperature advection (shading, K h^-1), 700-hPa geopotential height (contours, 1 dam) and 700-hPa wind (barbs, kt). East-southeasterly flow off 4.2 °C water (13 kt, 2.3 °C over Massachusetts Bay) meets light north-northeasterly flow inland (Boston -1.6 °C, Worcester -5.2 °C). Frontogenesis reaches 18 K (100 km)^-1 (3 h)^-1 in a coast-parallel band from Boston's North Shore to coastal New Hampshire. In ERA5 the front is only one or two grid lengths wide.",
+  "key_point": "The dark red strip in panel b, along the coast north of Boston, is the coastal front. Mild ocean air with east winds is on one side, and below-freezing land air with north winds is on the other.",
+  "numbers": {
+   "Boston": {
+    "T2m_C": -1.6,
+    "wind_dir_deg": 30,
+    "wind_kt": 3
+   },
+   "Worcester": {
+    "T2m_C": -5.2,
+    "wind_dir_deg": 10,
+    "wind_kt": 5
+   },
+   "Mass_Bay": {
+    "T2m_C": 2.3,
+    "wind_dir_deg": 110,
+    "wind_kt": 13
+   },
+   "SST_Mass_Bay_C": 4.2,
+   "max_frontogenesis_K_100km_3h": 18.1,
+   "max_frontogenesis_lonlat": [
+    -70.75,
+    43.0
+   ],
+   "min_airsea_dT_K_GulfOfMaine": -11.6
+  },
+  "notes": "The time moved from 2008-01-26 12Z to 2008-01-27 12Z, which changes the date. At 26 Jan 12Z ERA5 has offshore west-northwesterly flow everywhere and no coastal front. Onshore ESE flow starts only after 21 UTC 26 Jan, with a ~1 K contrast. The quote comes from the AFD issued 1055 PM EST 26 Jan = 0355 UTC 27 Jan (https://mesonet.agron.iastate.edu/p.php?pid=200801270355-KBOX-FXUS61-AFDBOX), verbatim: \"CAVEAT: COASTAL FRONT DEVELOPING /ESE WIND AT BUOYS/ MAY ENHANCE SNOWFALL RATES IN NE MASS N OF BOSTON AROUND 6 AM?\" (6 AM EST = 11 UTC). The 1020 AM EST 27 Jan AFD (https://mesonet.agron.iastate.edu/p.php?pid=200801271520-KBOX-FXUS61-AFDBOX) confirms \"LOW LEVEL MOISTURE CONVERGENCE (COASTAL FRONT)\". The frontogenesis maximum (box 72–70°W, 41.5–43.2°N) grows from 4 (03 UTC) to 8 (06), 15 (09) and 18 K (100 km)^-1 (3 h)^-1 (12 UTC). Frontogenesis here is the full 2-D kinematic function (convergence plus deformation of the total 10-m wind), not the convergence term alone. Following the fact-check (Keshishian & Bosart 1987 found that both geostrophic and observed-wind deformation contribute), there is no geostrophic comparison and no 'wrong-sign' claim. Over water the 2-m air is colder than the sea (down to -11.6 K over the Gulf of Maine), so it is unstable, matching the AFD's 'instability off the warmer ocean waters'. 850-hPa advection is weakly warm (< 1 K h^-1) under southwesterly 700-hPa flow. At 0.25° the 700-hPa height field in this small domain is nearly uniform. The domain is the same mesoscale box as in the sea-breeze figure."
+ },
+ {
+  "file": "marine_2015.png",
+  "system": "Marine layer and sea fog",
+  "time_utc": "2015-05-10 20:00",
+  "extent": [
+   -79,
+   -65,
+   38,
+   47
+  ],
+  "panels": [
+   {
+    "label": "(a) Low cloud cover (%), wind (kt)",
+    "shading": "ERA5 low cloud cover",
+    "contours": null,
+    "barbs": "10-m wind, every 5th grid point",
+    "units": "%; kt"
+   },
+   {
+    "label": "(b) Air minus sea (K), sea temp. (°C)",
+    "shading": "2-m temperature minus SST (over water only)",
+    "contours": "SST every 2 °C",
+    "barbs": null,
+    "units": "K; °C"
+   },
+   {
+    "label": "(c) 925-hPa minus 2-m temperature (K)",
+    "shading": "925-hPa temperature minus 2-m temperature (positive = inversion)",
+    "contours": null,
+    "barbs": null,
+    "units": "K"
+   }
+  ],
+  "caption": "ERA5 over New England at 2000 UTC 10 May 2015. (a) Low cloud cover (shading, %) and 10-m wind (barbs, kt). (b) 2-m air temperature minus sea surface temperature (shading, K) and SST (contours, 2 °C). (c) 925-hPa minus 2-m temperature (shading, K; positive values are a temperature inversion). Warm southwesterly air (Boston 28.1 °C, Worcester 30.5 °C) crosses the cold shelf water south of Rhode Island and Cape Cod (mean SST 10.3 °C) and is cooled from below. Over these waters the 2-m air averages 3.5 K warmer than the sea, the 2-m dewpoint depression is 0.4 K, the temperature rises 4.7 K from the surface to 925 hPa, and low cloud cover averages 92%. Inland, the 925-hPa temperature is 7–9 K below the 2-m value, so the lowest ~750 m is well mixed.",
+  "key_point": "The white band in panel a is the fog and low cloud over the cold water just off the south coast. Panels b and c show why it forms: warm air passing over colder water is chilled from below and capped by a strong inversion.",
+  "numbers": {
+   "Nantucket_ACK": {
+    "T2m_C": 12.6,
+    "Td2m_C": 12.5,
+    "low_cloud_pct": 100,
+    "T925_minus_T2m_K": 6.5,
+    "wind_dir_deg": 230,
+    "wind_kt": 18
+   },
+   "Marthas_Vineyard_MVY": {
+    "T2m_C": 13.8,
+    "Td2m_C": 13.1,
+    "low_cloud_pct": 93,
+    "T925_minus_T2m_K": 5.8,
+    "wind_dir_deg": 230,
+    "wind_kt": 19
+   },
+   "Boston": {
+    "T2m_C": 28.1,
+    "Td2m_C": 13.8,
+    "low_cloud_pct": 0,
+    "T925_minus_T2m_K": -7.2,
+    "wind_dir_deg": 220,
+    "wind_kt": 9
+   },
+   "Worcester": {
+    "T2m_C": 30.5,
+    "Td2m_C": 13.1,
+    "low_cloud_pct": 0,
+    "T925_minus_T2m_K": -8.8,
+    "wind_dir_deg": 240,
+    "wind_kt": 9
+   },
+   "southcoast_box": [
+    -72.5,
+    -69.5,
+    40.3,
+    41.4
+   ],
+   "southcoast_mean_low_cloud_pct": 92,
+   "southcoast_mean_T2m_minus_SST_K": 3.5,
+   "southcoast_mean_SST_C": 10.3,
+   "southcoast_mean_T925_minus_T2m_K": 4.7,
+   "southcoast_mean_dewpoint_depression_K": 0.4
+  },
+  "notes": "Case replaced (fact-check item 1). The 19 May 2009 quote was a sea-breeze forecast on a clear, dry day, and ERA5 low cloud there was <= 7%. The new case was found from IEM ASOS (Nantucket fog days with a southwesterly wind and no rain) and confirmed in the BOX AFD issued 442 PM EDT Sun 10 May 2015 (https://mesonet.agron.iastate.edu/p.php?pid=201505102042-KBOX-FXUS61-AFDBOX), verbatim: \"A NARROW SLIVER OF DENSE FOG HUGGED THE SOUTH COASTAL WATERS ALL AFTERNOON.\" The 952 PM EDT 9 May AFD (FXUS61 KBOX 100153) says \"AREAS OF DENSE FOG HAVE DEVELOPED ALONG THE SOUTH COAST/CAPE/ISLANDS\". IEM ASOS KACK, 1453–2253 UTC: visibility 0.25–1 mi in BR/FG except 5 mi at 1953 and 2053 UTC, ceiling 200–300 ft, 57–62 °F, wind 230–240° at 11–17 kt. KBOS in the same hours: 80–88 °F, visibility 8–10 mi. ERA5 at the Nantucket grid point: 12.6 °C, dewpoint 12.5 °C, low cloud 100%, wind 230° 18 kt. ERA5 has no fog or visibility variable, so low cloud cover plus a near-zero dewpoint depression stand in for it. The inversion comes from cooling from below (warm air over cold water), which fits the fact-check's correction of the card's 'subsidence inversion'. The low cloud over Maine/Quebec in panel a is frontal cloud, not part of the marine layer. The domain is the same regional box as in the backdoor-front figure. The new file name is marine_2015.png, so the page's img src must change. The 2009 script (fig_marine_2009.py) is kept, but its PNG is not delivered."
+ },
+ {
+  "file": "noreaster_2015.png",
+  "system": "Nor'easter",
+  "time_utc": "2015-01-27 00:00",
+  "extent": [
+   -87,
+   -62,
+   30,
+   48
+  ],
+  "panels": [
+   {
+    "label": "(a) Pressure (hPa), precipitation, wind",
+    "shading": "ERA5 total precipitation in the hour ending at the analysis time (>= 0.1 mm h^-1)",
+    "contours": "MSLP every 4 hPa",
+    "barbs": "10-m wind, every 10th grid point",
+    "units": "mm h^-1; hPa; kt"
+   },
+   {
+    "label": "(b) 500-hPa height (dam) and spin",
+    "shading": "500-hPa relative vorticity (lightly smoothed)",
+    "contours": "500-hPa geopotential height every 6 dam",
+    "barbs": null,
+    "units": "10^-5 s^-1; dam"
+   },
+   {
+    "label": "(c) High cloud cover (%), pressure",
+    "shading": "ERA5 high cloud cover",
+    "contours": "MSLP every 4 hPa",
+    "barbs": null,
+    "units": "%; hPa"
+   }
+  ],
+  "caption": "ERA5 at 0000 UTC 27 Jan 2015. (a) Mean sea level pressure (contours, 4 hPa), precipitation rate (shading, mm h^-1) and 10-m wind (barbs, kt). (b) 500-hPa geopotential height (contours, 6 dam) and relative vorticity (shading, 10^-5 s^-1). (c) High cloud cover (shading, %) and mean sea level pressure (contours, 4 hPa). The low is centred at 37.0°N, 71.75°W with a central pressure of 993.2 hPa, beneath a 500-hPa trough whose vorticity maximum (32 x 10^-5 s^-1) lies at 33.25°N, 72.25°W. Northeasterly 10-m winds reach 30 kt at Nantucket and 39 kt over the waters off southern New England, and the high-cloud shield forms a comma that wraps north and west of the low.",
+  "key_point": "The 'L' off the Mid-Atlantic coast is the storm. Northeast winds on its north side blow in off the ocean toward New England, and the white comma of high cloud in panel c is its cloud shield.",
+  "numbers": {
+   "low_lonlat": [
+    -71.75,
+    37.0
+   ],
+   "low_central_pressure_hPa": 993.2,
+   "Boston": {
+    "MSLP_hPa": 1016.3,
+    "precip_mm_h": 0.51,
+    "wind_dir_deg": 50,
+    "wind_kt": 15
+   },
+   "Nantucket": {
+    "MSLP_hPa": 1011.3,
+    "precip_mm_h": 2.05,
+    "wind_dir_deg": 60,
+    "wind_kt": 30
+   },
+   "NYC": {
+    "MSLP_hPa": 1010.4,
+    "precip_mm_h": 0.45,
+    "wind_dir_deg": 30,
+    "wind_kt": 13
+   },
+   "max_10m_wind_kt_box_75W_66W_38N_44N": 39,
+   "max_500hPa_rel_vort_1e-5": 31.6,
+   "max_500hPa_rel_vort_lonlat": [
+    -72.25,
+    33.25
+   ]
+  },
+  "notes": "Time unchanged. The map uses the group-A synoptic box (-87,-62,30,48), 2° south and west of the suggested (-85,-60,32,50), so that the 2011 Miller-B lows near 33°N do not sit on the frame edge. Precipitation is the ERA5 short-range forecast accumulated over 2300–0000 UTC, a model field rather than radar. High cloud cover stands in for an IR image. Observed snow totals (Boston 24.4 in, Worcester 34.5 in, from the fact-check) are not ERA5 values and are not used in the caption."
+ },
+ {
+  "file": "millerb_2011.png",
+  "system": "Miller-B redevelopment (hybrid case)",
+  "time_utc": "2011-01-26 12:00, 2011-01-26 18:00, 2011-01-27 06:00",
+  "extent": [
+   -87,
+   -62,
+   30,
+   48
+  ],
+  "panels": [
+   {
+    "label": "(a) 12 UTC 26 Jan 2011: pressure change",
+    "shading": "3-h MSLP change ending at the panel time (lightly smoothed)",
+    "contours": "MSLP every 4 hPa",
+    "barbs": null,
+    "units": "hPa per 3 h; hPa"
+   },
+   {
+    "label": "(b) 18 UTC 26 Jan 2011: pressure change",
+    "shading": "3-h MSLP change ending at the panel time",
+    "contours": "MSLP every 4 hPa",
+    "barbs": null,
+    "units": "hPa per 3 h; hPa"
+   },
+   {
+    "label": "(c) 06 UTC 27 Jan 2011: pressure change",
+    "shading": "3-h MSLP change ending at the panel time",
+    "contours": "MSLP every 4 hPa",
+    "barbs": null,
+    "units": "hPa per 3 h; hPa"
+   }
+  ],
+  "caption": "ERA5 mean sea level pressure (contours, 4 hPa) and its 3-h change (shading, hPa per 3 h) at (a) 1200 UTC 26 Jan, (b) 1800 UTC 26 Jan and (c) 0600 UTC 27 Jan 2011. In (a) there are separate pressure minima west of the Appalachians (1005.2 hPa, 36.75°N, 82.0°W) and on the North Carolina coast (1004.3 hPa, 35.0°N, 76.25°W). By (b) only the coastal low remains (998.8 hPa, 37.25°N, 74.25°W, falling 5.8 hPa in 3 h). By (c) it has deepened to 987.2 hPa at 39.0°N, 72.25°W, near the 40°N, 70°W benchmark (plus sign), with pressure rising behind it.",
+  "key_point": "Follow the 'L' across the three panels. At first there are two lows, one inland and one on the coast; then the inland one disappears and the coastal one takes over, deepening quickly (blue = pressure falling) as it heads for the 40°N/70°W benchmark.",
+  "numbers": {
+   "2011-01-26T12": [
+    {
+     "lon": -76.25,
+     "lat": 35.0,
+     "p_hPa": 1004.3,
+     "dp3h_hPa": -2.8
+    },
+    {
+     "lon": -81.0,
+     "lat": 34.5,
+     "p_hPa": 1005.1,
+     "dp3h_hPa": -3.6
+    },
+    {
+     "lon": -82.0,
+     "lat": 36.75,
+     "p_hPa": 1005.2,
+     "dp3h_hPa": -2.6
+    }
+   ],
+   "inland_primary_marked": [
+    -82.0,
+    36.75,
+    1005.2
+   ],
+   "2011-01-26T18": [
+    {
+     "lon": -74.25,
+     "lat": 37.25,
+     "p_hPa": 998.8,
+     "dp3h_hPa": -5.8
+    }
+   ],
+   "2011-01-27T06": [
+    {
+     "lon": -72.25,
+     "lat": 39.0,
+     "p_hPa": 987.2,
+     "dp3h_hPa": -3.5
+    },
+    {
+     "lon": -67.5,
+     "lat": 40.25,
+     "p_hPa": 988.2,
+     "dp3h_hPa": -5.7
+    }
+   ]
+  },
+  "notes": "Times changed so the redevelopment is visible (fact-check item 4). The handoff happens on 26 Jan, before the card's 27 Jan 00Z time; by then ERA5 already has a single coastal low (992.9 hPa, 38.25°N, 74.0°W). As the fact-check notes, this is a hybrid case: the PHI AFDs trace a low from northern Alabama to coastal North Carolina, which is closer to Miller A than to an Ohio-Valley primary. At 12 UTC 26 Jan ERA5 has three weak minima of nearly equal pressure (coastal 1004.3, South Carolina 1005.1 and Tennessee/Virginia border 1005.2 hPa). The two 'L' marks show the coastal minimum and the northern inland one. The 500-hPa vorticity on the card ('vorticity handoff') is left out to keep the panels readable. At 06 UTC 27 Jan ERA5 has a second minimum (988.2 hPa, 40.25°N, 67.5°W) east of the marked low. No AFD quote that calls this a Miller B is available."
+ },
+ {
+  "file": "santaana_2007.png",
+  "system": "Santa Ana (offshore) wind",
+  "time_utc": "2007-10-22 09:00",
+  "extent": [
+   -122.5,
+   -111,
+   31,
+   40.5
+  ],
+  "panels": [
+   {
+    "label": "(a) Pressure (hPa), 2-m temp., wind",
+    "shading": "2-m temperature",
+    "contours": "MSLP every 2 hPa (lightly smoothed)",
+    "barbs": "10-m wind, every 5th grid point",
+    "units": "°C; hPa; kt"
+   },
+   {
+    "label": "(b) 850-hPa temp. advection (K h⁻¹)",
+    "shading": "850-hPa temperature advection (blank where 850 hPa is within ~20 hPa of the ground or below it)",
+    "contours": "850-hPa temperature every 2 °C",
+    "barbs": "850-hPa wind, every 5th grid point",
+    "units": "K h^-1; °C; kt"
+   },
+   {
+    "label": "(c) Relative humidity (%), wind (kt)",
+    "shading": "2-m relative humidity over liquid water, from T and Td",
+    "contours": null,
+    "barbs": "10-m wind, every 5th grid point",
+    "units": "%; kt"
+   }
+  ],
+  "caption": "ERA5 over southern California and the Great Basin at 0900 UTC 22 Oct 2007. (a) Mean sea level pressure (contours, 2 hPa), 2-m temperature (shading, °C) and 10-m wind (barbs, kt). (b) 850-hPa temperature advection (shading, K h^-1), 850-hPa temperature (contours, 2 °C) and 850-hPa wind (barbs, kt); blank where 850 hPa is at or near ground level. (c) 2-m relative humidity (shading, %) and 10-m wind (barbs, kt). High pressure over the Great Basin (1037.9 hPa near 38.5°N, 113.75°W) produces an offshore pressure difference of 13.2 hPa from Tonopah to Los Angeles and 8.0 hPa from Daggett to Los Angeles, the largest of the day. Northeasterly to easterly 850-hPa flow carries colder air over the interior (mean advection -0.44 K h^-1 east of the coastal ranges), and 2-m relative humidity falls to 17% at Ontario and 13% at Daggett. Over high terrain, mean sea level pressure is a reduced quantity, and its contours crowd along the Sierra Nevada.",
+  "key_point": "Panel a: pressure is much higher inland ('H') than at the coast, which drives air from the desert toward the sea. Panel c: that air reaches the coast very dry (yellow). It warms by sinking down the mountains, not because warm air is blown in.",
+  "numbers": {
+   "great_basin_high_lonlat": [
+    -113.75,
+    38.5
+   ],
+   "great_basin_high_hPa": 1037.9,
+   "LAX": {
+    "MSLP_hPa": 1020.6,
+    "T2m_C": 16.8,
+    "RH2m_pct": 29,
+    "wind_dir_deg": 0,
+    "wind_kt": 5
+   },
+   "Tonopah_TPH": {
+    "MSLP_hPa": 1033.8,
+    "T2m_C": 2.4,
+    "RH2m_pct": 31,
+    "wind_dir_deg": 40,
+    "wind_kt": 3
+   },
+   "Daggett_DAG": {
+    "MSLP_hPa": 1028.6,
+    "T2m_C": 12.4,
+    "RH2m_pct": 13,
+    "wind_dir_deg": 80,
+    "wind_kt": 7
+   },
+   "San_Diego": {
+    "MSLP_hPa": 1018.1,
+    "T2m_C": 18.6,
+    "RH2m_pct": 48,
+    "wind_dir_deg": 350,
+    "wind_kt": 7
+   },
+   "Ontario_ONT": {
+    "MSLP_hPa": 1022.2,
+    "T2m_C": 14.5,
+    "RH2m_pct": 17,
+    "wind_dir_deg": 40,
+    "wind_kt": 6
+   },
+   "TPH_minus_LAX_hPa": 13.2,
+   "DAG_minus_LAX_hPa": 8.0,
+   "mean_850_Tadv_interior_K_per_h": -0.44,
+   "min_850_Tadv_interior_K_per_h": -2.54,
+   "min_RH2m_coastal_SoCal_pct": 4
+  },
+  "notes": "Hour changed from 12Z to 09Z, because the coordinator asked for the hour on 22 Oct 2007 with the strongest offshore gradient. Tonopah minus LAX MSLP peaks at 13.2 hPa at 08–09 UTC (11.1 at 00 UTC, 12.1 at 12 UTC, 9.2 at 23 UTC), and DAG minus LAX peaks at 8.0 hPa at 09 UTC. There is a jump between 09 and 10 UTC (13.2 -> 11.5 hPa) at the ERA5 assimilation-window boundary. 09 UTC is 0200 PDT, so the 2-m temperatures are night-time values. As the coordinator asked, nothing is labelled warm advection. The coastal heat is compressional warming of descending air (see Hughes & Hall 2010, Clim. Dyn. 34, 847–857, for the cold-desert thermal forcing), and ERA5 does not resolve the descent. The positive 850-hPa advection patch on the coastal slopes of the Transverse and Peninsular Ranges is where 850 hPa lies just above the terrain; it is not annotated. At this hour ERA5 2-m RH is 29% at LAX and 48% at San Diego, and the lowest value below ~500 m elevation in the LA–San Diego box is 4%. The map extent (-122.5,-111,31,40.5) is narrower than the old (-125,-112,30,41) so that it frames southern California and the Great Basin high."
+ }
+]
