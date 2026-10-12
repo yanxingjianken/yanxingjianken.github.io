@@ -14,6 +14,8 @@ These are my handwritten notes in OneNote format. Note that there may be Mandari
 
 ### [12.810 Atmosphere Dynamics (2025 Spring)](https://1drv.ms/o/c/1eaa79e252a5e09b/Ek8M0m1vniFGt3W-R532HosBq_vsc4Jm8U2KZGusoVcIiw?e=7ncho6)
 
+### [12.812 General Circulation (2026 Fall)](https://1drv.ms/o/c/78557753d3515636/IgCT3FRyKqkYQ4ImKnJ3Xu1EAaozTfutsIYvBS6qghIJb9I?e=Tr58h6)
+
 ### [12.815 Radiation Convection (2025 Spring)](https://1drv.ms/o/c/1eaa79e252a5e09b/Evl0HnW2oEZKkPl0CYLqZGsBXhxc5wS0BKIhy2VSqeEP5A?e=9exd1Z)
 
 ### [12.818 Atmos Data & Large-scale Dynam (2024 Fall)](https://1drv.ms/o/s!AjZWUdNTd1V4gq1HgRo2Xm7trRjTSg?e=Mztns1)
