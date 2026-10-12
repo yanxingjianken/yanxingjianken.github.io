@@ -1,7 +1,7 @@
 {
  "season": "2026-27",
  "source": "https://www.wxchallenge.com/schedule.php",
- "fetched": "2026-09-27T03:25:15Z",
+ "fetched": "2026-10-12T13:03:13Z",
  "fallback_station": "KBOS",
  "periods": [
   {
@@ -13,9 +13,9 @@
    "tournament": false
   },
   {
-   "city": null,
-   "station": null,
-   "climo": null,
+   "city": "Olympia, WA",
+   "station": "KOLM",
+   "climo": "60/40/15/0.16",
    "start": "2026-10-12",
    "end": "2026-10-26",
    "tournament": false
