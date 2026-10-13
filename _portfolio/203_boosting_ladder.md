@@ -157,7 +157,7 @@ collection: portfolio
 
 <h2>References and Notes</h2>
 <ol class="sci-refs">
-<li>S. Ravela, J. D. Kim, K. Gee, X. Yan, L. Albarghouty, A. Saha, S. Mercier, Ensemble-conditional Gaussian processes (Ens-CGP): Representation, geometry, and inference. <a href="https://arxiv.org/abs/2602.13871">arXiv:2602.13871</a> (2026).</li>
+<li>S. Ravela, J. D. Kim, K. Gee, X. Yan, S. Mercier, L. Albarghouty, A. Saha, Ensemble-conditional Gaussian processes (Ens-CGP): Representation, geometry, and inference. <a href="https://arxiv.org/abs/2602.13871">arXiv:2602.13871</a> (2026).</li>
 <li>M. E. Levine, A. M. Stuart, A framework for machine learning of model error in dynamical systems. <a href="https://arxiv.org/abs/2107.06658">arXiv:2107.06658</a> (2021).</li>
 <li>M. Trautner, S. Ravela, Neural integration of continuous dynamics. <a href="https://arxiv.org/abs/1911.10309">arXiv:1911.10309</a> (2019).</li>
 <li>J. D. Kim, S. Ravela, R. L. Evans, The Neuro-Physical Inverter: A modular framework for magnetotelluric inversion coupling ensemble conditioning with residual learning. <a href="https://arxiv.org/abs/2610.03225">arXiv:2610.03225</a> (2026).</li>
