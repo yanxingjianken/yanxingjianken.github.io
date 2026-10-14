@@ -28,11 +28,11 @@ ___
 
 ### Scientists and academicians: You can view my [CV here](https://www.overleaf.com/read/sypjtgcdtnqb#3846ad).
 
-I'm open to future fellowship opportunities. I am generously supported by the Thomas C. Desmond fellowship from Sep. 2025 to May 2026.
+I'm open to future fellowship opportunities. I am generously supported by the Thomas C. Desmond fellowship (2025 - 2026) and the Lester Wolfe Fellowship (2026 - 2027).
 
 ### HR and headhunters: You can view my [One-Page Resume here](https://www.overleaf.com/read/btytsbptfytw#0dfa4c) ([Mandarin Chinese Version](https://www.overleaf.com/read/csdmbvxkngxt#812fd7)).
 
-Post-graduation, I am interested in industrial positions of (but not limited to): Quantitative Research in Quantitative Finance (Energy / Commodity Trading); Research Scientist in Earth or Climate Science (AI, Energy, or Aerospace sectors); Extreme Weather Event Prediction Scientist in reinsurance and catastrophe bonds; Research / Consulting in Climate Finance and Policy.
+Post-graduation, I am interested in industrial positions of (but not limited to): Quantitative Research in Quantitative Finance (Energy / Commodity Trading / Cat bonds); AI for weather, climate, or general fluid dynamics; Consulting in Climate Finance and Policy.
 
 ___
 
@@ -43,9 +43,11 @@ ___
 
 - I love all kinds of food - from [homemade] to [fine dining](https://docs.google.com/presentation/d/1MkS_8FjDAC8YF36vI4oHA-Ww5XbS5BFHpBBz1LpHyWA/edit?usp=sharing).
   
-- I am a member of MIT WxChallenge team, which competes in a collegiate [weather forecast tournament](http://www.wxchallenge.com/index.php); we just won a team [championship (2024-25)](http://synoptic.mit.edu/miscellaneous/fc-team/)! My usr_id == eggtrt (2024/25), mndrin (2025/26).
+- I am the manager of the MIT WxChallenge team, which competes in a collegiate [weather forecast tournament](http://www.wxchallenge.com/index.php); we just won a team [championship (2024-25)](http://synoptic.mit.edu/miscellaneous/fc-team/)! My usr_id == eggtrt (2024/25), mndrin (2025/26), pockyy (2026/27).
 
 - My research is featured on a BBC radio show! Check it out <a href="https://www.bbc.com/audio/play/w3ct72wb">here</a> (approx. at 23'30'').
+
+- [Charlie](https://alpha-kun.github.io/) and I are generously supported by the [MIT sandbox program](https://sandbox.mit.edu/) for some crazy start-up ideas, stay tuned!
 
 - I represented NYU Shanghai in a nationwide Hearthstone tournament in China in 2021, and still am an active, top 0.5% ranked <a href="https://hearthstone.blizzard.com/en-us/battlegrounds/">Hearthstone Battleground</a> player. You can find my US ranking at the <a href="https://hearthstone.blizzard.com/en-us/community/leaderboards/?region=US&leaderboardId=battlegrounds&seasonId=13&page=353">official learderboard</a> for id = hirondelle (<a href="https://hearthstone.blizzard.com/en-us/community/leaderboards/?region=US&leaderboardId=battlegrounds&seasonId=13&page=353">season 8</a>), (<a href="https://hearthstone.blizzard.com/en-us/community/leaderboards/?region=US&leaderboardId=battlegrounds&seasonId=14&page=353">season 9</a>), (<a href="https://hearthstone.blizzard.com/en-us/community/leaderboards/?region=US&leaderboardId=battlegrounds&seasonId=15&page=127">season 10</a>), (<a href="https://hearthstone.blizzard.com/en-us/community/leaderboards?region=US&leaderboardId=battlegrounds&seasonId=16&page=148">season 11</a>). Or you can find my rankings <a href="https://www.hsguru.com/player-profile/hirondelle">here</a>.
 
