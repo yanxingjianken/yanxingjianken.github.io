@@ -1,0 +1,154 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 526 536" width="526pt" height="536pt" font-family="Arial, Helvetica, 'Liberation Sans', sans-serif">
+<defs><marker id="arr" viewBox="0 0 6 6" refX="5.6" refY="3" markerWidth="5.2" markerHeight="5.2" orient="auto"><path d="M0,0.5 L6,3 L0,5.5 z" fill="#000000"/></marker></defs>
+<rect x="-2" y="-2" width="526" height="536" fill="#ffffff"/>
+<text x="0" y="10" font-size="9" font-weight="bold" fill="#000000">A</text>
+<text x="12.0" y="10.0" font-size="7.4" fill="#000000" text-anchor="start"><tspan font-size="7.40" font-weight="bold">Use:</tspan><tspan font-size="7.40"> every hour t of one forecast run</tspan></text>
+<rect x="73.0" y="26.0" width="110.0" height="17.0" rx="8.5" fill="#fff" stroke="#000000" stroke-width="0.75"/>
+<text x="128.0" y="36.8" font-size="6.7" fill="#000000" text-anchor="middle"><tspan font-size="6.70">Start: one forecast run</tspan></text>
+<rect x="98.0" y="55.0" width="60.0" height="15.0" rx="0.0" fill="#fff" stroke="#000000" stroke-width="0.75"/>
+<text x="128.0" y="64.8" font-size="6.7" fill="#000000" text-anchor="middle"><tspan font-size="6.70">t ← 1</tspan></text>
+<path d="M47.0,82.0 L223.0,82.0 L209.0,108.0 L33.0,108.0 Z" fill="#fff" stroke="#000000" stroke-width="0.75"/>
+<text x="128.0" y="93.1" font-size="6.7" fill="#000000" text-anchor="middle"><tspan font-size="6.70">Read hour t: WRF d01 u</tspan><tspan dy="1.88" font-size="4.82">t</tspan><tspan dy="-1.88" font-size="6.70">, u</tspan><tspan dy="1.88" font-size="4.82">t−1</tspan><tspan dy="-1.88" font-size="6.70">, u</tspan><tspan dy="1.88" font-size="4.82">t−2</tspan><tspan dy="-1.88" font-size="6.70">;</tspan></text>
+<text x="128.0" y="101.5" font-size="6.7" fill="#000000" text-anchor="middle"><tspan font-size="6.70">GFS steering wind; Ens-CGP mean μ</tspan><tspan dy="1.88" font-size="4.82">t</tspan></text>
+<rect x="40.0" y="120.0" width="176.0" height="34.0" rx="0.0" fill="#fff" stroke="#000000" stroke-width="0.75"/>
+<path d="M45.0,120.0 L45.0,154.0" fill="none" stroke="#000000" stroke-width="0.75"/>
+<path d="M211.0,120.0 L211.0,154.0" fill="none" stroke="#000000" stroke-width="0.75"/>
+<text x="128.0" y="130.9" font-size="6.7" fill="#000000" text-anchor="middle"><tspan font-size="6.70" font-weight="bold">Order 0:</tspan><tspan font-size="6.70"> CorrDiff μ_v2 → 8 members</tspan></text>
+<text x="128.0" y="139.3" font-size="6.7" fill="#000000" text-anchor="middle"><tspan font-size="6.70">x</tspan><tspan dy="1.88" font-size="4.82">k,t</tspan><tspan dy="-1.88" font-size="6.70">, k = 1, …, 8; member k also reads</tspan></text>
+<text x="128.0" y="147.7" font-size="6.7" fill="#000000" text-anchor="middle"><tspan font-size="6.70">its own x</tspan><tspan dy="1.88" font-size="4.82">k,t−1</tspan><tspan dy="-1.88" font-size="6.70">, x</tspan><tspan dy="1.88" font-size="4.82">k,t−2</tspan></text>
+<rect x="40.0" y="166.0" width="176.0" height="26.0" rx="0.0" fill="#fff" stroke="#000000" stroke-width="0.75"/>
+<text x="128.0" y="177.1" font-size="6.7" fill="#000000" text-anchor="middle"><tspan font-size="6.70">Split: mean x̄</tspan><tspan dy="1.88" font-size="4.82">t</tspan><tspan dy="-1.88" font-size="6.70"> of the 8 members;</tspan></text>
+<text x="128.0" y="185.5" font-size="6.7" fill="#000000" text-anchor="middle"><tspan font-size="6.70">perturbation d</tspan><tspan dy="1.88" font-size="4.82">k,t</tspan><tspan dy="-1.88" font-size="6.70"> = x</tspan><tspan dy="1.88" font-size="4.82">k,t</tspan><tspan dy="-1.88" font-size="6.70"> − x̄</tspan><tspan dy="1.88" font-size="4.82">t</tspan></text>
+<rect x="40.0" y="204.0" width="176.0" height="26.0" rx="0.0" fill="#fff" stroke="#000000" stroke-width="0.75"/>
+<text x="128.0" y="215.1" font-size="6.7" fill="#000000" text-anchor="middle"><tspan font-size="6.70" font-weight="bold">Order 1</tspan><tspan font-size="6.70"> (linear, per variable and band b):</tspan></text>
+<text x="128.0" y="223.5" font-size="6.7" fill="#000000" text-anchor="middle"><tspan font-size="6.70">x̄</tspan><tspan dy="-2.55" font-size="4.82">(1)</tspan><tspan dy="4.42" font-size="4.82">t</tspan><tspan dy="-1.88" font-size="6.70"> = x̄</tspan><tspan dy="1.88" font-size="4.82">t</tspan><tspan dy="-1.88" font-size="6.70"> + Σ</tspan><tspan dy="1.88" font-size="4.82">b</tspan><tspan dy="-1.88" font-size="6.70"> β</tspan><tspan dy="1.88" font-size="4.82">b</tspan><tspan dy="-1.88" font-size="6.70"> · m</tspan><tspan dy="1.88" font-size="4.82">b,t</tspan></text>
+<rect x="98.0" y="242.0" width="60.0" height="15.0" rx="0.0" fill="#fff" stroke="#000000" stroke-width="0.75"/>
+<text x="128.0" y="251.8" font-size="6.7" fill="#000000" text-anchor="middle"><tspan font-size="6.70">n ← 2</tspan></text>
+<rect x="40.0" y="269.0" width="176.0" height="34.0" rx="0.0" fill="#fff" stroke="#000000" stroke-width="0.75"/>
+<text x="128.0" y="279.9" font-size="6.7" fill="#000000" text-anchor="middle"><tspan font-size="6.70" font-weight="bold">Order n</tspan><tspan font-size="6.70"> (boosting stage):</tspan></text>
+<text x="128.0" y="288.3" font-size="6.7" fill="#000000" text-anchor="middle"><tspan font-size="6.70">x̄</tspan><tspan dy="-2.55" font-size="4.82">(n)</tspan><tspan dy="4.42" font-size="4.82">t</tspan><tspan dy="-1.88" font-size="6.70"> = x̄</tspan><tspan dy="-2.55" font-size="4.82">(n−1)</tspan><tspan dy="4.42" font-size="4.82">t</tspan><tspan dy="-1.88" font-size="6.70"> + ν ê</tspan><tspan dy="-2.55" font-size="4.82">(n)</tspan><tspan dy="4.42" font-size="4.82">t</tspan></text>
+<text x="128.0" y="296.7" font-size="6.7" fill="#000000" text-anchor="middle"><tspan font-size="6.70">ê</tspan><tspan dy="-2.55" font-size="4.82">(n)</tspan><tspan dy="2.55" font-size="6.70">: random-feature network</tspan></text>
+<path d="M128.0,315.0 L184.0,335.0 L128.0,355.0 L72.0,335.0 Z" fill="#fff" stroke="#000000" stroke-width="0.75"/>
+<text x="128.0" y="337.2" font-size="6.4" fill="#000000" text-anchor="middle"><tspan font-size="6.40">n &lt; N ?</tspan></text>
+<rect x="204.0" y="327.0" width="44.0" height="16.0" rx="0.0" fill="#fff" stroke="#000000" stroke-width="0.75"/>
+<text x="226.0" y="337.3" font-size="6.7" fill="#000000" text-anchor="middle"><tspan font-size="6.70">n ← n + 1</tspan></text>
+<rect x="40.0" y="367.0" width="176.0" height="26.0" rx="0.0" fill="#fff" stroke="#000000" stroke-width="0.75"/>
+<text x="128.0" y="378.1" font-size="6.7" fill="#000000" text-anchor="middle"><tspan font-size="6.70" font-weight="bold">Perturbation scaling:</tspan><tspan font-size="6.70"> y</tspan><tspan dy="1.88" font-size="4.82">k,t</tspan><tspan dy="-1.88" font-size="6.70"> = x̄</tspan><tspan dy="-2.55" font-size="4.82">(N)</tspan><tspan dy="4.42" font-size="4.82">t</tspan></text>
+<text x="128.0" y="386.5" font-size="6.7" fill="#000000" text-anchor="middle"><tspan font-size="6.70">+ Σ</tspan><tspan dy="1.88" font-size="4.82">b</tspan><tspan dy="-1.88" font-size="6.70"> α</tspan><tspan dy="1.88" font-size="4.82">b</tspan><tspan dy="-1.88" font-size="6.70">(lead) · P</tspan><tspan dy="1.88" font-size="4.82">b</tspan><tspan dy="-1.88" font-size="6.70"> d</tspan><tspan dy="1.88" font-size="4.82">k,t</tspan></text>
+<path d="M47.0,405.0 L223.0,405.0 L209.0,423.0 L33.0,423.0 Z" fill="#fff" stroke="#000000" stroke-width="0.75"/>
+<text x="128.0" y="416.3" font-size="6.7" fill="#000000" text-anchor="middle"><tspan font-size="6.70">Write the 8 members y</tspan><tspan dy="1.88" font-size="4.82">k,t</tspan><tspan dy="-1.88" font-size="6.70"> (6 variables, 3 km)</tspan></text>
+<path d="M128.0,435.0 L184.0,455.0 L128.0,475.0 L72.0,455.0 Z" fill="#fff" stroke="#000000" stroke-width="0.75"/>
+<text x="128.0" y="457.2" font-size="6.4" fill="#000000" text-anchor="middle"><tspan font-size="6.40">t &lt; 72 ?</tspan></text>
+<rect x="1.0" y="447.0" width="34.0" height="16.0" rx="0.0" fill="#fff" stroke="#000000" stroke-width="0.75"/>
+<text x="18.0" y="457.3" font-size="6.7" fill="#000000" text-anchor="middle"><tspan font-size="6.70">t ← t + 1</tspan></text>
+<rect x="98.0" y="487.0" width="60.0" height="17.0" rx="8.5" fill="#fff" stroke="#000000" stroke-width="0.75"/>
+<text x="128.0" y="497.8" font-size="6.7" fill="#000000" text-anchor="middle"><tspan font-size="6.70">End</tspan></text>
+<path d="M128.0,43.0 L128.0,55.0" fill="none" stroke="#000000" stroke-width="0.75" marker-end="url(#arr)"/>
+<path d="M128.0,70.0 L128.0,82.0" fill="none" stroke="#000000" stroke-width="0.75" marker-end="url(#arr)"/>
+<path d="M128.0,108.0 L128.0,120.0" fill="none" stroke="#000000" stroke-width="0.75" marker-end="url(#arr)"/>
+<path d="M128.0,154.0 L128.0,166.0" fill="none" stroke="#000000" stroke-width="0.75" marker-end="url(#arr)"/>
+<path d="M128.0,192.0 L128.0,204.0" fill="none" stroke="#000000" stroke-width="0.75" marker-end="url(#arr)"/>
+<path d="M128.0,230.0 L128.0,242.0" fill="none" stroke="#000000" stroke-width="0.75" marker-end="url(#arr)"/>
+<path d="M128.0,257.0 L128.0,269.0" fill="none" stroke="#000000" stroke-width="0.75" marker-end="url(#arr)"/>
+<path d="M128.0,303.0 L128.0,315.0" fill="none" stroke="#000000" stroke-width="0.75" marker-end="url(#arr)"/>
+<path d="M128.0,393.0 L128.0,405.0" fill="none" stroke="#000000" stroke-width="0.75" marker-end="url(#arr)"/>
+<path d="M128.0,423.0 L128.0,435.0" fill="none" stroke="#000000" stroke-width="0.75" marker-end="url(#arr)"/>
+<path d="M128.0,355.0 L128.0,367.0" fill="none" stroke="#000000" stroke-width="0.75" marker-end="url(#arr)"/>
+<text x="134.0" y="363.0" font-size="6.2" fill="#000000" text-anchor="start" font-style="italic"><tspan font-size="6.20">no</tspan></text>
+<path d="M184.0,335.0 L204.0,335.0" fill="none" stroke="#000000" stroke-width="0.75" marker-end="url(#arr)"/>
+<text x="186.0" y="330.0" font-size="6.2" fill="#000000" text-anchor="start" font-style="italic"><tspan font-size="6.20">yes</tspan></text>
+<path d="M226.0,327.0 L226.0,286.0 L216.0,286.0" fill="none" stroke="#000000" stroke-width="0.75" marker-end="url(#arr)"/>
+<path d="M128.0,475.0 L128.0,487.0" fill="none" stroke="#000000" stroke-width="0.75" marker-end="url(#arr)"/>
+<text x="134.0" y="483.0" font-size="6.2" fill="#000000" text-anchor="start" font-style="italic"><tspan font-size="6.20">no</tspan></text>
+<path d="M72.0,455.0 L35.0,455.0" fill="none" stroke="#000000" stroke-width="0.75" marker-end="url(#arr)"/>
+<text x="68.0" y="450.0" font-size="6.2" fill="#000000" text-anchor="end" font-style="italic"><tspan font-size="6.20">yes</tspan></text>
+<path d="M18.0,447.0 L18.0,95.0 L36.5,95.0" fill="none" stroke="#000000" stroke-width="0.75" marker-end="url(#arr)"/>
+<path d="M233.0,159.0 L228.0,159.0 L228.0,194.0 L233.0,194.0" fill="none" stroke="#000000" stroke-width="0.75"/>
+<path d="M216.0,179.0 L228.0,176.5" fill="none" stroke="#000000" stroke-width="0.75" stroke-dasharray="2 1.5"/>
+<text x="232.0" y="166.0" font-size="6.0" fill="#000000" text-anchor="start"><tspan font-size="6.00">corrections act on x̄ only</tspan></text>
+<text x="232.0" y="174.4" font-size="6.0" fill="#000000" text-anchor="start"><tspan font-size="6.00">(squared error = right loss</tspan></text>
+<text x="232.0" y="182.8" font-size="6.0" fill="#000000" text-anchor="start"><tspan font-size="6.00">for a mean); the perturbations</tspan></text>
+<text x="232.0" y="191.2" font-size="6.0" fill="#000000" text-anchor="start"><tspan font-size="6.00">d are only rescaled</tspan></text>
+<path d="M233.0,204.0 L228.0,204.0 L228.0,231.0 L233.0,231.0" fill="none" stroke="#000000" stroke-width="0.75"/>
+<path d="M216.0,217.0 L228.0,217.5" fill="none" stroke="#000000" stroke-width="0.75" stroke-dasharray="2 1.5"/>
+<text x="232.0" y="211.2" font-size="6.0" fill="#000000" text-anchor="start"><tspan font-size="6.00">memory filter of the inputs z:</tspan></text>
+<text x="232.0" y="219.6" font-size="6.0" fill="#000000" text-anchor="start"><tspan font-size="6.00">m</tspan><tspan dy="1.68" font-size="4.32">b,t</tspan><tspan dy="-1.68" font-size="6.00"> = φ m</tspan><tspan dy="1.68" font-size="4.32">b,t−1</tspan><tspan dy="-1.68" font-size="6.00"> + (1 − φ) z</tspan><tspan dy="1.68" font-size="4.32">b,t</tspan></text>
+<text x="232.0" y="228.0" font-size="6.0" fill="#000000" text-anchor="start"><tspan font-size="6.00">(φ = 0: no memory)</tspan></text>
+<path d="M233.0,259.0 L228.0,259.0 L228.0,286.0 L233.0,286.0" fill="none" stroke="#000000" stroke-width="0.75"/>
+<path d="M216.0,276.0 L228.0,272.5" fill="none" stroke="#000000" stroke-width="0.75" stroke-dasharray="2 1.5"/>
+<text x="232.0" y="266.2" font-size="6.0" fill="#000000" text-anchor="start"><tspan font-size="6.00">inputs: local x̄</tspan><tspan dy="-2.28" font-size="4.32">(n−1)</tspan><tspan dy="2.28" font-size="6.00">, d01,</tspan></text>
+<text x="232.0" y="274.6" font-size="6.0" fill="#000000" text-anchor="start"><tspan font-size="6.00">μ; its own memory filter</tspan></text>
+<text x="232.0" y="283.0" font-size="6.0" fill="#000000" text-anchor="start"><tspan font-size="6.00">and lags</tspan></text>
+<text x="300" y="10" font-size="9" font-weight="bold" fill="#000000">B</text>
+<text x="312.0" y="10.0" font-size="7.4" fill="#000000" text-anchor="start"><tspan font-size="7.40" font-weight="bold">Fitting:</tspan><tspan font-size="7.40"> once, in this order</tspan></text>
+<rect x="370.0" y="26.0" width="60.0" height="17.0" rx="8.5" fill="#fff" stroke="#000000" stroke-width="0.75"/>
+<text x="400.0" y="36.8" font-size="6.7" fill="#000000" text-anchor="middle"><tspan font-size="6.70">Start</tspan></text>
+<rect x="320.0" y="55.0" width="160.0" height="34.0" rx="0.0" fill="#fff" stroke="#000000" stroke-width="0.75"/>
+<path d="M325.0,55.0 L325.0,89.0" fill="none" stroke="#000000" stroke-width="0.75"/>
+<path d="M475.0,55.0 L475.0,89.0" fill="none" stroke="#000000" stroke-width="0.75"/>
+<text x="400.0" y="65.9" font-size="6.7" fill="#000000" text-anchor="middle"><tspan font-size="6.70">Generate CorrDiff μ_v2, 8 members, on</tspan></text>
+<text x="400.0" y="74.3" font-size="6.7" fill="#000000" text-anchor="middle"><tspan font-size="6.70">the training and validation runs</tspan></text>
+<text x="400.0" y="82.7" font-size="6.7" fill="#000000" text-anchor="middle"><tspan font-size="6.70">(existing checkpoint)</tspan></text>
+<rect x="320.0" y="101.0" width="160.0" height="17.0" rx="0.0" fill="#fff" stroke="#000000" stroke-width="0.75"/>
+<text x="400.0" y="111.8" font-size="6.7" fill="#000000" text-anchor="middle"><tspan font-size="6.70">Split every hour into x̄ and d</tspan><tspan dy="1.88" font-size="4.82">k</tspan></text>
+<rect x="320.0" y="130.0" width="160.0" height="26.0" rx="0.0" fill="#fff" stroke="#000000" stroke-width="0.75"/>
+<text x="400.0" y="141.1" font-size="6.7" fill="#000000" text-anchor="middle"><tspan font-size="6.70">Fit order 1 on y − x̄ (training runs;</tspan></text>
+<text x="400.0" y="149.5" font-size="6.7" fill="#000000" text-anchor="middle"><tspan font-size="6.70">φ chosen out-of-fold, 5 episode folds)</tspan></text>
+<rect x="370.0" y="168.0" width="60.0" height="15.0" rx="0.0" fill="#fff" stroke="#000000" stroke-width="0.75"/>
+<text x="400.0" y="177.8" font-size="6.7" fill="#000000" text-anchor="middle"><tspan font-size="6.70">n ← 2</tspan></text>
+<rect x="320.0" y="195.0" width="160.0" height="34.0" rx="0.0" fill="#fff" stroke="#000000" stroke-width="0.75"/>
+<text x="400.0" y="205.9" font-size="6.7" fill="#000000" text-anchor="middle"><tspan font-size="6.70">For each step ν of a grid: fit order n on</tspan></text>
+<text x="400.0" y="214.3" font-size="6.7" fill="#000000" text-anchor="middle"><tspan font-size="6.70">the out-of-fold residual of order n − 1,</tspan></text>
+<text x="400.0" y="222.7" font-size="6.7" fill="#000000" text-anchor="middle"><tspan font-size="6.70">run on its own past outputs; add with ν</tspan></text>
+<path d="M400.0,241.0 L452.0,263.0 L400.0,285.0 L348.0,263.0 Z" fill="#fff" stroke="#000000" stroke-width="0.75"/>
+<text x="400.0" y="261.0" font-size="6.4" fill="#000000" text-anchor="middle"><tspan font-size="6.40">validation error</tspan></text>
+<text x="400.0" y="269.4" font-size="6.4" fill="#000000" text-anchor="middle"><tspan font-size="6.40">still falling?</tspan></text>
+<rect x="466.0" y="255.0" width="44.0" height="16.0" rx="0.0" fill="#fff" stroke="#000000" stroke-width="0.75"/>
+<text x="488.0" y="265.3" font-size="6.7" fill="#000000" text-anchor="middle"><tspan font-size="6.70">n ← n + 1</tspan></text>
+<rect x="320.0" y="297.0" width="160.0" height="17.0" rx="0.0" fill="#fff" stroke="#000000" stroke-width="0.75"/>
+<text x="400.0" y="307.8" font-size="6.7" fill="#000000" text-anchor="middle"><tspan font-size="6.70">N, ν ← lowest validation error (all ν)</tspan></text>
+<rect x="320.0" y="326.0" width="160.0" height="26.0" rx="0.0" fill="#fff" stroke="#000000" stroke-width="0.75"/>
+<text x="400.0" y="337.1" font-size="6.7" fill="#000000" text-anchor="middle"><tspan font-size="6.70">Fit α</tspan><tspan dy="1.88" font-size="4.82">b</tspan><tspan dy="-1.88" font-size="6.70">(lead) per variable and band</tspan></text>
+<text x="400.0" y="345.5" font-size="6.7" fill="#000000" text-anchor="middle"><tspan font-size="6.70">by fair CRPS on the training runs</tspan></text>
+<rect x="320.0" y="364.0" width="160.0" height="26.0" rx="0.0" fill="#fff" stroke="#000000" stroke-width="0.75"/>
+<text x="400.0" y="375.1" font-size="6.7" fill="#000000" text-anchor="middle"><tspan font-size="6.70">Score the validation runs</tspan></text>
+<text x="400.0" y="383.5" font-size="6.7" fill="#000000" text-anchor="middle"><tspan font-size="6.70">(error, CRPS, spread)</tspan></text>
+<path d="M327.0,402.0 L487.0,402.0 L473.0,428.0 L313.0,428.0 Z" fill="#fff" stroke="#000000" stroke-width="0.75"/>
+<text x="400.0" y="413.1" font-size="6.7" fill="#000000" text-anchor="middle"><tspan font-size="6.70">Test runs: generate 8 members,</tspan></text>
+<text x="400.0" y="421.5" font-size="6.7" fill="#000000" text-anchor="middle"><tspan font-size="6.70">score once</tspan></text>
+<rect x="370.0" y="440.0" width="60.0" height="17.0" rx="8.5" fill="#fff" stroke="#000000" stroke-width="0.75"/>
+<text x="400.0" y="450.8" font-size="6.7" fill="#000000" text-anchor="middle"><tspan font-size="6.70">End</tspan></text>
+<path d="M400.0,43.0 L400.0,55.0" fill="none" stroke="#000000" stroke-width="0.75" marker-end="url(#arr)"/>
+<path d="M400.0,89.0 L400.0,101.0" fill="none" stroke="#000000" stroke-width="0.75" marker-end="url(#arr)"/>
+<path d="M400.0,118.0 L400.0,130.0" fill="none" stroke="#000000" stroke-width="0.75" marker-end="url(#arr)"/>
+<path d="M400.0,156.0 L400.0,168.0" fill="none" stroke="#000000" stroke-width="0.75" marker-end="url(#arr)"/>
+<path d="M400.0,183.0 L400.0,195.0" fill="none" stroke="#000000" stroke-width="0.75" marker-end="url(#arr)"/>
+<path d="M400.0,229.0 L400.0,241.0" fill="none" stroke="#000000" stroke-width="0.75" marker-end="url(#arr)"/>
+<path d="M400.0,314.0 L400.0,326.0" fill="none" stroke="#000000" stroke-width="0.75" marker-end="url(#arr)"/>
+<path d="M400.0,352.0 L400.0,364.0" fill="none" stroke="#000000" stroke-width="0.75" marker-end="url(#arr)"/>
+<path d="M400.0,390.0 L400.0,402.0" fill="none" stroke="#000000" stroke-width="0.75" marker-end="url(#arr)"/>
+<path d="M400.0,428.0 L400.0,440.0" fill="none" stroke="#000000" stroke-width="0.75" marker-end="url(#arr)"/>
+<path d="M400.0,285.0 L400.0,297.0" fill="none" stroke="#000000" stroke-width="0.75" marker-end="url(#arr)"/>
+<text x="406.0" y="293.0" font-size="6.2" fill="#000000" text-anchor="start" font-style="italic"><tspan font-size="6.20">no</tspan></text>
+<path d="M452.0,263.0 L466.0,263.0" fill="none" stroke="#000000" stroke-width="0.75" marker-end="url(#arr)"/>
+<text x="453.0" y="258.0" font-size="6.2" fill="#000000" text-anchor="start" font-style="italic"><tspan font-size="6.20">yes</tspan></text>
+<path d="M488.0,255.0 L488.0,212.0 L480.0,212.0" fill="none" stroke="#000000" stroke-width="0.75" marker-end="url(#arr)"/>
+<text x="320.0" y="476.0" font-size="6.0" fill="#000000" text-anchor="start"><tspan font-size="6.00">Training runs fit; validation runs choose; test runs are scored once.</tspan></text>
+<text x="320.0" y="484.5" font-size="6.0" fill="#000000" text-anchor="start"><tspan font-size="6.00">Training-run members are in-sample (CorrDiff was trained on them).</tspan></text>
+<path d="M0,510.0 L522.0,510.0" fill="none" stroke="#000000" stroke-width="0.75"/>
+<text x="0.0" y="524.0" font-size="6.4" fill="#000000" text-anchor="start"><tspan font-size="6.40">Symbols:</tspan></text>
+<rect x="40.0" y="516.0" width="32.0" height="12.0" rx="6.0" fill="#fff" stroke="#000000" stroke-width="0.75"/>
+<text x="76.0" y="524.0" font-size="6.2" fill="#000000" text-anchor="start"><tspan font-size="6.20">start / end</tspan></text>
+<rect x="132.0" y="516.0" width="28.0" height="12.0" rx="0.0" fill="#fff" stroke="#000000" stroke-width="0.75"/>
+<text x="164.0" y="524.0" font-size="6.2" fill="#000000" text-anchor="start"><tspan font-size="6.20">process</tspan></text>
+<rect x="202.0" y="516.0" width="28.0" height="12.0" rx="0.0" fill="#fff" stroke="#000000" stroke-width="0.75"/>
+<path d="M207.0,516.0 L207.0,528.0" fill="none" stroke="#000000" stroke-width="0.75"/>
+<path d="M225.0,516.0 L225.0,528.0" fill="none" stroke="#000000" stroke-width="0.75"/>
+<text x="234.0" y="524.0" font-size="6.2" fill="#000000" text-anchor="start"><tspan font-size="6.20">model run as one block</tspan></text>
+<path d="M320.0,516.0 L344.0,516.0 L336.0,528.0 L312.0,528.0 Z" fill="#fff" stroke="#000000" stroke-width="0.75"/>
+<text x="346.0" y="524.0" font-size="6.2" fill="#000000" text-anchor="start"><tspan font-size="6.20">input / output</tspan></text>
+<path d="M408.0,514.0 L421.0,522.0 L408.0,530.0 L395.0,522.0 Z" fill="#fff" stroke="#000000" stroke-width="0.75"/>
+<text x="425.0" y="524.0" font-size="6.2" fill="#000000" text-anchor="start"><tspan font-size="6.20">decision</tspan></text>
+<path d="M465,515 L460,515 L460,527 L465,527" fill="none" stroke="#000000" stroke-width="0.75"/>
+<text x="468.0" y="524.0" font-size="6.2" fill="#000000" text-anchor="start"><tspan font-size="6.20">note</tspan></text>
+</svg>
