@@ -45,8 +45,11 @@ from gribio import derive_surface  # noqa: E402
 import model_gfs  # noqa: E402
 import model_aifs  # noqa: E402
 import model_ifs  # noqa: E402
+import model_gdps  # noqa: E402
+import model_hrrr  # noqa: E402
+import model_nbm  # noqa: E402
 
-MODELS = {"gfs": model_gfs, "aifs": model_aifs, "ifs": model_ifs}
+MODELS = {"gfs": model_gfs, "aifs": model_aifs, "ifs": model_ifs, "gdps": model_gdps, "hrrr": model_hrrr, "nbm": model_nbm}
 N_ANALYSIS_DAYS = 5
 VAR_UNITS = {v: u for _s, (v, u) in VARS.items()}
 # near-surface fields, stored with level "sfc" (files <var>sfc.u16.gz): 2-m temperature and dew point,
@@ -78,6 +81,15 @@ def write_nh_fields(fields, dirpath, hdr_base):
         with open(os.path.join(dirpath, field_filename(vid, lev)), "wb") as f:
             f.write(encode_field(arr, hdr))
     return sub.get(("z", 500))
+
+
+def write_grid_fields(fields, grid, dirpath, hdr_base):
+    """Regional models: one file per field on the model's own latitude-longitude grid."""
+    os.makedirs(dirpath, exist_ok=True)
+    for (vid, lev), arr in fields.items():
+        hdr = dict(hdr_base, var=vid, level=lev, units=VAR_UNITS[vid], lat0=grid.lat0, dlat=grid.dlat, lon0=grid.lon0, dlon=grid.dlon)
+        with open(os.path.join(dirpath, field_filename(vid, lev)), "wb") as f:
+            f.write(encode_field(arr, hdr))
 
 
 def write_conus_pack(fields, dirpath, hdr_base):
@@ -151,17 +163,19 @@ def hf_list(api, repo):
 # ----------------------------------------------------------------------------
 def process_model(mid, args, api, index, tmp_root):
     M = MODELS[mid]
+    regional = getattr(M, "REGIONAL", False)
+    mstep = min(args.max_step, getattr(M, "MAX_STEP", args.max_step))
     if args.run:
         init = datetime.strptime(args.run, "%Y%m%d%H").replace(tzinfo=timezone.utc)
     else:
-        init = M.latest_complete_run(max_step=args.max_step)
+        init = M.latest_complete_run(max_step=mstep)
     run_id = M.run_id(init)
     cur = (index or {}).get("models", {}).get(mid, {})
-    max_step = M.last_step(init, args.max_step) if hasattr(M, "last_step") else args.max_step
+    max_step = M.last_step(init, mstep) if hasattr(M, "last_step") else mstep
     if not args.force and cur.get("latest_run") == run_id and cur.get("steps", [None])[-1] == max_step:
         log(f"{mid}: run {run_id} already published; nothing to do")
         return None
-    steps = list(range(0, max_step + 1, args.step_hours))
+    steps = list(range(getattr(M, "FIRST_STEP", 0), max_step + 1, args.step_hours))
     log(f"{mid}: run {run_id}, {len(steps)} steps to f{max_step:03d}")
     out_root = os.path.join(tmp_root, mid, "publish")
     run_dir = os.path.join(out_root, mid, "runs", run_id)
@@ -178,10 +192,23 @@ def process_model(mid, args, api, index, tmp_root):
         valid = init + timedelta(hours=step)
         hdr = {"model": mid, "init": init.strftime("%Y-%m-%dT%H:00Z"), "valid": valid.strftime("%Y-%m-%dT%H:00Z"), "step": step}
         d = os.path.join(run_dir, f"f{step:03d}")
-        z500_fcst.append(write_nh_fields(fields, d, hdr))
-        write_nh_fields(sfc, d, hdr)
-        write_conus_pack({**fields, **sfc}, d, hdr)
+        if regional:
+            write_grid_fields({**fields, **sfc}, M.GRID, d, hdr)
+        else:
+            z500_fcst.append(write_nh_fields(fields, d, hdr))
+            write_nh_fields(sfc, d, hdr)
+            write_conus_pack({**fields, **sfc}, d, hdr)
         log(f"  f{step:03d} done ({time.time() - t0:.1f}s)")
+    if regional:   # US-only models: no hemispheric analyses or 500-hPa tracks
+        fields_list = sorted({f"{k[0]}{k[1]}" for k in fields} | {f"{k[0]}{k[1]}" for k in sfc})
+        meta = {"model": mid, "label": M.LABEL, "run": run_id, "init": init.strftime("%Y-%m-%dT%H:00Z"), "steps": steps,
+                "fields": fields_list, "grids": {"reg": M.GRID.__dict__}, "domain": "regional", "grid_note": M.GRID_NOTE,
+                "source": M.SOURCE, "generated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")}
+        write_json(os.path.join(run_dir, "meta.json"), meta)
+        log(f"{mid}: prepared in {(time.time() - t_model) / 60:.1f} min")
+        return {"out_root": out_root, "run_id": run_id, "init": meta["init"], "steps": steps, "fields": fields_list,
+                "grids": meta["grids"], "anl_keep": set(), "label": M.LABEL, "source": M.SOURCE, "domain": "regional",
+                "grid_note": M.GRID_NOTE}
     anl_dir = os.path.join(out_root, mid, "analyses", run_id)
     shutil.copytree(os.path.join(run_dir, "f000"), anl_dir, ignore=shutil.ignore_patterns("conus.u16.gz", "*sfc.u16.gz"))
 
@@ -196,7 +223,10 @@ def process_model(mid, args, api, index, tmp_root):
             z500_anl.append(have[rid]); continue
         try:
             log(f"  fetching missing analysis {rid}")
-            fields = M.fetch_fields(t, 0, cache_dir=args.cache_dir)
+            if hasattr(M, "CYCLES") and t.hour not in M.CYCLES:   # 12-hourly models: 6-h forecast stands in at 06/18 UTC
+                fields = M.fetch_fields(t - timedelta(hours=6), 6, cache_dir=args.cache_dir)
+            else:
+                fields = M.fetch_fields(t, 0, cache_dir=args.cache_dir)
             fields = {k: v for k, v in fields.items() if isinstance(k[1], int)}
             hdr = {"model": mid, "init": t.strftime("%Y-%m-%dT%H:00Z"), "valid": t.strftime("%Y-%m-%dT%H:00Z"), "step": 0}
             z500_anl.append(write_nh_fields(fields, os.path.join(out_root, mid, "analyses", rid), hdr))
@@ -236,7 +266,7 @@ def process_model(mid, args, api, index, tmp_root):
     write_json(os.path.join(run_dir, "meta.json"), meta)
     log(f"{mid}: prepared in {(time.time() - t_model) / 60:.1f} min")
     return {"out_root": out_root, "run_id": run_id, "init": meta["init"], "steps": steps, "fields": fields_list,
-            "grids": meta["grids"], "anl_keep": set(anl_ids + [run_id]), "label": M.LABEL, "source": M.SOURCE}
+            "grids": meta["grids"], "anl_keep": set(anl_ids + [run_id]), "label": M.LABEL, "source": M.SOURCE, "domain": "global"}
 
 
 def publish(mid, res, args, api, index, existing):
@@ -251,9 +281,14 @@ def publish(mid, res, args, api, index, existing):
     index = index or {}
     index.setdefault("models", {})
     published_anl = sorted(({p.split("/")[2] for p in existing if p.startswith(f"{mid}/analyses/")} | res["anl_keep"]) & res["anl_keep"])
-    index["models"][mid] = {"label": res["label"], "source": res["source"], "latest_run": res["run_id"], "init": res["init"],
-                            "steps": res["steps"], "fields": res["fields"], "grids": res["grids"], "analyses": published_anl,
-                            "tracks": f"{mid}/tracks/latest.json"}
+    entry = {"label": res["label"], "source": res["source"], "latest_run": res["run_id"], "init": res["init"],
+             "steps": res["steps"], "fields": res["fields"], "grids": res["grids"], "analyses": published_anl,
+             "domain": res.get("domain", "global")}
+    if entry["domain"] == "global":
+        entry["tracks"] = f"{mid}/tracks/latest.json"
+    else:
+        entry["grid_note"] = res.get("grid_note", "")
+    index["models"][mid] = entry
     index["climatology"] = "climatology/z500_ltm_1991-2020_2p5.u16.gz"
     index["updated"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     index["format"] = "gzip(JSON header line + uint16 LE array); value = offset + scale*u16; 65535 = missing"
@@ -283,7 +318,7 @@ def publish(mid, res, args, api, index, existing):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--repo", default=os.environ.get("HF_DATASET", "yanxingjianken/nh-forecast-6hourly"))
-    ap.add_argument("--models", default="gfs,aifs,ifs")
+    ap.add_argument("--models", default="gfs,aifs,ifs,gdps,hrrr,nbm")
     ap.add_argument("--run", help="force a run id YYYYMMDDHH (applies to every selected model)")
     ap.add_argument("--max-step", type=int, default=240)
     ap.add_argument("--step-hours", type=int, default=6)

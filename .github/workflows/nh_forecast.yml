@@ -1,7 +1,8 @@
 name: NH forecast dataset (6-hourly runs, checked hourly)
 
 # GFS 0.25 deg is complete on AWS ~4.7 h after each synoptic time; ECMWF AIFS-single
-# ~5.5 h; ECMWF IFS ~6.5-7.5 h (its 06/18 UTC cycles stop at 144 h).  GitHub's cron is best-effort (delays of hours happen), so the job runs
+# ~5.5 h; ECMWF IFS ~6.5-7.5 h (its 06/18 UTC cycles stop at 144 h); ECCC GDPS (00/12 UTC) ~4-5 h;
+# HRRR (to 48 h) and NBM (surface only, to 72 h) for the US station maps ~1-2 h.  GitHub's cron is best-effort (delays of hours happen), so the job runs
 # hourly and is idempotent: it publishes a model only when a newer complete run
 # exists than the one recorded in index.json on the Hub, otherwise it exits in
 # under a minute.  All data go to the Hugging Face dataset; nothing is committed
@@ -12,9 +13,9 @@ on:
   workflow_dispatch:
     inputs:
       models:
-        description: "Comma-separated models (gfs,aifs,ifs)"
+        description: "Comma-separated models (gfs,aifs,ifs,gdps,hrrr,nbm)"
         required: false
-        default: "gfs,aifs,ifs"
+        default: "gfs,aifs,ifs,gdps,hrrr,nbm"
       run:
         description: "Force run id YYYYMMDDHH (blank = latest complete run)"
         required: false
@@ -50,7 +51,7 @@ jobs:
           HF_HUB_DISABLE_PROGRESS_BARS: "1"
         run: |
           cd pipelines/nh_forecast
-          EXTRA="--models ${{ github.event.inputs.models || 'gfs,aifs,ifs' }}"
+          EXTRA="--models ${{ github.event.inputs.models || 'gfs,aifs,ifs,gdps,hrrr,nbm' }}"
           if [ -n "${{ github.event.inputs.run }}" ]; then EXTRA="$EXTRA --run ${{ github.event.inputs.run }}"; fi
           if [ "${{ github.event.inputs.force }}" = "true" ]; then EXTRA="$EXTRA --force"; fi
           # squash the dataset history once a day (05Z hour) so storage stays near one day of runs

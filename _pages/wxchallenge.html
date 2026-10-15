@@ -67,7 +67,7 @@ author_profile: false
 
   <p class="jn-abstract"><b>Purpose.</b> Model guidance and observations for the <a href="https://www.wxchallenge.com/">WxChallenge</a>, a forecasting contest in which students predict, for one US airport, the maximum and minimum temperature, the maximum sustained wind and the precipitation over a 24-h &ldquo;forecast day&rdquo; that runs from 06 UTC to 06 UTC (in US Eastern time, 2 am to 2 am in summer and 1 am to 1 am in winter). The page works for any US airport weather station and opens on the current contest city. The layout follows <a href="https://wxchallenge.yolandgao.com/">Yoland Gao&rsquo;s meteogram site</a>.</p>
   <p class="jn-abstract"><b>How to use.</b> Type a 4-letter station code (for example KBOS) and press Go, or press Competition city. The latest model run loads automatically. Table 2 summarises each forecast day; Fig. 2 shows the hour-by-hour forecast with observations; Fig. 1 shows the weather pattern around the station, and its slider steps through forecast (or, for satellite and radar, past) times; Fig. 3 shows the vertical structure above the station.</p>
-  <details class="jn-small"><summary>Abbreviations</summary><p class="jn-abstract jn-small"> GFS: NOAA Global Forecast System. HRRR and RRFS: NOAA 3-km models for the US (RRFS is replacing the NAM, the older NOAA regional model). NBM: National Blend of Models, NOAA&rsquo;s calibrated blend of many models; NBS and NBE are its short-range (3-hourly, to 72 h) and extended text guidance. IFS: the ECMWF (European Centre) global model. AIFS: ECMWF&rsquo;s machine-learning global model. MOS: Model Output Statistics, a statistically corrected station forecast. METAR: the routine hourly airport weather report. ASOS: Automated Surface Observing System, the US airport stations. BUFKIT: model vertical profiles at a station. UTC: Coordinated Universal Time (Z).</p></details>
+  <details class="jn-small"><summary>Abbreviations</summary><p class="jn-abstract jn-small"> GFS: NOAA Global Forecast System. HRRR and RRFS: NOAA 3-km models for the US (RRFS is replacing the NAM, the older NOAA regional model). GDPS: the Canadian (ECCC) global model. NBM: National Blend of Models, NOAA&rsquo;s calibrated blend of many models; NBS and NBE are its short-range (3-hourly, to 72 h) and extended text guidance. IFS: the ECMWF (European Centre) global model. AIFS: ECMWF&rsquo;s machine-learning global model. MOS: Model Output Statistics, a statistically corrected station forecast. METAR: the routine hourly airport weather report. ASOS: Automated Surface Observing System, the US airport stations. BUFKIT: model vertical profiles at a station. UTC: Coordinated Universal Time (Z).</p></details>
 
   <div class="jn-controls">
     <div class="jn-ctl"><label for="wx-station">Station (ICAO)</label>
@@ -87,15 +87,6 @@ author_profile: false
       <div class="jn-ctl-row"><input type="date" id="wx-date" aria-label="run date (UTC)"><select id="wx-hour" aria-label="run hour (UTC)"></select></div></div>
     <div class="jn-ctl wx-runbtns"><label class="wx-runbtns-label">&nbsp;</label>
       <div class="jn-btngroup"><button id="wx-prev" title="previous run">&lt; run</button><button id="wx-latest">latest</button><button id="wx-next" title="next run">run &gt;</button></div></div>
-    <div class="jn-ctl"><label for="wx-guide">Statistical guidance</label>
-      <select id="wx-guide">
-        <option value="auto">automatic (MOS of the GFS/NAM run, otherwise NBM short range)</option>
-        <option value="nbs">NBM short-range text (NBS)</option>
-        <option value="nbe">NBM extended text (NBE)</option>
-        <option value="mav">GFS MOS (MAV)</option>
-        <option value="met">NAM MOS (MET)</option>
-        <option value="none">none</option>
-      </select></div>
     <div class="jn-ctl"><label for="wx-window">Time-series window</label>
       <select id="wx-window"><option value="60">first 60 h</option><option value="0">full run</option></select></div>
   </div>
@@ -147,8 +138,13 @@ author_profile: false
       <div class="wx-legend" id="wx-tslegend"></div>
       <figcaption id="wx-tscap"></figcaption>
     </figure>
-    <div class="jn-tabcap"><b>Table 2.</b> Forecast-day summary (06&ndash;06 UTC). Model values come from the hourly series of the selected run; guidance values from the statistical guidance chosen above (maximum and minimum from its daily max/min, wind from its highest sustained wind at its 3- or 6-hourly times, with * where only part of the day is covered, precipitation from its 6- or 12-h amounts, where \u2020 marks NBE 12-h amounts that cover 00\u201300 UTC instead; GFS and NAM MOS give no amounts); observations to date from METARs. Note that MOS and NBM maxima and minima are for daytime (about 7 am&ndash;7 pm local standard time) and night-time (about 7 pm&ndash;8 am) periods, not the 06&ndash;06 UTC contest day: when temperatures fall after a front, the day&rsquo;s highest value can occur near 06 UTC and exceed the guidance maximum. Bold: the day covered by the next 00 UTC deadline.<span class="wx-scrollcue"> Scroll sideways for more columns.</span></div>
+    <div class="jn-tabcap"><b>Table 2.</b> Forecast-day summary (06&ndash;06 UTC). Model values come from the hourly series of the selected run; guidance values from the statistical guidance that matches the model automatically (GFS MOS for GFS runs, NAM MOS for NAM runs, NBM short range otherwise; all products are compared in Table 3) (maximum and minimum from its daily max/min, wind from its highest sustained wind at its 3- or 6-hourly times, with * where only part of the day is covered, precipitation from its 6- or 12-h amounts, where \u2020 marks NBE 12-h amounts that cover 00\u201300 UTC instead; GFS and NAM MOS give no amounts); observations to date from METARs. Note that MOS and NBM maxima and minima are for daytime (about 7 am&ndash;7 pm local standard time) and night-time (about 7 pm&ndash;8 am) periods, not the 06&ndash;06 UTC contest day: when temperatures fall after a front, the day&rsquo;s highest value can occur near 06 UTC and exceed the guidance maximum. Bold: the day covered by the next 00 UTC deadline.<span class="wx-scrollcue"> Scroll sideways for more columns.</span></div>
     <div class="jn-tablewrap"><table class="jn-table" id="wx-daytab"><thead><tr><th>Forecast day</th><th class="num">Max T (&deg;F)</th><th class="num">Min T (&deg;F)</th><th class="num">Max wind (kt)</th><th class="num">Precip (in)</th><th class="num" id="wx-g-max">Guidance max (&deg;F)</th><th class="num" id="wx-g-min">Guidance min (&deg;F)</th><th class="num" id="wx-g-wind">Guidance wind (kt)</th><th class="num" id="wx-g-pr">Guidance precip (in)</th><th class="num">Observed so far: max / min / wind / precip</th></tr></thead><tbody></tbody></table></div>
+  </div>
+
+  <div class="wx-sec">
+    <div class="jn-tabcap" id="wx-guidetab-cap"><b>Table 3.</b> Statistical guidance for each forecast day, all products (the latest bulletin of each). Max/min are the products&rsquo; daytime and night-time values; wind is the highest sustained wind at their 3-, 6- or 12-hourly times (* part of the day only); precipitation sums their 6- or 12-h amounts (&dagger; 00&ndash;00 UTC).<span class="wx-scrollcue"> Scroll sideways for more columns.</span></div>
+    <div class="jn-tablewrap"><table class="jn-table" id="wx-guidetab"><thead><tr><th>Forecast day</th><th>Product (issued)</th><th class="num">Max (&deg;F)</th><th class="num">Min (&deg;F)</th><th class="num">Wind (kt)</th><th class="num">Precip (in)</th></tr></thead><tbody></tbody></table></div>
   </div>
 
   <!-- ------------------------------------------------------------ 3. time-height -->
@@ -174,7 +170,8 @@ author_profile: false
       <p><b>Statistical guidance</b> from the IEM MOS archive (<code>api/1/mos.json</code>): GFS MOS (MAV, 00/06/12/18 UTC), NAM MOS (MET, 00/12 UTC), and the National Blend of Models text bulletins NBS (short range, 3-hourly to 72 h, 00/06/12/18 UTC) and NBE (extended, 00/12 UTC). The page uses the bulletin issued at or before the selected model run. Red diamonds mark the daily maximum and minimum (MOS N/X, NBM TXN); NBM precipitation amounts (6-h Q06, 12-h Q12, hundredths of an inch) are summed over each 06&ndash;06 UTC day. <b>NBM gridded</b> forecasts (2.5 km; hourly output from the runs at 00, 03, &hellip;, 21 UTC that Open-Meteo archives; surface variables only, so no time&ndash;height sections) come from Open-Meteo. <b>Observations:</b> IEM ASOS/METAR archive (routine and special reports). The stochastic-wind ensemble of the original site is server-side and is not reproduced.</p>
       <p><b>Observed imagery</b> (past only; satellites provide no forecasts): GOES-East or GOES-West Advanced Baseline Imager (whichever views the station better; clean infrared band 13, red visible band 2, GeoColor and air-mass RGB) and the GPM IMERG Early Run 30-min precipitation rate, both served by NASA GIBS, whose time domains decide which frames the slider offers; and the NEXRAD base-reflectivity composite over the contiguous US from the Iowa Environmental Mesonet. Images are requested in latitude&ndash;longitude coordinates for exactly the map box, so they overlay the coastlines without resampling. Colour bars use the providers&rsquo; own colour tables.</p>
       <p><b>Surface level:</b> 2-m temperature and dew point (&deg;F), 10-m wind (kt), mean-sea-level pressure (hPa) and precipitation accumulated over the 6 h ending at the valid time (in; GFS 6-h bucket, ECMWF difference of run totals).</p>
-      <p><b>Grid panel:</b> fields from the 6-hourly GFS / AIFS / IFS dataset behind the <a href="{{ base_path }}/blocking-plots/nh-forecast/">Northern Hemisphere viewer</a> (0.25&deg; CONUS window, 0.5&deg; elsewhere). The four surrounding 0.25&deg; grid points are exact model grid nodes; for HRRR/RRFS the 3-km Lambert-conformal cell nodes around the station are drawn from the published grid definition (no field values). <b>Competition city:</b> from wxchallenge.com, refreshed weekly; fallback KBOS.</p>
+      <p><b>Grid panel models:</b> GFS (NOAA), AIFS and IFS (ECMWF) and GDPS (ECCC, the Canadian global model, 00/12 UTC runs; contains information licensed under the Data Server End-use Licence of Environment and Climate Change Canada) are global; HRRR (NOAA, 3 km, to 48 h) and NBM (2.5 km, surface fields only, to 72 h) cover the US and are interpolated from their Lambert-conformal grids to a 0.05&deg; latitude&ndash;longitude grid, with HRRR winds rotated to true north.</p>
+      <p><b>Grid panel:</b> fields from the 6-hourly GFS / AIFS / IFS / GDPS / HRRR / NBM dataset behind the <a href="{{ base_path }}/blocking-plots/nh-forecast/">Northern Hemisphere viewer</a> (0.25&deg; CONUS window, 0.5&deg; elsewhere). The four surrounding 0.25&deg; grid points are exact model grid nodes; for HRRR/RRFS the 3-km Lambert-conformal cell nodes around the station are drawn from the published grid definition (no field values). <b>Competition city:</b> from wxchallenge.com, refreshed weekly; fallback KBOS.</p>
     </div>
   </details>
 </div>
@@ -400,7 +397,7 @@ author_profile: false
     nbs: {label: 'NBM short-range text (NBS)', short: 'NBM NBS', iem: 'NBS', cycles: [0, 6, 12, 18], qpf: 'q06'},
     nbe: {label: 'NBM extended text (NBE)', short: 'NBM NBE', iem: 'NBE', cycles: [0, 12], qpf: 'q12'}
   };
-  function guideKey() { var g = $('wx-guide').value; if (g === 'auto') g = MODELS[S.model].guide || 'nbs'; return g === 'none' ? null : g; }
+  function guideKey() { return MODELS[S.model].guide || 'nbs'; }   /* MOS of the GFS/NAM run, otherwise NBM short range */
   async function loadGuidance(key, station, init) {
     var G = GUIDE[key]; if (!G) return null;
     var rt = new Date(init); rt.setUTCMinutes(0, 0, 0);
@@ -487,7 +484,7 @@ author_profile: false
         (res[0].status !== 'fulfilled' ? ' · <span class="jn-err">observations unavailable (' + res[0].reason.message + ')</span>' : ' · ' + S.obs.length + ' METAR reports');
       status('wx-status', '');
       history.replaceState(null, '', '?station=' + st.icao + '&model=' + S.model + '&run=' + run.init.toISOString().slice(0, 13) + 'Z');
-      drawTS(); drawTH(); drawDayTable();
+      drawTS(); drawTH(); drawDayTable(); drawGuideTable();
       loadMap();
     } catch (e) {
       if (seq !== S.seq) return;
@@ -504,6 +501,36 @@ author_profile: false
     return days;
   }
   function inWin(t, a, b) { return t > a && t <= b; }
+  /* one row of guidance values for a forecast day (shared by Tables 2 and 3) */
+  function guideDay(G, dy) {
+    var mx = '\u2014', mn = '\u2014', wind = '\u2014', pr = '\u2014';
+    if (!G) return {mx: mx, mn: mn, wind: wind, pr: pr};
+    G.rows.forEach(function (r) { if (r.nx == null || !inWin(r.t, dy.start, dy.end)) return; if (r.t.getUTCHours() === 0) mx = r.nx; else if (r.t.getUTCHours() === 12) mn = r.nx; });
+    var gw = G.rows.filter(function (r) { return r.wsp != null && inWin(r.t, dy.start, dy.end); });
+    if (gw.length) { var full = gw[0].t <= new Date(dy.start.getTime() + 6 * 3.6e6) && gw[gw.length - 1].t >= new Date(dy.end.getTime() - 6 * 3.6e6); wind = d3.max(gw, function (r) { return r.wsp; }) + (full ? '' : '*'); }
+    var gq = G.rows.filter(function (r) { return r.qpf != null && inWin(r.t, dy.start, dy.end); });
+    if (gq.length === 24 / G.qpfHours) pr = d3.sum(gq, function (r) { return r.qpf; }).toFixed(2) + (G.qpfHours === 12 ? '\u2020' : '');
+    return {mx: mx, mn: mn, wind: wind, pr: pr};
+  }
+  async function drawGuideTable() {
+    var tb = $('wx-guidetab').querySelector('tbody'); tb.innerHTML = '';
+    if (!S.station || !S.run) return;
+    var st = S.station.icao, now = new Date(), keys = ['nbs', 'nbe', 'mav', 'met'];
+    var res = await Promise.all(keys.map(function (k) { return loadGuidance(k, st, now).catch(function () { return null; }); }));
+    if (S.station.icao !== st) return;
+    var days = wxDays(S.run).slice(0, 4);
+    days.forEach(function (dy, i) {
+      var isNext = dy.start.getTime() === nextDeadline().getTime() + 6 * 3.6e6;
+      keys.forEach(function (k, j) {
+        var G = res[j]; if (!G) return;
+        var v = guideDay(G, dy); if (v.mx === '\u2014' && v.mn === '\u2014' && v.wind === '\u2014') return;
+        var tr = document.createElement('tr'); if (isNext) tr.style.fontWeight = '700';
+        tr.innerHTML = '<td>' + (j === 0 || !tb.lastChild || tb.lastChild.dataset.day !== String(i) ? 'Day ' + (i + 1) + ': ' + fmtTick(dy.start) + '\u2013' + fmtTick(dy.end) : '') + '</td><td>' + G.label + ' (' + fmtTick(G.runtime) + ')</td><td class="num">' + v.mx + '</td><td class="num">' + v.mn + '</td><td class="num">' + v.wind + '</td><td class="num">' + v.pr + '</td>';
+        tr.dataset.day = String(i); tb.appendChild(tr);
+      });
+    });
+    if (!tb.children.length) tb.innerHTML = '<tr><td colspan="6">No statistical guidance is issued for ' + st + '.</td></tr>';
+  }
   function drawDayTable() {
     var run = S.run, tb = $('wx-daytab').querySelector('tbody'); tb.innerHTML = '';
     var gs = S.mos ? S.mos.short : 'Guidance';
@@ -516,17 +543,7 @@ author_profile: false
       var pr = d3.sum(H.filter(function (h) { return h.t > dy.start; }), function (h) { return h.precip1h || 0; });
       /* MOS N/X: the value valid at 00 UTC is the daytime maximum, the value valid at 12 UTC the night-time minimum */
       var mosMax = '\u2014', mosMin = '\u2014';
-      var gWind = '\u2014', gPr = '\u2014';
-      if (S.mos) {
-        S.mos.rows.forEach(function (r) { if (r.nx == null || !inWin(r.t, dy.start, dy.end)) return; if (r.t.getUTCHours() === 0) mosMax = r.nx; else if (r.t.getUTCHours() === 12) mosMin = r.nx; });
-        var gw = S.mos.rows.filter(function (r) { return r.wsp != null && inWin(r.t, dy.start, dy.end); });
-        if (gw.length) {   /* * when the guidance times do not span the whole forecast day */
-          var full = gw[0].t <= new Date(dy.start.getTime() + 6 * 3.6e6) && gw[gw.length - 1].t >= new Date(dy.end.getTime() - 6 * 3.6e6);
-          gWind = d3.max(gw, function (r) { return r.wsp; }) + (full ? '' : '*');
-        }
-        var gq = S.mos.rows.filter(function (r) { return r.qpf != null && inWin(r.t, dy.start, dy.end); });
-        if (gq.length === 24 / S.mos.qpfHours) gPr = d3.sum(gq, function (r) { return r.qpf; }).toFixed(2) + (S.mos.qpfHours === 12 ? '\u2020' : '');
-      }
+      var gv = guideDay(S.mos, dy); mosMax = gv.mx; mosMin = gv.mn; var gWind = gv.wind, gPr = gv.pr;
       var obsTxt = '—';
       if (S.obs && now > dy.start) {
         var O = S.obs.filter(function (o) { return inWin(o.t, dy.start, dy.end); });
@@ -1006,13 +1023,16 @@ author_profile: false
     $('wx-mapstep-label').textContent = '+' + step + ' h, valid ' + fmtTime(vt) + (lt ? ' (' + lt + ')' : '') + '; 6-h steps';
     var vr = S.mapVar, lev = S.mapLev, contVar = S.mapCont === 'z' ? (lev === 'sfc' ? 'msl' : 'z') : (S.mapCont === 'same' ? vr : null);
     var names = {}; [vr, contVar].forEach(function (v) { if (v) (MAPVARS[v].from || [v]).forEach(function (n) { names[n] = 1; }); });
-    var missing = Object.keys(names).filter(function (n) { return (m.fields || []).indexOf(storeKey(n, lev)) < 0; });
-    if (missing.length) { clearMaps(); status('wx-mapstatus', (lev === 'sfc' ? 'Surface fields are' : 'This field is') + ' not in the published ' + (m.label || S.mapModel) + ' run yet; it appears with the next 6-hourly update.', true); return; }
+    var has = function (n) { return (m.fields || []).indexOf(storeKey(n, lev)) >= 0; };
+    var contNote = '';
+    if (contVar && !(MAPVARS[contVar].from || [contVar]).every(has)) { contNote = ' (' + (m.label || S.mapModel) + ' provides no ' + MAPVARS[contVar].label + ', so no contours)'; (MAPVARS[contVar].from || [contVar]).forEach(function (n) { delete names[n]; }); (MAPVARS[vr].from || [vr]).forEach(function (n) { names[n] = 1; }); contVar = null; }
+    var missing = Object.keys(names).filter(function (n) { return !has(n); });
+    if (missing.length) { clearMaps(); status('wx-mapstatus', (m.fields || []).every(function (f) { return /sfc$/.test(f); }) ? (m.label || S.mapModel) + ' provides surface fields only; choose the surface level.' : (lev === 'sfc' ? 'Surface fields are' : 'This field is') + ' not in the published ' + (m.label || S.mapModel) + ' run yet; it appears with the next update.', true); return; }
     status('wx-mapstatus', 'loading ' + (m.label || S.mapModel) + ' f' + pad(step, 3) + '…');
     try {
       var nh = {}, cn = null;
       for (var n in names) nh[n] = await fetchU16(dir + '/' + storeKey(n, lev) + '.u16.gz');
-      var g = m.grids.conus, inConus = st.lat >= g.lat0 + 1 && st.lat <= g.lat0 + g.dlat * (g.ny - 1) - 1 && ((st.lon + 360) % 360) >= g.lon0 + 1 && ((st.lon + 360) % 360) <= g.lon0 + g.dlon * (g.nx - 1) - 1;
+      var g = m.grids.conus, inConus = !!g && st.lat >= g.lat0 + 1 && st.lat <= g.lat0 + g.dlat * (g.ny - 1) - 1 && ((st.lon + 360) % 360) >= g.lon0 + 1 && ((st.lon + 360) % 360) <= g.lon0 + g.dlon * (g.nx - 1) - 1;
       if (inConus) { try { cn = await fetchU16(dir + '/conus.u16.gz'); } catch (e) { cn = null; } }
       if (seq !== mapSeq) return;
       var cnSrc = null; if (cn) { cnSrc = {}; for (var n2 in names) cnSrc[n2] = cn.fields[storeKey(n2, lev)]; }
@@ -1029,7 +1049,8 @@ author_profile: false
       var ciTxt = ci == null ? '' : (Array.isArray(ci) ? 'at ' + ci.join(', ') + ' ' + CV.units : 'interval ' + ci + ' ' + CV.units);
       if (contVar === 'z') ciTxt += '; labels in decametres, e.g. ' + ({850: '141 = 1410 m', 500: '552 = 5520 m', 250: '1056 = 10 560 m'}[lev] || '552 = 5520 m');
       $('wx-maptitle').textContent = levText(lev) + MV.label + ' (shaded, ' + MV.units + ')' + (CV ? '; ' + levText(lev) + CV.label + ' (contours' + (contVar === 'z' ? ', labelled in decametres' : '') + ')' : '') + '. ' + (m.label || S.mapModel) + ' run ' + fmtTime(m.init) + ', f' + pad(step, 3) + '.';
-      $('wx-mapcap').innerHTML = '<span class="jn-figno">Fig. 1.</span> ' + (m.label || S.mapModel) + ' forecast (run ' + fmtTime(m.init) + ', f' + pad(step, 3) + ') of ' + levText(lev) + MV.label + ' (shaded, ' + MV.units + ')' + (CV ? ' and ' + CV.label + ' (contours, ' + ciTxt + ')' : '') + ' around ' + st.icao + ' (star).' + (vr === 'tp6' ? ' Precipitation is accumulated over the 6 h ending at the valid time; white: less than 0.01 in.' : '') + (lev !== 'sfc' ? ' Pressure levels: 850 hPa is about 1.5 km above sea level, 500 hPa about 5.5 km and 250 hPa about 10 km (jet-stream level).' : '') + ' (a) Grid nodes of the ' + (cnS ? '0.25°' : '0.5°') + ' field are drawn as dots; the four nodes surrounding the station are filled and labelled with their values' + (MODELS[S.model].src === 'bufkit' && (S.model === 'HRRR' || S.model === 'RRFS') ? '; open squares are the four 3-km ' + S.model + ' Lambert-conformal grid nodes around the station' : '') + '. (b) Same field on the 0.5° grid over the large-scale set-up. Grey lines: coastlines and state borders' + (S.showElev ? '; thin grey contours: surface elevation (ETOPO 2022; 200, 500, 1000, 1500, 2000, 2500, 3000, 3500 and 4000 m)' : '') + '. Plate carrée projection.';
+      var outside = isNaN(sample(cnS || nhS, st.lon, st.lat));
+      $('wx-mapcap').innerHTML = (outside ? '<b>' + st.icao + ' lies outside the ' + (m.label || S.mapModel) + ' domain.</b> ' : '') + '<span class="jn-figno">Fig. 1.</span> ' + (m.label || S.mapModel) + ' forecast (run ' + fmtTime(m.init) + ', f' + pad(step, 3) + ') of ' + levText(lev) + MV.label + ' (shaded, ' + MV.units + ')' + (CV ? ' and ' + CV.label + ' (contours, ' + ciTxt + ')' : contNote) + ' around ' + st.icao + ' (star).' + (vr === 'tp6' ? ' Precipitation is accumulated over the 6 h ending at the valid time; white: less than 0.01 in.' : '') + (lev !== 'sfc' ? ' Pressure levels: 850 hPa is about 1.5 km above sea level, 500 hPa about 5.5 km and 250 hPa about 10 km (jet-stream level).' : '') + ' (a) ' + ((cnS || nhS).hdr.dlon * (Math.max(280, $('wx-map-a').clientWidth - 2) / 7) >= 6 ? 'Grid nodes of the ' + (cnS || nhS).hdr.dlon + '° field are drawn as dots; the' : 'The') + ' four grid nodes surrounding the station are filled and labelled with their values' + (m.grid_note ? ' (' + m.grid_note + ')' : '') + (MODELS[S.model].src === 'bufkit' && (S.model === 'HRRR' || S.model === 'RRFS') ? '; open squares are the four 3-km ' + S.model + ' Lambert-conformal grid nodes around the station' : '') + '. (b) Same field on the 0.5° grid over the large-scale set-up. Grey lines: coastlines and state borders' + (S.showElev ? '; thin grey contours: surface elevation (ETOPO 2022; 200, 500, 1000, 1500, 2000, 2500, 3000, 3500 and 4000 m)' : '') + '. Plate carrée projection.';
       status('wx-mapstatus', '');
     } catch (e) { if (seq === mapSeq) status('wx-mapstatus', 'Could not load gridded fields: ' + e.message, true); }
   }
@@ -1133,11 +1154,12 @@ author_profile: false
     if (S.showElev) drawElevation(gElev, path, x, y, st, lon0, lon1, lat0, lat1, zoom, W, H, free);
     /* grid nodes (zoom panel, model fields only) */
     if (zoom && shade && sc) {
-      var hs = shade.hdr, cornerIJ = corners(shade, st);
-      for (var la = Math.ceil(lat0 / hs.dlat) * hs.dlat; la <= lat1; la += hs.dlat) for (var lo = Math.ceil((lon0 - hs.lon0) / hs.dlon) * hs.dlon + hs.lon0; lo <= lon1 + 1e-9; lo += hs.dlon) {
+      var hs = shade.hdr, cornerIJ = corners(shade, st), dense = hs.dlon * W / (lon1 - lon0) < 6;   /* fine grids: corner nodes only */
+      for (var la = dense ? Infinity : Math.ceil(lat0 / hs.dlat) * hs.dlat; la <= lat1; la += hs.dlat) for (var lo = Math.ceil((lon0 - hs.lon0) / hs.dlon) * hs.dlon + hs.lon0; lo <= lon1 + 1e-9; lo += hs.dlon) {
         var isC = cornerIJ.some(function (c) { return Math.abs(c.lat - la) < 1e-6 && Math.abs(((c.lon - lo + 540) % 360) - 180) < 1e-6; });
         g.append('circle').attr('cx', x(((lo - st.lon + 540) % 360) - 180 + st.lon)).attr('cy', y(la)).attr('r', isC ? 3.2 : 1.4).attr('fill', isC ? '#000' : '#fff').attr('stroke', '#000').attr('stroke-width', 0.7);
       }
+      if (dense) cornerIJ.forEach(function (c) { g.append('circle').attr('cx', x(((c.lon - st.lon + 540) % 360) - 180 + st.lon)).attr('cy', y(c.lat)).attr('r', 2.6).attr('fill', '#000').attr('stroke', '#fff').attr('stroke-width', 0.6); });
       cornerIJ.forEach(function (c, k) { var xp = x(((c.lon - st.lon + 540) % 360) - 180 + st.lon), yp = y(c.lat); g.append('text').attr('x', xp + (k % 2 ? 5 : -5)).attr('y', yp + (k < 2 ? 12 : -6)).attr('text-anchor', k % 2 ? 'start' : 'end').style('font-size', '7.5pt').style('font-weight', '700').style('paint-order', 'stroke').attr('stroke', '#fff').attr('stroke-width', 2.5).attr('fill', '#000').text(isNaN(c.val) ? '' : fmtMap(sc, sc.conv(c.val))); });
       if (S.model === 'HRRR' || S.model === 'RRFS') { var nodes = lccNodes(st.lat, st.lon); if (nodes) nodes.forEach(function (nd) { g.append('rect').attr('x', x(nd.lon) - 3).attr('y', y(nd.lat) - 3).attr('width', 6).attr('height', 6).attr('fill', '#fff').attr('stroke', '#b2182b').attr('stroke-width', 1); }); }
     }
@@ -1192,7 +1214,7 @@ author_profile: false
     var cs = corners(fld, st), names = ['SW', 'SE', 'NW', 'NE'];
     cs.forEach(function (c, k) { var tr = document.createElement('tr'); tr.innerHTML = '<td>' + names[k] + ' node (' + fld.hdr.dlon + '° grid)</td><td class="num">' + c.lat.toFixed(2) + '\u00B0N</td><td class="num">' + fmtLon(c.lon) + '</td><td class="num">' + c.dist.toFixed(1) + '</td><td class="num">' + (isNaN(c.val) ? '—' : sc.conv(c.val).toFixed(dp)) + '</td>'; tb.appendChild(tr); });
     var tr2 = document.createElement('tr'), bil = sample(fld, st.lon, st.lat); tr2.innerHTML = '<td><b>Station (interpolated)</b></td><td class="num">' + st.lat.toFixed(2) + '\u00B0N</td><td class="num">' + fmtLon(st.lon) + '</td><td class="num">0</td><td class="num"><b>' + (isNaN(bil) ? '—' : sc.conv(bil).toFixed(dp)) + '</b></td>'; tb.appendChild(tr2);
-    var note = 'Grid: ' + S.mapModel.toUpperCase() + ' ' + fld.hdr.dlon + '° latitude–longitude output grid' + (fld.hdr.dlon === 0.25 ? '' : ' (every second point of the 0.25° grid)') + '. Nearest grid point ' + d3.min(cs, function (c) { return c.dist; }).toFixed(1) + ' km from the station; the station value is interpolated linearly between the four points.';
+    var note = 'Grid: ' + (m.grid_note ? m.grid_note : S.mapModel.toUpperCase() + ' ' + fld.hdr.dlon + '° latitude–longitude output grid' + (fld.hdr.dlon === 0.25 ? '' : ' (every second point of the 0.25° grid)')) + '. Nearest grid point ' + d3.min(cs, function (c) { return c.dist; }).toFixed(1) + ' km from the station; the station value is interpolated linearly between the four points.';
     if (S.model === 'HRRR' || S.model === 'RRFS') { var nd = lccNodes(st.lat, st.lon); if (nd) note += ' ' + S.model + ' 3-km Lambert-conformal nodes around the station: ' + nd.map(function (n) { return '(' + n.lat.toFixed(3) + '°N, ' + fmtLon(n.lon) + ', ' + haversine(st.lat, st.lon, n.lat, n.lon).toFixed(2) + ' km)'; }).join(', ') + '; the BUFKIT profile is the nearest node.'; }
     if (MODELS[S.model].src === 'openmeteo' && S.run && S.run.gridNote) note += ' ' + S.run.gridNote + ' (Open-Meteo returns the model cell containing the station).';
     $('wx-gridnote').textContent = note;
@@ -1214,10 +1236,15 @@ author_profile: false
   $('wx-prev').addEventListener('click', function () { var i = selectedInit() || S.init; if (!i) return; var n = new Date(i.getTime() - MODELS[S.model].stepH * 3.6e6); setRunControls(n); loadAll(); });
   $('wx-next').addEventListener('click', function () { var i = selectedInit() || S.init; if (!i) return; var n = new Date(i.getTime() + MODELS[S.model].stepH * 3.6e6); if (n > new Date()) return; setRunControls(n); loadAll(); });
   $('wx-window').addEventListener('change', function () { S.window = +this.value; drawTS(); drawDayTable(); });
-  $('wx-guide').addEventListener('change', async function () { if (!S.run || !S.station) return; var gk = guideKey(); S.mos = gk ? await loadGuidance(gk, S.station.icao, S.run.init) : null; drawTS(); drawDayTable(); });
+
   Array.from($('wx-tssel').querySelectorAll('button')).forEach(function (b) { b.addEventListener('click', function () { S.chart = this.dataset.chart; Array.from($('wx-tssel').querySelectorAll('button')).forEach(function (o) { o.setAttribute('aria-pressed', o === b ? 'true' : 'false'); }); drawTS(); }); });
   Array.from($('wx-thsel').querySelectorAll('button')).forEach(function (b) { b.addEventListener('click', function () { S.field = this.dataset.field; Array.from($('wx-thsel').querySelectorAll('button')).forEach(function (o) { o.setAttribute('aria-pressed', o === b ? 'true' : 'false'); }); drawTH(); }); });
-  $('wx-mapmodel').addEventListener('change', function () { S.mapModel = this.value; S.obsK = null; fillMapVars(); loadMap(); });
+  $('wx-mapmodel').addEventListener('change', function () {
+    S.mapModel = this.value; S.obsK = null;
+    var m = S.hfIndex && S.hfIndex.models[S.mapModel];   /* surface-only models (NBM): switch to the surface level */
+    if (m && (m.fields || []).every(function (f) { return /sfc$/.test(f); }) && S.mapLev !== 'sfc') { S.mapLev = 'sfc'; $('wx-maplev').value = 'sfc'; }
+    fillMapVars(); loadMap();
+  });
   $('wx-mapvar').addEventListener('change', function () { if (S.mapModel === 'obs') { S.obsVar = this.value; S.obsK = null; } else S.mapVar = this.value; loadMap(); });
   $('wx-maplev').addEventListener('change', function () { S.mapLev = this.value === 'sfc' ? 'sfc' : +this.value; fillMapVars(); loadMap(); });
   $('wx-mapcont').addEventListener('change', function () { S.mapCont = this.value; loadMap(); });
