@@ -67,7 +67,7 @@ author_profile: false
 
   <p class="jn-abstract"><b>Purpose.</b> Model guidance and observations for the <a href="https://www.wxchallenge.com/">WxChallenge</a>, a forecasting contest in which students predict, for one US airport, the maximum and minimum temperature, the maximum sustained wind and the precipitation over a 24-h &ldquo;forecast day&rdquo; that runs from 06 UTC to 06 UTC (in US Eastern time, 2 am to 2 am in summer and 1 am to 1 am in winter). The page works for any US airport weather station and opens on the current contest city. The layout follows <a href="https://wxchallenge.yolandgao.com/">Yoland Gao&rsquo;s meteogram site</a>.</p>
   <p class="jn-abstract"><b>How to use.</b> Type a 4-letter station code (for example KBOS) and press Go, or press Competition city. The latest model run loads automatically. Table 2 summarises each forecast day; Fig. 2 shows the hour-by-hour forecast with observations; Fig. 1 shows the weather pattern around the station, and its slider steps through forecast (or, for satellite and radar, past) times; Fig. 3 shows the vertical structure above the station.</p>
-  <details class="jn-small"><summary>Abbreviations</summary><p class="jn-abstract jn-small"> GFS: NOAA Global Forecast System. HRRR and RRFS: NOAA 3-km models for the US (RRFS replaces the NAM, the older NOAA regional model, on 14 Oct 2026). IFS: the ECMWF (European Centre) global model. AIFS: ECMWF&rsquo;s machine-learning global model. MOS: Model Output Statistics, a statistically corrected station forecast. METAR: the routine hourly airport weather report. ASOS: Automated Surface Observing System, the US airport stations. BUFKIT: model vertical profiles at a station. UTC: Coordinated Universal Time (Z).</p></details>
+  <details class="jn-small"><summary>Abbreviations</summary><p class="jn-abstract jn-small"> GFS: NOAA Global Forecast System. HRRR and RRFS: NOAA 3-km models for the US (RRFS is replacing the NAM, the older NOAA regional model). NBM: National Blend of Models, NOAA&rsquo;s calibrated blend of many models; NBS and NBE are its short-range (3-hourly, to 72 h) and extended text guidance. IFS: the ECMWF (European Centre) global model. AIFS: ECMWF&rsquo;s machine-learning global model. MOS: Model Output Statistics, a statistically corrected station forecast. METAR: the routine hourly airport weather report. ASOS: Automated Surface Observing System, the US airport stations. BUFKIT: model vertical profiles at a station. UTC: Coordinated Universal Time (Z).</p></details>
 
   <div class="jn-controls">
     <div class="jn-ctl"><label for="wx-station">Station (ICAO)</label>
@@ -78,14 +78,24 @@ author_profile: false
         <option value="GFS">GFS (BUFKIT)</option>
         <option value="HRRR">HRRR (BUFKIT)</option>
         <option value="RRFS">RRFS (BUFKIT)</option>
-        <option value="NAM">NAM (BUFKIT, retires 14 Oct 2026)</option>
+        <option value="NAM">NAM (BUFKIT; being replaced by RRFS)</option>
         <option value="IFS">ECMWF IFS 0.25&deg; (Open-Meteo)</option>
         <option value="AIFS">ECMWF AIFS-single (Open-Meteo)</option>
+        <option value="NBM">NBM 2.5 km (National Blend; Open-Meteo, 3-hourly runs)</option>
       </select></div>
     <div class="jn-ctl"><label for="wx-date">Run (UTC)</label>
       <div class="jn-ctl-row"><input type="date" id="wx-date" aria-label="run date (UTC)"><select id="wx-hour" aria-label="run hour (UTC)"></select></div></div>
     <div class="jn-ctl wx-runbtns"><label class="wx-runbtns-label">&nbsp;</label>
       <div class="jn-btngroup"><button id="wx-prev" title="previous run">&lt; run</button><button id="wx-latest">latest</button><button id="wx-next" title="next run">run &gt;</button></div></div>
+    <div class="jn-ctl"><label for="wx-guide">Statistical guidance</label>
+      <select id="wx-guide">
+        <option value="auto">automatic (MOS of the GFS/NAM run, otherwise NBM short range)</option>
+        <option value="nbs">NBM short-range text (NBS)</option>
+        <option value="nbe">NBM extended text (NBE)</option>
+        <option value="mav">GFS MOS (MAV)</option>
+        <option value="met">NAM MOS (MET)</option>
+        <option value="none">none</option>
+      </select></div>
     <div class="jn-ctl"><label for="wx-window">Time-series window</label>
       <select id="wx-window"><option value="60">first 60 h</option><option value="0">full run</option></select></div>
   </div>
@@ -137,8 +147,8 @@ author_profile: false
       <div class="wx-legend" id="wx-tslegend"></div>
       <figcaption id="wx-tscap"></figcaption>
     </figure>
-    <div class="jn-tabcap"><b>Table 2.</b> Forecast-day summary (06&ndash;06 UTC). Model values come from the hourly series of the selected run; MOS (GFS and NAM only) from the same cycle; observations to date from METARs. Bold: the day covered by the next 00 UTC deadline.<span class="wx-scrollcue"> Scroll sideways for more columns.</span></div>
-    <div class="jn-tablewrap"><table class="jn-table" id="wx-daytab"><thead><tr><th>Forecast day</th><th class="num">Max T (&deg;F)</th><th class="num">Min T (&deg;F)</th><th class="num">Max wind (kt)</th><th class="num">Precip (in)</th><th class="num">MOS max (&deg;F)</th><th class="num">MOS min (&deg;F)</th><th class="num">Observed so far: max / min / wind / precip</th></tr></thead><tbody></tbody></table></div>
+    <div class="jn-tabcap"><b>Table 2.</b> Forecast-day summary (06&ndash;06 UTC). Model values come from the hourly series of the selected run; guidance values from the statistical guidance chosen above (maximum and minimum from its daily max/min, wind from its highest sustained wind at its 3- or 6-hourly times, with * where only part of the day is covered, precipitation from its 6- or 12-h amounts, where \u2020 marks NBE 12-h amounts that cover 00\u201300 UTC instead; GFS and NAM MOS give no amounts); observations to date from METARs. Note that MOS and NBM maxima and minima are for daytime (about 7 am&ndash;7 pm local standard time) and night-time (about 7 pm&ndash;8 am) periods, not the 06&ndash;06 UTC contest day: when temperatures fall after a front, the day&rsquo;s highest value can occur near 06 UTC and exceed the guidance maximum. Bold: the day covered by the next 00 UTC deadline.<span class="wx-scrollcue"> Scroll sideways for more columns.</span></div>
+    <div class="jn-tablewrap"><table class="jn-table" id="wx-daytab"><thead><tr><th>Forecast day</th><th class="num">Max T (&deg;F)</th><th class="num">Min T (&deg;F)</th><th class="num">Max wind (kt)</th><th class="num">Precip (in)</th><th class="num" id="wx-g-max">Guidance max (&deg;F)</th><th class="num" id="wx-g-min">Guidance min (&deg;F)</th><th class="num" id="wx-g-wind">Guidance wind (kt)</th><th class="num" id="wx-g-pr">Guidance precip (in)</th><th class="num">Observed so far: max / min / wind / precip</th></tr></thead><tbody></tbody></table></div>
   </div>
 
   <!-- ------------------------------------------------------------ 3. time-height -->
@@ -161,7 +171,7 @@ author_profile: false
     <div class="jn-note">
       <p><b>BUFKIT models</b> (GFS, HRRR, RRFS, NAM): Iowa Environmental Mesonet <code>api/1/nws/bufkit.json</code>. Surface series: T2MS, TD2M (&deg;C&rarr;&deg;F), UWND/VWND (m s<sup>&minus;1</sup>&rarr;kt), P01M/C01M (mm&rarr;in), CAPE, LIFT, KINX, PWAT (mm&rarr;in), precipitation type from the WXTR/WXTS/WXTZ/WXTP flags. Boundary-layer wind: maximum and pressure-weighted mean of the profile wind from the surface to the level where &theta; first exceeds the surface value by 0.4 K. Profiles are interpolated in ln&nbsp;<i>p</i> to a fixed 60-level grid (1000&ndash;100 hPa); levels below the model surface are masked.</p>
       <p><b>Open-Meteo models</b> (ECMWF IFS 0.25&deg;, AIFS-single): hourly 2-m temperature and dew point, 10-m wind, precipitation, CAPE (IFS only) and 12 pressure levels (1000&ndash;100 hPa) of temperature, relative humidity, wind, geopotential height, vertical velocity (converted to &omega; = &minus;<i>w p g</i>/(<i>R<sub>d</sub> T</i>)) and cloud cover; &theta; and &theta;<sub>e</sub> (Bolton 1980) are computed here. Specific runs come from the Open-Meteo single-runs API. Lifted and K indices are not available for these models.</p>
-      <p><b>MOS</b> (GFS MAV; NAM MET at 00/12 UTC): IEM <code>api/1/mos.json</code>; red diamonds mark the MOS daily maximum/minimum (N/X). <b>Observations:</b> IEM ASOS/METAR archive (routine and special reports). The stochastic-wind ensemble of the original site is server-side and is not reproduced.</p>
+      <p><b>Statistical guidance</b> from the IEM MOS archive (<code>api/1/mos.json</code>): GFS MOS (MAV, 00/06/12/18 UTC), NAM MOS (MET, 00/12 UTC), and the National Blend of Models text bulletins NBS (short range, 3-hourly to 72 h, 00/06/12/18 UTC) and NBE (extended, 00/12 UTC). The page uses the bulletin issued at or before the selected model run. Red diamonds mark the daily maximum and minimum (MOS N/X, NBM TXN); NBM precipitation amounts (6-h Q06, 12-h Q12, hundredths of an inch) are summed over each 06&ndash;06 UTC day. <b>NBM gridded</b> forecasts (2.5 km; hourly output from the runs at 00, 03, &hellip;, 21 UTC that Open-Meteo archives; surface variables only, so no time&ndash;height sections) come from Open-Meteo. <b>Observations:</b> IEM ASOS/METAR archive (routine and special reports). The stochastic-wind ensemble of the original site is server-side and is not reproduced.</p>
       <p><b>Observed imagery</b> (past only; satellites provide no forecasts): GOES-East or GOES-West Advanced Baseline Imager (whichever views the station better; clean infrared band 13, red visible band 2, GeoColor and air-mass RGB) and the GPM IMERG Early Run 30-min precipitation rate, both served by NASA GIBS, whose time domains decide which frames the slider offers; and the NEXRAD base-reflectivity composite over the contiguous US from the Iowa Environmental Mesonet. Images are requested in latitude&ndash;longitude coordinates for exactly the map box, so they overlay the coastlines without resampling. Colour bars use the providers&rsquo; own colour tables.</p>
       <p><b>Surface level:</b> 2-m temperature and dew point (&deg;F), 10-m wind (kt), mean-sea-level pressure (hPa) and precipitation accumulated over the 6 h ending at the valid time (in; GFS 6-h bucket, ECMWF difference of run totals).</p>
       <p><b>Grid panel:</b> fields from the 6-hourly GFS / AIFS / IFS dataset behind the <a href="{{ base_path }}/blocking-plots/nh-forecast/">Northern Hemisphere viewer</a> (0.25&deg; CONUS window, 0.5&deg; elsewhere). The four surrounding 0.25&deg; grid points are exact model grid nodes; for HRRR/RRFS the 3-km Lambert-conformal cell nodes around the station are drawn from the published grid definition (no field values). <b>Competition city:</b> from wxchallenge.com, refreshed weekly; fallback KBOS.</p>
@@ -187,12 +197,13 @@ author_profile: false
   var STATES_URL = 'https://cdn.jsdelivr.net/gh/PublicaMundi/MappingAPI@master/data/geojson/us-states.json';
 
   var MODELS = {
-    GFS:  {label: 'GFS', src: 'bufkit', bufkit: 'GFS',  cycles: [0, 6, 12, 18], stepH: 6, mos: 'GFS', hasCloud: false, hasCape: true},
+    GFS:  {label: 'GFS', src: 'bufkit', bufkit: 'GFS',  cycles: [0, 6, 12, 18], stepH: 6, guide: 'mav', hasCloud: false, hasCape: true},
     HRRR: {label: 'HRRR', src: 'bufkit', bufkit: 'HRRR', cycles: null, stepH: 1, mos: null, hasCloud: true, hasCape: true},
     RRFS: {label: 'RRFS', src: 'bufkit', bufkit: 'RRFS', cycles: null, stepH: 1, mos: null, hasCloud: true, hasCape: true},
-    NAM:  {label: 'NAM', src: 'bufkit', bufkit: 'NAM',  cycles: [0, 6, 12, 18], stepH: 6, mos: 'NAM', hasCloud: true, hasCape: true},
+    NAM:  {label: 'NAM', src: 'bufkit', bufkit: 'NAM',  cycles: [0, 6, 12, 18], stepH: 6, guide: 'met', hasCloud: true, hasCape: true},
     IFS:  {label: 'ECMWF IFS 0.25°', src: 'openmeteo', om: 'ecmwf_ifs025', cycles: [0, 6, 12, 18], stepH: 6, mos: null, hasCloud: true, hasCape: true},
-    AIFS: {label: 'ECMWF AIFS-single', src: 'openmeteo', om: 'ecmwf_aifs025_single', cycles: [0, 6, 12, 18], stepH: 6, mos: null, hasCloud: true, hasCape: false}
+    AIFS: {label: 'ECMWF AIFS-single', src: 'openmeteo', om: 'ecmwf_aifs025_single', cycles: [0, 6, 12, 18], stepH: 6, mos: null, hasCloud: true, hasCape: false},
+    NBM:  {label: 'NBM', src: 'openmeteo', om: 'ncep_nbm_conus', cycles: [0, 3, 6, 9, 12, 15, 18, 21], stepH: 3, mos: null, hasCloud: false, hasCape: true, noLevels: true}
   };
   var OM_LEVELS = [1000, 925, 850, 700, 600, 500, 400, 300, 250, 200, 150, 100];
   var PGRID = (function () { var out = []; var n = 60; for (var i = 0; i < n; i++) out.push(Math.exp(Math.log(1000) + (Math.log(100) - Math.log(1000)) * i / (n - 1))); return out; })();
@@ -316,10 +327,17 @@ author_profile: false
 
   async function loadOpenMeteo(model, st, init) {
     var M = MODELS[model];
-    if (!init) init = await omLatestRun(model);
+    if (!init) {   /* newest run kept by the single-runs archive: floor to the model's cycles, step back if missing */
+      var last = await omLatestRun(model), cand = new Date(last.getTime());
+      while (M.cycles && M.cycles.indexOf(cand.getUTCHours()) < 0) cand = new Date(cand.getTime() - 3.6e6);
+      for (var tries = 0; tries < 4; tries++) {
+        try { return await loadOpenMeteo(model, st, cand); }
+        catch (e) { if (tries === 3) throw e; cand = new Date(cand.getTime() - M.stepH * 3.6e6); }
+      }
+    }
     var sfc = ['temperature_2m', 'dew_point_2m', 'wind_speed_10m', 'wind_direction_10m', 'wind_gusts_10m', 'precipitation', 'snowfall', 'rain', 'cape', 'surface_pressure', 'cloud_cover'];
     var pl = [];
-    OM_LEVELS.forEach(function (L) { ['temperature', 'relative_humidity', 'wind_speed', 'wind_direction', 'geopotential_height', 'vertical_velocity', 'cloud_cover'].forEach(function (v) { pl.push(v + '_' + L + 'hPa'); }); });
+    if (!M.noLevels) OM_LEVELS.forEach(function (L) { ['temperature', 'relative_humidity', 'wind_speed', 'wind_direction', 'geopotential_height', 'vertical_velocity', 'cloud_cover'].forEach(function (v) { pl.push(v + '_' + L + 'hPa'); }); });
     var url = OM_RUNS + '?latitude=' + st.lat + '&longitude=' + st.lon + '&models=' + M.om + '&run=' + init.toISOString().slice(0, 16) +
       '&hourly=' + sfc.concat(pl).join(',') + '&wind_speed_unit=ms&forecast_days=7&timezone=UTC';
     var d = await getJSON(url);
@@ -340,7 +358,7 @@ author_profile: false
                       wdir: h.wind_direction_10m[i], gust: h.wind_gusts_10m && h.wind_gusts_10m[i] != null ? h.wind_gusts_10m[i] * 1.94384 : null,
                       precip1h: pin, conv1h: null, accum: accum, ptype: ptype, cape: M.hasCape && h.cape ? h.cape[i] : null, cin: null, lift: null, kidx: null, pwat: null,
                       blmax: null, blmean: null, sfcp: h.surface_pressure ? h.surface_pressure[i] : null});
-      if (t - init <= 72 * 3.6e6) {
+      if (!M.noLevels && t - init <= 72 * 3.6e6) {
         var sp = h.surface_pressure ? h.surface_pressure[i] : 1013;
         var P = [], T = [], TH = [], THE = [], W = [], RH = [], OM = [], CL = [];
         OM_LEVELS.forEach(function (L) {
@@ -375,15 +393,30 @@ author_profile: false
     return out;
   }
 
-  async function loadMOS(model, station, init) {
-    var M = MODELS[model]; if (!M.mos) return null;
-    var rt = new Date(init);
-    if (M.mos === 'NAM') { var hh = rt.getUTCHours(); rt.setUTCHours(hh >= 12 ? 12 : 0, 0, 0, 0); }
-    var url = IEM + '/api/1/mos.json?station=' + station + '&model=' + M.mos + '&runtime=' + isoRun(rt);
-    try {
-      var d = await getJSON(url), rows = (d.data || []).map(function (r) { return {t: new Date(r.ftime.replace(' ', 'T') + 'Z'), tmp: r.tmp, dpt: r.dpt, wsp: r.wsp, nx: r.n_x}; });
-      return rows.length ? {runtime: rt, rows: rows} : null;
-    } catch (e) { return null; }
+  /* statistical guidance from the IEM MOS archive: GFS MOS (MAV), NAM MOS (MET), NBM short-range (NBS) and extended (NBE) text */
+  var GUIDE = {
+    mav: {label: 'GFS MOS (MAV)', short: 'GFS MOS', iem: 'GFS', cycles: [0, 6, 12, 18]},
+    met: {label: 'NAM MOS (MET)', short: 'NAM MOS', iem: 'NAM', cycles: [0, 12]},
+    nbs: {label: 'NBM short-range text (NBS)', short: 'NBM NBS', iem: 'NBS', cycles: [0, 6, 12, 18], qpf: 'q06'},
+    nbe: {label: 'NBM extended text (NBE)', short: 'NBM NBE', iem: 'NBE', cycles: [0, 12], qpf: 'q12'}
+  };
+  function guideKey() { var g = $('wx-guide').value; if (g === 'auto') g = MODELS[S.model].guide || 'nbs'; return g === 'none' ? null : g; }
+  async function loadGuidance(key, station, init) {
+    var G = GUIDE[key]; if (!G) return null;
+    var rt = new Date(init); rt.setUTCMinutes(0, 0, 0);
+    while (G.cycles.indexOf(rt.getUTCHours()) < 0) rt = new Date(rt.getTime() - 3.6e6);
+    for (var k = 0; k < 4; k++) {   /* guidance issued at or before the model run; step back if that cycle is missing */
+      try {
+        var d = await getJSON(IEM + '/api/1/mos.json?station=' + station + '&model=' + G.iem + '&runtime=' + isoRun(rt));
+        var rows = (d.data || []).map(function (r) {
+          var q = G.qpf && r[G.qpf] != null ? r[G.qpf] / 100 : null;   /* NBM QPF is given in hundredths of an inch */
+          return {t: new Date(r.ftime.replace(' ', 'T') + 'Z'), tmp: r.tmp, dpt: r.dpt, wsp: r.wsp, gst: r.gst == null ? null : r.gst, nx: r.n_x != null ? r.n_x : (r.txn != null ? r.txn : null), qpf: q};
+        });
+        if (rows.length) return {key: key, label: G.label, short: G.short, runtime: rt, rows: rows, qpfHours: G.qpf === 'q12' ? 12 : 6};
+      } catch (e) { /* try the previous cycle */ }
+      rt = new Date(rt.getTime() - 3.6e6 * (key === 'met' || key === 'nbe' ? 12 : 6));
+    }
+    return null;
   }
 
   /* ================================================================ station + schedule */
@@ -444,7 +477,7 @@ author_profile: false
       if (seq !== S.seq) return;
       S.run = run; S.init = run.init; setRunControls(run.init);
       var pObs = loadObs(st, new Date(run.init.getTime() - 30 * 3.6e6), new Date(Math.min(Date.now(), run.init.getTime() + 84 * 3.6e6)));
-      var pMos = loadMOS(S.model, st.icao, run.init);
+      var gk = guideKey(), pMos = gk ? loadGuidance(gk, st.icao, run.init) : Promise.resolve(null);
       var res = await Promise.allSettled([pObs, pMos]);
       if (seq !== S.seq) return;
       S.obs = res[0].status === 'fulfilled' ? res[0].value : []; S.mos = res[1].status === 'fulfilled' ? res[1].value : null;
@@ -473,6 +506,8 @@ author_profile: false
   function inWin(t, a, b) { return t > a && t <= b; }
   function drawDayTable() {
     var run = S.run, tb = $('wx-daytab').querySelector('tbody'); tb.innerHTML = '';
+    var gs = S.mos ? S.mos.short : 'Guidance';
+    $('wx-g-max').textContent = gs + ' max (\u00B0F)'; $('wx-g-min').textContent = gs + ' min (\u00B0F)'; $('wx-g-wind').textContent = gs + ' wind (kt)'; $('wx-g-pr').textContent = gs + ' precip (in)';
     if (!run) return;
     var days = wxDays(run).slice(0, S.window ? 3 : 8), now = new Date();
     days.forEach(function (dy, i) {
@@ -481,7 +516,17 @@ author_profile: false
       var pr = d3.sum(H.filter(function (h) { return h.t > dy.start; }), function (h) { return h.precip1h || 0; });
       /* MOS N/X: the value valid at 00 UTC is the daytime maximum, the value valid at 12 UTC the night-time minimum */
       var mosMax = '\u2014', mosMin = '\u2014';
-      if (S.mos) S.mos.rows.forEach(function (r) { if (r.nx == null || !inWin(r.t, dy.start, dy.end)) return; if (r.t.getUTCHours() === 0) mosMax = r.nx; else if (r.t.getUTCHours() === 12) mosMin = r.nx; });
+      var gWind = '\u2014', gPr = '\u2014';
+      if (S.mos) {
+        S.mos.rows.forEach(function (r) { if (r.nx == null || !inWin(r.t, dy.start, dy.end)) return; if (r.t.getUTCHours() === 0) mosMax = r.nx; else if (r.t.getUTCHours() === 12) mosMin = r.nx; });
+        var gw = S.mos.rows.filter(function (r) { return r.wsp != null && inWin(r.t, dy.start, dy.end); });
+        if (gw.length) {   /* * when the guidance times do not span the whole forecast day */
+          var full = gw[0].t <= new Date(dy.start.getTime() + 6 * 3.6e6) && gw[gw.length - 1].t >= new Date(dy.end.getTime() - 6 * 3.6e6);
+          gWind = d3.max(gw, function (r) { return r.wsp; }) + (full ? '' : '*');
+        }
+        var gq = S.mos.rows.filter(function (r) { return r.qpf != null && inWin(r.t, dy.start, dy.end); });
+        if (gq.length === 24 / S.mos.qpfHours) gPr = d3.sum(gq, function (r) { return r.qpf; }).toFixed(2) + (S.mos.qpfHours === 12 ? '\u2020' : '');
+      }
       var obsTxt = '—';
       if (S.obs && now > dy.start) {
         var O = S.obs.filter(function (o) { return inWin(o.t, dy.start, dy.end); });
@@ -490,7 +535,7 @@ author_profile: false
       var tr = document.createElement('tr');
       var isNext = dy.start.getTime() === nextDeadline().getTime() + 6 * 3.6e6;
       if (isNext) tr.style.fontWeight = '700';
-      tr.innerHTML = '<td>Day ' + (i + 1) + ': ' + fmtTick(dy.start) + '–' + fmtTick(dy.end) + (H.length < 20 ? ' (partial)' : '') + (isNext ? '<br>\u2190 next deadline' : '') + '</td><td class="num">' + (tmax == null ? '—' : tmax.toFixed(1)) + '</td><td class="num">' + (tmin == null ? '—' : tmin.toFixed(1)) + '</td><td class="num">' + (wmax == null ? '—' : wmax.toFixed(1)) + '</td><td class="num">' + pr.toFixed(2) + '</td><td class="num">' + mosMax + '</td><td class="num">' + mosMin + '</td><td class="num">' + obsTxt + '</td>';
+      tr.innerHTML = '<td>Day ' + (i + 1) + ': ' + fmtTick(dy.start) + '–' + fmtTick(dy.end) + (H.length < 20 ? ' (partial)' : '') + (isNext ? '<br>\u2190 next deadline' : '') + '</td><td class="num">' + (tmax == null ? '—' : tmax.toFixed(1)) + '</td><td class="num">' + (tmin == null ? '—' : tmin.toFixed(1)) + '</td><td class="num">' + (wmax == null ? '—' : wmax.toFixed(1)) + '</td><td class="num">' + pr.toFixed(2) + '</td><td class="num">' + mosMax + '</td><td class="num">' + mosMin + '</td><td class="num">' + gWind + '</td><td class="num">' + gPr + '</td><td class="num">' + obsTxt + '</td>';
       tb.appendChild(tr);
     });
   }
@@ -527,18 +572,27 @@ author_profile: false
     var obsWin = (S.obs || []).filter(function (o) { return o.t > t0 && o.t <= tEnd; });
     if (chart === 't2m') {
       ser(run.label + ' 2-m T', 't2m', null, {color: C.model, marker: 'circle'}); ser(run.label + ' 2-m dew point', 'td2m', null, {color: C.td, marker: 'circle', dash: '4,2'});
-      if (S.mos) { var mr = S.mos.rows.filter(function (r) { return r.t > t0 && r.t <= tEnd; }); series.push({name: MODELS[S.model].mos + ' MOS T', pts: mr.filter(function (r) { return r.tmp != null; }).map(function (r) { return {t: r.t, v: r.tmp}; }), style: {color: C.mos, marker: 'x'}}); series.push({name: MODELS[S.model].mos + ' MOS dew point', pts: mr.filter(function (r) { return r.dpt != null; }).map(function (r) { return {t: r.t, v: r.dpt}; }), style: {color: C.mos, marker: 'x', dash: '4,2'}});
+      if (S.mos) { var mr = S.mos.rows.filter(function (r) { return r.t > t0 && r.t <= tEnd; }); series.push({name: S.mos.short + ' T', pts: mr.filter(function (r) { return r.tmp != null; }).map(function (r) { return {t: r.t, v: r.tmp}; }), style: {color: C.mos, marker: 'x'}}); series.push({name: S.mos.short + ' dew point', pts: mr.filter(function (r) { return r.dpt != null; }).map(function (r) { return {t: r.t, v: r.dpt}; }), style: {color: C.mos, marker: 'x', dash: '4,2'}});
         extra = mr.filter(function (r) { return r.nx != null; }).map(function (r) { return {t: r.t, v: r.nx}; }); }
       obsS = [{name: 'observed T', pts: obsWin.filter(function (o) { return o.t2m != null; }).map(function (o) { return {t: o.t, v: o.t2m}; }), color: C.obs}, {name: 'observed dew point', pts: obsWin.filter(function (o) { return o.td2m != null; }).map(function (o) { return {t: o.t, v: o.td2m}; }), color: C.obs2}];
     } else if (chart === 'wind') {
       ser(run.label + ' 10-m wind', 'wspd', null, {color: C.model, marker: 'circle'}); ser('boundary-layer max', 'blmax', null, {color: '#e08214', marker: 'none'}); ser('boundary-layer mean', 'blmean', null, {color: '#8073ac', marker: 'none', dash: '4,2'}); ser(run.label + ' gust', 'gust', null, {color: '#4d4d4d', marker: 'none', dash: '1,2'});
-      if (S.mos) series.push({name: MODELS[S.model].mos + ' MOS wind', pts: S.mos.rows.filter(function (r) { return r.wsp != null && r.t > t0 && r.t <= tEnd; }).map(function (r) { return {t: r.t, v: r.wsp}; }), style: {color: C.mos, marker: 'x'}});
+      if (S.mos) {
+        series.push({name: S.mos.short + ' wind', pts: S.mos.rows.filter(function (r) { return r.wsp != null && r.t > t0 && r.t <= tEnd; }).map(function (r) { return {t: r.t, v: r.wsp}; }), style: {color: C.mos, marker: 'x'}});
+        var gp = S.mos.rows.filter(function (r) { return r.gst != null && r.t > t0 && r.t <= tEnd; }).map(function (r) { return {t: r.t, v: r.gst}; });
+        if (gp.length) series.push({name: S.mos.short + ' gust', pts: gp, style: {color: C.mos, marker: 'none', dash: '1,2'}});
+      }
       obsS = [{name: 'observed sustained wind', pts: obsWin.filter(function (o) { return o.wspd != null; }).map(function (o) { return {t: o.t, v: o.wspd}; }), color: C.obs}];
     } else if (chart === 'precip') {
       ser(run.label + ' accumulated', 'accum', null, {color: C.model, marker: 'circle'});
       var acc = 0, op = [];
       obsWin.forEach(function (o) { if (o.t.getUTCMinutes() >= 50 && o.p01i != null) { acc += o.p01i; op.push({t: new Date(o.t.getTime() + (60 - o.t.getUTCMinutes()) * 60000), v: acc}); } });
       obsS = [{name: 'observed accumulated (hourly reports)', pts: op, color: C.obs}];
+      if (S.mos) {   /* guidance QPF accumulated from the model start time */
+        var ga = 0, gq = [];
+        S.mos.rows.forEach(function (r) { if (r.qpf == null || r.t <= t0 || r.t > tEnd) return; ga += r.qpf; gq.push({t: r.t, v: ga}); });
+        if (gq.length) series.push({name: S.mos.short + ' accumulated QPF', pts: gq, style: {color: C.mos, marker: 'x'}});
+      }
     } else if (chart === 'cape') { ser(run.label + ' CAPE', 'cape', null, {color: C.model, marker: 'circle'}); }
     else if (chart === 'lik') { ser(run.label + ' lifted index', 'lift', null, {color: C.model, marker: 'circle'}); ser(run.label + ' K index', 'kidx', null, {color: '#4d4d4d', marker: 'circle', dash: '4,2'}); }
     else if (chart === 'pwat') { ser(run.label + ' precipitable water', 'pwat', null, {color: C.model, marker: 'circle'}); }
@@ -579,11 +633,11 @@ author_profile: false
     /* legend + caption */
     var leg = series.map(function (s) { return '<span><i style="border-color:' + s.style.color + (s.style.dash ? ';border-top-style:dashed' : '') + '"></i>' + s.name + (s.style.marker === 'x' ? ' (×)' : '') + '</span>'; })
       .concat(obsS.map(function (s) { return '<span><i class="diamond" style="background:' + s.color + '"></i>' + s.name + '</span>'; }));
-    if (extra.length) leg.push('<span><i class="diamond" style="background:' + C.extrema + ';width:9px;height:9px"></i>MOS daily maximum (X) and minimum (N)</span>');
+    if (extra.length) leg.push('<span><i class="diamond" style="background:' + C.extrema + ';width:9px;height:9px"></i>' + (S.mos ? S.mos.short : 'MOS') + ' daily maximum and minimum</span>');
     if (chart === 'precip') leg.push('<span><i class="sq" style="background:' + C.rain + '"></i>rain</span><span><i class="sq" style="background:' + C.snow + '"></i>snow</span><span><i class="sq" style="background:' + C.frz + '"></i>freezing rain</span><span><i class="sq" style="background:' + C.ice + '"></i>ice pellets</span><span><i class="sq" style="background:' + C.conv + '"></i>convective part</span>');
     $('wx-tslegend').innerHTML = leg.join('');
     $('wx-tstitle').textContent = chartSpec(chart).title + ', ' + S.station.icao + ', ' + run.label + ' run ' + fmtTime(run.init) + '.';
-    $('wx-tscap').innerHTML = '<span class="jn-figno">Fig. 2.</span> ' + chartSpec(chart).title + ' at ' + S.station.icao + ' (' + S.station.name + ') from the ' + run.label + ' run of ' + fmtTime(run.init) + (S.window ? ', first ' + S.window + ' h' : ', full run') + '. Dashed vertical lines mark 0600 UTC, the WxChallenge day boundaries.' + (obsS.length ? ' Diamonds: METAR observations (IEM ASOS archive).' : '') + ((S.mos && (chart === 't2m' || chart === 'wind')) ? ' \u00D7: ' + MODELS[S.model].mos + ' MOS from the same cycle.' : '') + (CHART_NOTE[chart] || '');
+    $('wx-tscap').innerHTML = '<span class="jn-figno">Fig. 2.</span> ' + chartSpec(chart).title + ' at ' + S.station.icao + ' (' + S.station.name + ') from the ' + run.label + ' run of ' + fmtTime(run.init) + (S.window ? ', first ' + S.window + ' h' : ', full run') + '. Dashed vertical lines mark 0600 UTC, the WxChallenge day boundaries.' + (obsS.length ? ' Diamonds: METAR observations (IEM ASOS archive).' : '') + ((S.mos && (chart === 't2m' || chart === 'wind' || chart === 'precip')) ? ' \u00D7: ' + S.mos.label + ' issued ' + fmtTime(S.mos.runtime) + '.' : '') + (CHART_NOTE[chart] || '');
   }
 
   /* ================================================================ time-height sections */
@@ -609,7 +663,10 @@ author_profile: false
   };
   function drawTH() {
     var run = S.run, box = $('wx-th'), svg = d3.select(box).select('svg'); svg.selectAll('*').remove(); d3.select('#wx-thcbar').selectAll('*').remove();
-    if (!run || !run.profiles || !run.profiles.times.length) return;
+    if (!run || !run.profiles || !run.profiles.times.length) {
+      if (run) { var W0 = Math.max(320, box.clientWidth - 2); svg.attr('width', W0).attr('height', 60).attr('viewBox', '0 0 ' + W0 + ' 60'); svg.append('text').attr('x', W0 / 2).attr('y', 34).attr('text-anchor', 'middle').style('font-family', 'Helvetica, Arial, sans-serif').style('font-size', '9pt').text('No vertical profiles in the ' + run.label + ' data (surface variables only); choose another model.'); $('wx-thtitle').textContent = ''; $('wx-thcap').innerHTML = '<span class="jn-figno">Fig. 3.</span> Time\u2013height sections need upper-air data, which ' + run.label + ' does not provide.'; }
+      return;
+    }
     var F = FIELDS[S.field], key = F.key || S.field, pf = run.profiles;
     var W = Math.max(320, box.clientWidth - 2), H = 340; svg.attr('width', W).attr('height', H).attr('viewBox', '0 0 ' + W + ' ' + H).style('font-family', 'Helvetica, Arial, sans-serif').style('font-size', '8pt');
     var m = {l: 46, r: 14, t: 12, b: 34};
@@ -1157,6 +1214,7 @@ author_profile: false
   $('wx-prev').addEventListener('click', function () { var i = selectedInit() || S.init; if (!i) return; var n = new Date(i.getTime() - MODELS[S.model].stepH * 3.6e6); setRunControls(n); loadAll(); });
   $('wx-next').addEventListener('click', function () { var i = selectedInit() || S.init; if (!i) return; var n = new Date(i.getTime() + MODELS[S.model].stepH * 3.6e6); if (n > new Date()) return; setRunControls(n); loadAll(); });
   $('wx-window').addEventListener('change', function () { S.window = +this.value; drawTS(); drawDayTable(); });
+  $('wx-guide').addEventListener('change', async function () { if (!S.run || !S.station) return; var gk = guideKey(); S.mos = gk ? await loadGuidance(gk, S.station.icao, S.run.init) : null; drawTS(); drawDayTable(); });
   Array.from($('wx-tssel').querySelectorAll('button')).forEach(function (b) { b.addEventListener('click', function () { S.chart = this.dataset.chart; Array.from($('wx-tssel').querySelectorAll('button')).forEach(function (o) { o.setAttribute('aria-pressed', o === b ? 'true' : 'false'); }); drawTS(); }); });
   Array.from($('wx-thsel').querySelectorAll('button')).forEach(function (b) { b.addEventListener('click', function () { S.field = this.dataset.field; Array.from($('wx-thsel').querySelectorAll('button')).forEach(function (o) { o.setAttribute('aria-pressed', o === b ? 'true' : 'false'); }); drawTH(); }); });
   $('wx-mapmodel').addEventListener('change', function () { S.mapModel = this.value; S.obsK = null; fillMapVars(); loadMap(); });
