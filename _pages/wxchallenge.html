@@ -60,6 +60,15 @@ author_profile: false
   .wx .wx-chartsel button { white-space: normal; height: auto; min-height: 22px; line-height: 1.2; padding: 3px 8px; }
   .wx input[type=date] { height: 24px; padding: 0 4px; box-sizing: border-box; }
   .wx #wx-cornertab td:first-child { white-space: nowrap; }
+  .wx .wx-gate { border: 1px solid #000; padding: 8px 10px; margin: 8px 0; background: #fafafa; max-width: 680px; }
+  .wx .wx-gate-head { font-family: Helvetica, Arial, sans-serif; font-weight: 700; font-size: 9pt; margin-bottom: 4px; }
+  .wx .wx-gate p { margin: 0 0 6px 0; }
+  .wx .wx-gate-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-family: Helvetica, Arial, sans-serif; font-size: 8.5pt; }
+  .wx .wx-gate-row label { display: inline-flex; align-items: center; gap: 4px; margin: 0; }
+  .wx .wx-gate-row input[type=checkbox] { margin: 0; }
+  .wx .wx-gate-row input[type=password] { width: 210px; max-width: 100%; height: 24px; box-sizing: border-box; }
+  .wx .wx-legal { font-family: Helvetica, Arial, sans-serif; font-size: 7.5pt; color: #444; margin: 2px 0 6px 0; max-width: 900px; }
+  .wx .wx-legal button { font-size: 7.5pt; padding: 0 6px; height: 18px; }
 </style>
 
 <div class="jn wx" id="wx-app">
@@ -67,7 +76,7 @@ author_profile: false
 
   <p class="jn-abstract"><b>Purpose.</b> Model guidance and observations for the <a href="https://www.wxchallenge.com/">WxChallenge</a>, a forecasting contest in which students predict, for one US airport, the maximum and minimum temperature, the maximum sustained wind and the precipitation over a 24-h &ldquo;forecast day&rdquo; that runs from 06 UTC to 06 UTC (in US Eastern time, 2 am to 2 am in summer and 1 am to 1 am in winter). The page works for any US airport weather station and opens on the current contest city. The layout follows <a href="https://wxchallenge.yolandgao.com/">Yoland Gao&rsquo;s meteogram site</a>.</p>
   <p class="jn-abstract"><b>How to use.</b> Type a 4-letter station code (for example KBOS) and press Go, or press Competition city. The latest model run loads automatically. Table 2 summarises each forecast day; Fig. 2 shows the hour-by-hour forecast with observations; Fig. 1 shows the weather pattern around the station, and its slider steps through forecast (or, for satellite and radar, past) times; Fig. 3 shows the vertical structure above the station.</p>
-  <details class="jn-small"><summary>Abbreviations</summary><p class="jn-abstract jn-small"> GFS: NOAA Global Forecast System. HRRR and RRFS: NOAA 3-km models for the US (RRFS is replacing the NAM, the older NOAA regional model). GDPS: the Canadian (ECCC) global model. NBM: National Blend of Models, NOAA&rsquo;s calibrated blend of many models; NBS and NBE are its short-range (3-hourly, to 72 h) and extended text guidance. IFS: the ECMWF (European Centre) global model. AIFS: ECMWF&rsquo;s machine-learning global model. MOS: Model Output Statistics, a statistically corrected station forecast. METAR: the routine hourly airport weather report. ASOS: Automated Surface Observing System, the US airport stations. BUFKIT: model vertical profiles at a station. UTC: Coordinated Universal Time (Z).</p></details>
+  <details class="jn-small"><summary>Abbreviations</summary><p class="jn-abstract jn-small"> GFS: NOAA Global Forecast System. HRRR and RRFS: NOAA 3-km models for the US (RRFS is replacing the NAM, the older NOAA regional model). GDPS: the Canadian (ECCC) global model. NBM: National Blend of Models, NOAA&rsquo;s calibrated blend of many models; NBS and NBE are its short-range (3-hourly, to 72 h) and extended text guidance. IFS: the ECMWF (European Centre) global model. AIFS: ECMWF&rsquo;s machine-learning global model. MOS: Model Output Statistics, a statistically corrected station forecast. METAR: the routine hourly airport weather report. ASOS: Automated Surface Observing System, the US airport stations. BUFKIT: model vertical profiles at a station. UTC: Coordinated Universal Time (Z). WeatherNext 3: Google DeepMind&rsquo;s experimental machine-learning ensemble forecast (64 members), shown to WxChallenge team members who enter the team passcode.</p></details>
 
   <div class="jn-controls">
     <div class="jn-ctl"><label for="wx-station">Station (ICAO)</label>
@@ -82,6 +91,7 @@ author_profile: false
         <option value="IFS">ECMWF IFS 0.25&deg; (Open-Meteo)</option>
         <option value="AIFS">ECMWF AIFS-single (Open-Meteo)</option>
         <option value="NBM">NBM 2.5 km (National Blend; Open-Meteo, 3-hourly runs)</option>
+        <option value="WN3">Google WeatherNext 3 ensemble (team passcode)</option>
       </select></div>
     <div class="jn-ctl"><label for="wx-date">Run (UTC)</label>
       <div class="jn-ctl-row"><input type="date" id="wx-date" aria-label="run date (UTC)"><select id="wx-hour" aria-label="run hour (UTC)"></select></div></div>
@@ -93,6 +103,13 @@ author_profile: false
   <div class="wx-period" id="wx-period"></div>
   <div class="jn-status" id="wx-status"></div>
   <div class="wx-src" id="wx-stinfo"></div>
+  <div class="wx-legal" id="wx-wn3legal" hidden></div>
+  <div class="wx-gate" id="wx-wn3gate" hidden>
+    <div class="wx-gate-head">WeatherNext 3: team access</div>
+    <p class="jn-small">WeatherNext 3 is Google DeepMind&rsquo;s experimental machine-learning ensemble forecast. Google&rsquo;s terms allow its live forecasts to be shared only with named people, so its files are encrypted and open only for members of the MIT WxChallenge team. Enter the team passcode.</p>
+    <div class="wx-gate-row"><input type="password" id="wx-wn3pass" autocomplete="current-password" aria-label="team passcode" placeholder="team passcode"><button id="wx-wn3go">Unlock</button><label><input type="checkbox" id="wx-wn3remember"> remember on this device</label></div>
+    <div class="jn-status" id="wx-wn3status"></div>
+  </div>
 
   <!-- ------------------------------------------------------------ 1. station map -->
   <div class="wx-sec">
@@ -130,7 +147,7 @@ author_profile: false
     <h2>2. Surface time series</h2>
     <div class="wx-chartsel" id="wx-tssel">
       <button data-chart="t2m" aria-pressed="true">2-m T &amp; T<sub>d</sub></button><button data-chart="wind">10-m wind</button><button data-chart="precip">Accumulated precipitation</button>
-      <button data-chart="cape">CAPE</button><button data-chart="lik">LI &amp; K index</button><button data-chart="pwat">Precipitable water</button>
+      <button data-chart="cape">CAPE</button><button data-chart="lik">LI &amp; K index</button><button data-chart="pwat">Precipitable water</button><button data-chart="cloud">Cloud cover</button>
     </div>
     <figure class="jn-fig">
       <div class="jn-fig-title" id="wx-tstitle"></div>
@@ -138,7 +155,7 @@ author_profile: false
       <div class="wx-legend" id="wx-tslegend"></div>
       <figcaption id="wx-tscap"></figcaption>
     </figure>
-    <div class="jn-tabcap"><b>Table 2.</b> Forecast-day summary (06&ndash;06 UTC). Model values come from the hourly series of the selected run; guidance values from the statistical guidance that matches the model automatically (GFS MOS for GFS runs, NAM MOS for NAM runs, NBM short range otherwise; all products are compared in Table 3) (maximum and minimum from its daily max/min, wind from its highest sustained wind at its 3- or 6-hourly times, with * where only part of the day is covered, precipitation from its 6- or 12-h amounts, where \u2020 marks NBE 12-h amounts that cover 00\u201300 UTC instead; GFS and NAM MOS give no amounts); observations to date from METARs. Note that MOS and NBM maxima and minima are for daytime (about 7 am&ndash;7 pm local standard time) and night-time (about 7 pm&ndash;8 am) periods, not the 06&ndash;06 UTC contest day: when temperatures fall after a front, the day&rsquo;s highest value can occur near 06 UTC and exceed the guidance maximum. Bold: the day covered by the next 00 UTC deadline.<span class="wx-scrollcue"> Scroll sideways for more columns.</span></div>
+    <div class="jn-tabcap"><b>Table 2.</b> Forecast-day summary (06&ndash;06 UTC). Model values come from the hourly series of the selected run; guidance values from the statistical guidance that matches the model automatically (GFS MOS for GFS runs, NAM MOS for NAM runs, NBM short range otherwise; all products are compared in Table 3) (maximum and minimum from its daily max/min, wind from its highest sustained wind at its 3- or 6-hourly times, with * where only part of the day is covered, precipitation from its 6- or 12-h amounts, where \u2020 marks NBE 12-h amounts that cover 00\u201300 UTC instead; GFS and NAM MOS give no amounts); observations to date from METARs. Note that MOS and NBM maxima and minima are for daytime (about 7 am&ndash;7 pm local standard time) and night-time (about 7 pm&ndash;8 am) periods, not the 06&ndash;06 UTC contest day: when temperatures fall after a front, the day&rsquo;s highest value can occur near 06 UTC and exceed the guidance maximum. For WeatherNext 3, the range in brackets runs from the highest (for minima, lowest) value of its hourly 10th-percentile series to that of its 90th-percentile series, a guide to the ensemble spread. Bold: the day covered by the next 00 UTC deadline.<span class="wx-scrollcue"> Scroll sideways for more columns.</span></div>
     <div class="jn-tablewrap"><table class="jn-table" id="wx-daytab"><thead><tr><th>Forecast day</th><th class="num">Max T (&deg;F)</th><th class="num">Min T (&deg;F)</th><th class="num">Max wind (kt)</th><th class="num">Precip (in)</th><th class="num" id="wx-g-max">Guidance max (&deg;F)</th><th class="num" id="wx-g-min">Guidance min (&deg;F)</th><th class="num" id="wx-g-wind">Guidance wind (kt)</th><th class="num" id="wx-g-pr">Guidance precip (in)</th><th class="num">Observed so far: max / min / wind / precip</th></tr></thead><tbody></tbody></table></div>
   </div>
 
@@ -169,6 +186,7 @@ author_profile: false
       <p><b>Open-Meteo models</b> (ECMWF IFS 0.25&deg;, AIFS-single): hourly 2-m temperature and dew point, 10-m wind, precipitation, CAPE (IFS only) and 12 pressure levels (1000&ndash;100 hPa) of temperature, relative humidity, wind, geopotential height, vertical velocity (converted to &omega; = &minus;<i>w p g</i>/(<i>R<sub>d</sub> T</i>)) and cloud cover; &theta; and &theta;<sub>e</sub> (Bolton 1980) are computed here. Specific runs come from the Open-Meteo single-runs API. Lifted and K indices are not available for these models.</p>
       <p><b>Statistical guidance</b> from the IEM MOS archive (<code>api/1/mos.json</code>): GFS MOS (MAV, 00/06/12/18 UTC), NAM MOS (MET, 00/12 UTC), and the National Blend of Models text bulletins NBS (short range, 3-hourly to 72 h, 00/06/12/18 UTC) and NBE (extended, 00/12 UTC). The page uses the bulletin issued at or before the selected model run. Red diamonds mark the daily maximum and minimum (MOS N/X, NBM TXN); NBM precipitation amounts (6-h Q06, 12-h Q12, hundredths of an inch) are summed over each 06&ndash;06 UTC day. <b>NBM gridded</b> forecasts (2.5 km; hourly output from the runs at 00, 03, &hellip;, 21 UTC that Open-Meteo archives; surface variables only, so no time&ndash;height sections) come from Open-Meteo. <b>Observations:</b> IEM ASOS/METAR archive (routine and special reports). The stochastic-wind ensemble of the original site is server-side and is not reproduced.</p>
       <p><b>Observed imagery</b> (past only; satellites provide no forecasts): GOES-East or GOES-West Advanced Baseline Imager (whichever views the station better; clean infrared band 13, red visible band 2, GeoColor and air-mass RGB) and the GPM IMERG Early Run 30-min precipitation rate, both served by NASA GIBS, whose time domains decide which frames the slider offers; and the NEXRAD base-reflectivity composite over the contiguous US from the Iowa Environmental Mesonet. Images are requested in latitude&ndash;longitude coordinates for exactly the map box, so they overlay the coastlines without resampling. Colour bars use the providers&rsquo; own colour tables.</p>
+      <p><b>WeatherNext 3</b> (Google DeepMind; team members only): an experimental machine-learning ensemble of 64 members, run every 6 h to 15 days. The page uses Google&rsquo;s precomputed ensemble statistics (mean, 10th and 90th percentiles): station-calibrated 2-m temperature and dew point (0.05&deg;), and 10-m wind, hourly precipitation (the model&rsquo;s own and a version calibrated to NASA&rsquo;s IMERG satellite estimate), sea-level pressure and cloud cover (0.1&deg;), interpolated bilinearly to the station hourly to 48 h; and maps every 6 h to 240 h on a 0.1&deg; window over the US. Google&rsquo;s terms allow live forecasts to be shared only with named people, so every file is encrypted (AES-256-GCM, key derived from the team passcode) and decrypted in your browser. Pressure levels are not used because Google charges the downloader for that part of the dataset. WeatherNext 3 forecasts weather variables, not satellite images; its cloud-cover fields are the closest it comes to a satellite view. Not an official forecast.</p>
       <p><b>Surface level:</b> 2-m temperature and dew point (&deg;F), 10-m wind (kt), mean-sea-level pressure (hPa) and precipitation accumulated over the 6 h ending at the valid time (in; GFS 6-h bucket, ECMWF difference of run totals).</p>
       <p><b>Grid panel models:</b> GFS (NOAA), AIFS and IFS (ECMWF) and GDPS (ECCC, the Canadian global model, 00/12 UTC runs; contains information licensed under the Data Server End-use Licence of Environment and Climate Change Canada) are global; HRRR (NOAA, 3 km, to 48 h) and NBM (2.5 km, surface fields only, to 72 h) cover the US and are interpolated from their Lambert-conformal grids to a 0.05&deg; latitude&ndash;longitude grid, with HRRR winds rotated to true north.</p>
       <p><b>Grid panel:</b> fields from the 6-hourly GFS / AIFS / IFS / GDPS / HRRR / NBM dataset behind the <a href="{{ base_path }}/blocking-plots/nh-forecast/">Northern Hemisphere viewer</a> (0.25&deg; CONUS window, 0.5&deg; elsewhere). The four surrounding 0.25&deg; grid points are exact model grid nodes; for HRRR/RRFS the 3-km Lambert-conformal cell nodes around the station are drawn from the published grid definition (no field values). <b>Competition city:</b> from wxchallenge.com, refreshed weekly; fallback KBOS.</p>
@@ -200,8 +218,10 @@ author_profile: false
     NAM:  {label: 'NAM', src: 'bufkit', bufkit: 'NAM',  cycles: [0, 6, 12, 18], stepH: 6, guide: 'met', hasCloud: true, hasCape: true},
     IFS:  {label: 'ECMWF IFS 0.25°', src: 'openmeteo', om: 'ecmwf_ifs025', cycles: [0, 6, 12, 18], stepH: 6, mos: null, hasCloud: true, hasCape: true},
     AIFS: {label: 'ECMWF AIFS-single', src: 'openmeteo', om: 'ecmwf_aifs025_single', cycles: [0, 6, 12, 18], stepH: 6, mos: null, hasCloud: true, hasCape: false},
-    NBM:  {label: 'NBM', src: 'openmeteo', om: 'ncep_nbm_conus', cycles: [0, 3, 6, 9, 12, 15, 18, 21], stepH: 3, mos: null, hasCloud: false, hasCape: true, noLevels: true}
+    NBM:  {label: 'NBM', src: 'openmeteo', om: 'ncep_nbm_conus', cycles: [0, 3, 6, 9, 12, 15, 18, 21], stepH: 3, mos: null, hasCloud: false, hasCape: true, noLevels: true},
+    WN3:  {label: 'WeatherNext 3', src: 'wn3', cycles: [0, 6, 12, 18], stepH: 6, mos: null, hasCloud: false, hasCape: false, noLevels: true}
   };
+  var WN3_ROOT = qs.get('wn3base') || qs.get('base') || HF_BASE;
   var OM_LEVELS = [1000, 925, 850, 700, 600, 500, 400, 300, 250, 200, 150, 100];
   var PGRID = (function () { var out = []; var n = 60; for (var i = 0; i < n; i++) out.push(Math.exp(Math.log(1000) + (Math.log(100) - Math.log(1000)) * i / (n - 1))); return out; })();
   var C = {model: '#000000', mos: '#b2182b', obs: '#2166ac', obs2: '#1b7837', extrema: '#b2182b', day: '#999999', td: '#4d4d4d',
@@ -211,7 +231,8 @@ author_profile: false
   /* ================================================================ state */
   var S = {stations: [], byId: {}, schedule: null, station: null, model: 'GFS', init: null, run: null, obs: null, mos: null,
            chart: 't2m', field: 'temp', window: 60, hfIndex: null, mapModel: null, mapVar: 't', mapLev: 850, mapCont: 'z', mapK: 0, obsVar: 'goes_ir', obsK: null,
-           land: null, states: null, elev: null, elevNH: null, showElev: true, cache: {}, seq: 0};
+           land: null, states: null, elev: null, elevNH: null, showElev: true, cache: {}, seq: 0,
+           wn3: {idx: null, key: null, base: null, pending: null}};
 
   function $(id) { return document.getElementById(id); }
   function status(id, msg, err) { var s = $(id); s.textContent = msg || ''; s.className = 'jn-status' + (err ? ' jn-err' : ''); }
@@ -354,7 +375,7 @@ author_profile: false
       run.hours.push({t: t, t2m: c2f(h.temperature_2m[i]), td2m: c2f(h.dew_point_2m[i]), wspd: h.wind_speed_10m[i] == null ? null : h.wind_speed_10m[i] * 1.94384,
                       wdir: h.wind_direction_10m[i], gust: h.wind_gusts_10m && h.wind_gusts_10m[i] != null ? h.wind_gusts_10m[i] * 1.94384 : null,
                       precip1h: pin, conv1h: null, accum: accum, ptype: ptype, cape: M.hasCape && h.cape ? h.cape[i] : null, cin: null, lift: null, kidx: null, pwat: null,
-                      blmax: null, blmean: null, sfcp: h.surface_pressure ? h.surface_pressure[i] : null});
+                      blmax: null, blmean: null, sfcp: h.surface_pressure ? h.surface_pressure[i] : null, tcc: h.cloud_cover ? h.cloud_cover[i] : null});
       if (!M.noLevels && t - init <= 72 * 3.6e6) {
         var sp = h.surface_pressure ? h.surface_pressure[i] : 1013;
         var P = [], T = [], TH = [], THE = [], W = [], RH = [], OM = [], CL = [];
@@ -371,6 +392,115 @@ author_profile: false
       }
     }
     run.profiles = pf;
+    return run;
+  }
+
+  /* ================================================================ WeatherNext 3 (Google DeepMind): encrypted team files */
+  /* Files on the Hub are nonce(12) | AES-256-GCM ciphertext | tag; the key is PBKDF2-HMAC-SHA256 of the team passcode
+     with the salt and iteration count from wn3/index.json.  Only the derived key bits are kept (session, or this device
+     when "remember" is ticked); the passcode itself is never stored or sent anywhere. */
+  var WN3_STORE = 'wn3key:';
+  function b64bytes(t) { var b = atob(t), u = new Uint8Array(b.length); for (var i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u; }
+  function hexOf(buf) { return Array.from(new Uint8Array(buf)).map(function (x) { return (x < 16 ? '0' : '') + x.toString(16); }).join(''); }
+  function bytesOfHex(h) { var u = new Uint8Array(h.length / 2); for (var i = 0; i < u.length; i++) u[i] = parseInt(h.substr(2 * i, 2), 16); return u; }
+  function wn3Locked() { var e = new Error('WeatherNext 3 is locked'); e.wn3locked = true; return e; }
+  function wn3Shard(icao) { var h = 0; for (var i = 0; i < icao.length; i++) h = (Math.imul(h, 31) + icao.charCodeAt(i)) >>> 0; return h % S.wn3.idx.ts.shards; }
+  async function loadWN3Index() {
+    try {
+      var r = await fetch(WN3_ROOT + '/wn3/index.json', {cache: 'no-cache'}); if (!r.ok) throw new Error('HTTP ' + r.status);
+      var sha = r.headers.get('x-repo-commit'); S.wn3.base = (sha && WN3_ROOT === HF_BASE) ? HF_BASE.replace(/\/resolve\/main$/, '/resolve/' + sha) : WN3_ROOT;
+      S.wn3.idx = await r.json();
+    } catch (e) { S.wn3.idx = null; }
+    if (S.wn3.idx && !S.wn3.key) await wn3Restore();
+  }
+  async function wn3KeyFromBits(bits) {
+    var key = await crypto.subtle.importKey('raw', bits, {name: 'AES-GCM'}, false, ['decrypt']);
+    var chk = b64bytes(S.wn3.idx.enc.check);
+    var pt = await crypto.subtle.decrypt({name: 'AES-GCM', iv: chk.subarray(0, 12)}, key, chk.subarray(12));   /* throws if the key is wrong */
+    if (new TextDecoder().decode(pt) !== 'WN3-OK') throw new Error('wrong key');
+    return key;
+  }
+  async function wn3Unlock(pass, remember) {
+    var e = S.wn3.idx.enc;
+    var base = await crypto.subtle.importKey('raw', new TextEncoder().encode(pass), 'PBKDF2', false, ['deriveBits']);
+    var bits = await crypto.subtle.deriveBits({name: 'PBKDF2', hash: 'SHA-256', salt: b64bytes(e.salt), iterations: e.iter}, base, 256);
+    S.wn3.key = await wn3KeyFromBits(bits);
+    var k = WN3_STORE + e.salt;
+    try { sessionStorage.setItem(k, hexOf(bits)); } catch (x) { /* storage unavailable: key lives in memory only */ }
+    try { if (remember) localStorage.setItem(k, hexOf(bits)); else localStorage.removeItem(k); } catch (x) { /* ignore */ }
+  }
+  async function wn3Restore() {
+    var k = WN3_STORE + S.wn3.idx.enc.salt, h = null;
+    try { h = sessionStorage.getItem(k) || localStorage.getItem(k); } catch (x) { h = null; }
+    if (!h) return false;
+    try { S.wn3.key = await wn3KeyFromBits(bytesOfHex(h)); return true; } catch (x) { S.wn3.key = null; return false; }
+  }
+  function wn3Forget() {
+    try { Object.keys(localStorage).forEach(function (k) { if (k.indexOf(WN3_STORE) === 0) localStorage.removeItem(k); }); } catch (x) { /* ignore */ }
+    try { Object.keys(sessionStorage).forEach(function (k) { if (k.indexOf(WN3_STORE) === 0) sessionStorage.removeItem(k); }); } catch (x) { /* ignore */ }
+    S.wn3.key = null; location.reload();
+  }
+  async function wn3Decrypt(buf) {
+    if (!S.wn3.key) throw wn3Locked();
+    var u = new Uint8Array(buf);
+    return crypto.subtle.decrypt({name: 'AES-GCM', iv: u.subarray(0, 12)}, S.wn3.key, u.subarray(12));
+  }
+  function showGate(where) {
+    var g = $('wx-wn3gate');
+    if (!S.wn3.idx) { status(where === 'map' ? 'wx-mapstatus' : 'wx-status', 'WeatherNext 3 files are not published yet; try again later.', true); g.hidden = true; return; }
+    var anchor = where === 'map' ? $('wx-mapstatus') : $('wx-stinfo');
+    anchor.parentNode.insertBefore(g, where === 'map' ? anchor : anchor.nextSibling);
+    g.hidden = false; S.wn3.pending = where; status('wx-wn3status', '');
+  }
+  function wn3LegalHTML() {
+    var L = (S.wn3.idx && S.wn3.idx.legal) || {}, b = S.wn3.base || WN3_ROOT;
+    return '<b>WeatherNext 3:</b> ' + (L.copyright || 'Copyright 2024-6 Google LLC') + '. Experimental forecasts from Google DeepMind&rsquo;s machine-learning models, read from Google Cloud Storage and made available under the ' +
+      '<a href="' + (L.terms_url || 'https://storage.googleapis.com/weathernext-public/terms-of-use.pdf') + '">GDM Real-Time Weather Forecasting Experimental Data Terms of Use</a> (<a href="' + b + '/' + (L.terms || 'wn3/TERMS_OF_USE.pdf') + '">copy</a>, ' +
+      '<a href="' + b + '/' + (L.notice || 'wn3/LEGALLY_BINDING_TERMS_OF_USE.txt') + '">legally binding notice</a>, <a href="' + b + '/' + (L.readme || 'wn3/NOTICE.txt') + '">notice of modifications</a>). ' +
+      'This data is intended for experimental modelling only and is not intended, validated, or approved for real world use; it is not an official forecast. Shared with named MIT WxChallenge team members for educational use only: do not pass on the passcode, the data or images of it. ' +
+      '<button type="button" id="wx-wn3forget">forget the passcode on this device</button>';
+  }
+  function updateWN3Legal() {
+    var on = !!S.wn3.key && (S.model === 'WN3' || S.mapModel === 'wn3'), el = $('wx-wn3legal');
+    el.hidden = !on; if (!on) return;
+    el.innerHTML = wn3LegalHTML(); $('wx-wn3forget').addEventListener('click', wn3Forget);
+  }
+  async function onWN3Unlock() {
+    var p = $('wx-wn3pass').value; if (!p) { status('wx-wn3status', 'Type the team passcode first.', true); return; }
+    if (!S.wn3.idx) await loadWN3Index();
+    if (!S.wn3.idx) { status('wx-wn3status', 'WeatherNext 3 files are not published yet.', true); return; }
+    status('wx-wn3status', 'checking…');
+    try { await wn3Unlock(p, $('wx-wn3remember').checked); } catch (e) { S.wn3.key = null; status('wx-wn3status', 'That passcode is not correct.', true); return; }
+    $('wx-wn3pass').value = ''; status('wx-wn3status', ''); $('wx-wn3gate').hidden = true;
+    if (S.model === 'WN3') loadAll({latest: true});
+    if (S.mapModel === 'wn3') { fillMapVars(); loadMap(); }
+    updateWN3Legal();
+  }
+  async function loadWN3(st, init) {
+    if (!S.wn3.idx) await loadWN3Index();
+    var I = S.wn3.idx; if (!I) throw new Error('WeatherNext 3 files are not published yet');
+    if (!S.wn3.key) throw wn3Locked();
+    var runs = (I.ts && I.ts.runs) || [I.latest_run], rid = I.latest_run, note = '';
+    if (init) { var want = init.toISOString().slice(0, 13).replace(/[-T]/g, ''); if (runs.indexOf(want) >= 0) rid = want; else note = 'run ' + fmtTime(init) + ' is not kept (only the last ' + runs.length + ' runs are); showing the latest'; }
+    var url = S.wn3.base + '/' + I.ts.path.replace('{run}', rid).replace('{shard}', pad(wn3Shard(st.icao), 3));
+    var r = await fetch(url); if (!r.ok) throw new Error('HTTP ' + r.status + ' for the WeatherNext 3 station file');
+    var gz = await wn3Decrypt(await r.arrayBuffer());
+    var obj = JSON.parse(await new Response(new Blob([gz]).stream().pipeThrough(new DecompressionStream('gzip'))).text());
+    var rec = obj.stations[st.icao]; if (!rec) throw new Error(st.icao + ' is not in the WeatherNext 3 station extract');
+    var q = obj.quantum || {};
+    var val = function (k, i) { var a = rec[k]; return (!a || a[i] == null) ? null : a[i] * (q[k] || 1); };
+    var run = emptyRun('WN3', new Date(obj.init));
+    run.lat = rec.lat; run.lon = rec.lon; run.bands = true; run.note = note;
+    run.gridNote = 'WeatherNext 3 station values are interpolated bilinearly from its 0.05° station-calibrated grid (temperature and dew point) and its 0.1° grid (other variables).';
+    var t0 = new Date(obj.t0).getTime(), acc = 0, acci = 0;
+    for (var i = 0; i < obj.n; i++) {
+      var p = val('p', i), pi = val('pi', i); acc += p || 0; acci += pi || 0;
+      run.hours.push({t: new Date(t0 + i * 3.6e6), t2m: val('t', i), td2m: val('td', i), wspd: val('ws', i), wdir: val('wd', i), gust: null,
+                      precip1h: p, conv1h: null, accum: acc, accumi: acci, ptype: null, cape: null, cin: null, lift: null, kidx: null, pwat: null,
+                      blmax: null, blmean: null, sfcp: null, msl: val('msl', i), tcc: val('tcc', i), lcc: val('lcc', i), mcc: val('mcc', i), hcc: val('hcc', i),
+                      t2m_lo: val('t10', i), t2m_hi: val('t90', i), td2m_lo: val('td10', i), td2m_hi: val('td90', i), wspd_lo: val('ws10', i), wspd_hi: val('ws90', i), p90: val('p90', i)});
+    }
+    run.profiles = null;
     return run;
   }
 
@@ -470,7 +600,9 @@ author_profile: false
     var init = opts.latest ? null : selectedInit();
     status('wx-status', 'loading ' + MODELS[S.model].label + ' for ' + st.icao + '…');
     try {
-      var run = MODELS[S.model].src === 'bufkit' ? await loadBufkit(S.model, st.icao, init) : await loadOpenMeteo(S.model, st, init);
+      if (S.model !== 'WN3' && S.wn3.pending === 'model') $('wx-wn3gate').hidden = true;
+      var src = MODELS[S.model].src;
+      var run = src === 'bufkit' ? await loadBufkit(S.model, st.icao, init) : (src === 'wn3' ? await loadWN3(st, init) : await loadOpenMeteo(S.model, st, init));
       if (seq !== S.seq) return;
       S.run = run; S.init = run.init; setRunControls(run.init);
       var pObs = loadObs(st, new Date(run.init.getTime() - 30 * 3.6e6), new Date(Math.min(Date.now(), run.init.getTime() + 84 * 3.6e6)));
@@ -478,16 +610,17 @@ author_profile: false
       var res = await Promise.allSettled([pObs, pMos]);
       if (seq !== S.seq) return;
       S.obs = res[0].status === 'fulfilled' ? res[0].value : []; S.mos = res[1].status === 'fulfilled' ? res[1].value : null;
-      var srcTxt = MODELS[S.model].src === 'bufkit' ? 'IEM BUFKIT ' + MODELS[S.model].bufkit : 'Open-Meteo ' + MODELS[S.model].om;
+      var srcTxt = MODELS[S.model].src === 'bufkit' ? 'IEM BUFKIT ' + MODELS[S.model].bufkit : (MODELS[S.model].src === 'wn3' ? 'Google DeepMind WeatherNext 3 (encrypted team files)' + (run.note ? ' (' + run.note + ')' : '') : 'Open-Meteo ' + MODELS[S.model].om);
       $('wx-stinfo').innerHTML = '<b>' + st.icao + '</b> ' + st.name + ', ' + st.state + ' · ' + st.lat.toFixed(4) + '°N, ' + fmtLon(st.lon) + ', ' + Math.round(st.elev) + ' m · time zone ' + st.tz +
         ' · ' + srcTxt + ' run ' + fmtTime(run.init) + (run.lat != null ? ' (model site ' + (+run.lat).toFixed(2) + '°N, ' + fmtLon(+run.lon) + (run.elev != null ? ', ' + Math.round(run.elev) + ' m' : '') + ')' : '') +
         (res[0].status !== 'fulfilled' ? ' · <span class="jn-err">observations unavailable (' + res[0].reason.message + ')</span>' : ' · ' + S.obs.length + ' METAR reports');
       status('wx-status', '');
       history.replaceState(null, '', '?station=' + st.icao + '&model=' + S.model + '&run=' + run.init.toISOString().slice(0, 13) + 'Z');
-      drawTS(); drawTH(); drawDayTable(); drawGuideTable();
+      drawTS(); drawTH(); drawDayTable(); drawGuideTable(); updateWN3Legal();
       loadMap();
     } catch (e) {
       if (seq !== S.seq) return;
+      if (e && e.wn3locked) { status('wx-status', 'WeatherNext 3 is for WxChallenge team members: enter the team passcode below.'); showGate('model'); return; }
       status('wx-status', 'Could not load ' + MODELS[S.model].label + ' for ' + st.icao + ': ' + e.message, true);
     }
   }
@@ -541,6 +674,10 @@ author_profile: false
       var H = run.hours.filter(function (h) { return inWin(h.t, dy.start, dy.end) || h.t.getTime() === dy.start.getTime(); });
       var tmax = d3.max(H, function (h) { return h.t2m; }), tmin = d3.min(H, function (h) { return h.t2m; }), wmax = d3.max(H, function (h) { return h.wspd; });
       var pr = d3.sum(H.filter(function (h) { return h.t > dy.start; }), function (h) { return h.precip1h || 0; });
+      var rg = function (v, lo, hi) { return v == null ? '\u2014' : v.toFixed(1) + ((run.bands && lo != null && hi != null) ? ' <span class="jn-muted">(' + lo.toFixed(0) + '\u2013' + hi.toFixed(0) + ')</span>' : ''); };
+      var cell = [rg(tmax, d3.max(H, function (h) { return h.t2m_lo; }), d3.max(H, function (h) { return h.t2m_hi; })),
+                  rg(tmin, d3.min(H, function (h) { return h.t2m_lo; }), d3.min(H, function (h) { return h.t2m_hi; })),
+                  rg(wmax, d3.max(H, function (h) { return h.wspd_lo; }), d3.max(H, function (h) { return h.wspd_hi; }))];
       /* MOS N/X: the value valid at 00 UTC is the daytime maximum, the value valid at 12 UTC the night-time minimum */
       var mosMax = '\u2014', mosMin = '\u2014';
       var gv = guideDay(S.mos, dy); mosMax = gv.mx; mosMin = gv.mn; var gWind = gv.wind, gPr = gv.pr;
@@ -552,7 +689,7 @@ author_profile: false
       var tr = document.createElement('tr');
       var isNext = dy.start.getTime() === nextDeadline().getTime() + 6 * 3.6e6;
       if (isNext) tr.style.fontWeight = '700';
-      tr.innerHTML = '<td>Day ' + (i + 1) + ': ' + fmtTick(dy.start) + '–' + fmtTick(dy.end) + (H.length < 20 ? ' (partial)' : '') + (isNext ? '<br>\u2190 next deadline' : '') + '</td><td class="num">' + (tmax == null ? '—' : tmax.toFixed(1)) + '</td><td class="num">' + (tmin == null ? '—' : tmin.toFixed(1)) + '</td><td class="num">' + (wmax == null ? '—' : wmax.toFixed(1)) + '</td><td class="num">' + pr.toFixed(2) + '</td><td class="num">' + mosMax + '</td><td class="num">' + mosMin + '</td><td class="num">' + gWind + '</td><td class="num">' + gPr + '</td><td class="num">' + obsTxt + '</td>';
+      tr.innerHTML = '<td>Day ' + (i + 1) + ': ' + fmtTick(dy.start) + '–' + fmtTick(dy.end) + (H.length < 20 ? ' (partial)' : '') + (isNext ? '<br>\u2190 next deadline' : '') + '</td><td class="num">' + cell[0] + '</td><td class="num">' + cell[1] + '</td><td class="num">' + cell[2] + '</td><td class="num">' + pr.toFixed(2) + '</td><td class="num">' + mosMax + '</td><td class="num">' + mosMin + '</td><td class="num">' + gWind + '</td><td class="num">' + gPr + '</td><td class="num">' + obsTxt + '</td>';
       tb.appendChild(tr);
     });
   }
@@ -565,7 +702,8 @@ author_profile: false
       precip: {title: 'Accumulated precipitation', ylab: 'Precipitation (in)'},
       cape: {title: 'Convective available potential energy', ylab: 'CAPE (J kg⁻¹)'},
       lik: {title: 'Lifted index and K index', ylab: 'Index'},
-      pwat: {title: 'Precipitable water', ylab: 'Precipitable water (in)'}
+      pwat: {title: 'Precipitable water', ylab: 'Precipitable water (in)'},
+      cloud: {title: 'Cloud cover', ylab: 'Cloud cover (%)'}
     }[chart];
   }
   var CHART_NOTE = {
@@ -574,7 +712,8 @@ author_profile: false
     precip: ' The line accumulates from the start of the run, not from 06 UTC (daily totals are in Table 2); bars are hourly amounts, coloured by precipitation type.',
     cape: ' CAPE measures the energy available to rising air; values above about 1000 J kg\u207B\u00B9 indicate potential for thunderstorms.',
     lik: ' A lifted index below 0 or a K index above about 30 indicates potential for thunderstorms.',
-    pwat: ' Precipitable water is the depth of liquid if all the water vapour above the station fell out; above about 1.5 in favours heavy rain.'
+    pwat: ' Precipitable water is the depth of liquid if all the water vapour above the station fell out; above about 1.5 in favours heavy rain.',
+    cloud: ' Cloud cover is the percentage of the sky covered by cloud; low, middle and high layers can overlap, so they need not add up to the total.'
   };
   function drawTS() {
     var run = S.run, box = $('wx-ts'), svg = d3.select(box).select('svg'); svg.selectAll('*').remove();
@@ -584,16 +723,17 @@ author_profile: false
     var t0 = run.hours[0].t, tEnd = S.window ? new Date(t0.getTime() + S.window * 3.6e6) : run.hours[run.hours.length - 1].t;
     var Hs = run.hours.filter(function (h) { return h.t <= tEnd; });
     var x = d3.scaleUtc().domain([t0, tEnd]).range([m.l, W - m.r]);
-    var chart = S.chart, series = [], obsS = [], yl = chartSpec(chart).ylab, extra = [];
+    var chart = S.chart, series = [], obsS = [], yl = chartSpec(chart).ylab, extra = [], bands = [];
     function ser(name, key, arr, style) { var pts = (arr || Hs).filter(function (h) { return h[key] != null && isFinite(h[key]); }).map(function (h) { return {t: h.t, v: h[key]}; }); if (pts.length) series.push({name: name, pts: pts, style: style}); }
     var obsWin = (S.obs || []).filter(function (o) { return o.t > t0 && o.t <= tEnd; });
     if (chart === 't2m') {
       ser(run.label + ' 2-m T', 't2m', null, {color: C.model, marker: 'circle'}); ser(run.label + ' 2-m dew point', 'td2m', null, {color: C.td, marker: 'circle', dash: '4,2'});
+      if (run.bands) bands = [{lo: 't2m_lo', hi: 't2m_hi', color: C.model}, {lo: 'td2m_lo', hi: 'td2m_hi', color: C.td}];
       if (S.mos) { var mr = S.mos.rows.filter(function (r) { return r.t > t0 && r.t <= tEnd; }); series.push({name: S.mos.short + ' T', pts: mr.filter(function (r) { return r.tmp != null; }).map(function (r) { return {t: r.t, v: r.tmp}; }), style: {color: C.mos, marker: 'x'}}); series.push({name: S.mos.short + ' dew point', pts: mr.filter(function (r) { return r.dpt != null; }).map(function (r) { return {t: r.t, v: r.dpt}; }), style: {color: C.mos, marker: 'x', dash: '4,2'}});
         extra = mr.filter(function (r) { return r.nx != null; }).map(function (r) { return {t: r.t, v: r.nx}; }); }
       obsS = [{name: 'observed T', pts: obsWin.filter(function (o) { return o.t2m != null; }).map(function (o) { return {t: o.t, v: o.t2m}; }), color: C.obs}, {name: 'observed dew point', pts: obsWin.filter(function (o) { return o.td2m != null; }).map(function (o) { return {t: o.t, v: o.td2m}; }), color: C.obs2}];
     } else if (chart === 'wind') {
-      ser(run.label + ' 10-m wind', 'wspd', null, {color: C.model, marker: 'circle'}); ser('boundary-layer max', 'blmax', null, {color: '#e08214', marker: 'none'}); ser('boundary-layer mean', 'blmean', null, {color: '#8073ac', marker: 'none', dash: '4,2'}); ser(run.label + ' gust', 'gust', null, {color: '#4d4d4d', marker: 'none', dash: '1,2'});
+      ser(run.label + ' 10-m wind', 'wspd', null, {color: C.model, marker: 'circle'}); if (run.bands) bands = [{lo: 'wspd_lo', hi: 'wspd_hi', color: C.model}]; ser('boundary-layer max', 'blmax', null, {color: '#e08214', marker: 'none'}); ser('boundary-layer mean', 'blmean', null, {color: '#8073ac', marker: 'none', dash: '4,2'}); ser(run.label + ' gust', 'gust', null, {color: '#4d4d4d', marker: 'none', dash: '1,2'});
       if (S.mos) {
         series.push({name: S.mos.short + ' wind', pts: S.mos.rows.filter(function (r) { return r.wsp != null && r.t > t0 && r.t <= tEnd; }).map(function (r) { return {t: r.t, v: r.wsp}; }), style: {color: C.mos, marker: 'x'}});
         var gp = S.mos.rows.filter(function (r) { return r.gst != null && r.t > t0 && r.t <= tEnd; }).map(function (r) { return {t: r.t, v: r.gst}; });
@@ -601,7 +741,7 @@ author_profile: false
       }
       obsS = [{name: 'observed sustained wind', pts: obsWin.filter(function (o) { return o.wspd != null; }).map(function (o) { return {t: o.t, v: o.wspd}; }), color: C.obs}];
     } else if (chart === 'precip') {
-      ser(run.label + ' accumulated', 'accum', null, {color: C.model, marker: 'circle'});
+      ser(run.label + ' accumulated', 'accum', null, {color: C.model, marker: 'circle'}); ser(run.label + ' accumulated, IMERG-calibrated', 'accumi', null, {color: '#4d4d4d', marker: 'none', dash: '4,2'});
       var acc = 0, op = [];
       obsWin.forEach(function (o) { if (o.t.getUTCMinutes() >= 50 && o.p01i != null) { acc += o.p01i; op.push({t: new Date(o.t.getTime() + (60 - o.t.getUTCMinutes()) * 60000), v: acc}); } });
       obsS = [{name: 'observed accumulated (hourly reports)', pts: op, color: C.obs}];
@@ -613,13 +753,16 @@ author_profile: false
     } else if (chart === 'cape') { ser(run.label + ' CAPE', 'cape', null, {color: C.model, marker: 'circle'}); }
     else if (chart === 'lik') { ser(run.label + ' lifted index', 'lift', null, {color: C.model, marker: 'circle'}); ser(run.label + ' K index', 'kidx', null, {color: '#4d4d4d', marker: 'circle', dash: '4,2'}); }
     else if (chart === 'pwat') { ser(run.label + ' precipitable water', 'pwat', null, {color: C.model, marker: 'circle'}); }
+    else if (chart === 'cloud') { ser(run.label + ' total cloud cover', 'tcc', null, {color: C.model, marker: 'circle'}); ser('low cloud', 'lcc', null, {color: '#2166ac', marker: 'none'}); ser('middle cloud', 'mcc', null, {color: '#1b7837', marker: 'none', dash: '4,2'}); ser('high cloud', 'hcc', null, {color: '#b2182b', marker: 'none', dash: '1,2'}); }
     var all = [];
     series.forEach(function (s) { s.pts.forEach(function (p) { all.push(p.v); }); }); obsS.forEach(function (s) { s.pts.forEach(function (p) { all.push(p.v); }); }); extra.forEach(function (p) { all.push(p.v); });
     if (chart === 'precip') Hs.forEach(function (h) { if (h.precip1h != null) all.push(h.precip1h); });
+    bands.forEach(function (b) { Hs.forEach(function (h) { if (h[b.lo] != null) all.push(h[b.lo]); if (h[b.hi] != null) all.push(h[b.hi]); }); });
     if (!all.length) { svg.append('text').attr('x', W / 2).attr('y', H / 2).attr('text-anchor', 'middle').text('no data for this chart in the ' + run.label + ' run'); $('wx-tslegend').innerHTML = ''; $('wx-tstitle').textContent = ''; return; }
     var lo = d3.min(all), hi = d3.max(all), padv = (chart === 'precip') ? 0.05 : (chart === 'cape' ? 30 : (chart === 'pwat' ? 0.3 : 3));
-    if (chart === 'precip' || chart === 'cape' || chart === 'pwat' || chart === 'wind') lo = 0;
+    if (chart === 'precip' || chart === 'cape' || chart === 'pwat' || chart === 'wind' || chart === 'cloud') lo = 0;
     var y = d3.scaleLinear().domain([lo - (lo === 0 ? 0 : padv), hi + padv]).nice().range([H - m.b, m.t]);
+    if (chart === 'cloud') y.domain([0, 100]);
     /* grid + day rules */
     var g = svg.append('g');
     var days = wxDays(run).filter(function (d) { return d.start < tEnd; });
@@ -635,6 +778,10 @@ author_profile: false
       var bw = Math.max(1, (x(new Date(t0.getTime() + 3.6e6)) - x(t0)) * 0.8);
       Hs.forEach(function (h) { if (!h.precip1h) return; var col = {rain: C.rain, snow: C.snow, freezing: C.frz, ice: C.ice}[h.ptype] || C.unk; g.append('rect').attr('x', x(h.t) - bw / 2).attr('y', y(h.precip1h)).attr('width', bw).attr('height', y(0) - y(h.precip1h)).attr('fill', col).attr('stroke', 'none'); if (h.conv1h) g.append('rect').attr('x', x(h.t) - bw / 2).attr('y', y(h.conv1h)).attr('width', bw).attr('height', y(0) - y(h.conv1h)).attr('fill', C.conv).attr('stroke', 'none'); });
     }
+    bands.forEach(function (b) {   /* ensemble 10th-90th percentile range */
+      var pts = Hs.filter(function (h) { return h[b.lo] != null && h[b.hi] != null; }); if (!pts.length) return;
+      g.append('path').datum(pts).attr('d', d3.area().x(function (h) { return x(h.t); }).y0(function (h) { return y(h[b.lo]); }).y1(function (h) { return y(h[b.hi]); })).attr('fill', b.color).attr('fill-opacity', 0.14).attr('stroke', 'none');
+    });
     var line = d3.line().x(function (p) { return x(p.t); }).y(function (p) { return y(p.v); });
     series.forEach(function (s) {
       g.append('path').datum(s.pts).attr('d', line).attr('fill', 'none').attr('stroke', s.style.color).attr('stroke-width', 1.1).attr('stroke-dasharray', s.style.dash || null);
@@ -651,10 +798,12 @@ author_profile: false
     var leg = series.map(function (s) { return '<span><i style="border-color:' + s.style.color + (s.style.dash ? ';border-top-style:dashed' : '') + '"></i>' + s.name + (s.style.marker === 'x' ? ' (×)' : '') + '</span>'; })
       .concat(obsS.map(function (s) { return '<span><i class="diamond" style="background:' + s.color + '"></i>' + s.name + '</span>'; }));
     if (extra.length) leg.push('<span><i class="diamond" style="background:' + C.extrema + ';width:9px;height:9px"></i>' + (S.mos ? S.mos.short : 'MOS') + ' daily maximum and minimum</span>');
-    if (chart === 'precip') leg.push('<span><i class="sq" style="background:' + C.rain + '"></i>rain</span><span><i class="sq" style="background:' + C.snow + '"></i>snow</span><span><i class="sq" style="background:' + C.frz + '"></i>freezing rain</span><span><i class="sq" style="background:' + C.ice + '"></i>ice pellets</span><span><i class="sq" style="background:' + C.conv + '"></i>convective part</span>');
+    if (bands.length) leg.push('<span><i class="sq" style="background:#000;opacity:0.16;border:0"></i>shading: 10th\u201390th percentile of the 64 ensemble members</span>');
+    if (chart === 'precip' && run.model === 'WN3') leg.push('<span><i class="sq" style="background:' + C.unk + '"></i>hourly amount (ensemble mean; type not forecast)</span>');
+    else if (chart === 'precip') leg.push('<span><i class="sq" style="background:' + C.rain + '"></i>rain</span><span><i class="sq" style="background:' + C.snow + '"></i>snow</span><span><i class="sq" style="background:' + C.frz + '"></i>freezing rain</span><span><i class="sq" style="background:' + C.ice + '"></i>ice pellets</span><span><i class="sq" style="background:' + C.conv + '"></i>convective part</span>');
     $('wx-tslegend').innerHTML = leg.join('');
     $('wx-tstitle').textContent = chartSpec(chart).title + ', ' + S.station.icao + ', ' + run.label + ' run ' + fmtTime(run.init) + '.';
-    $('wx-tscap').innerHTML = '<span class="jn-figno">Fig. 2.</span> ' + chartSpec(chart).title + ' at ' + S.station.icao + ' (' + S.station.name + ') from the ' + run.label + ' run of ' + fmtTime(run.init) + (S.window ? ', first ' + S.window + ' h' : ', full run') + '. Dashed vertical lines mark 0600 UTC, the WxChallenge day boundaries.' + (obsS.length ? ' Diamonds: METAR observations (IEM ASOS archive).' : '') + ((S.mos && (chart === 't2m' || chart === 'wind' || chart === 'precip')) ? ' \u00D7: ' + S.mos.label + ' issued ' + fmtTime(S.mos.runtime) + '.' : '') + (CHART_NOTE[chart] || '');
+    $('wx-tscap').innerHTML = '<span class="jn-figno">Fig. 2.</span> ' + chartSpec(chart).title + ' at ' + S.station.icao + ' (' + S.station.name + ') from the ' + run.label + ' run of ' + fmtTime(run.init) + (S.window ? ', first ' + S.window + ' h' : ', full run') + '. Dashed vertical lines mark 0600 UTC, the WxChallenge day boundaries.' + (obsS.length ? ' Diamonds: METAR observations (IEM ASOS archive).' : '') + ((S.mos && (chart === 't2m' || chart === 'wind' || chart === 'precip')) ? ' \u00D7: ' + S.mos.label + ' issued ' + fmtTime(S.mos.runtime) + '.' : '') + ((chart === 'precip' && run.model === 'WN3') ? (CHART_NOTE.precip || '').replace(', coloured by precipitation type', ' (WeatherNext 3 does not forecast the precipitation type)') : (CHART_NOTE[chart] || '')) + (run.bands ? ' WeatherNext 3: lines are the mean of its 64 ensemble members' + (bands.length ? ' and shading spans their 10th to 90th percentiles' : '') + '; temperature and dew point are its station-calibrated forecasts; its series ends at 48 h.' : '');
   }
 
   /* ================================================================ time-height sections */
@@ -764,9 +913,18 @@ author_profile: false
     v10:   {label: '10-m south\u2013north wind v', units: 'kt', lev: 'sfc', conv: ms2kt, cmap: RdBu_r},
     spd10: {label: '10-m wind speed', units: 'kt', lev: 'sfc', from: ['u10', 'v10'], conv: ms2kt, cmap: d3.interpolateYlOrRd},
     msl:   {label: 'sea-level pressure', units: 'hPa', lev: 'sfc', conv: ident, cmap: d3.interpolatePuOr},
-    tp6:   {label: '6-h precipitation', units: 'in', lev: 'sfc', conv: function (x) { return x / 25.4; }, cmap: function (t) { return d3.interpolateYlGnBu(0.15 + 0.85 * t); }, clearBelow: true}
+    tp6:   {label: '6-h precipitation', units: 'in', lev: 'sfc', conv: function (x) { return x / 25.4; }, cmap: function (t) { return d3.interpolateYlGnBu(0.15 + 0.85 * t); }, clearBelow: true},
+    tp6i:  {label: '6-h precipitation, IMERG-calibrated', units: 'in', lev: 'sfc', conv: function (x) { return x / 25.4; }, cmap: function (t) { return d3.interpolateYlGnBu(0.15 + 0.85 * t); }, clearBelow: true},
+    u100:  {label: '100-m west\u2013east wind u', units: 'kt', lev: 'sfc', conv: ms2kt, cmap: RdBu_r},
+    v100:  {label: '100-m south\u2013north wind v', units: 'kt', lev: 'sfc', conv: ms2kt, cmap: RdBu_r},
+    spd100: {label: '100-m wind speed', units: 'kt', lev: 'sfc', from: ['u100', 'v100'], conv: ms2kt, cmap: d3.interpolateYlOrRd},
+    tcc:   {label: 'total cloud cover', units: '%', lev: 'sfc', conv: ident, cmap: function (t) { return d3.interpolateGreys(0.04 + 0.7 * t); }},
+    lcc:   {label: 'low cloud cover', units: '%', lev: 'sfc', conv: ident, cmap: function (t) { return d3.interpolateGreys(0.04 + 0.7 * t); }},
+    mcc:   {label: 'middle cloud cover', units: '%', lev: 'sfc', conv: ident, cmap: function (t) { return d3.interpolateGreys(0.04 + 0.7 * t); }},
+    hcc:   {label: 'high cloud cover', units: '%', lev: 'sfc', conv: ident, cmap: function (t) { return d3.interpolateGreys(0.04 + 0.7 * t); }},
+    t2msp: {label: '2-m temperature spread (90th minus 10th percentile)', units: '°F', lev: 'sfc', conv: function (x) { return x * 1.8; }, cmap: d3.interpolatePuRd}
   };
-  var VARS_PL = ['z', 't', 'u', 'v', 'q', 'w', 'spd'], VARS_SFC = ['t2m', 'd2m', 'u10', 'v10', 'spd10', 'msl', 'tp6'];
+  var VARS_PL = ['z', 't', 'u', 'v', 'q', 'w', 'spd'], VARS_SFC = ['t2m', 'd2m', 'u10', 'v10', 'spd10', 'msl', 'tp6', 'tp6i', 'u100', 'v100', 'spd100', 'tcc', 'lcc', 'mcc', 'hcc', 't2msp'];
   var VAR_TWIN = {z: 'msl', t: 't2m', u: 'u10', v: 'v10', q: 'd2m', w: 'tp6', spd: 'spd10'};
   Object.keys(VAR_TWIN).forEach(function (k) { VAR_TWIN[VAR_TWIN[k]] = k; });
   /* shading ranges in display units: [lo, hi, step] or explicit bin edges */
@@ -775,20 +933,24 @@ author_profile: false
     w: {850: [-1.2, 1.2, 0.2], 500: [-1.2, 1.2, 0.2], 250: [-0.6, 0.6, 0.1]}, q: {850: [0, 20, 2], 500: [0, 5, 0.5], 250: [0, 0.5, 0.05]},
     spd: {850: [0, 80, 10], 500: [0, 120, 10], 250: [0, 180, 20]},
     t2m: {sfc: [-20, 110, 5]}, d2m: {sfc: [-20, 80, 5]}, u10: {sfc: [-40, 40, 5]}, v10: {sfc: [-40, 40, 5]}, spd10: {sfc: [0, 50, 5]},
-    msl: {sfc: [976, 1048, 4]}, tp6: {sfc: {edges: [0.01, 0.05, 0.1, 0.25, 0.5, 0.75, 1, 1.5, 2, 3, 5]}}};
+    msl: {sfc: [976, 1048, 4]}, tp6: {sfc: {edges: [0.01, 0.05, 0.1, 0.25, 0.5, 0.75, 1, 1.5, 2, 3, 5]}}, tp6i: {sfc: {edges: [0.01, 0.05, 0.1, 0.25, 0.5, 0.75, 1, 1.5, 2, 3, 5]}},
+    u100: {sfc: [-60, 60, 10]}, v100: {sfc: [-60, 60, 10]}, spd100: {sfc: [0, 70, 5]}, tcc: {sfc: [0, 100, 10]}, lcc: {sfc: [0, 100, 10]}, mcc: {sfc: [0, 100, 10]}, hcc: {sfc: [0, 100, 10]},
+    t2msp: {sfc: [0, 14, 1]}};
   /* contour intervals (or explicit contour values) */
   var MAPCI = {z: {850: 30, 500: 60, 250: 120}, t: {850: 2, 500: 2, 250: 2}, u: {850: 10, 500: 20, 250: 20}, v: {850: 10, 500: 20, 250: 20},
     w: {850: 0.2, 500: 0.2, 250: 0.1}, q: {850: 1, 500: 0.5, 250: 0.05}, spd: {850: 10, 500: 20, 250: 20},
-    t2m: {sfc: 5}, d2m: {sfc: 5}, u10: {sfc: 5}, v10: {sfc: 5}, spd10: {sfc: 5}, msl: {sfc: 4}, tp6: {sfc: [0.01, 0.1, 0.25, 0.5, 1, 2]}};
+    t2m: {sfc: 5}, d2m: {sfc: 5}, u10: {sfc: 5}, v10: {sfc: 5}, spd10: {sfc: 5}, msl: {sfc: 4}, tp6: {sfc: [0.01, 0.1, 0.25, 0.5, 1, 2]},
+    tp6i: {sfc: [0.01, 0.1, 0.25, 0.5, 1, 2]}, u100: {sfc: 10}, v100: {sfc: 10}, spd100: {sfc: 10}, tcc: {sfc: 20}, lcc: {sfc: 20}, mcc: {sfc: 20}, hcc: {sfc: 20}, t2msp: {sfc: 2}};
   function storeKey(name, lev) { return name + (lev === 'sfc' ? 'sfc' : lev); }
   function levText(lev) { return lev === 'sfc' ? '' : lev + '-hPa '; }
   function fmtMap(sc, v) { return sc.units === 'in' ? v.toFixed(2) : (sc.units === 'm' || sc.units === 'hPa' || Math.abs(v) >= 100) ? String(Math.round(v)) : v.toFixed(1); }
 
   var mapCache = {};
-  async function fetchU16(url) {
+  async function fetchU16(url, enc) {
     if (mapCache[url]) return mapCache[url];
     var r = await fetch(url); if (!r.ok) throw new Error('HTTP ' + r.status + ' for ' + url.split('/').slice(-3).join('/'));
-    var buf = await r.arrayBuffer(), u8 = new Uint8Array(buf);
+    var buf = await r.arrayBuffer(); if (enc) buf = await wn3Decrypt(buf);
+    var u8 = new Uint8Array(buf);
     if (u8[0] === 0x1f && u8[1] === 0x8b) { buf = await new Response(new Blob([buf]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer(); u8 = new Uint8Array(buf); }
     var nl = u8.indexOf(10), hdr = JSON.parse(new TextDecoder().decode(u8.subarray(0, nl))), body = buf.slice(nl + 1), u16 = new Uint16Array(body);
     var out;
@@ -989,36 +1151,42 @@ author_profile: false
     var g1 = document.createElement('optgroup'); g1.label = 'Model forecast (6-hourly dataset)';
     if (S.hfIndex) Object.keys(S.hfIndex.models).forEach(function (mid) { var o = document.createElement('option'); o.value = mid; o.textContent = S.hfIndex.models[mid].label || mid.toUpperCase(); g1.appendChild(o); });
     if (g1.children.length) sel.appendChild(g1);
+    if (S.wn3.idx) { var g3 = document.createElement('optgroup'); g3.label = 'Team only (passcode)'; var o3 = document.createElement('option'); o3.value = 'wn3'; o3.textContent = 'WeatherNext 3 (Google DeepMind ensemble mean)'; g3.appendChild(o3); sel.appendChild(g3); }
     var g2 = document.createElement('optgroup'); g2.label = 'Observed, past ' + OBS_HOURS + ' h only';
     var o2 = document.createElement('option'); o2.value = 'obs'; o2.textContent = 'Satellite and radar imagery'; g2.appendChild(o2); sel.appendChild(g2);
-    if (S.mapModel !== 'obs' && !(S.hfIndex && S.hfIndex.models[S.mapModel])) S.mapModel = S.hfIndex ? Object.keys(S.hfIndex.models)[0] : 'obs';
+    if (S.mapModel !== 'obs' && !mapMeta(S.mapModel)) S.mapModel = S.hfIndex ? Object.keys(S.hfIndex.models)[0] : 'obs';
     sel.value = S.mapModel;
   }
+  function mapMeta(id) { return id === 'wn3' ? S.wn3.idx : (S.hfIndex ? S.hfIndex.models[id] : null); }
   function fillMapVars() {
     var sel = $('wx-mapvar'); sel.innerHTML = '';
     var obs = S.mapModel === 'obs', list = obs ? Object.keys(OBS) : (S.mapLev === 'sfc' ? VARS_SFC : VARS_PL);
+    var mm = obs ? null : mapMeta(S.mapModel);   /* offer only the variables this source publishes */
+    if (mm && mm.fields) { var avail = list.filter(function (k) { return (MAPVARS[k].from || [k]).every(function (n) { return mm.fields.indexOf(storeKey(n, S.mapLev)) >= 0; }); }); if (avail.length) list = avail; }
     list.forEach(function (k) { var o = document.createElement('option'); o.value = k; o.textContent = obs ? OBS[k].label : MAPVARS[k].label + ', ' + MAPVARS[k].units + (MAPVARS[k].hint || ''); sel.appendChild(o); });
     if (!obs && list.indexOf(S.mapVar) < 0) S.mapVar = VAR_TWIN[S.mapVar] && list.indexOf(VAR_TWIN[S.mapVar]) >= 0 ? VAR_TWIN[S.mapVar] : list[0];
     sel.value = obs ? S.obsVar : S.mapVar;
     $('wx-maplev-ctl').style.display = obs ? 'none' : ''; $('wx-mapcont-ctl').style.display = obs ? 'none' : '';
     $('wx-mapcont-z').textContent = S.mapLev === 'sfc' ? 'sea-level pressure' : 'height (same level)';
     $('wx-mapstep-name').textContent = obs ? 'Observation time' : 'Forecast hour';
-    if (!obs && S.hfIndex && S.hfIndex.models[S.mapModel]) { var m = S.hfIndex.models[S.mapModel]; $('wx-mapstep').max = m.steps.length - 1; S.mapK = Math.min(S.mapK, m.steps.length - 1); $('wx-mapstep').value = S.mapK; }
+    if (!obs && mapMeta(S.mapModel)) { var m = mapMeta(S.mapModel); $('wx-mapstep').max = m.steps.length - 1; S.mapK = Math.min(S.mapK, m.steps.length - 1); $('wx-mapstep').value = S.mapK; }
   }
 
   async function loadHFIndex() {
+    await loadWN3Index();
     try { var r = await fetch(HF + '/index.json', {cache: 'no-cache'}); if (!r.ok) throw new Error('HTTP ' + r.status); var sha = r.headers.get('x-repo-commit'); if (sha && HF === HF_BASE) HF = HF_BASE.replace(/\/resolve\/main$/, '/resolve/' + sha); S.hfIndex = await r.json(); }
     catch (e) { S.hfIndex = null; status('wx-mapstatus', 'Model fields unavailable (' + e.message + '); observed imagery still works.', true); }
     buildSourceSelect();
-    if (S.hfIndex && S.mapModel !== 'obs') { var m = S.hfIndex.models[S.mapModel]; S.mapK = Math.min(m.steps.length - 1, 4); }
+    if (S.mapModel !== 'obs') { var m = mapMeta(S.mapModel); if (m) S.mapK = Math.min(m.steps.length - 1, 4); }
     fillMapVars();
   }
   var mapSeq = 0;
   async function loadMap() {
     if (S.mapModel === 'obs') return loadObsMap();
-    var seq = ++mapSeq; if (!S.hfIndex || !S.station) return;
-    var m = S.hfIndex.models[S.mapModel]; if (!m) return;
-    var st = S.station, step = m.steps[Math.min(S.mapK, m.steps.length - 1)], dir = HF + '/' + S.mapModel + '/runs/' + m.latest_run + '/f' + pad(step, 3);
+    var seq = ++mapSeq; if (!S.station) return;
+    var m = mapMeta(S.mapModel); if (!m) return;
+    if (S.mapModel === 'wn3' && !S.wn3.key) { clearMaps(); showCornerTable(false); $('wx-maptitle').textContent = ''; $('wx-mapcap').innerHTML = ''; status('wx-mapstatus', 'WeatherNext 3 is for WxChallenge team members: enter the team passcode below.'); showGate('map'); return; }
+    var st = S.station, step = m.steps[Math.min(S.mapK, m.steps.length - 1)], dir = (m.mapdir ? S.wn3.base + '/' + m.mapdir : HF + '/' + S.mapModel + '/runs/' + m.latest_run) + '/f' + pad(step, 3), ext = '.u16.gz' + (m.enc_files ? '.enc' : '');
     var vt = new Date(new Date(m.init).getTime() + step * 3.6e6), lt = localTime(vt, st);
     $('wx-mapstep-label').textContent = '+' + step + ' h, valid ' + fmtTime(vt) + (lt ? ' (' + lt + ')' : '') + '; 6-h steps';
     var vr = S.mapVar, lev = S.mapLev, contVar = S.mapCont === 'z' ? (lev === 'sfc' ? 'msl' : 'z') : (S.mapCont === 'same' ? vr : null);
@@ -1031,7 +1199,7 @@ author_profile: false
     status('wx-mapstatus', 'loading ' + (m.label || S.mapModel) + ' f' + pad(step, 3) + '…');
     try {
       var nh = {}, cn = null;
-      for (var n in names) nh[n] = await fetchU16(dir + '/' + storeKey(n, lev) + '.u16.gz');
+      for (var n in names) nh[n] = await fetchU16(dir + '/' + storeKey(n, lev) + ext, !!m.enc_files);
       var g = m.grids.conus, inConus = !!g && st.lat >= g.lat0 + 1 && st.lat <= g.lat0 + g.dlat * (g.ny - 1) - 1 && ((st.lon + 360) % 360) >= g.lon0 + 1 && ((st.lon + 360) % 360) <= g.lon0 + g.dlon * (g.nx - 1) - 1;
       if (inConus) { try { cn = await fetchU16(dir + '/conus.u16.gz'); } catch (e) { cn = null; } }
       if (seq !== mapSeq) return;
@@ -1050,7 +1218,10 @@ author_profile: false
       if (contVar === 'z') ciTxt += '; labels in decametres, e.g. ' + ({850: '141 = 1410 m', 500: '552 = 5520 m', 250: '1056 = 10 560 m'}[lev] || '552 = 5520 m');
       $('wx-maptitle').textContent = levText(lev) + MV.label + ' (shaded, ' + MV.units + ')' + (CV ? '; ' + levText(lev) + CV.label + ' (contours' + (contVar === 'z' ? ', labelled in decametres' : '') + ')' : '') + '. ' + (m.label || S.mapModel) + ' run ' + fmtTime(m.init) + ', f' + pad(step, 3) + '.';
       var outside = isNaN(sample(cnS || nhS, st.lon, st.lat));
-      $('wx-mapcap').innerHTML = (outside ? '<b>' + st.icao + ' lies outside the ' + (m.label || S.mapModel) + ' domain.</b> ' : '') + '<span class="jn-figno">Fig. 1.</span> ' + (m.label || S.mapModel) + ' forecast (run ' + fmtTime(m.init) + ', f' + pad(step, 3) + ') of ' + levText(lev) + MV.label + ' (shaded, ' + MV.units + ')' + (CV ? ' and ' + CV.label + ' (contours, ' + ciTxt + ')' : contNote) + ' around ' + st.icao + ' (star).' + (vr === 'tp6' ? ' Precipitation is accumulated over the 6 h ending at the valid time; white: less than 0.01 in.' : '') + (lev !== 'sfc' ? ' Pressure levels: 850 hPa is about 1.5 km above sea level, 500 hPa about 5.5 km and 250 hPa about 10 km (jet-stream level).' : '') + ' (a) ' + ((cnS || nhS).hdr.dlon * (Math.max(280, $('wx-map-a').clientWidth - 2) / 7) >= 6 ? 'Grid nodes of the ' + (cnS || nhS).hdr.dlon + '° field are drawn as dots; the' : 'The') + ' four grid nodes surrounding the station are filled and labelled with their values' + (m.grid_note ? ' (' + m.grid_note + ')' : '') + (MODELS[S.model].src === 'bufkit' && (S.model === 'HRRR' || S.model === 'RRFS') ? '; open squares are the four 3-km ' + S.model + ' Lambert-conformal grid nodes around the station' : '') + '. (b) Same field on the 0.5° grid over the large-scale set-up. Grey lines: coastlines and state borders' + (S.showElev ? '; thin grey contours: surface elevation (ETOPO 2022; 200, 500, 1000, 1500, 2000, 2500, 3000, 3500 and 4000 m)' : '') + '. Plate carrée projection.';
+      $('wx-mapcap').innerHTML = (outside ? '<b>' + st.icao + ' lies outside the ' + (m.label || S.mapModel) + ' domain.</b> ' : '') + '<span class="jn-figno">Fig. 1.</span> ' + (m.label || S.mapModel) + ' forecast (run ' + fmtTime(m.init) + ', f' + pad(step, 3) + ') of ' + levText(lev) + MV.label + ' (shaded, ' + MV.units + ')' + (CV ? ' and ' + CV.label + ' (contours, ' + ciTxt + ')' : contNote) + ' around ' + st.icao + ' (star).' + (/^tp6/.test(vr) ? ' Precipitation is accumulated over the 6 h ending at the valid time; white: less than 0.01 in.' : '') + (lev !== 'sfc' ? ' Pressure levels: 850 hPa is about 1.5 km above sea level, 500 hPa about 5.5 km and 250 hPa about 10 km (jet-stream level).' : '') + ' (a) ' + ((cnS || nhS).hdr.dlon * (Math.max(280, $('wx-map-a').clientWidth - 2) / 7) >= 6 ? 'Grid nodes of the ' + (cnS || nhS).hdr.dlon + '° field are drawn as dots; the' : 'The') + ' four grid nodes surrounding the station are filled and labelled with their values' + (m.grid_note ? ' (' + m.grid_note + ')' : '') + (MODELS[S.model].src === 'bufkit' && (S.model === 'HRRR' || S.model === 'RRFS') ? '; open squares are the four 3-km ' + S.model + ' Lambert-conformal grid nodes around the station' : '') + '. (b) Same field on the ' + nhS.hdr.dlon + '° grid over the large-scale set-up. Grey lines: coastlines and state borders' + (S.showElev ? '; thin grey contours: surface elevation (ETOPO 2022, lightly smoothed; 200, 500 and 1000 m in low terrain, every 500 m to 2500 m in hills, and 500, 1000, 2000, 3000 and 4000 m in high mountains; very small rings are left out)' : '') + '. Plate carrée projection.';
+      if (m.domain === 'regional') $('wx-mapcap').innerHTML += ' Hatched grey areas lie outside the ' + (m.label || S.mapModel) + ' map window (no data).';
+      if (S.mapModel === 'wn3') $('wx-mapcap').innerHTML += ' WeatherNext 3 maps show the mean of its 64 ensemble members' + (vr === 't2msp' ? '; the spread map is the 90th minus the 10th percentile of 2-m temperature, a measure of forecast uncertainty' : '') + (vr === 'tp6i' ? '; the IMERG-calibrated amounts come from a version of its precipitation trained to match NASA\u2019s IMERG satellite estimate' : '') + (/cc$/.test(vr) ? '; cloud cover is the closest WeatherNext 3 comes to a satellite view, since it does not forecast satellite images' : '') + '.';
+      updateWN3Legal();
       status('wx-mapstatus', '');
     } catch (e) { if (seq === mapSeq) status('wx-mapstatus', 'Could not load gridded fields: ' + e.message, true); }
   }
@@ -1114,9 +1285,9 @@ author_profile: false
     if (shade && sc) {
       var img = ctx.createImageData(W, H), px = img.data, rgb = sc.cols.map(function (c) { var q = d3.rgb(c); return [q.r, q.g, q.b]; }), B = 2;
       for (var yy = 0; yy < H; yy += B) for (var xx = 0; xx < W; xx += B) {
-        var raw = sample(shade, x.invert(xx + B / 2), y.invert(yy + B / 2)); if (isNaN(raw)) continue;
-        var bi = binOf(sc, sc.conv(raw)); if (bi < 0) continue;
-        var c = rgb[bi];
+        var raw = sample(shade, x.invert(xx + B / 2), y.invert(yy + B / 2)), c;
+        if (isNaN(raw)) c = ((xx + yy) >> 1) % 5 === 0 ? [200, 200, 200] : [244, 244, 244];   /* hatched: outside the model's map window */
+        else { var bi = binOf(sc, sc.conv(raw)); if (bi < 0) continue; c = rgb[bi]; }
         for (var y2 = yy; y2 < Math.min(H, yy + B); y2++) for (var x2 = xx; x2 < Math.min(W, xx + B); x2++) { var k = (y2 * W + x2) * 4; px[k] = c[0]; px[k + 1] = c[1]; px[k + 2] = c[2]; px[k + 3] = 255; }
       }
       ctx.putImageData(img, 0, 0);
@@ -1174,7 +1345,17 @@ author_profile: false
   }
   /* ---- surface elevation (ETOPO 2022 subsets stored with the site: 0.05 deg CONUS window, 0.25 deg NH) */
   var ELEV_CONUS = BASE_PATH + '/assets/data/elev_conus_0p05.u16.gz', ELEV_NH = BASE_PATH + '/assets/data/elev_nh_0p25.u16.gz';
-  var ELEV_LEVELS = [200, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000];
+  /* contour levels chosen by the relief in view, so rugged terrain gets fewer, wider-spaced lines */
+  function elevLevels(vmax) { return vmax <= 1500 ? [200, 500, 1000] : (vmax <= 3000 ? [500, 1000, 1500, 2000, 2500] : [500, 1000, 2000, 3000, 4000]); }
+  /* separable box blur of radius r (cells), applied twice (close to a Gaussian): removes small ridges and valleys before contouring */
+  function boxBlur(a, ni, nj, r) {
+    var b = new Float64Array(a.length), n = 2 * r + 1;
+    for (var p = 0; p < 2; p++) {
+      for (var j = 0; j < nj; j++) for (var i = 0; i < ni; i++) { var sm = 0; for (var d = -r; d <= r; d++) sm += a[j * ni + Math.min(ni - 1, Math.max(0, i + d))]; b[j * ni + i] = sm / n; }
+      for (var j2 = 0; j2 < nj; j2++) for (var i2 = 0; i2 < ni; i2++) { var sm2 = 0; for (var d2 = -r; d2 <= r; d2++) sm2 += b[Math.min(nj - 1, Math.max(0, j2 + d2)) * ni + i2]; a[j2 * ni + i2] = sm2 / n; }
+    }
+    return a;
+  }
   async function ensureElevation(st) {
     if (!S.elevNH) { try { S.elevNH = await fetchU16(ELEV_NH); } catch (e) { S.elevNH = null; } }
     if (!S.elev) { try { S.elev = await fetchU16(ELEV_CONUS); } catch (e) { S.elev = null; } }
@@ -1189,14 +1370,21 @@ author_profile: false
     if (h.nx * h.dlon < 359) { i0 = Math.max(0, i0); ni = Math.min(ni, h.nx - i0); }
     if (ni < 3 || nj < 3) return;
     var vals = new Float64Array(ni * nj), vmax = -Infinity;
-    for (var j = 0; j < nj; j++) for (var i = 0; i < ni; i++) { var v = nodeValue(fld, i0 + i, j0 + j); vals[j * ni + i] = isNaN(v) ? -1e9 : v; if (!isNaN(v)) vmax = Math.max(vmax, v); }
-    var thr = ELEV_LEVELS.filter(function (l) { return l < vmax; }); if (!thr.length) return;
+    for (var j = 0; j < nj; j++) for (var i = 0; i < ni; i++) { var v = nodeValue(fld, i0 + i, j0 + j); vals[j * ni + i] = isNaN(v) ? 0 : v; }   /* ocean = sea level */
+    /* smoothing length about 10 km in the close-up and 30 km in the wide view, whatever the grid spacing */
+    var sig = (zoom ? 0.1 : 0.3) / h.dlon, rad = Math.max(1, Math.round((Math.sqrt(6 * sig * sig + 1) - 1) / 2));
+    boxBlur(vals, ni, nj, rad);
+    for (var q = 0; q < vals.length; q++) if (vals[q] > vmax) vmax = vals[q];
+    var thr = elevLevels(vmax).filter(function (l) { return l < vmax; }); if (!thr.length) return;
+    var minPx = zoom ? 60 : 30;   /* drop rings and fragments shorter than this on screen */
+    var pxLen = function (ln) { var L = 0; for (var k = 1; k < ln.length; k++) L += Math.hypot((ln[k][0] - ln[k - 1][0]) * W / span, (ln[k][1] - ln[k - 1][1]) * H / (lat1 - lat0)); return L; };
     var lonAt = function (i) { return h.lon0 + (i0 + i - 0.5) * h.dlon; }, latAt = function (j) { return h.lat0 + (j0 + j - 0.5) * h.dlat; };
     var ge = g.append('g');
     d3.contours().size([ni, nj]).thresholds(thr)(vals).forEach(function (c) {
       var lines = [];
       c.coordinates.forEach(function (poly) { poly.forEach(function (ring) { var cur = []; ring.forEach(function (p) { if (p[0] <= 0 || p[0] >= ni || p[1] <= 0 || p[1] >= nj) { if (cur.length > 1) lines.push(cur); cur = []; return; } cur.push([lonAt(p[0]), latAt(p[1])]); }); if (cur.length > 1) lines.push(cur); }); });
-      ge.append('path').datum({type: 'MultiLineString', coordinates: lines}).attr('d', path).attr('fill', 'none').attr('stroke', '#6d6d6d').attr('stroke-width', c.value >= 1000 && c.value % 1000 === 0 ? 0.7 : 0.4).attr('stroke-opacity', 0.9);
+      lines = lines.filter(function (ln) { return pxLen(ln) >= minPx; });
+      ge.append('path').datum({type: 'MultiLineString', coordinates: lines}).attr('d', path).attr('fill', 'none').attr('stroke', '#7a7a7a').attr('stroke-width', c.value >= 1000 && c.value % 1000 === 0 ? 0.6 : 0.35).attr('stroke-opacity', 0.6);
       var labelled = 0;
       lines.forEach(function (ln) { if (labelled > 0 || ln.length < (zoom ? 30 : 60)) return; var p = ln[Math.floor(ln.length / 2)]; var xp = x(((p[0] - st.lon + 540) % 360) - 180 + st.lon), yp = y(p[1]); if (xp < 20 || xp > W - 20 || yp < 12 || yp > H - 18) return; if (free && !free(xp, yp, 34, 9)) return; ge.append('text').attr('x', xp).attr('y', yp + 2.5).attr('text-anchor', 'middle').style('font-size', '6.5pt').style('paint-order', 'stroke').attr('stroke', '#fff').attr('stroke-width', 2).attr('fill', '#6d6d6d').text(c.value + ' m'); labelled++; });
     });
@@ -1241,15 +1429,18 @@ author_profile: false
   Array.from($('wx-thsel').querySelectorAll('button')).forEach(function (b) { b.addEventListener('click', function () { S.field = this.dataset.field; Array.from($('wx-thsel').querySelectorAll('button')).forEach(function (o) { o.setAttribute('aria-pressed', o === b ? 'true' : 'false'); }); drawTH(); }); });
   $('wx-mapmodel').addEventListener('change', function () {
     S.mapModel = this.value; S.obsK = null;
-    var m = S.hfIndex && S.hfIndex.models[S.mapModel];   /* surface-only models (NBM): switch to the surface level */
+    var m = mapMeta(S.mapModel);   /* surface-only models (NBM, WeatherNext 3): switch to the surface level */
     if (m && (m.fields || []).every(function (f) { return /sfc$/.test(f); }) && S.mapLev !== 'sfc') { S.mapLev = 'sfc'; $('wx-maplev').value = 'sfc'; }
-    fillMapVars(); loadMap();
+    if (S.mapModel !== 'wn3' && S.wn3.pending === 'map') $('wx-wn3gate').hidden = true;
+    fillMapVars(); loadMap(); updateWN3Legal();
   });
   $('wx-mapvar').addEventListener('change', function () { if (S.mapModel === 'obs') { S.obsVar = this.value; S.obsK = null; } else S.mapVar = this.value; loadMap(); });
   $('wx-maplev').addEventListener('change', function () { S.mapLev = this.value === 'sfc' ? 'sfc' : +this.value; fillMapVars(); loadMap(); });
   $('wx-mapcont').addEventListener('change', function () { S.mapCont = this.value; loadMap(); });
   $('wx-mapstep').addEventListener('input', function () { if (S.mapModel === 'obs') S.obsK = +this.value; else S.mapK = +this.value; loadMap(); });
   $('wx-elev').addEventListener('change', function () { S.showElev = this.checked; loadMap(); });
+  $('wx-wn3go').addEventListener('click', onWN3Unlock);
+  $('wx-wn3pass').addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); onWN3Unlock(); } });
   var rto = null; window.addEventListener('resize', function () { clearTimeout(rto); rto = setTimeout(function () { drawTS(); drawTH(); loadMap(); }, 300); });
   setInterval(function () { var d = new Date(); var loc = ''; if (S.station && S.station.tz) { try { loc = ' · ' + S.station.icao + ' local ' + new Intl.DateTimeFormat('en-US', {timeZone: S.station.tz, hour: '2-digit', minute: '2-digit', hour12: false, timeZoneName: 'short'}).format(d); } catch (e) { loc = ''; } } $('wx-clock').textContent = pad(d.getUTCHours()) + ':' + pad(d.getUTCMinutes()) + ' UTC' + loc; }, 1000);
 

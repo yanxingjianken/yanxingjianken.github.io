@@ -1,0 +1,80 @@
+name: WeatherNext 3 team files (encrypted; checked hourly)
+
+# Google DeepMind WeatherNext 3: the 00/06/12/18 UTC runs (360 h) appear in Google Cloud Storage a few hours
+# after their start time.  The job checks hourly and is idempotent: it publishes only when a newer complete
+# run exists than the one in wn3/index.json on the Hub.  Each run reads about 50 GB from Google's free
+# statistics bucket (one global field per lead time), keeps only station series and a US map window, encrypts
+# every file with the team passcode and uploads it to the Hugging Face dataset.  Nothing is committed to this
+# repository.  Secrets: GCP_ADC_JSON (Google sign-in of the allowlisted account), WN3_PASSCODE, HF_TOKEN.
+on:
+  schedule:
+    - cron: "20 * * * *"
+  workflow_dispatch:
+    inputs:
+      run:
+        description: "Force run id YYYYMMDDHH (blank = newest complete run)"
+        required: false
+        default: ""
+      force:
+        description: "Republish even if already on the Hub (true/false)"
+        required: false
+        default: "false"
+
+concurrency:
+  group: wn3-forecast
+  cancel-in-progress: false
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - name: Check secrets
+        id: chk
+        env:
+          ADC: ${{ secrets.GCP_ADC_JSON }}
+          PASS: ${{ secrets.WN3_PASSCODE }}
+        run: |
+          if [ -z "$ADC" ] || [ -z "$PASS" ]; then
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::GCP_ADC_JSON or WN3_PASSCODE is not set; skipping WeatherNext 3."
+          else
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/checkout@v4
+        if: steps.chk.outputs.ok == 'true'
+        with:
+          sparse-checkout: |
+            pipelines/wn3
+            pipelines/nh_forecast/common.py
+            assets/data/asos_stations.json
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@v5
+        if: steps.chk.outputs.ok == 'true'
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pipelines/wn3/requirements.txt
+      - name: Install dependencies
+        if: steps.chk.outputs.ok == 'true'
+        run: pip install -r pipelines/wn3/requirements.txt
+      - name: Build and publish
+        if: steps.chk.outputs.ok == 'true'
+        env:
+          ADC: ${{ secrets.GCP_ADC_JSON }}
+          WN3_PASSCODE: ${{ secrets.WN3_PASSCODE }}
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_DATASET: yanxingjianken/nh-forecast-6hourly
+          HF_HUB_DISABLE_PROGRESS_BARS: "1"
+        run: |
+          umask 077
+          printf '%s' "$ADC" > "$RUNNER_TEMP/adc.json"
+          export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/adc.json"
+          cd pipelines/wn3
+          EXTRA=""
+          if [ -n "${{ github.event.inputs.run }}" ]; then EXTRA="$EXTRA --run ${{ github.event.inputs.run }}"; fi
+          if [ "${{ github.event.inputs.force }}" = "true" ]; then EXTRA="$EXTRA --force"; fi
+          status=0
+          python -W ignore run_wn3.py $EXTRA || status=$?
+          rm -f "$RUNNER_TEMP/adc.json"
+          exit $status

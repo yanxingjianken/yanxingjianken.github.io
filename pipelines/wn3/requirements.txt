@@ -1,0 +1,7 @@
+numpy>=1.26
+xarray>=2024.6
+zarr>=3
+gcsfs>=2024.6
+cryptography>=42
+requests>=2.31
+huggingface_hub>=1.0,<3
