@@ -945,6 +945,7 @@ author_profile: false
   function levText(lev) { return lev === 'sfc' ? '' : lev + '-hPa '; }
   function fmtMap(sc, v) { return sc.units === 'in' ? v.toFixed(2) : (sc.units === 'm' || sc.units === 'hPa' || Math.abs(v) >= 100) ? String(Math.round(v)) : v.toFixed(1); }
 
+  var GRID_DOT_MIN_PX = 15;   /* draw every grid node in the close-up only when nodes are at least this far apart on screen */
   var mapCache = {};
   async function fetchU16(url, enc) {
     if (mapCache[url]) return mapCache[url];
@@ -966,6 +967,15 @@ author_profile: false
     var j0 = Math.min(h.ny - 2, Math.floor(fj)), tj = fj - j0, i0 = Math.floor(fi) % h.nx, ti = fi - Math.floor(fi), i1 = (i0 + 1) % h.nx, d = fld.data, nx = h.nx;
     var a = d[j0 * nx + i0], b = d[j0 * nx + i1], c = d[(j0 + 1) * nx + i0], e = d[(j0 + 1) * nx + i1];
     return (a * (1 - ti) + b * ti) * (1 - tj) + (c * (1 - ti) + e * ti) * tj;
+  }
+  /* column window [i0, i0 + ni) of a grid covering longitudes lon0..lon0 + span (with one spare column each side).
+     Global grids wrap around; regional grids (HRRR, NBM, WeatherNext 3) are clipped, so a box that starts west of
+     the grid starts at its first column instead of wrapping to the far side. */
+  function lonWindow(h, lon0, span) {
+    if (h.nx * h.dlon >= 359) return {i0: Math.floor((((lon0 - h.lon0) % 360) + 360) % 360 / h.dlon) - 1, ni: Math.ceil(span / h.dlon) + 3};
+    var rel = ((lon0 - h.lon0 + 540) % 360) - 180, a = Math.floor(rel / h.dlon) - 1, b = a + Math.ceil(span / h.dlon) + 3;
+    a = Math.max(0, a); b = Math.min(h.nx, b);
+    return {i0: a, ni: b - a};
   }
   function nodeValue(fld, i, j) { var h = fld.hdr; if (j < 0 || j >= h.ny) return NaN; return fld.data[j * h.nx + ((i % h.nx) + h.nx) % h.nx]; }
   function fieldFrom(src, name) {
@@ -1218,7 +1228,7 @@ author_profile: false
       if (contVar === 'z') ciTxt += '; labels in decametres, e.g. ' + ({850: '141 = 1410 m', 500: '552 = 5520 m', 250: '1056 = 10 560 m'}[lev] || '552 = 5520 m');
       $('wx-maptitle').textContent = levText(lev) + MV.label + ' (shaded, ' + MV.units + ')' + (CV ? '; ' + levText(lev) + CV.label + ' (contours' + (contVar === 'z' ? ', labelled in decametres' : '') + ')' : '') + '. ' + (m.label || S.mapModel) + ' run ' + fmtTime(m.init) + ', f' + pad(step, 3) + '.';
       var outside = isNaN(sample(cnS || nhS, st.lon, st.lat));
-      $('wx-mapcap').innerHTML = (outside ? '<b>' + st.icao + ' lies outside the ' + (m.label || S.mapModel) + ' domain.</b> ' : '') + '<span class="jn-figno">Fig. 1.</span> ' + (m.label || S.mapModel) + ' forecast (run ' + fmtTime(m.init) + ', f' + pad(step, 3) + ') of ' + levText(lev) + MV.label + ' (shaded, ' + MV.units + ')' + (CV ? ' and ' + CV.label + ' (contours, ' + ciTxt + ')' : contNote) + ' around ' + st.icao + ' (star).' + (/^tp6/.test(vr) ? ' Precipitation is accumulated over the 6 h ending at the valid time; white: less than 0.01 in.' : '') + (lev !== 'sfc' ? ' Pressure levels: 850 hPa is about 1.5 km above sea level, 500 hPa about 5.5 km and 250 hPa about 10 km (jet-stream level).' : '') + ' (a) ' + ((cnS || nhS).hdr.dlon * (Math.max(280, $('wx-map-a').clientWidth - 2) / 7) >= 6 ? 'Grid nodes of the ' + (cnS || nhS).hdr.dlon + '° field are drawn as dots; the' : 'The') + ' four grid nodes surrounding the station are filled and labelled with their values' + (m.grid_note ? ' (' + m.grid_note + ')' : '') + (MODELS[S.model].src === 'bufkit' && (S.model === 'HRRR' || S.model === 'RRFS') ? '; open squares are the four 3-km ' + S.model + ' Lambert-conformal grid nodes around the station' : '') + '. (b) Same field on the ' + nhS.hdr.dlon + '° grid over the large-scale set-up. Grey lines: coastlines and state borders' + (S.showElev ? '; thin grey contours: surface elevation (ETOPO 2022, lightly smoothed; 200, 500 and 1000 m in low terrain, every 500 m to 2500 m in hills, and 500, 1000, 2000, 3000 and 4000 m in high mountains; very small rings are left out)' : '') + '. Plate carrée projection.';
+      $('wx-mapcap').innerHTML = (outside ? '<b>' + st.icao + ' lies outside the ' + (m.label || S.mapModel) + ' domain.</b> ' : '') + '<span class="jn-figno">Fig. 1.</span> ' + (m.label || S.mapModel) + ' forecast (run ' + fmtTime(m.init) + ', f' + pad(step, 3) + ') of ' + levText(lev) + MV.label + ' (shaded, ' + MV.units + ')' + (CV ? ' and ' + CV.label + ' (contours, ' + ciTxt + ')' : contNote) + ' around ' + st.icao + ' (star).' + (/^tp6/.test(vr) ? ' Precipitation is accumulated over the 6 h ending at the valid time; white: less than 0.01 in.' : '') + (lev !== 'sfc' ? ' Pressure levels: 850 hPa is about 1.5 km above sea level, 500 hPa about 5.5 km and 250 hPa about 10 km (jet-stream level).' : '') + ' (a) ' + ((cnS || nhS).hdr.dlon * (Math.max(280, $('wx-map-a').clientWidth - 2) / 7) >= GRID_DOT_MIN_PX ? 'Grid nodes of the ' + (cnS || nhS).hdr.dlon + '° field are drawn as dots; the' : 'The') + ' four grid nodes surrounding the station are filled and labelled with their values' + (m.grid_note ? ' (' + m.grid_note + ')' : '') + (MODELS[S.model].src === 'bufkit' && (S.model === 'HRRR' || S.model === 'RRFS') ? '; open squares are the four 3-km ' + S.model + ' Lambert-conformal grid nodes around the station' : '') + '. (b) Same field on the ' + nhS.hdr.dlon + '° grid over the large-scale set-up. Grey lines: coastlines and state borders' + (S.showElev ? '; thin grey contours: surface elevation (ETOPO 2022, lightly smoothed; 200, 500 and 1000 m in low terrain, every 500 m to 2500 m in hills, and 500, 1000, 2000, 3000 and 4000 m in high mountains; very small rings are left out)' : '') + '. Plate carrée projection.';
       if (m.domain === 'regional') $('wx-mapcap').innerHTML += ' Hatched grey areas lie outside the ' + (m.label || S.mapModel) + ' map window (no data).';
       if (S.mapModel === 'wn3') $('wx-mapcap').innerHTML += ' WeatherNext 3 maps show the mean of its 64 ensemble members' + (vr === 't2msp' ? '; the spread map is the 90th minus the 10th percentile of 2-m temperature, a measure of forecast uncertainty' : '') + (vr === 'tp6i' ? '; the IMERG-calibrated amounts come from a version of its precipitation trained to match NASA\u2019s IMERG satellite estimate' : '') + (/cc$/.test(vr) ? '; cloud cover is the closest WeatherNext 3 comes to a satellite view, since it does not forecast satellite images' : '') + '.';
       updateWN3Legal();
@@ -1301,10 +1311,12 @@ author_profile: false
     /* contours from the field's own grid restricted to the box */
     if (cont && sc) {
       var h = cont.hdr, ci = MAPCI[contVar][sc.lev], conv = MAPVARS[contVar].conv;
-      var i0 = Math.floor((((lon0 - h.lon0) % 360) + 360) % 360 / h.dlon) - 1, ni = Math.ceil(2 * dlon / h.dlon) + 3, j0 = Math.max(0, Math.floor((lat0 - h.lat0) / h.dlat) - 1), j1 = Math.min(h.ny - 1, Math.ceil((lat1 - h.lat0) / h.dlat) + 1), nj = j1 - j0 + 1;
-      if (h.nx * h.dlon < 359) { i0 = Math.max(0, i0); ni = Math.min(ni, h.nx - i0); }
-      var vals = new Float64Array(ni * nj), vmin = Infinity, vmax = -Infinity;
-      for (var j = 0; j < nj; j++) for (var i = 0; i < ni; i++) { var r0 = nodeValue(cont, i0 + i, j0 + j), vv = isNaN(r0) ? NaN : conv(r0); vals[j * ni + i] = isNaN(vv) ? -1e9 : vv; if (!isNaN(vv)) { vmin = Math.min(vmin, vv); vmax = Math.max(vmax, vv); } }
+      var lw = lonWindow(h, lon0, 2 * dlon), i0 = lw.i0, ni = lw.ni, j0 = Math.max(0, Math.floor((lat0 - h.lat0) / h.dlat) - 1), j1 = Math.min(h.ny - 1, Math.ceil((lat1 - h.lat0) / h.dlat) + 1), nj = j1 - j0 + 1;
+      if (ni < 3 || nj < 3) { ni = 0; nj = 0; }   /* box outside a regional grid: no contours */
+      var vals = new Float64Array(Math.max(0, ni * nj)), miss = new Uint8Array(Math.max(0, ni * nj)), vmin = Infinity, vmax = -Infinity;
+      for (var j = 0; j < nj; j++) for (var i = 0; i < ni; i++) { var r0 = nodeValue(cont, i0 + i, j0 + j), vv = isNaN(r0) ? NaN : conv(r0); vals[j * ni + i] = isNaN(vv) ? -1e9 : vv; if (isNaN(vv)) miss[j * ni + i] = 1; else { vmin = Math.min(vmin, vv); vmax = Math.max(vmax, vv); } }
+      /* contour points next to a missing node (edge of a regional grid) are cut, so lines do not pile up along the edge */
+      var nearMiss = function (p) { var a = Math.floor(p[0] - 0.5), b = Math.floor(p[1] - 0.5); for (var dj = 0; dj <= 1; dj++) for (var di = 0; di <= 1; di++) { var ii = a + di, jj = b + dj; if (ii >= 0 && ii < ni && jj >= 0 && jj < nj && miss[jj * ni + ii]) return true; } return false; };
       if (isFinite(vmin)) {
         var thr = [];
         if (Array.isArray(ci)) thr = ci.filter(function (t) { return t <= vmax; });
@@ -1312,7 +1324,7 @@ author_profile: false
         var lonAt = function (i) { return h.lon0 + (i0 + i - 0.5) * h.dlon; }, latAt = function (j) { return h.lat0 + (j0 + j - 0.5) * h.dlat; };
         d3.contours().size([ni, nj]).thresholds(thr)(vals).forEach(function (c) {
           var lines = [];
-          c.coordinates.forEach(function (poly) { poly.forEach(function (ring) { var cur = []; ring.forEach(function (p) { if (p[0] <= 0 || p[0] >= ni || p[1] <= 0 || p[1] >= nj) { if (cur.length > 1) lines.push(cur); cur = []; return; } cur.push([lonAt(p[0]), latAt(p[1])]); }); if (cur.length > 1) lines.push(cur); }); });
+          c.coordinates.forEach(function (poly) { poly.forEach(function (ring) { var cur = []; ring.forEach(function (p) { if (p[0] <= 0 || p[0] >= ni || p[1] <= 0 || p[1] >= nj || nearMiss(p)) { if (cur.length > 1) lines.push(cur); cur = []; return; } cur.push([lonAt(p[0]), latAt(p[1])]); }); if (cur.length > 1) lines.push(cur); }); });
           var bold = (contVar === 'z' && Math.abs((c.value / ci) % 5) < 1e-6) || (contVar === 'msl' && Math.abs(c.value % 20) < 1e-6);
           var dashed = c.value < 0 && ['u', 'v', 'w', 'u10', 'v10'].indexOf(contVar) >= 0;
           g.append('path').datum({type: 'MultiLineString', coordinates: lines}).attr('d', path).attr('fill', 'none').attr('stroke', '#000').attr('stroke-width', bold ? 1.1 : 0.6).attr('stroke-dasharray', dashed ? '4,2' : null);
@@ -1325,7 +1337,7 @@ author_profile: false
     if (S.showElev) drawElevation(gElev, path, x, y, st, lon0, lon1, lat0, lat1, zoom, W, H, free);
     /* grid nodes (zoom panel, model fields only) */
     if (zoom && shade && sc) {
-      var hs = shade.hdr, cornerIJ = corners(shade, st), dense = hs.dlon * W / (lon1 - lon0) < 6;   /* fine grids: corner nodes only */
+      var hs = shade.hdr, cornerIJ = corners(shade, st), dense = hs.dlon * W / (lon1 - lon0) < GRID_DOT_MIN_PX;   /* dense grids: only the four nodes around the station */
       for (var la = dense ? Infinity : Math.ceil(lat0 / hs.dlat) * hs.dlat; la <= lat1; la += hs.dlat) for (var lo = Math.ceil((lon0 - hs.lon0) / hs.dlon) * hs.dlon + hs.lon0; lo <= lon1 + 1e-9; lo += hs.dlon) {
         var isC = cornerIJ.some(function (c) { return Math.abs(c.lat - la) < 1e-6 && Math.abs(((c.lon - lo + 540) % 360) - 180) < 1e-6; });
         g.append('circle').attr('cx', x(((lo - st.lon + 540) % 360) - 180 + st.lon)).attr('cy', y(la)).attr('r', isC ? 3.2 : 1.4).attr('fill', isC ? '#000' : '#fff').attr('stroke', '#000').attr('stroke-width', 0.7);
@@ -1366,8 +1378,7 @@ author_profile: false
     if (!fld) fld = S.elevNH;
     if (!fld) return;
     var h = fld.hdr, span = lon1 - lon0;
-    var i0 = Math.floor((((lon0 - h.lon0) % 360) + 360) % 360 / h.dlon) - 1, ni = Math.ceil(span / h.dlon) + 3, j0 = Math.max(0, Math.floor((lat0 - h.lat0) / h.dlat) - 1), j1 = Math.min(h.ny - 1, Math.ceil((lat1 - h.lat0) / h.dlat) + 1), nj = j1 - j0 + 1;
-    if (h.nx * h.dlon < 359) { i0 = Math.max(0, i0); ni = Math.min(ni, h.nx - i0); }
+    var lw = lonWindow(h, lon0, span), i0 = lw.i0, ni = lw.ni, j0 = Math.max(0, Math.floor((lat0 - h.lat0) / h.dlat) - 1), j1 = Math.min(h.ny - 1, Math.ceil((lat1 - h.lat0) / h.dlat) + 1), nj = j1 - j0 + 1;
     if (ni < 3 || nj < 3) return;
     var vals = new Float64Array(ni * nj), vmax = -Infinity;
     for (var j = 0; j < nj; j++) for (var i = 0; i < ni; i++) { var v = nodeValue(fld, i0 + i, j0 + j); vals[j * ni + i] = isNaN(v) ? 0 : v; }   /* ocean = sea level */
