@@ -398,6 +398,24 @@ def load_stations(only=None):
     return {"icao": [s["icao"] for s in cat], "lat": lat, "lon": lon, "lon360": lon % 360.0}
 
 
+def ensure_gitattributes(api, repo):
+    """Binary files must go to Xet/LFS storage: make sure *.enc and *.pdf are routed there (own commit, before the data)."""
+    r = requests.get(f"https://huggingface.co/datasets/{repo}/resolve/main/.gitattributes", headers={"Cache-Control": "no-cache"}, timeout=60)
+    if r.status_code == 404:
+        cur = ""
+    elif r.ok:
+        cur = r.text
+    else:
+        raise RuntimeError(f".gitattributes could not be read (HTTP {r.status_code}); not overwriting it")
+    need = [p for p in ("*.enc", "*.pdf") if not re.search(r"^" + re.escape(p) + r"\s", cur, re.M)]
+    if not need:
+        return
+    new = cur.rstrip("\n") + "\n" + "".join(f"{p} filter=lfs diff=lfs merge=lfs -text\n" for p in need)
+    api.upload_file(path_or_fileobj=new.encode(), path_in_repo=".gitattributes", repo_id=repo, repo_type="dataset",
+                    commit_message="Store " + " and ".join(need) + " files with Xet/LFS")
+    log(f"wn3: .gitattributes now routes {', '.join(need)} to Xet/LFS")
+
+
 def hf_index(repo):
     try:
         r = requests.get(f"https://huggingface.co/datasets/{repo}/resolve/main/wn3/index.json", headers={"Cache-Control": "no-cache"}, timeout=60)
@@ -497,6 +515,7 @@ def main():
             return
         from huggingface_hub import CommitOperationAdd, CommitOperationDelete, HfApi
         api = HfApi(token=os.environ["HF_TOKEN"])
+        ensure_gitattributes(api, args.repo)
         existing = api.list_repo_files(args.repo, repo_type="dataset")
         ops = [CommitOperationAdd(path_in_repo=os.path.relpath(os.path.join(dp, f), res["out"]), path_or_fileobj=os.path.join(dp, f))
                for dp, _, fs in os.walk(res["out"]) for f in fs]
