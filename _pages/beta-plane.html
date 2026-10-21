@@ -1,0 +1,503 @@
+---
+layout: archive
+title: "Interactive Beta-Plane Model"
+permalink: /blocking-plots/beta-plane/
+author_profile: false
+---
+
+{% include base_path %}
+<link rel="stylesheet" href="{{ base_path }}/assets/css/journal.css?v={{ site.time | date: "%s" }}">
+<style>.page__title { font-family: "STIX Two Text", "Times New Roman", Times, serif; font-weight: 700; }</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+
+<style>
+  .bp .bp-layout { display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap; }
+  .bp .bp-main { flex: 2.3 1 420px; min-width: 0; }
+  .bp .bp-aux { flex: 1 1 230px; min-width: 0; }
+  .bp .bp-aux.is-off { flex: 0 0 auto; }
+  .bp .bp-aux.is-off .bp-auxbody { display: none; }
+  .bp .bp-panel { position: relative; border: 1px solid #000; background: #fff; touch-action: none; cursor: crosshair; user-select: none; -webkit-user-select: none; }
+  .bp .bp-panel canvas { position: absolute; left: 0; top: 0; }
+  .bp .bp-panel svg { position: relative; display: block; }
+  .bp .bp-small { position: relative; background: #fff; margin-bottom: 10px; }
+  .bp .bp-small canvas { position: absolute; }
+  .bp .bp-small svg { position: relative; display: block; }
+  .bp .bp-readout { font-family: Helvetica, Arial, sans-serif; font-size: 8pt; color: #333; min-height: 1.3em; margin: 3px 0; font-variant-numeric: tabular-nums; }
+  .bp .bp-cbar { display: block; margin: 2px 0 4px 0; }
+  .bp .bp-runbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; font-family: Helvetica, Arial, sans-serif; font-size: 8.5pt; margin: 6px 0; }
+  .bp .bp-clock { font-variant-numeric: tabular-nums; min-width: 190px; }
+  .bp .bp-group { border-top: 1px solid #999; padding-top: 6px; margin-top: 8px; }
+  .bp .bp-group-head { font-family: Helvetica, Arial, sans-serif; font-size: 8.5pt; font-weight: 700; margin: 0 0 4px 0; }
+  .bp .bp-group-head label { font-weight: 700; display: inline-flex; align-items: center; gap: 4px; }
+  .bp .bp-group .jn-controls { border: 0; margin: 2px 0 4px 0; padding: 2px 0; }
+  .bp .jn-ctl input[type=range] { width: 150px; max-width: 100%; }
+  .bp .bp-val { font-variant-numeric: tabular-nums; color: #000; }
+  .bp .bp-auxtoggle { font-family: Helvetica, Arial, sans-serif; font-size: 8.5pt; margin: 0 0 6px 0; display: flex; align-items: center; gap: 4px; }
+  .bp .bp-auxtoggle label { display: inline-flex; align-items: center; gap: 4px; font-weight: 700; margin: 0; }
+  .bp .bp-subcap { font-family: Helvetica, Arial, sans-serif; font-size: 8pt; color: #333; margin: 0 0 2px 0; }
+  .bp .bp-group.is-off .jn-ctl:not(.bp-keep) { opacity: 0.45; }
+  @media (max-width: 700px) {
+    .bp .bp-main, .bp .bp-aux { flex: 1 1 100%; }
+    .bp .bp-aux.is-off { flex: 1 1 100%; }
+    .bp .jn-ctl input[type=range] { width: 100%; }
+  }
+</style>
+
+<div class="jn bp" id="bp-app">
+  <p class="jn-small"><a href="{{ base_path }}/blocking-plots/">&larr; Blocking Plots</a> &nbsp;|&nbsp; <a href="{{ base_path }}/blocking-plots/composites/">Blocking composite viewer</a> &nbsp;|&nbsp; <a href="{{ base_path }}/blocking-plots/nh-forecast/">Northern Hemisphere forecast viewer</a></p>
+  <div class="jn-runhead"><span>Interactive model &middot; doubly periodic &beta;-plane</span><span>runs in your browser</span></div>
+
+  <p class="jn-abstract"><b>Purpose.</b> A live two-dimensional model of the mid-latitude atmosphere at about 5&ndash;10 km altitude, where the jet stream lives. The Earth&rsquo;s rotation is represented by the &beta;-plane: the Coriolis parameter increases northward at a constant rate &beta;, which is what makes large-scale waves (Rossby waves) drift westward relative to the wind and lets a jet meander, break and leave behind stationary highs and lows, the ingredients of atmospheric blocking. You can switch on a jet and a band of random &ldquo;storms&rdquo; (stirring) and disturb the flow with the mouse.</p>
+  <p class="jn-abstract"><b>How to use.</b> Drag across the map to push the air along the stroke. Click (tap) to drop a high-pressure vortex (anticyclone, H); hold Shift while clicking, or change &ldquo;Click places&rdquo;, to drop a low (cyclone, L). A strong high placed just north of the jet often stalls and splits the jet, like a block. The sliders change the jet and the stirring while the model runs; Reset starts the chosen preset again; Calm removes all eddies but keeps the jet.</p>
+
+  <div class="bp-runbar">
+    <div class="jn-btngroup"><button id="bp-play" aria-pressed="true" title="pause or resume">pause</button><button id="bp-reset" title="start the chosen preset again">reset</button><button id="bp-calm" title="remove all eddies, keep the jet">calm</button></div>
+    <label for="bp-preset">Preset</label>
+    <select id="bp-preset">
+      <option value="default">Jet with stirring (default)</option>
+      <option value="jet">Jet only: it meanders by itself (barotropic instability)</option>
+      <option value="rossby">Rossby waves only: no jet, no stirring; click to add vortices</option>
+      <option value="jets">Stirring everywhere with a strong &beta;: zonal jets form</option>
+    </select>
+    <span class="bp-clock" id="bp-clock">day 0.0</span>
+  </div>
+
+  <div class="bp-layout">
+    <div class="bp-main">
+      <figure class="jn-fig" id="bp-fig">
+        <div class="jn-fig-title" id="bp-title"></div>
+        <div class="bp-subcap" id="bp-suba">(a) the flow</div>
+        <div class="bp-panel" id="bp-panel"><canvas id="bp-canvas"></canvas><svg id="bp-svg"></svg></div>
+        <div class="bp-readout" id="bp-readout">&nbsp;</div>
+        <svg class="bp-cbar" id="bp-cbar"></svg>
+        <figcaption id="bp-cap"></figcaption>
+      </figure>
+
+      <div class="bp-group" id="bp-g-disp">
+        <div class="bp-group-head">Display and mouse</div>
+        <div class="jn-controls">
+          <div class="jn-ctl"><label for="bp-shade">Shading</label>
+            <select id="bp-shade"><option value="zeta">relative vorticity &zeta;</option><option value="q">potential vorticity q = &zeta; + &beta;y</option><option value="psi">streamfunction &psi;</option><option value="u">west&ndash;east wind u</option><option value="v">south&ndash;north wind v</option></select></div>
+          <div class="jn-ctl"><label for="bp-cont">Contours</label>
+            <select id="bp-cont"><option value="psi">streamfunction &psi; (like 500-hPa height)</option><option value="q">potential vorticity q</option><option value="none">none</option></select></div>
+          <div class="jn-ctl"><label for="bp-click">Click places</label>
+            <select id="bp-click"><option value="H">a high (anticyclone)</option><option value="L">a low (cyclone)</option></select></div>
+          <div class="jn-ctl"><label for="bp-speed">Speed</label>
+            <select id="bp-speed"><option value="0.5">0.5 day per second</option><option value="1">1 day per second</option><option value="1.5" selected>1.5 days per second</option><option value="3">3 days per second</option></select></div>
+        </div>
+      </div>
+
+      <div class="bp-group" id="bp-g-jet">
+        <div class="bp-group-head"><label><input type="checkbox" id="bp-jet" checked> Jet</label> <span class="jn-muted" style="font-weight:400">(the zonal-mean flow is pulled back towards this profile)</span></div>
+        <div class="jn-controls">
+          <div class="jn-ctl"><label for="bp-jlat">Centre latitude <span class="bp-val" id="bp-jlat-v"></span></label><input type="range" id="bp-jlat" min="15" max="75" step="1" value="45"></div>
+          <div class="jn-ctl"><label for="bp-jw">Half-width <span class="bp-val" id="bp-jw-v"></span></label><input type="range" id="bp-jw" min="400" max="2500" step="50" value="1000"></div>
+          <div class="jn-ctl"><label for="bp-ju">Peak speed <span class="bp-val" id="bp-ju-v"></span></label><input type="range" id="bp-ju" min="0" max="60" step="1" value="30"></div>
+        </div>
+      </div>
+
+      <div class="bp-group" id="bp-g-stir">
+        <div class="bp-group-head"><label><input type="checkbox" id="bp-stir" checked> Stirring</label> <span class="jn-muted" style="font-weight:400">(random wave forcing in a latitude band, like a storm track)</span></div>
+        <div class="jn-controls">
+          <div class="jn-ctl"><label for="bp-slat">Centre latitude <span class="bp-val" id="bp-slat-v"></span></label><input type="range" id="bp-slat" min="10" max="80" step="1" value="45"></div>
+          <div class="jn-ctl"><label for="bp-sm">Zonal wavenumber <span class="bp-val" id="bp-sm-v"></span></label><input type="range" id="bp-sm" min="1" max="20" step="1" value="6"></div>
+          <div class="jn-ctl"><label for="bp-sa">Strength <span class="bp-val" id="bp-sa-v"></span></label><input type="range" id="bp-sa" min="0" max="8" step="0.25" value="2"></div>
+        </div>
+      </div>
+
+      <details class="bp-group">
+        <summary class="bp-group-head" style="cursor:pointer">Advanced: &beta;, friction, resolution</summary>
+        <div class="jn-controls">
+          <div class="jn-ctl"><label for="bp-beta">&beta; (northward increase of the Coriolis parameter)</label>
+            <select id="bp-beta"><option value="0">off (f-plane)</option><option value="30">as at 30&deg;N</option><option value="45" selected>as at 45&deg;N</option><option value="60">as at 60&deg;N</option><option value="x4">4 &times; the 45&deg;N value (narrower zonal jets)</option></select></div>
+          <div class="jn-ctl"><label for="bp-fric">Friction time <span class="bp-val" id="bp-fric-v"></span></label><input type="range" id="bp-fric" min="2" max="40" step="1" value="10"></div>
+          <div class="jn-ctl"><label for="bp-tj">Jet relaxation time <span class="bp-val" id="bp-tj-v"></span></label><input type="range" id="bp-tj" min="1" max="20" step="1" value="4"></div>
+          <div class="jn-ctl"><label for="bp-res">Grid</label>
+            <select id="bp-res"><option value="256">256 &times; 128 (78 km)</option><option value="512">512 &times; 256 (39 km; slower)</option><option value="128">128 &times; 64 (156 km; for slow devices)</option></select></div>
+        </div>
+      </details>
+    </div>
+
+    <aside class="bp-aux" id="bp-aux">
+      <div class="bp-auxtoggle"><label><input type="checkbox" id="bp-auxon" checked> Auxiliary panels</label></div>
+      <div class="bp-auxbody">
+        <div class="bp-subcap">(b) zonal-mean wind [u](y), m s<sup>&minus;1</sup></div>
+        <div class="bp-small" id="bp-ubox"><svg id="bp-usvg"></svg></div>
+        <div class="bp-subcap" id="bp-hovcap">(c) Hovm&ouml;ller diagram</div>
+        <div class="bp-small" id="bp-hbox"><canvas id="bp-hcanvas"></canvas><svg id="bp-hsvg"></svg></div>
+        <div class="bp-subcap">(d) kinetic-energy spectrum</div>
+        <div class="bp-small" id="bp-sbox"><svg id="bp-ssvg"></svg></div>
+        <div class="jn-small" id="bp-auxcap"></div>
+      </div>
+    </aside>
+  </div>
+
+  <details>
+    <summary class="jn-small">Method notes</summary>
+    <div class="jn-note">
+      <p><b>Equation.</b> Barotropic vorticity equation on a &beta;-plane, &part;&zeta;/&part;t + J(&psi;, &zeta;) + &beta; &part;&psi;/&part;x = F<sub>jet</sub> + F<sub>stir</sub> + F<sub>mouse</sub> &minus; &zeta;/&tau;<sub>f</sub> &minus; &nu;&nabla;<sup>8</sup>&zeta;, with &zeta; = &nabla;<sup>2</sup>&psi;, u = &minus;&part;&psi;/&part;y, v = &part;&psi;/&part;x. Domain 20&nbsp;000 km &times; 10&nbsp;000 km, periodic in both directions; the y axis is labelled 0&ndash;90&deg;N at 111 km per degree, but &beta; is constant (default 1.62 &times; 10<sup>&minus;11</sup> m<sup>&minus;1</sup> s<sup>&minus;1</sup>, its value at 45&deg;N) and the top edge joins the bottom edge.</p>
+      <p><b>Numerics.</b> Pseudo-spectral (fast Fourier transforms; exact inversion of &zeta; = &nabla;<sup>2</sup>&psi; on the periodic domain), Jacobian on the grid with 2/3-rule dealiasing, third-order Adams&ndash;Bashforth time stepping (about 7&ndash;13 min steps, halved automatically when the flow is fast), friction and &nabla;<sup>8</sup> hyperviscosity (damping time 1/20 day at the smallest resolved scale) applied exactly. A single Rossby wave propagates at the theoretical speed c = &minus;&beta;/K<sup>2</sup> and the unforced, inviscid energy is conserved to 1 part in 10<sup>7</sup> over three days. The model runs in a Web Worker in your browser; nothing is sent to a server.</p>
+      <p><b>Jet.</b> The zonal-mean vorticity is relaxed, with the jet relaxation time, towards that of U(y) = U<sub>0</sub> exp[&minus;(y &minus; y<sub>j</sub>)<sup>2</sup>/w<sup>2</sup>] (repeated periodically in y). On a periodic domain the domain-average wind cannot be represented, so the profile is shown and used with its average removed (weak easterlies away from the jet). Jets narrower than about (2U<sub>0</sub>/&beta;)<sup>1/2</sup> violate the Rayleigh&ndash;Kuo stability criterion (U&Prime; &gt; &beta; somewhere) and meander on their own.</p>
+      <p><b>Stirring.</b> F<sub>stir</sub> = A G(y) &Sigma;<sub>m&minus;1&hellip;m+1</sub> Re[a<sub>m</sub>(t) e<sup>i k<sub>m</sub> x</sup>], with G a Gaussian of half-width 800 km around the chosen latitude (the zonal-jets preset stirs the whole domain), k<sub>m</sub> = 2&pi;m / 20&nbsp;000 km and a<sub>m</sub> complex random amplitudes with a 2-day memory (red noise).</p>
+      <p><b>Mouse.</b> Dragging adds a velocity impulse along the stroke with a Gaussian footprint (radius 400 km), which in vorticity is a dipole; clicking adds a Gaussian vortex (radius 550 km, peak wind about 25 m s<sup>&minus;1</sup>). The panels on the right show the zonal-mean wind with the target jet (dashed), &psi; minus its zonal mean along one latitude over the last 30 days (time runs downward: eastward-moving waves tilt to the lower right, westward-moving ones to the lower left), and the kinetic-energy spectrum with the stirring wavenumber and the Rhines wavenumber k<sub>&beta;</sub> = (&beta;/U<sub>rms</sub>)<sup>1/2</sup>, where the turbulent energy cascade is arrested and zonal jets form.</p>
+    </div>
+  </details>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var BASE_PATH = '{{ base_path }}', VER = '{{ site.time | date: "%s" }}';
+  var LX = 20, LY = 10, US = 11.574, ZS = 1.1574, PS = 1.1574, FS = 1.3396;   /* unit conversions: m/s, 1e-5 s-1, 1e7 m2 s-1, 1e-10 s-2 */
+  var OMEGA = 7.292e-5, A_E = 6.371e6;
+  function betaAt(lat) { if (lat === 'x4') return 4 * betaAt(45); lat = +lat; return lat ? 2 * OMEGA * Math.cos(lat * Math.PI / 180) / A_E * 1e6 * 86400 : 0; }   /* in 1/(1000 km day) */
+  function $(id) { return document.getElementById(id); }
+  function y2lat(y) { return y / LY * 90; }
+  function lat2y(l) { return l / 90 * LY; }
+  var S = {wStir: 0.8, preset: 'default', playing: true, frame: null, waiting: false, shade: 'zeta', cont: 'psi', click: 'H', hov: [], spec: null, lim: {}, limT: {}, auxOn: true,
+           res: 256, lastT: 0, lastWall: 0, rate: 0, contT: 0, contCache: null, drag: null};
+  try { if (localStorage.getItem('bp-aux') === 'off') S.auxOn = false; } catch (e) { /* storage unavailable */ }
+
+  /* ---------------------------------------------------------------- parameters from the controls */
+  function params() {
+    return {jetOn: $('bp-jet').checked, yJet: lat2y(+$('bp-jlat').value), wJet: +$('bp-jw').value / 1000, U0: +$('bp-ju').value / US, tauJet: +$('bp-tj').value,
+            stirOn: $('bp-stir').checked, yStir: lat2y(+$('bp-slat').value), mStir: +$('bp-sm').value, Astir: +$('bp-sa').value / FS,
+            wStir: S.wStir, beta: betaAt($('bp-beta').value), tauFric: +$('bp-fric').value};
+  }
+  function labels() {
+    $('bp-jlat-v').textContent = $('bp-jlat').value + '°N'; $('bp-jw-v').textContent = (+$('bp-jw').value).toLocaleString('en-US') + ' km'; $('bp-ju-v').textContent = $('bp-ju').value + ' m s⁻¹';
+    $('bp-slat-v').textContent = $('bp-slat').value + '°N'; var m = +$('bp-sm').value; $('bp-sm-v').textContent = m + ' (wavelength ' + Math.round(20000 / m).toLocaleString('en-US') + ' km)';
+    $('bp-sa-v').textContent = (+$('bp-sa').value).toFixed(2) + ' × 10⁻¹⁰ s⁻²'; $('bp-fric-v').textContent = $('bp-fric').value + ' days'; $('bp-tj-v').textContent = $('bp-tj').value + ' days';
+    $('bp-g-jet').classList.toggle('is-off', !$('bp-jet').checked); $('bp-g-stir').classList.toggle('is-off', !$('bp-stir').checked);
+  }
+
+  /* ---------------------------------------------------------------- worker */
+  var W = null;
+  function startWorker() {
+    if (W) W.terminate();
+    W = new Worker(BASE_PATH + '/assets/js/beta-plane-worker.js?v=' + VER);
+    W.onmessage = onMsg;
+    W.onerror = function (e) { $('bp-readout').textContent = 'The model could not start in this browser (' + (e.message || 'worker error') + ').'; };
+    var n = S.res; W.postMessage({cmd: 'init', Nx: n, Ny: n / 2, params: params()});
+    W.postMessage({cmd: 'speed', daysPerSec: +$('bp-speed').value}); W.postMessage({cmd: 'run', on: S.playing && !document.hidden});
+    S.hov = []; S.waiting = false; S.contCache = null;
+  }
+  function send(m) { if (W) W.postMessage(m); }
+  function onMsg(ev) {
+    var m = ev.data;
+    if (m.type === 'blowup') { $('bp-readout').textContent = 'The flow became too violent and the model restarted.'; S.hov = []; return; }
+    if (m.type !== 'frame') return;
+    S.waiting = false;
+    if (S.frame && m.t < S.frame.t - 1e-6) S.hov = [];   /* reset happened */
+    S.frame = m;
+    if (m.hov) { S.hov.push(m.hov); while (S.hov.length && S.hov[0].t < m.t - 30) S.hov.shift(); }
+    if (m.spec) S.spec = m.spec;
+    var now = performance.now();
+    if (S.lastWall && now - S.lastWall > 900) { S.rate = (m.t - S.lastT) / ((now - S.lastWall) / 1000); S.lastT = m.t; S.lastWall = now; }
+    else if (!S.lastWall) { S.lastT = m.t; S.lastWall = now; }
+    draw();
+  }
+  function tick() {
+    if (W && !S.waiting && !document.hidden) { S.waiting = true; send({cmd: 'frame', hovY: hovY()}); }
+    requestAnimationFrame(tick);
+  }
+  function hovY() { var p = params(); return p.jetOn ? p.yJet : (p.stirOn ? p.yStir : LY / 2); }
+
+  /* ---------------------------------------------------------------- fields and colour scale */
+  var SHADES = {
+    zeta: {label: 'relative vorticity ζ', units: '10⁻⁵ s⁻¹', scale: ZS},
+    q: {label: 'potential vorticity q = ζ + β(y − y₀)', units: '10⁻⁵ s⁻¹', scale: ZS},
+    psi: {label: 'streamfunction ψ', units: '10⁷ m² s⁻¹', scale: PS},
+    u: {label: 'west–east wind u', units: 'm s⁻¹', scale: US},
+    v: {label: 'south–north wind v', units: 'm s⁻¹', scale: US}
+  };
+  function fieldArray(F, which) {
+    if (which === 'zeta') return F.zeta; if (which === 'psi') return F.psi; if (which === 'u') return F.u; if (which === 'v') return F.v;
+    var Nx = F.Nx, Ny = F.Ny;   /* q = zeta + beta (y - Ly/2) */
+    if (F._q) return F._q;
+    var b = params().beta, a = new Float32Array(Nx * Ny), dy = LY / Ny;
+    for (var j = 0; j < Ny; j++) { var add = b * (j * dy - LY / 2); for (var i = 0; i < Nx; i++) a[j * Nx + i] = F.zeta[j * Nx + i] + add; }
+    F._q = a; return a;
+  }
+  var NICE = [0.5, 1, 1.5, 2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 25, 30, 40, 50, 60, 80, 100, 120, 150, 200, 250, 300, 400, 500];
+  function niceLimit(name, arr, scale) {
+    var n = arr.length, st = Math.max(1, Math.floor(n / 4000)), vals = [];
+    for (var i = 0; i < n; i += st) vals.push(Math.abs(arr[i]) * scale);
+    vals.sort(function (a, b) { return a - b; });
+    var want = vals[Math.floor(vals.length * 0.995)] || 1, lim = NICE[NICE.length - 1];
+    for (var k = 0; k < NICE.length; k++) if (NICE[k] >= want) { lim = NICE[k]; break; }
+    var cur = S.lim[name], now = performance.now();   /* grow at once, shrink only after 3 s */
+    if (!cur || lim > cur) { S.lim[name] = lim; S.limT[name] = now; }
+    else if (lim < cur) { if (now - (S.limT[name] || 0) > 3000) { S.lim[name] = lim; S.limT[name] = now; } }
+    else S.limT[name] = now;
+    return S.lim[name];
+  }
+  /* discrete RdBu bins of a round width (8-16 bins across -lim..lim) */
+  var PAL = {};
+  function bins(lim) {
+    var step = d3.tickStep(0, lim, 6), nb = Math.max(2, Math.round(2 * lim / step));
+    if (!PAL[nb]) { PAL[nb] = []; for (var b = 0; b < nb; b++) PAL[nb].push(d3.rgb(d3.interpolateRdBu(1 - (b + 0.5) / nb))); }
+    return {step: step, nb: nb, pal: PAL[nb]};
+  }
+
+  /* ---------------------------------------------------------------- main panel */
+  var G = {W: 0, H: 0, m: {l: 40, r: 8, t: 6, b: 30}, ix: null, iy: null};
+  function geom() {
+    var box = $('bp-panel'), W = Math.max(300, box.clientWidth - 2), pw = W - G.m.l - G.m.r, ph = Math.round(pw / 2), H = ph + G.m.t + G.m.b;
+    if (W !== G.W || H !== G.H) { G.W = W; G.H = H; G.pw = pw; G.ph = ph; G.key = null; var c = $('bp-canvas'); c.width = pw; c.height = ph; c.style.left = (G.m.l + 1) + 'px'; c.style.top = (G.m.t + 1) + 'px'; drawAxes(); }
+    return G;
+  }
+  function drawAxes() {
+    var svg = d3.select('#bp-svg'); svg.selectAll('*').remove(); svg.attr('width', G.W).attr('height', G.H).style('font-family', 'Helvetica, Arial, sans-serif').style('font-size', '8pt');
+    var x = d3.scaleLinear().domain([0, LX]).range([G.m.l, G.m.l + G.pw]), y = d3.scaleLinear().domain([0, 90]).range([G.m.t + G.ph, G.m.t]);
+    G.x = x; G.y = y;
+    svg.append('defs').append('clipPath').attr('id', 'bp-clip').append('rect').attr('x', G.m.l).attr('y', G.m.t).attr('width', G.pw).attr('height', G.ph);
+    G.gc = svg.append('g').attr('clip-path', 'url(#bp-clip)');
+    G.gm = svg.append('g').attr('clip-path', 'url(#bp-clip)');
+    svg.append('rect').attr('x', G.m.l + 0.5).attr('y', G.m.t + 0.5).attr('width', G.pw - 1).attr('height', G.ph - 1).attr('fill', 'none').attr('stroke', '#000');
+    var nx = G.pw < 540 ? 4 : 8;
+    svg.append('g').attr('transform', 'translate(0,' + (G.m.t + G.ph) + ')').call(d3.axisBottom(x).ticks(nx).tickSize(4).tickFormat(function (v) { return d3.format(',')(v * 1000); }))
+      .call(function (a) { a.selectAll('path,line').attr('stroke', '#000'); });
+    svg.append('g').attr('transform', 'translate(' + G.m.l + ',0)').call(d3.axisLeft(y).tickValues([0, 15, 30, 45, 60, 75, 90]).tickSize(4).tickFormat(function (v) { return v + '°N'; }))
+      .call(function (a) { a.selectAll('path,line').attr('stroke', '#000'); });
+    svg.append('text').attr('x', G.m.l + G.pw / 2).attr('y', G.H - 3).attr('text-anchor', 'middle').text('x (km)');
+  }
+  function shadePanel(F, arr, sc, lim) {
+    var pw = G.pw, ph = G.ph, Nx = F.Nx, Ny = F.Ny, key = pw + 'x' + ph + ':' + Nx;
+    if (G.key !== key) {   /* interpolation indices per column / row (periodic) */
+      G.key = key; G.ix0 = new Int32Array(pw); G.ix1 = new Int32Array(pw); G.wx = new Float32Array(pw); G.iy0 = new Int32Array(ph); G.iy1 = new Int32Array(ph); G.wy = new Float32Array(ph);
+      for (var c = 0; c < pw; c++) { var fi = (c + 0.5) / pw * Nx, i0 = Math.floor(fi); G.wx[c] = fi - i0; G.ix0[c] = ((i0 % Nx) + Nx) % Nx; G.ix1[c] = (G.ix0[c] + 1) % Nx; }
+      for (var r = 0; r < ph; r++) { var fj = (1 - (r + 0.5) / ph) * Ny, j0 = Math.floor(fj); G.wy[r] = fj - j0; G.iy0[r] = ((j0 % Ny) + Ny) % Ny; G.iy1[r] = (G.iy0[r] + 1) % Ny; }
+      G.img = $('bp-canvas').getContext('2d').createImageData(pw, ph);
+    }
+    var B = bins(lim), NB = B.nb, PALL = B.pal, px = G.img.data, k = NB / (2 * lim), off = NB / 2;
+    for (var rr = 0; rr < ph; rr++) {
+      var a0 = G.iy0[rr] * Nx, a1 = G.iy1[rr] * Nx, wy = G.wy[rr];
+      for (var cc = 0; cc < pw; cc++) {
+        var wx = G.wx[cc], i0b = G.ix0[cc], i1b = G.ix1[cc];
+        var v = ((arr[a0 + i0b] * (1 - wx) + arr[a0 + i1b] * wx) * (1 - wy) + (arr[a1 + i0b] * (1 - wx) + arr[a1 + i1b] * wx) * wy) * sc;
+        var bi = Math.floor(v * k + off); if (bi < 0) bi = 0; else if (bi >= NB) bi = NB - 1;
+        var col = PALL[bi], p = (rr * pw + cc) * 4; px[p] = col.r; px[p + 1] = col.g; px[p + 2] = col.b; px[p + 3] = 255;
+      }
+    }
+    $('bp-canvas').getContext('2d').putImageData(G.img, 0, 0);
+  }
+  /* contours on the periodic grid: pad one wrapped row and column so lines continue across the edges */
+  function contourPanel(F, which) {
+    var now = performance.now(); if (S.contCache && now - S.contT < 90 && S.contCache.which === which) return;
+    S.contT = now; G.gc.selectAll('*').remove(); S.contCache = {which: which};
+    if (which === 'none') return;
+    var arr = which === 'psi' ? F.psi : fieldArray(F, 'q'), Nx = F.Nx, Ny = F.Ny, sc = which === 'psi' ? PS : ZS;
+    var pad = new Float64Array((Nx + 1) * (Ny + 1)), mn = Infinity, mx = -Infinity;
+    for (var j = 0; j <= Ny; j++) for (var i = 0; i <= Nx; i++) { var v = arr[(j % Ny) * Nx + (i % Nx)] * sc; pad[(Ny - j) * (Nx + 1) + i] = v; if (v < mn) mn = v; if (v > mx) mx = v; }
+    if (which === 'q') {   /* the beta y part jumps at the periodic edge: use the unpadded top row */
+      for (var i2 = 0; i2 <= Nx; i2++) pad[i2] = pad[(Nx + 1) + i2] + (pad[(Nx + 1) + i2] - pad[2 * (Nx + 1) + i2]);
+    }
+    var span = mx - mn; if (!(span > 0)) return;
+    var ci = d3.tickStep(mn, mx, 12), thr = d3.range(Math.ceil(mn / ci) * ci, mx, ci);
+    var dx = G.pw / Nx, dy = G.ph / Ny;
+    /* grid node k sits at contour coordinate k + 0.5; node (i, row r) is at x = i dx, y = Ly - r dy */
+    var path = d3.geoPath(d3.geoTransform({point: function (a, b) { this.stream.point(G.m.l + (a - 0.5) * dx, G.m.t + (b - 0.5) * dy); }}));
+    var cs = d3.contours().size([Nx + 1, Ny + 1]).thresholds(thr)(pad);
+    cs.forEach(function (c) {
+      var neg = c.value < -1e-9 && which === 'psi';
+      G.gc.append('path').datum({type: 'MultiLineString', coordinates: c.coordinates.map(function (poly) { return poly; }).flat()}).attr('d', path).attr('fill', 'none').attr('stroke', '#000').attr('stroke-width', Math.abs(c.value) < 1e-9 ? 1.1 : 0.6).attr('stroke-opacity', 0.75).attr('stroke-dasharray', neg ? '3,2' : null);
+    });
+    S.contCache.ci = ci;
+  }
+  function drawCbar(lim, sc) {
+    var W = Math.max(300, $('bp-fig').clientWidth), svg = d3.select('#bp-cbar'); svg.selectAll('*').remove(); svg.attr('width', W).attr('height', 40).style('font-family', 'Helvetica, Arial, sans-serif').style('font-size', '7.5pt');
+    var B = bins(lim), NB = B.nb, bw = (W - 80) / NB, every = NB > 10 ? 2 : 1;
+    B.pal.forEach(function (c, i) { svg.append('rect').attr('x', 40 + i * bw).attr('y', 4).attr('width', bw + 0.5).attr('height', 9).attr('fill', c.formatHex()); });
+    svg.append('rect').attr('x', 40).attr('y', 4).attr('width', W - 80).attr('height', 9).attr('fill', 'none').attr('stroke', '#000').attr('stroke-width', 0.6);
+    for (var i = 0; i <= NB; i++) { var v = -lim + i * B.step, xp = 40 + i * bw; svg.append('line').attr('x1', xp).attr('x2', xp).attr('y1', 13).attr('y2', 16).attr('stroke', '#000'); if (Math.round(v / B.step) % every === 0) svg.append('text').attr('x', xp).attr('y', 25).attr('text-anchor', 'middle').text(d3.format('~g')(+v.toFixed(4)).replace('-', '\u2212')); }
+    svg.append('text').attr('x', 40).attr('y', 37).text(SHADES[S.shade].label + ' (' + SHADES[S.shade].units + ')');
+  }
+  function draw() {
+    var F = S.frame; if (!F) return;
+    geom();
+    var D = SHADES[S.shade], arr = fieldArray(F, S.shade), lim = niceLimit(S.shade, arr, D.scale);
+    shadePanel(F, arr, D.scale, lim);
+    contourPanel(F, S.cont);
+    if (S.cbarKey !== S.shade + lim + G.W) { S.cbarKey = S.shade + lim + G.W; drawCbar(lim, D.scale); }
+    var day = F.t;
+    $('bp-clock').textContent = 'day ' + day.toFixed(1) + (S.playing ? (S.rate > 0 ? ' · ' + S.rate.toFixed(1) + ' days per second' : '') : ' · paused');
+    $('bp-title').textContent = D.label + ' (shaded, ' + D.units + ')' + (S.cont !== 'none' ? '; ' + (S.cont === 'psi' ? 'streamfunction ψ' : 'potential vorticity q') + ' (contours)' : '') + ', day ' + day.toFixed(1) + '.';
+    if (S.auxOn) drawAux(F);
+    if (!S.capKey || S.capKey !== capKey()) { S.capKey = capKey(); caption(); }
+    if (S.hover) readout(S.hover.x, S.hover.y);
+  }
+
+  /* ---------------------------------------------------------------- auxiliary panels */
+  /* put the top of panel (b) level with panel (a) when the two columns sit side by side */
+  function alignAux() {
+    var ub = $('bp-ubox'), pa = $('bp-panel'); ub.style.marginTop = '0px';
+    var ra = pa.getBoundingClientRect(), rb = ub.getBoundingClientRect();
+    if (rb.left > ra.left + 50 && ra.top > rb.top) ub.style.marginTop = Math.round(ra.top - rb.top) + 'px';
+  }
+  function drawAux(F) {
+    var W = Math.max(200, $('bp-aux').clientWidth), Hm = G.H;
+    if (S.alignW !== G.W) { S.alignW = G.W; alignAux(); }
+    /* (b) zonal-mean wind: same latitude axis and height as panel (a) */
+    var svg = d3.select('#bp-usvg'); svg.selectAll('*').remove(); svg.attr('width', W).attr('height', Hm).style('font-family', 'Helvetica, Arial, sans-serif').style('font-size', '7.5pt');
+    var m = {l: 34, r: 8, t: G.m.t, b: G.m.b}, ph = Hm - m.t - m.b, Ny = F.Ny;
+    var ub = Array.from(F.ubar, function (v) { return v * US; }), uj = Array.from(F.ujet, function (v) { return v * US; }), pj = params().jetOn;
+    var lo = Math.min(-10, d3.min(ub), pj ? d3.min(uj) : 0), hi = Math.max(20, d3.max(ub), pj ? d3.max(uj) : 0);
+    var x = d3.scaleLinear().domain([lo, hi]).nice().range([m.l, W - m.r]), y = d3.scaleLinear().domain([0, 90]).range([m.t + ph, m.t]);
+    svg.append('line').attr('x1', x(0)).attr('x2', x(0)).attr('y1', m.t).attr('y2', m.t + ph).attr('stroke', '#999').attr('stroke-width', 0.6);
+    var line = d3.line().x(function (d) { return x(d[0]); }).y(function (d) { return y(d[1]); });
+    var pts = ub.map(function (v, j) { return [v, y2lat(j * LY / Ny)]; }); pts.push([ub[0], 90]);
+    if (pj) { var pt2 = uj.map(function (v, j) { return [v, y2lat(j * LY / Ny)]; }); pt2.push([uj[0], 90]); svg.append('path').attr('d', line(pt2)).attr('fill', 'none').attr('stroke', '#666').attr('stroke-width', 1).attr('stroke-dasharray', '4,3'); }
+    svg.append('path').attr('d', line(pts)).attr('fill', 'none').attr('stroke', '#000').attr('stroke-width', 1.3);
+    svg.append('rect').attr('x', m.l + 0.5).attr('y', m.t + 0.5).attr('width', W - m.l - m.r - 1).attr('height', ph - 1).attr('fill', 'none').attr('stroke', '#000');
+    svg.append('g').attr('transform', 'translate(0,' + (m.t + ph) + ')').call(d3.axisBottom(x).ticks(4).tickSize(3)).call(function (a) { a.selectAll('path,line').attr('stroke', '#000'); });
+    svg.append('g').attr('transform', 'translate(' + m.l + ',0)').call(d3.axisLeft(y).tickValues([0, 30, 60, 90]).tickSize(3).tickFormat(function (v) { return v + '°'; })).call(function (a) { a.selectAll('path,line').attr('stroke', '#000'); });
+    svg.append('text').attr('x', W - m.r - 2).attr('y', m.t + 10).attr('text-anchor', 'end').style('font-size', '7pt').attr('fill', '#333').text(pj ? 'solid: model; dashed: jet target' : 'model');
+
+    /* (c) Hovmoller of psi minus its zonal mean along one latitude, last 30 days, time downward */
+    var hb = $('bp-hbox'), hH = Math.round(W * 0.85), hm = {l: 34, r: 8, t: 4, b: 26}, hpw = W - hm.l - hm.r, hph = hH - hm.t - hm.b;
+    var hs = d3.select('#bp-hsvg'); hs.selectAll('*').remove(); hs.attr('width', W).attr('height', hH).style('font-family', 'Helvetica, Arial, sans-serif').style('font-size', '7.5pt');
+    var hc = $('bp-hcanvas'); if (hc.width !== hpw || hc.height !== hph) { hc.width = hpw; hc.height = hph; } hc.style.left = hm.l + 'px'; hc.style.top = hm.t + 'px';
+    var ctx = hc.getContext('2d'); ctx.clearRect(0, 0, hpw, hph);
+    var tEnd = F.t, tStart = tEnd - 30, rows = S.hov;
+    $('bp-hovcap').textContent = '(c) ψ − [ψ] at ' + Math.round(y2lat(hovY())) + '°N, last 30 days' + (S.hovLim ? ' (±' + S.hovLim + ' × 10⁷ m² s⁻¹)' : '');
+    if (rows.length > 1) {
+      var hl = 0; rows.forEach(function (r) { for (var i = 0; i < r.row.length; i++) hl = Math.max(hl, Math.abs(r.row[i])); }); hl = hl * PS || 1;
+      for (var kk2 = 0; kk2 < NICE.length; kk2++) if (NICE[kk2] >= hl) { hl = NICE[kk2]; break; }
+      var HB = bins(hl), NB = HB.nb, img = ctx.createImageData(hpw, hph), px = img.data, Nx = rows[0].row.length, k = NB / (2 * hl);
+      for (var rr = 0; rr < hph; rr++) {
+        var tt = tStart + (rr + 0.5) / hph * 30, idx = d3.bisector(function (r) { return r.t; }).left(rows, tt); if (idx >= rows.length || (idx === 0 && rows[0].t > tt + 0.25)) continue;
+        var row = rows[Math.min(rows.length - 1, idx)].row;
+        for (var cc = 0; cc < hpw; cc++) { var fi = (cc + 0.5) / hpw * Nx, i0 = Math.floor(fi) % Nx, i1 = (i0 + 1) % Nx, w = fi - Math.floor(fi), v = (row[i0] * (1 - w) + row[i1] * w) * PS;
+          var bi = Math.floor(v * k + NB / 2); bi = bi < 0 ? 0 : (bi >= NB ? NB - 1 : bi); var col = HB.pal[bi], p = (rr * hpw + cc) * 4; px[p] = col.r; px[p + 1] = col.g; px[p + 2] = col.b; px[p + 3] = 255; }
+      }
+      ctx.putImageData(img, 0, 0);
+      S.hovLim = hl;
+    }
+    var hx = d3.scaleLinear().domain([0, LX]).range([hm.l, hm.l + hpw]), hy = d3.scaleLinear().domain([tStart, tEnd]).range([hm.t, hm.t + hph]);
+    hs.append('rect').attr('x', hm.l + 0.5).attr('y', hm.t + 0.5).attr('width', hpw - 1).attr('height', hph - 1).attr('fill', 'none').attr('stroke', '#000');
+    hs.append('g').attr('transform', 'translate(0,' + (hm.t + hph) + ')').call(d3.axisBottom(hx).ticks(4).tickSize(3).tickFormat(function (v) { return d3.format(',')(v * 1000); })).call(function (a) { a.selectAll('path,line').attr('stroke', '#000'); });
+    hs.append('g').attr('transform', 'translate(' + hm.l + ',0)').call(d3.axisLeft(hy).ticks(5).tickSize(3).tickFormat(function (v) { return v < 0 ? '' : d3.format('d')(v); })).call(function (a) { a.selectAll('path,line').attr('stroke', '#000'); });
+    hs.append('text').attr('x', hm.l + hpw / 2).attr('y', hH - 2).attr('text-anchor', 'middle').text('x (km)');
+    hs.append('text').attr('transform', 'rotate(-90)').attr('x', -(hm.t + hph / 2)).attr('y', 9).attr('text-anchor', 'middle').text('day');
+
+    /* (d) kinetic-energy spectrum, log-log */
+    var sp = S.spec, ss = d3.select('#bp-ssvg'), sH = Math.round(W * 0.8), sm = {l: 40, r: 8, t: 14, b: 28};
+    ss.selectAll('*').remove(); ss.attr('width', W).attr('height', sH).style('font-family', 'Helvetica, Arial, sans-serif').style('font-size', '7.5pt');
+    if (!sp) return;
+    var dat = []; for (var q = 1; q < sp.k.length; q++) if (sp.E[q] > 0) dat.push([sp.k[q], sp.E[q] * US * US * 1e6]);   /* m^3 s^-2 */
+    if (dat.length < 3) return;
+    var sx = d3.scaleLog().domain([d3.min(dat, function (d) { return d[0]; }), d3.max(dat, function (d) { return d[0]; })]).range([sm.l, W - sm.r]);
+    var emax = d3.max(dat, function (d) { return d[1]; }), sy = d3.scaleLog().domain([emax * 1e-6, emax * 3]).range([sH - sm.b, sm.t]).clamp(true);
+    var p = params(), urms = 0; for (var q2 = 0; q2 < F.u.length; q2 += 7) urms += F.u[q2] * F.u[q2] + F.v[q2] * F.v[q2]; urms = Math.sqrt(urms / Math.ceil(F.u.length / 7));
+    var kb = p.beta > 0 && urms > 0 ? Math.sqrt(p.beta / urms) : null, ks = p.stirOn ? 2 * Math.PI * p.mStir / LX : null;
+    [[kb, 'k_β', '1,2'], [ks, 'stirring', '4,2']].forEach(function (a) { if (!a[0] || a[0] < sx.domain()[0] || a[0] > sx.domain()[1]) return; ss.append('line').attr('x1', sx(a[0])).attr('x2', sx(a[0])).attr('y1', sm.t).attr('y2', sH - sm.b).attr('stroke', '#666').attr('stroke-dasharray', a[2]); ss.append('text').attr('x', sx(a[0]) + 2).attr('y', sm.t - 3).style('font-size', '7pt').attr('fill', '#333').text(a[1]); });
+    var k0 = dat[Math.floor(dat.length / 3)][0], e0 = dat[Math.floor(dat.length / 3)][1];   /* K^-3 guide */
+    var k1 = sx.domain()[1]; ss.append('line').attr('x1', sx(k0)).attr('y1', sy(e0 * 3)).attr('x2', sx(k1)).attr('y2', sy(e0 * 3 * Math.pow(k1 / k0, -3))).attr('stroke', '#999').attr('stroke-width', 0.8);
+    ss.append('text').attr('x', sx(k1) - 2).attr('y', sy(e0 * 3 * Math.pow(k1 / k0, -3)) - 4).attr('text-anchor', 'end').style('font-size', '7pt').attr('fill', '#666').text('K⁻³');
+    ss.append('path').attr('d', d3.line().x(function (d) { return sx(d[0]); }).y(function (d) { return sy(d[1]); })(dat)).attr('fill', 'none').attr('stroke', '#000').attr('stroke-width', 1.2);
+    ss.append('rect').attr('x', sm.l + 0.5).attr('y', sm.t + 0.5).attr('width', W - sm.l - sm.r - 1).attr('height', sH - sm.t - sm.b - 1).attr('fill', 'none').attr('stroke', '#000');
+    var wl = [10000, 3000, 1000, 300].filter(function (L) { var kk = 2 * Math.PI / (L / 1000); return kk >= sx.domain()[0] && kk <= sx.domain()[1]; });
+    ss.append('g').attr('transform', 'translate(0,' + (sH - sm.b) + ')').call(d3.axisBottom(sx).tickValues(wl.map(function (L) { return 2 * Math.PI / (L / 1000); })).tickFormat(function (kk) { return d3.format(',')(Math.round(2 * Math.PI / kk * 1000)); }).tickSize(3)).call(function (a) { a.selectAll('path,line').attr('stroke', '#000'); });
+    ss.append('g').attr('transform', 'translate(' + sm.l + ',0)').call(d3.axisLeft(sy).tickValues(d3.range(Math.ceil(Math.log10(sy.domain()[0])), Math.floor(Math.log10(sy.domain()[1])) + 1).filter(function (e, i, a) { return a.length < 5 || (a[a.length - 1] - e) % 2 === 0; }).map(function (e) { return Math.pow(10, e); })).tickFormat(function (v) { var e = Math.round(Math.log10(v)); return '10' + String(e).split('').map(function (c) { return '⁰¹²³⁴⁵⁶⁷⁸⁹'['0123456789'.indexOf(c)] || (c === '-' ? '⁻' : c); }).join(''); }).tickSize(3)).call(function (a) { a.selectAll('path,line').attr('stroke', '#000'); });
+    ss.append('text').attr('x', sm.l + (W - sm.l - sm.r) / 2).attr('y', sH - 2).attr('text-anchor', 'middle').text('wavelength (km)');
+    ss.append('text').attr('transform', 'rotate(-90)').attr('x', -(sm.t + (sH - sm.t - sm.b) / 2)).attr('y', 9).attr('text-anchor', 'middle').text('E(K) (m³ s⁻²)');
+  }
+
+  /* ---------------------------------------------------------------- caption */
+  function capKey() { var p = params(); return [S.shade, S.cont, p.jetOn, p.yJet, p.wJet, p.U0, p.stirOn, p.yStir, p.mStir, p.Astir, p.beta, p.tauFric, p.tauJet, p.wStir, S.res, S.auxOn].join('|'); }
+  function caption() {
+    var p = params(), D = SHADES[S.shade], bv = $('bp-beta').value, bTxt = p.beta ? 'β = ' + (p.beta / 86400 / 1e6 * 1e11).toFixed(2) + ' × 10⁻¹¹ m⁻¹ s⁻¹ (' + (bv === 'x4' ? 'four times its value at 45°N' : 'its value at ' + bv + '°N') + ')' : 'no β (f-plane)';
+    var parts = [];
+    parts.push(p.jetOn ? 'a jet of ' + Math.round(p.U0 * US) + ' m s⁻¹ peak speed and ' + (+$('bp-jw').value).toLocaleString('en-US') + ' km half-width centred at ' + $('bp-jlat').value + '°N (relaxation time ' + p.tauJet + ' days)' : 'no jet');
+    parts.push(p.stirOn ? 'stirring at zonal wavenumbers ' + Math.max(1, p.mStir - 1) + '–' + (p.mStir + 1) + ' (wavelength about ' + Math.round(20000 / p.mStir).toLocaleString('en-US') + ' km) ' + (S.wStir > 2 ? 'over the whole domain' : 'centred at ' + $('bp-slat').value + '°N') + ' with strength ' + (+$('bp-sa').value).toFixed(2) + ' × 10⁻¹⁰ s⁻²' : 'no stirring');
+    $('bp-cap').innerHTML = '<span class="jn-figno">Fig. 1.</span> (a) ' + D.label + ' (shaded, ' + D.units + '; the colour range adapts to the flow)' +
+      (S.cont === 'psi' ? ' and streamfunction ψ (contours; air flows along them with higher ψ to its right, like 500-hPa height contours: highs are ψ maxima, lows ψ minima; dashed: negative)' : (S.cont === 'q' ? ' and potential vorticity q (contours; where they fold back on themselves, Rossby waves are breaking)' : '')) +
+      ' in a barotropic model on a doubly periodic β-plane, 20 000 km wide and 10 000 km tall (labelled 0–90°N; the top edge joins the bottom), ' + bTxt + ', with ' + parts.join(' and ') + ', friction time ' + p.tauFric + ' days and a ' + S.res + ' × ' + S.res / 2 + ' grid. Drag to push the flow; click to add a high (or, with Shift, a low).' +
+      (S.auxOn ? ' (b) Zonal-mean west–east wind' + (p.jetOn ? ' (solid) and the jet it is relaxed towards (dashed, domain average removed)' : '') + '. (c) ψ minus its zonal mean along the latitude marked, over the last 30 days (time runs downward): stripes tilting to the lower right are waves carried eastward by the jet, stripes tilting to the lower left are Rossby waves moving westward against the flow, and vertical stripes are highs and lows that stay put, as blocks do. (d) Kinetic-energy spectrum against wavelength, with the stirring scale, the Rhines scale k<sub>β</sub> = (β/U<sub>rms</sub>)<sup>1/2</sup> and a K⁻³ slope for reference.' : '');
+  }
+
+  /* ---------------------------------------------------------------- mouse and touch */
+  function toDomain(ev) {
+    var r = $('bp-panel').getBoundingClientRect(), px = ev.clientX - r.left - 1 - G.m.l, py = ev.clientY - r.top - 1 - G.m.t;
+    return {x: px / G.pw * LX, y: (1 - py / G.ph) * LY, inside: px >= 0 && px <= G.pw && py >= 0 && py <= G.ph, px: ev.clientX, py: ev.clientY};
+  }
+  function readout(x, y) {
+    var F = S.frame; if (!F) return;
+    var Nx = F.Nx, Ny = F.Ny, i = ((Math.round(x / LX * Nx) % Nx) + Nx) % Nx, j = ((Math.round(y / LY * Ny) % Ny) + Ny) % Ny, q = j * Nx + i, D = SHADES[S.shade], arr = fieldArray(F, S.shade);
+    var spd = Math.hypot(F.u[q], F.v[q]) * US;
+    $('bp-readout').textContent = 'x = ' + Math.round(x * 1000).toLocaleString('en-US') + ' km, ' + y2lat(y).toFixed(1) + '°N: ' + D.label.split(' = ')[0] + ' = ' + (arr[q] * D.scale).toFixed(1).replace('-', '\u2212') + (D.units.indexOf('10') === 0 ? ' × ' : ' ') + D.units + ', wind speed ' + spd.toFixed(0) + ' m s⁻¹';
+  }
+  var panel = $('bp-panel');
+  panel.addEventListener('pointerdown', function (ev) {
+    var d = toDomain(ev); if (!d.inside) return;
+    try { panel.setPointerCapture(ev.pointerId); } catch (e) { /* synthetic or already released pointer */ }
+    S.drag = {id: ev.pointerId, x0: d.px, y0: d.py, last: d, t0: performance.now(), tl: performance.now(), moved: 0, shift: ev.shiftKey};
+  });
+  panel.addEventListener('pointermove', function (ev) {
+    var d = toDomain(ev);
+    S.hover = d.inside ? d : null; if (d.inside) readout(d.x, d.y);
+    var g = S.drag; if (!g || g.id !== ev.pointerId) return;
+    var now = performance.now(), dtw = Math.max(1, now - g.tl) / 1000, ddx = d.x - g.last.x, ddy = d.y - g.last.y;
+    g.moved += Math.hypot(d.px - g.last.px, d.py - g.last.py);
+    if (g.moved > 6) {
+      var spd = Math.hypot(ddx, ddy) / dtw, gain = 1.6 * Math.max(0.5, Math.min(2.5, spd / 10));
+      var ux = ddx * gain, uy = ddy * gain, mag = Math.hypot(ux, uy), cap = 1.5;   /* at most about 17 m/s per event */
+      if (mag > cap) { ux *= cap / mag; uy *= cap / mag; }
+      if (mag > 1e-4) send({cmd: 'impulse', list: [{type: 'push', x: (g.last.x + d.x) / 2, y: (g.last.y + d.y) / 2, ux: ux, uy: uy}]});
+    }
+    g.last = d; g.tl = now;
+  });
+  function endDrag(ev) {
+    var g = S.drag; if (!g || g.id !== ev.pointerId) return; S.drag = null;
+    if (g.moved <= 6 && performance.now() - g.t0 < 600) {
+      var d = toDomain({clientX: g.x0, clientY: g.y0}), sign = (S.click === 'H') !== (ev.shiftKey || g.shift) ? -1 : 1;
+      send({cmd: 'impulse', list: [{type: 'vortex', x: d.x, y: d.y, sign: sign, z0: 13.5}]});
+      mark(d, sign);
+    }
+  }
+  panel.addEventListener('pointerup', endDrag); panel.addEventListener('pointercancel', function () { S.drag = null; });
+  panel.addEventListener('pointerleave', function () { S.hover = null; });
+  function mark(d, sign) {   /* brief H / L label where a vortex was dropped */
+    var t = G.gm.append('text').attr('x', G.x(d.x)).attr('y', G.y(y2lat(d.y)) + 4).attr('text-anchor', 'middle').style('font-size', '11pt').style('font-weight', '700')
+      .attr('fill', sign < 0 ? '#2166ac' : '#b2182b').style('paint-order', 'stroke').attr('stroke', '#fff').attr('stroke-width', 2.5).text(sign < 0 ? 'H' : 'L');
+    t.transition().delay(700).duration(800).style('opacity', 0).remove();
+  }
+
+  /* ---------------------------------------------------------------- controls */
+  var PRESETS = {
+    default: {jet: true, stir: true, jlat: 45, jw: 1000, ju: 30, slat: 45, sm: 6, sa: 2, beta: '45', fric: 10, tj: 4},
+    jet: {jet: true, stir: false, jlat: 45, jw: 700, ju: 35, slat: 45, sm: 6, sa: 2, beta: '45', fric: 20, tj: 6},
+    rossby: {jet: false, stir: false, jlat: 45, jw: 1000, ju: 30, slat: 45, sm: 6, sa: 2, beta: '45', fric: 30, tj: 4, urms: 0.5},
+    jets: {jet: false, stir: true, jlat: 45, jw: 1000, ju: 30, slat: 45, sm: 16, sa: 4, beta: 'x4', fric: 20, tj: 4, wStir: 4}
+  };
+  function applyPreset(name) {
+    var P = PRESETS[name]; S.preset = name; $('bp-jet').checked = P.jet; $('bp-stir').checked = P.stir; S.wStir = P.wStir || 0.8;
+    ['jlat', 'jw', 'ju', 'slat', 'sm', 'sa', 'fric', 'tj'].forEach(function (k) { $('bp-' + k).value = P[k]; });
+    $('bp-beta').value = P.beta; labels(); send({cmd: 'params', params: params()}); S.preset = name; send({cmd: 'reset', urms: (P.urms == null ? 1 : P.urms) / US, kpeak: P.kpeak || 3}); S.hov = []; S.capKey = null;
+  }
+  ['bp-jet', 'bp-stir', 'bp-jlat', 'bp-jw', 'bp-ju', 'bp-slat', 'bp-sm', 'bp-sa', 'bp-fric', 'bp-tj', 'bp-beta'].forEach(function (id) {
+    $(id).addEventListener('input', function () { if (id === 'bp-slat') S.wStir = 0.8; labels(); send({cmd: 'params', params: params()}); S.capKey = null; if (id === 'bp-jlat' || id === 'bp-jet' || id === 'bp-stir' || id === 'bp-slat') S.hov = []; });
+  });
+  $('bp-preset').addEventListener('change', function () { applyPreset(this.value); });
+  $('bp-shade').addEventListener('change', function () { S.shade = this.value; S.cbarKey = null; S.capKey = null; draw(); });
+  $('bp-cont').addEventListener('change', function () { S.cont = this.value; S.contCache = null; S.capKey = null; draw(); });
+  $('bp-click').addEventListener('change', function () { S.click = this.value; });
+  $('bp-speed').addEventListener('change', function () { send({cmd: 'speed', daysPerSec: +this.value}); });
+  $('bp-res').addEventListener('change', function () { S.res = +this.value; G.key = null; S.capKey = null; startWorker(); });
+  $('bp-play').addEventListener('click', function () { S.playing = !S.playing; this.textContent = S.playing ? 'pause' : 'play'; this.setAttribute('aria-pressed', S.playing ? 'true' : 'false'); send({cmd: 'run', on: S.playing}); S.lastWall = 0; draw(); });
+  $('bp-reset').addEventListener('click', function () { var P = PRESETS[S.preset || 'default']; send({cmd: 'reset', urms: (P.urms == null ? 1 : P.urms) / US, kpeak: P.kpeak || 3}); S.hov = []; });
+  $('bp-calm').addEventListener('click', function () { send({cmd: 'reset', urms: 0}); S.hov = []; });
+  $('bp-auxon').addEventListener('change', function () { S.auxOn = this.checked; $('bp-aux').classList.toggle('is-off', !S.auxOn); try { localStorage.setItem('bp-aux', S.auxOn ? 'on' : 'off'); } catch (e) { /* ignore */ } G.W = 0; S.alignW = null; S.cbarKey = null; S.capKey = null; draw(); });
+  document.addEventListener('visibilitychange', function () { send({cmd: 'run', on: S.playing && !document.hidden}); S.lastWall = 0; });
+  var rto = null; window.addEventListener('resize', function () { clearTimeout(rto); rto = setTimeout(function () { G.W = 0; S.alignW = null; S.cbarKey = null; S.contCache = null; draw(); }, 150); });
+  document.addEventListener('keydown', function (e) { if (e.key === ' ' && e.target === document.body) { e.preventDefault(); $('bp-play').click(); } });
+
+  /* ---------------------------------------------------------------- start */
+  $('bp-auxon').checked = S.auxOn; $('bp-aux').classList.toggle('is-off', !S.auxOn);
+  if (window.matchMedia && window.matchMedia('(max-width: 700px)').matches) { S.res = 128; $('bp-res').value = '128'; }
+  labels();
+  if (typeof Worker === 'undefined') { $('bp-readout').textContent = 'This browser cannot run the model (no Web Worker support).'; return; }
+  startWorker(); requestAnimationFrame(tick);
+})();
+</script>
