@@ -1,7 +1,7 @@
 {
  "season": "2026-27",
  "source": "https://www.wxchallenge.com/schedule.php",
- "fetched": "2026-10-12T13:03:13Z",
+ "fetched": "2026-10-26T14:09:01Z",
  "fallback_station": "KBOS",
  "periods": [
   {
@@ -21,9 +21,9 @@
    "tournament": false
   },
   {
-   "city": null,
-   "station": null,
-   "climo": null,
+   "city": "Minneapolis, MN",
+   "station": "KMSP",
+   "climo": "52/36/10/0.07",
    "start": "2026-10-26",
    "end": "2026-11-09",
    "tournament": false
