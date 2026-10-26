@@ -36,6 +36,7 @@ collection: portfolio
 .wx figure.jn-fig.wx-schem .wx-two img { width: 100%; height: auto; display: block; margin: 0 auto; }
 .wx figure.jn-fig img { width: 100%; height: auto; border: 0; }
 .wx figure.wx-map a, .wx figure.wx-map a:hover { border-bottom: 0; display: block; }
+.wx a, .wx .wx-refs li { overflow-wrap: anywhere; }
 .wx blockquote.wx-afd { border-left: 2px solid #999; border-radius: 0; margin: 0.6em 0 1em 0; padding: 2px 0 2px 12px; font-size: 10pt; font-style: normal; color: #000; background: none; }
 .wx blockquote.wx-afd p { font-style: italic; margin: 0 0 4px 0; }
 .wx blockquote.wx-afd footer { font-size: 9pt; font-style: normal; color: #333; }
