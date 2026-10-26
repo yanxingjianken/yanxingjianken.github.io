@@ -1011,7 +1011,7 @@ collection: portfolio
 <p>Statements about how forecasters recognize each system summarize the cited papers, drawn from a reading of 53 peer-reviewed papers on these systems and on model temperature forecasts, supplemented by the AMS Glossary of Meteorology. Identification methods given without a citation reflect standard National Weather Service forecasting practice. The counts of midnight highs in Section 3.3 were made for this page from hourly airport observations.</p>
 
 <h2 id="acknowledgments">Acknowledgments</h2>
-<p>Generated using Copernicus Climate Change Service information (2026); neither the European Commission nor ECMWF is responsible for any use of this information. The ARCO-ERA5 copy is hosted by Google Cloud Public Datasets, and the text archive is maintained by the Iowa Environmental Mesonet at Iowa State University. Reproduced schematics are credited to their sources in the figure captions.</p>
+<p>I would like to thank helpful suggestions from Conrad Straden (MIT) for entries in this webpage. This page is generated using Copernicus Climate Change Service information (2026), and neither the European Commission nor ECMWF is responsible for any use of this information. The ARCO-ERA5 copy is hosted by Google Cloud Public Datasets, and the text archive is maintained by the Iowa Environmental Mesonet at Iowa State University. Reproduced schematics are credited to their sources in the figure captions.</p>
 
 <h2 id="references">References</h2>
 <ol class="wx-refs">
