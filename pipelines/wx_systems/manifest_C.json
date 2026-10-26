@@ -389,5 +389,127 @@
    }
   },
   "notes": "Case changed per the lead's fact-check: ERA5 on 6 Jul 2012 is a broad central-US ridge with a cutoff low off New England, not an omega block. Checked the suggested mid-April 2016 case with daily 12Z z500 for 10-20 Apr: no closed high over the east on 10-14 Apr; a closed high over the Great Lakes/Ohio Valley from 15 Apr (574 dam, 43.0°N 80.5°W) through 18 Apr (583 dam, 39.0°N 85.25°W); a western cut-off low (549-562 dam, 35.5-40.25°N, 106-109°W) on 16-18 Apr and an eastern cut-off low off the Atlantic coast (554-557 dam, 33.5-37.5°N, 61.75-64.25°W) on 16-18 Apr; by 19-20 Apr the high had broken down. So the clean Ω persisted about 3 days (16-18 Apr), 4 counting its formation on 15 Apr. On 15 Apr the 'east_low' in numbers is the trough near Labrador, not yet the Atlantic cut-off. No other candidates were checked because this case passed. The anomaly uses one climatology (16 Apr 12Z, 30 years) for all three days. File is omegablock_2016.png (not _2012): the card's realfig src, caption ('2012-07-06 12Z, Jul 2012 heat') and example line ('Jul 2012 Northeast heat') need updating. Blocking indices and ridge-axis position are not plotted."
+ },
+ {
+  "file": "norlun_2025.png",
+  "system": "Norlun trough",
+  "time_utc": "2025-12-24T09:00Z (precipitation summed 2025-12-23T21Z to 2025-12-24T18Z)",
+  "extent": [
+   -77,
+   -59,
+   36,
+   49
+  ],
+  "panels": [
+   {
+    "label": "Pressure (hPa), precipitation, wind",
+    "shading": "precipitation in the hour ending 09Z",
+    "contours": "MSLP every 2 hPa (one pass of a 9-point smoother)",
+    "barbs": "10-m wind (kt)",
+    "units": "mm h^-1, hPa, kt"
+   },
+   {
+    "label": "500-hPa height (dam) and spin",
+    "shading": "500-hPa relative vorticity (two passes of a 9-point smoother)",
+    "contours": "500-hPa height every 6 dam",
+    "barbs": null,
+    "units": "10^-5 s^-1, dam"
+   },
+   {
+    "label": "Precipitation over 21 h (mm)",
+    "shading": "total precipitation 2025-12-23T21Z to 2025-12-24T18Z, extent [-72.6,-66.6,42.4,46.4]",
+    "contours": null,
+    "barbs": null,
+    "units": "mm"
+   }
+  ],
+  "caption": "See Fig. 34 on the page.",
+  "key_point": "Isobars bend from a low far offshore back to the Maine coast (inverted trough); the precipitation band lies along it while a 500-hPa spin maximum approaches from the west.",
+  "numbers": {
+   "time": "2025-12-24T09",
+   "low_lon": -64.0,
+   "low_lat": 38.75,
+   "low_mslp_hPa": 999.3,
+   "vort500_max_lon": -73.5,
+   "vort500_max_lat": 43.25,
+   "vort500_max_1e5": 27.9,
+   "trough_axis": [
+    [
+     -64.5,
+     40.0,
+     1004.8
+    ],
+    [
+     -64.75,
+     40.5,
+     1005.9
+    ],
+    [
+     -69.0,
+     41.0,
+     1007.3
+    ],
+    [
+     -69.5,
+     41.5,
+     1007.1
+    ],
+    [
+     -69.5,
+     42.0,
+     1006.8
+    ],
+    [
+     -69.75,
+     42.5,
+     1006.5
+    ],
+    [
+     -70.0,
+     43.0,
+     1006.4
+    ],
+    [
+     -70.0,
+     43.5,
+     1007.1
+    ],
+    [
+     -70.25,
+     44.0,
+     1008.1
+    ],
+    [
+     -71.5,
+     44.5,
+     1009.2
+    ]
+   ],
+   "max_precip_rate_maine_mm_h": 2.35,
+   "max_precip_rate_lonlat": [
+    -69.75,
+    44.0
+   ],
+   "acc_max_mm": 27.0,
+   "acc_max_lonlat": [
+    -69.75,
+    43.75
+   ],
+   "acc_at_sites_mm": {
+    "Topsham": 24.0,
+    "Lewiston_2E": 21.6,
+    "Portland_jetport": 18.8,
+    "Boothbay_Harbor_3SE": 24.6,
+    "Bangor": 6.9,
+    "Concord": 7.7
+   },
+   "dist_km": {
+    "Topsham-Portland_jetport": 40,
+    "Topsham-Boothbay_3SE": 34,
+    "Lewiston2E-Portland_jetport": 51,
+    "low-Portland": 759
+   }
+  },
+  "notes": "Case chosen from IEM AFD archive scan (BOX/GYX/OKX/CAR, 2001-2026) for 'Norlun'. GYX AFDs 22-24 Dec 2025 name it; GYX PNS 1426Z 25 Dec 2025: Topsham 0.8 WSW 18.5 in, 2 E Lewiston 18.0 in, Portland Jetport 5.3 in, 3 SE Boothbay Harbor 2.5 in. ERA5 smooths the band: its 21-h totals are 24 mm at Topsham, 19 mm at Portland and 25 mm near Boothbay Harbor. Trough axis = row-wise MSLP minimum west of the low. Distances: Topsham to Portland Jetport 40 km, to 3 SE Boothbay Harbor 34 km; low to Portland 759 km."
  }
 ]

@@ -1,6 +1,6 @@
 ---
 title: "Special Weather Systems of the Northeastern United States"
-excerpt: "A guide for non-specialists to 21 systems that shape the weather of the northeastern United States, each illustrated with a schematic and a reanalysis map of a real case.<br/><img src='/images/wx_systems_v3/noreaster_2015.png' style='max-width: 60%; height: auto;'>"
+excerpt: "A guide for non-specialists to 22 systems that shape the weather of the northeastern United States, each illustrated with a schematic and a reanalysis map of a real case.<br/><img src='/images/wx_systems_v3/noreaster_2015.png' style='max-width: 60%; height: auto;'>"
 collection: portfolio
 ---
 
@@ -58,7 +58,7 @@ collection: portfolio
   <marker id="ar-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="#b2182b"/></marker>
 </defs></svg>
 
-<p class="jn-abstract"><b>Abstract.</b> This page describes 21 weather systems that shape day-to-day weather in the northeastern United States, from the sea breeze and the nor’easter to cold air trapped against the Appalachians. Two systems from elsewhere in the country, the Great Plains dryline and the California Santa Ana wind, are included for contrast. The page is written for readers with a science background but no training in meteorology. Each entry opens with a one-sentence definition and then describes how the system forms, how it changes temperature, wind, cloud and precipitation, and how forecasters recognize it, with reference to published studies. Each is illustrated with a schematic drawn for this page and a map of a real case from a reanalysis of past weather, and most entries quote the National Weather Service forecasters who handled that case.</p>
+<p class="jn-abstract"><b>Abstract.</b> This page describes 22 weather systems that shape day-to-day weather in the northeastern United States, from the sea breeze and the nor’easter to cold air trapped against the Appalachians. Two systems from elsewhere in the country, the Great Plains dryline and the California Santa Ana wind, are included for contrast. The page is written for readers with a science background but no training in meteorology. Each entry opens with a one-sentence definition and then describes how the system forms, how it changes temperature, wind, cloud and precipitation, and how forecasters recognize it, with reference to published studies. Each is illustrated with a schematic drawn for this page and a map of a real case from a reanalysis of past weather, and most entries quote the National Weather Service forecasters who handled that case.</p>
 
 <ol class="wx-toc">
   <li><a href="#sec-1">Coastal and marine systems</a></li>
@@ -112,7 +112,7 @@ collection: portfolio
   </div>
   <div>
     <dt>Forecaster quotations</dt>
-    <dd>National Weather Service (NWS) forecast offices publish an Area Forecast Discussion (AFD) several times a day, a technical note explaining the reasoning behind the forecast. Quotations come from the offices for Boston (BOX, located in Norton, Mass.; older products are headed &ldquo;Taunton&rdquo;), New York (OKX, Upton, N.Y.), Philadelphia (PHI, Mount Holly, N.J.), Baltimore/Washington (LWX, Sterling, Va.) and Buffalo (BUF). Each links to the archived text of the product it is taken from.</dd>
+    <dd>National Weather Service (NWS) forecast offices publish an Area Forecast Discussion (AFD) several times a day, a technical note explaining the reasoning behind the forecast. Quotations come from the offices for Boston (BOX, located in Norton, Mass.; older products are headed &ldquo;Taunton&rdquo;), New York (OKX, Upton, N.Y.), Philadelphia (PHI, Mount Holly, N.J.), Buffalo (BUF), Binghamton, N.Y. (BGM), Blacksburg, Va. (RNK), Gray, Maine (GYX), Norman, Okla. (OUN) and Los Angeles (LOX, Oxnard, Calif.). Each links to the archived text of the product it is taken from.</dd>
   </div>
   <div>
     <dt>Sources</dt>
@@ -121,7 +121,7 @@ collection: portfolio
 </dl>
 </div>
 
-<p class="jn-tabcap" id="table-1"><b>Table 1.</b> The 21 systems described on this page. &ldquo;Scale&rdquo; is the typical size; &ldquo;season&rdquo; is when the system is most common or matters most in the Northeast. The dryline and the Santa Ana wind do not occur in the Northeast and are included for contrast.</p>
+<p class="jn-tabcap" id="table-1"><b>Table 1.</b> The 22 systems described on this page. &ldquo;Scale&rdquo; is the typical size; &ldquo;season&rdquo; is when the system is most common or matters most in the Northeast. The dryline and the Santa Ana wind do not occur in the Northeast and are included for contrast.</p>
 <div class="wx-tablewrap">
 <table class="jn-table">
 <thead>
@@ -144,6 +144,7 @@ collection: portfolio
 <tr><td><a href="#freezing-rain">4.1 Freezing rain and ice storms</a></td><td>Warm layer 1&ndash;3 km up over a shallow freezing layer</td><td>Winter</td><td>Rain at 28&ndash;32 &deg;F that freezes on contact; a quarter inch (6 mm) of ice brings down branches and power lines</td></tr>
 <tr><td><a href="#bomb-cyclone">4.2 Bomb cyclone</a></td><td>About 1000 km or more</td><td>Cold season, mainly over the ocean</td><td>Central pressure falls at least about 18&ndash;20 hPa in 24 h; rapidly rising winds, heavy snow or rain, coastal flooding</td></tr>
 <tr><td><a href="#alberta-clipper">4.3 Alberta clipper</a></td><td>Small, fast-moving low</td><td>Mostly December and January</td><td>A few inches of light, powdery snow, then gusty northwest winds and sharp cooling</td></tr>
+<tr><td><a href="#norlun-trough">4.4 Norlun trough</a></td><td>Trough hundreds of km long; snow band a few to tens of km wide</td><td>December to April</td><td>Very localized heavy snow near the coast, e.g. 18.5 in (47 cm) at Topsham, Maine, and 5.3 in (13 cm) at Portland&rsquo;s airport, 42 km away, in Dec 2025</td></tr>
 <tr><td><a href="#gust-front">5.1 Gust front and cold pool</a></td><td>Cold pool about 1 km deep, narrower than a model grid</td><td>Thunderstorm season</td><td>Sudden gust and wind shift; temperature can fall more than 10 &deg;F (5.5 &deg;C) within minutes</td></tr>
 <tr><td><a href="#derecho">5.2 Derecho</a></td><td>Damage swath at least 400 km (250 mi) long</td><td>Thunderstorm season</td><td>Gusts of 60&ndash;90 mph, fallen trees, long power outages; most occur in the central United States, some reach the Northeast</td></tr>
 <tr><td><a href="#dryline">5.3 Dryline</a></td><td>Moisture change across a few to tens of km</td><td>Spring; most often mid- to late May</td><td>Not a Northeast feature; a Great Plains moisture boundary where severe storms and tornadoes form</td></tr>
@@ -770,6 +771,47 @@ collection: portfolio
 <footer>NWS Boston (BOX) Area Forecast Discussion, issued 5:21 p.m. EST 19 Jan 2008 (2221 UTC) (<a href="https://mesonet.agron.iastate.edu/p.php?pid=200801192221-KBOX-FXUS61-AFDBOX">archived text</a>)</footer></blockquote>
 </section>
 
+<section class="wx-sys" id="norlun-trough">
+<h3>4.4 Norlun trough</h3>
+<p class="wx-def">A Norlun trough is a narrow trough of low pressure reaching from a storm far out at sea to the coast, where it can hold heavy snow over a few towns for hours.</p>
+<p>Most troughs point south from a low; an inverted trough points north (<a href="#ref-ams2026">AMS 2026</a>). In a Norlun trough, isobars bend sharply northwestward from a low far offshore toward the coast (Fig. 33). Along the trough, ocean wind meets land wind, and the air crowding in (convergence) can only rise. Warmed and moistened by the sea, this air is unstable (once lifted, it keeps rising) and builds snow squalls, helped by a disturbance approaching aloft. Under the stalled trough, snow can fall at 2&ndash;4 in (5&ndash;10 cm) per hour, and totals drop quickly away from it. The name joins two National Weather Service meteorologists in New Hampshire, Steve NOgueiRa and Weir LUNdstedt, who studied surprise snowstorms of 1992 and 1993 (<a href="#ref-lundstedtnd">Lundstedt n.d.</a>).</p>
+<figure class="jn-fig wx-schem" id="fig-33">
+  <svg viewBox="0 0 300 180" role="img" aria-labelledby="fig-33-cap">
+    <rect width="300" height="180" fill="#fff"/>
+    <path d="M0,0 H300 V30 C240,50 190,70 148,82 S60,120 0,140 Z" fill="#d9d9d9"/>
+    <path d="M300,30 C240,50 190,70 148,82 S60,120 0,140" fill="none" stroke="#000" stroke-width="1"/>
+    <ellipse cx="157" cy="80" rx="7" ry="30" transform="rotate(-18 157 80)" fill="#c6dbef" stroke="#2166ac" stroke-width="0.8" stroke-dasharray="3 2"/>
+    <g fill="none" stroke="#000" stroke-width="0.8">
+      <ellipse cx="240" cy="148" rx="18" ry="13"/>
+      <path d="M300,120 C262,120 214,128 188,121 C198,140 206,160 212,180"/>
+      <path d="M300,94 C252,98 202,108 162,96 C170,128 172,156 170,180"/>
+      <path d="M300,64 C242,70 186,84 150,62 C150,104 140,150 126,180"/>
+    </g>
+    <path d="M226,142 C206,132 194,126 188,121 S166,106 162,96 S150,74 150,62 L147,34" fill="none" stroke="#000" stroke-width="1.4" stroke-dasharray="5 3"/>
+    <text x="234" y="153" font-size="16" font-weight="700" fill="#b2182b" style="fill:#b2182b">L</text>
+    <line x1="224" y1="86" x2="174" y2="88" stroke="#000" stroke-width="1.6" marker-end="url(#ar-k)"/>
+    <line x1="100" y1="90" x2="140" y2="86" stroke="#000" stroke-width="1.6" marker-end="url(#ar-k)"/>
+    <circle cx="112" cy="40" r="6" fill="#fff"/>
+    <text x="112" y="44" font-size="12" text-anchor="middle">×</text>
+    <text x="8" y="16" font-size="10">× = spin maximum aloft (500 hPa)</text>
+    <text x="156" y="42" font-size="10">inverted trough</text>
+    <text x="144" y="66" font-size="10" text-anchor="end">heavy snow</text>
+    <text x="296" y="80" font-size="10" text-anchor="end">moist ocean air</text>
+    <text x="296" y="176" font-size="10" text-anchor="end">low far offshore</text>
+    <line x1="16" y1="176" x2="16" y2="156" stroke="#000" stroke-width="1" marker-end="url(#ar-k)"/>
+    <text x="12" y="152" font-size="10">N</text>
+  </svg>
+  <figcaption id="fig-33-cap"><span class="jn-figno">Fig. 33.</span> Schematic map of a Norlun trough, north at the top. Gray is land and white is ocean. The black lines are isobars around a low (L) far offshore. Followed from the low toward the coast, each one bends sharply northwestward, and the dashed line joining these bends is the trough axis. The two black arrows show ocean wind and land wind meeting along the axis. There moist air rises, and a narrow band of heavy snow (light blue) can sit over the same stretch of coast for hours. The × marks the strongest spin in the winds about 5.5 km up; its approach adds lift.</figcaption>
+</figure>
+<figure class="jn-fig wx-map" id="fig-34">
+  <a href="/images/wx_systems_v3/norlun_2025.png" title="Open the full-size figure"><img src="/images/wx_systems_v3/norlun_2025.png" alt="ERA5 maps for the Norlun trough case, 0900 UTC 24 December 2025, with precipitation for 23–24 December" loading="lazy"></a>
+  <figcaption><span class="jn-figno">Fig. 34.</span> Isobars bend from a low far offshore (L) to the Maine coast, where snow falls along the inverted trough as a spin maximum aloft nears (ERA5, 0900 UTC [4 a.m. EST] 24 Dec 2025). (a) Sea-level pressure (contours every 2 hPa; low 999 hPa), precipitation rate (mm h⁻¹) and 10-m wind (barbs, kt). (b) 500-hPa height (contours every 6 dam) and spin (10⁻⁵ s⁻¹; red: counterclockwise). (c) Precipitation as melted water, 2100 UTC 23 Dec to 1800 UTC 24 Dec (mm). The 0.25° grid smooths the band, giving 19 mm at Portland and 24 mm at Topsham, near the darkest patch, a far smaller contrast than the measured snowfall.</figcaption>
+</figure>
+<p><i>Why it is hard to forecast.</i> Models of the time predicted little or no precipitation for either storm, and where the trough stalls is hard to call (<a href="#ref-lundstedtnd">Lundstedt n.d.</a>). Such troughs form where large-scale rising motion reaches northwest of the parent low (<a href="#ref-cebulko2016">Cebulko 2016</a>), and in central U.S. cases the wetter side of the trough varies (<a href="#ref-weisman2002">Weisman et al. 2002</a>). On 23&ndash;24 December 2025 (Fig. 34) Topsham, Maine, measured 18.5 in (47 cm) of snow. Portland&rsquo;s airport, 42 km (26 mi) southwest, had 5.3 in (13 cm), and a site near Boothbay Harbor, 32 km (20 mi) east, 2.5 in (6 cm) (<a href="https://mesonet.agron.iastate.edu/p.php?pid=202512251426-KGYX-NOUS41-PNSGYX">NWS Gray snowfall reports</a>).</p>
+<blockquote class="wx-afd"><p>&ldquo;Christmas comes early for snow lovers as a Norlun trough impacts Maine and New Hampshire tonight. … By late this evening and through the overnight hours, an inverted trough is expected to become stationary across the MidCoast, likely reaching westward into Casco Bay. This serves as a focus for heavy snowfall overnight…&rdquo;</p>
+<footer>NWS Gray, Maine (GYX) Area Forecast Discussion, issued 1:24 p.m. EST 23 Dec 2025 (1824 UTC) (<a href="https://mesonet.agron.iastate.edu/p.php?pid=202512231824-KGYX-FXUS61-AFDGYX">archived text</a>); the MidCoast is the Maine coast between Casco Bay, at Portland, and Penobscot Bay</footer></blockquote>
+</section>
+
 <h2 id="sec-5">5. Convective and mesoscale boundaries</h2>
 <p>Thunderstorms create boundaries tens to hundreds of kilometers long, and other boundaries set thunderstorms off. Most are too narrow to appear clearly in a reanalysis with a 25–30 km grid, so the maps for these cases show the setting rather than the boundary itself.</p>
 
@@ -778,8 +820,8 @@ collection: portfolio
 <p class="wx-def">A gust front is the leading edge of the cool air that spreads out from under a thunderstorm; when it passes, the wind gusts and changes direction and the temperature drops within minutes.</p>
 <p><i>How it forms.</i> Rain evaporating below a thunderstorm cools the air. The denser air sinks as a downdraft and spreads along the ground as a cold pool about 1 km deep, a flow of dense fluid under lighter fluid called a gravity current (<a href="#ref-charba1974">Charba 1974</a>). Its leading edge is the gust front.</p>
 <p>Behind the gust front the temperature can fall more than 10 °F (5.5 °C), and a low shelf cloud often accompanies it. New storms tend to form where it lifts the humid air ahead.</p>
-<figure class="jn-fig wx-schem" id="fig-33">
-  <svg viewBox="0 0 300 168" role="img" aria-labelledby="fig-33-cap">
+<figure class="jn-fig wx-schem" id="fig-35">
+  <svg viewBox="0 0 300 168" role="img" aria-labelledby="fig-35-cap">
     <rect width="300" height="168" fill="#fff"/>
     <ellipse cx="215" cy="38" rx="62" ry="22" fill="#f2f2f2" stroke="#000" stroke-width="0.8"/>
     <ellipse cx="195" cy="56" rx="36" ry="11" fill="#f2f2f2" stroke="#000" stroke-width="0.8"/>
@@ -801,13 +843,13 @@ collection: portfolio
     <text x="52" y="158" font-size="10" text-anchor="middle">gust front</text>
     <text x="294" y="158" font-size="10" text-anchor="end">ground</text>
   </svg>
-  <figcaption id="fig-33-cap"><span class="jn-figno">Fig. 33.</span> Schematic vertical cross-section through a thunderstorm and its outflow. Blue arrows under the cloud are the downdraft of air cooled by evaporating rain; on reaching the ground it spreads out as the cold pool (blue shading), here moving to the left. The gust front is the leading edge of the cold pool. The red arrow shows warm, humid air ahead of the storm being forced upward over the cold pool, where new storm cells can form. Not to scale: the cold pool is roughly 1 km deep and may extend tens of kilometers from the storm.</figcaption>
+  <figcaption id="fig-35-cap"><span class="jn-figno">Fig. 35.</span> Schematic vertical cross-section through a thunderstorm and its outflow. Blue arrows under the cloud are the downdraft of air cooled by evaporating rain; on reaching the ground it spreads out as the cold pool (blue shading), here moving to the left. The gust front is the leading edge of the cold pool. The red arrow shows warm, humid air ahead of the storm being forced upward over the cold pool, where new storm cells can form. Not to scale: the cold pool is roughly 1 km deep and may extend tens of kilometers from the storm.</figcaption>
 </figure>
-<figure class="jn-fig wx-map" id="fig-34">
+<figure class="jn-fig wx-map" id="fig-36">
   <a href="/images/wx_systems_v3/gustfront_2013.png" title="Open the full-size figure"><img src="/images/wx_systems_v3/gustfront_2013.png" alt="ERA5 maps for the gust front case, 1800 UTC 8 July 2013" loading="lazy"></a>
-  <figcaption><span class="jn-figno">Fig. 34.</span> Cooler air lies north of a boundary across Vermont, New Hampshire and Maine (arrow in a), under the area where morning storms rained (b); the gust front itself, only a few kilometers wide, is too narrow for the reanalysis (ERA5, 1800 UTC [2 p.m. EDT] 8 Jul 2013). (a) 2-m temperature (°C) and 10-m wind (barbs, kt). (b) Rain from 0600 to 1500 UTC (mm) and 1800 UTC 2-m temperature (contours at 24 and 28 °C). Along 72°W the temperature falls from 26 to 20 °C across about 170 km.</figcaption>
+  <figcaption><span class="jn-figno">Fig. 36.</span> Cooler air lies north of a boundary across Vermont, New Hampshire and Maine (arrow in a), under the area where morning storms rained (b); the gust front itself, only a few kilometers wide, is too narrow for the reanalysis (ERA5, 1800 UTC [2 p.m. EDT] 8 Jul 2013). (a) 2-m temperature (°C) and 10-m wind (barbs, kt). (b) Rain from 0600 to 1500 UTC (mm) and 1800 UTC 2-m temperature (contours at 24 and 28 °C). Along 72°W the temperature falls from 26 to 20 °C across about 170 km.</figcaption>
 </figure>
-<p><i>How forecasters identify it.</i> Radar often shows a gust front as a thin line of weak echo (signal reflected back to the radar), and surface stations record the pressure jump, cooling and wind shift. <a href="#ref-wakimoto1982">Wakimoto (1982)</a> traced the life cycle of gust fronts with Doppler radar and weather balloons. Gust fronts are easily confused with backdoor and sea-breeze fronts (<a href="#backdoor-front">Sections 1.2</a> and <a href="#sea-breeze">1.1</a>), as on 8 July 2013. At 10:37 a.m. EDT the Boston office described a boundary moving south as possible outflow from morning storms; by 2:38 p.m. it called the same boundary a “back door cold front/sea breeze” (<a href="https://mesonet.agron.iastate.edu/p.php?pid=201307081838-KBOX-FXUS61-AFDBOX">archived text</a>). ERA5 shows the cooler air north of the boundary at 1800 UTC (2 p.m. EDT; Fig. 34).</p>
+<p><i>How forecasters identify it.</i> Radar often shows a gust front as a thin line of weak echo (signal reflected back to the radar), and surface stations record the pressure jump, cooling and wind shift. <a href="#ref-wakimoto1982">Wakimoto (1982)</a> traced the life cycle of gust fronts with Doppler radar and weather balloons. Gust fronts are easily confused with backdoor and sea-breeze fronts (<a href="#backdoor-front">Sections 1.2</a> and <a href="#sea-breeze">1.1</a>), as on 8 July 2013. At 10:37 a.m. EDT the Boston office described a boundary moving south as possible outflow from morning storms; by 2:38 p.m. it called the same boundary a “back door cold front/sea breeze” (<a href="https://mesonet.agron.iastate.edu/p.php?pid=201307081838-KBOX-FXUS61-AFDBOX">archived text</a>). ERA5 shows the cooler air north of the boundary at 1800 UTC (2 p.m. EDT; Fig. 36).</p>
 <blockquote class="wx-afd"><p>“Surface analysis show[s] that a weak boundary...perhaps outflow from morning convection is moving southward towards SNE [southern New England]. In fact winds are out of the NE at MHT/LWM and BVY.”</p>
 <footer>NWS Boston (BOX) Area Forecast Discussion, issued 10:37 a.m. EDT 8 Jul 2013 (1437 UTC); MHT, LWM and BVY are airports in Manchester, N.H., Lawrence and Beverly, Mass. (<a href="https://mesonet.agron.iastate.edu/p.php?pid=201307081437-KBOX-FXUS61-AFDBOX">archived text</a>)</footer></blockquote>
 </section>
@@ -817,8 +859,8 @@ collection: portfolio
 <p class="wx-def">A derecho is a long-lived windstorm produced by a fast-moving line or cluster of thunderstorms, whose straight-line winds damage a swath at least 400 km (250 mi) long.</p>
 <p><i>How it forms.</i> New storms keep forming at the leading edge of a thunderstorm cluster’s strong cold pool, so the system moves faster than the winds around it. Air flowing in from behind, the rear-inflow jet, descends toward the ground and pushes the middle of the line ahead of its ends, bowing it into a bow echo on radar. The strongest winds are at the apex of the bow. Most derechos occur in the central United States.</p>
 <p>Gusts reach 60–90 mph (27–40 m s⁻¹), felling trees and power lines.</p>
-<figure class="jn-fig wx-schem" id="fig-35">
-  <svg viewBox="0 0 300 168" role="img" aria-labelledby="fig-35-cap">
+<figure class="jn-fig wx-schem" id="fig-37">
+  <svg viewBox="0 0 300 168" role="img" aria-labelledby="fig-37-cap">
     <rect width="300" height="168" fill="#fff"/>
     <path d="M70 28 C 140 18, 200 40, 222 84 C 200 128, 140 150, 70 140 C 112 104, 112 64, 70 28 Z" fill="#d9d9d9" stroke="#000" stroke-width="0.8"/>
     <path d="M70 28 C 140 18, 200 40, 222 84 C 200 128, 140 150, 70 140" fill="none" stroke="#000" stroke-width="2.2"/>
@@ -832,13 +874,13 @@ collection: portfolio
     <line x1="288" y1="40" x2="288" y2="18" stroke="#000" stroke-width="1" marker-end="url(#ar-k)"/>
     <text x="288" y="52" font-size="10" text-anchor="middle">N</text>
   </svg>
-  <figcaption id="fig-35-cap"><span class="jn-figno">Fig. 35.</span> Schematic map view of a bow echo in a derecho, moving east (to the right). Gray shading is the area of rain seen by radar; the heavy black edge is the line of intense storms at its leading edge. The blue arrow is the rear-inflow jet, which enters from behind the line, descends, and reaches the ground near the apex of the bow, where the strongest straight-line winds occur.</figcaption>
+  <figcaption id="fig-37-cap"><span class="jn-figno">Fig. 37.</span> Schematic map view of a bow echo in a derecho, moving east (to the right). Gray shading is the area of rain seen by radar; the heavy black edge is the line of intense storms at its leading edge. The blue arrow is the rear-inflow jet, which enters from behind the line, descends, and reaches the ground near the apex of the bow, where the strongest straight-line winds occur.</figcaption>
 </figure>
-<figure class="jn-fig wx-map" id="fig-36">
+<figure class="jn-fig wx-map" id="fig-38">
   <a href="/images/wx_systems_v3/derecho_2012.png" title="Open the full-size figure"><img src="/images/wx_systems_v3/derecho_2012.png" alt="ERA5 maps for the derecho case, 1800 UTC 29 June 2012, with cooling from 2000 to 2300 UTC" loading="lazy"></a>
-  <figcaption><span class="jn-figno">Fig. 36.</span> The derecho’s bow-shaped line of storms is too small for ERA5, which instead shows very unstable air (dark red in b) along the northern edge of the heat ridge (a) and the swath of sudden cooling the storms left behind (blue in c) (ERA5, 29 Jun 2012). (a) 850-hPa temperature (°C) and 500-hPa height (contours every 3 dam), 1800 UTC (2 p.m. EDT). (b) CAPE, the energy available to rising air (J kg⁻¹), and 10-m to 500-hPa wind difference (barbs, kt), 1800 UTC. (c) 2-m temperature change, 2000–2300 UTC (K), and the 2 mm h⁻¹ rain contour.</figcaption>
+  <figcaption><span class="jn-figno">Fig. 38.</span> The derecho’s bow-shaped line of storms is too small for ERA5, which instead shows very unstable air (dark red in b) along the northern edge of the heat ridge (a) and the swath of sudden cooling the storms left behind (blue in c) (ERA5, 29 Jun 2012). (a) 850-hPa temperature (°C) and 500-hPa height (contours every 3 dam), 1800 UTC (2 p.m. EDT). (b) CAPE, the energy available to rising air (J kg⁻¹), and 10-m to 500-hPa wind difference (barbs, kt), 1800 UTC. (c) 2-m temperature change, 2000–2300 UTC (K), and the 2 mm h⁻¹ rain contour.</figcaption>
 </figure>
-<p>Forecasters look for a bowing line on radar and large instability (energy available to rising air). <a href="#ref-johns1987">Johns and Hirt (1987)</a> revived the term; <a href="#ref-corfidi2016">Corfidi et al. (2016)</a> and <a href="#ref-squitieri2025">Squitieri et al. (2025)</a> revised its definition. The Storm Prediction Center also requires gusts of at least 58 mph along the swath, several of them 75 mph or more (<a href="https://www.spc.noaa.gov/misc/AbtDerechos/derechofacts.htm">SPC</a>). On 29 June 2012 a derecho crossed about 700 mi (1100 km) in 12 h, from northern Indiana at about 1800 UTC (2 p.m. EDT) to the Delaware and New Jersey coast, with gusts to 91 mph at Fort Wayne, Ind. (<a href="https://www.spc.noaa.gov/misc/AbtDerechos/casepages/jun292012page.htm">SPC case page</a>). Because the storms were far smaller than ERA5’s grid, its strongest gust that afternoon (Fig. 36) is only 34 kt (39 mph).</p>
+<p>Forecasters look for a bowing line on radar and large instability (energy available to rising air). <a href="#ref-johns1987">Johns and Hirt (1987)</a> revived the term; <a href="#ref-corfidi2016">Corfidi et al. (2016)</a> and <a href="#ref-squitieri2025">Squitieri et al. (2025)</a> revised its definition. The Storm Prediction Center also requires gusts of at least 58 mph along the swath, several of them 75 mph or more (<a href="https://www.spc.noaa.gov/misc/AbtDerechos/derechofacts.htm">SPC</a>). On 29 June 2012 a derecho crossed about 700 mi (1100 km) in 12 h, from northern Indiana at about 1800 UTC (2 p.m. EDT) to the Delaware and New Jersey coast, with gusts to 91 mph at Fort Wayne, Ind. (<a href="https://www.spc.noaa.gov/misc/AbtDerechos/casepages/jun292012page.htm">SPC case page</a>). Because the storms were far smaller than ERA5’s grid, its strongest gust that afternoon (Fig. 38) is only 34 kt (39 mph).</p>
 </section>
 
 <section class="wx-sys" id="dryline">
@@ -846,8 +888,8 @@ collection: portfolio
 <p class="wx-def">A dryline is a boundary, usually over the southern and central Great Plains in spring, between humid air from the Gulf of Mexico and very dry air from the desert Southwest; thunderstorms often form along it.</p>
 <p>Humid Gulf air spreads north in a shallow layer; to the west, where the land rises, the air is hot and dry. By day, mixing brings dry air down through the thin western edge of the humid layer, so the dryline moves east; at night it drifts back west (<a href="#ref-schaefer1974">Schaefer 1974</a>). The Northeast has no dryline. It is included for contrast with the sea-breeze and backdoor fronts (<a href="#sea-breeze">Sections 1.1</a> and <a href="#backdoor-front">1.2</a>): those separate cool air from warm air, while the dryline separates mainly moist air from dry air.</p>
 <p><i>At the surface.</i> Crossing the line westward, the dewpoint can fall 20 °F (11 °C) or more. Rising air along the dryline starts many of the Plains’ spring severe storms and tornadoes.</p>
-<figure class="jn-fig wx-schem" id="fig-37">
-  <svg viewBox="0 0 300 168" role="img" aria-labelledby="fig-37-cap">
+<figure class="jn-fig wx-schem" id="fig-39">
+  <svg viewBox="0 0 300 168" role="img" aria-labelledby="fig-39-cap">
     <rect width="300" height="168" fill="#fff"/>
     <rect x="0" y="18" width="150" height="150" fill="#fcbba1" opacity="0.5"/>
     <rect x="150" y="18" width="150" height="150" fill="#c7e9c0"/>
@@ -869,13 +911,13 @@ collection: portfolio
     <line x1="214" y1="36" x2="172" y2="36" stroke="#000" stroke-width="1.2" marker-end="url(#ar-k)"/>
     <text x="218" y="39" font-size="10">at night</text>
   </svg>
-  <figcaption id="fig-37-cap"><span class="jn-figno">Fig. 37.</span> Schematic map view of a dryline over the southern Plains. Shading shows dry desert air to the west (pale red) and humid Gulf air to the east (green); the dashed line is the dryline, where thunderstorms (white ovals) tend to form. Arrows show the typical daily movement: east during the day as mixing erodes the shallow humid layer from the west, back west at night.</figcaption>
+  <figcaption id="fig-39-cap"><span class="jn-figno">Fig. 39.</span> Schematic map view of a dryline over the southern Plains. Shading shows dry desert air to the west (pale red) and humid Gulf air to the east (green); the dashed line is the dryline, where thunderstorms (white ovals) tend to form. Arrows show the typical daily movement: east during the day as mixing erodes the shallow humid layer from the west, back west at night.</figcaption>
 </figure>
-<figure class="jn-fig wx-map" id="fig-38">
+<figure class="jn-fig wx-map" id="fig-40">
   <a href="/images/wx_systems_v3/dryline_2013.png" title="Open the full-size figure"><img src="/images/wx_systems_v3/dryline_2013.png" alt="ERA5 maps for the dryline case, 2100 UTC 20 May 2013" loading="lazy"></a>
-  <figcaption><span class="jn-figno">Fig. 38.</span> Dryline over the southern Plains, 2100 UTC (4 p.m. CDT) 20 May 2013 (ERA5). (a) 2-m dewpoint (°C) and 10-m wind (barbs, kt). (b) 10-m divergence (10⁻⁵ s⁻¹; blue: converging air) and 2-m moisture (contours at 6, 10 and 14 g kg⁻¹). (c) CAPE (J kg⁻¹) and the energy barrier rising air must first overcome (dashed contours). The dryline is the sharp edge between dry (pale) and humid (dark blue) air in (a), across which the dewpoint jumps about 20 °C. The humid air east of it is very unstable (c), and the Moore storm formed there.</figcaption>
+  <figcaption><span class="jn-figno">Fig. 40.</span> Dryline over the southern Plains, 2100 UTC (4 p.m. CDT) 20 May 2013 (ERA5). (a) 2-m dewpoint (°C) and 10-m wind (barbs, kt). (b) 10-m divergence (10⁻⁵ s⁻¹; blue: converging air) and 2-m moisture (contours at 6, 10 and 14 g kg⁻¹). (c) CAPE (J kg⁻¹) and the energy barrier rising air must first overcome (dashed contours). The dryline is the sharp edge between dry (pale) and humid (dark blue) air in (a), across which the dewpoint jumps about 20 °C. The humid air east of it is very unstable (c), and the Moore storm formed there.</figcaption>
 </figure>
-<p>On surface maps the dryline lies along the tightest dewpoint gradient, where winds converge. In 30 years of observations, <a href="#ref-hoch2005">Hoch and Markowski (2005)</a> found a dryline on 32% of April–June days, most often in mid- to late May, usually near 101°W (through the Texas Panhandle and western Kansas). On 20 May 2013 storms formed along the Oklahoma dryline; one produced the Moore tornado at about 1956 UTC (2:56 p.m. CDT), an hour after the discussion below. ERA5 at 2100 UTC (Fig. 38) spreads the dryline’s 20 °C (36 °F) dewpoint jump over several grid boxes.</p>
+<p>On surface maps the dryline lies along the tightest dewpoint gradient, where winds converge. In 30 years of observations, <a href="#ref-hoch2005">Hoch and Markowski (2005)</a> found a dryline on 32% of April–June days, most often in mid- to late May, usually near 101°W (through the Texas Panhandle and western Kansas). On 20 May 2013 storms formed along the Oklahoma dryline; one produced the Moore tornado at about 1956 UTC (2:56 p.m. CDT), an hour after the discussion below. ERA5 at 2100 UTC (Fig. 40) spreads the dryline’s 20 °C (36 °F) dewpoint jump over several grid boxes.</p>
 <blockquote class="wx-afd"><p>“Rapid thunderstorm development is expected over the next hour or two along the dryline and stationary boundary.”</p>
 <footer>NWS Norman, Okla. (OUN) Area Forecast Discussion, issued 1:52 p.m. CDT 20 May 2013 (1852 UTC) (<a href="https://mesonet.agron.iastate.edu/p.php?pid=201305201852-KOUN-FXUS64-AFDOUN">archived text</a>)</footer></blockquote>
 </section>
@@ -888,8 +930,8 @@ collection: portfolio
 <p class="wx-def">An omega block is a large, nearly stationary pattern in the winds about 5–6 km up: a high-pressure ridge between two lows, shaped like the Greek letter Ω, that holds the weather in place for days.</p>
 <p>The jet stream normally carries weather systems west to east every few days. Sometimes its meanders grow until a ridge pushes far north and lows are cut off on either side. The jet then splits and flows around the block, and the systems that would normally push the pattern east are steered around it instead, so the block can persist for a week or more. <a href="#ref-rex1950">Rex (1950)</a> first described blocking systematically.</p>
 <p>Under the ridge, sinking air warms and dries, so clouds dissolve and days are clear, warm and dry (in summer, heat waves and stagnant air). Under the lows, cool, showery days follow one another. Week-ahead forecasts hinge on when a block forms and when it breaks down.</p>
-<figure class="jn-fig wx-schem" id="fig-39">
-  <svg viewBox="0 0 300 200" role="img" aria-labelledby="fig-39-cap">
+<figure class="jn-fig wx-schem" id="fig-41">
+  <svg viewBox="0 0 300 200" role="img" aria-labelledby="fig-41-cap">
     <rect width="300" height="200" fill="#fff"/>
     <path d="M0 92 C 22 92, 26 150, 60 150 C 96 150, 84 40, 150 34 C 216 40, 204 150, 240 150 C 274 150, 278 92, 300 92" fill="none" stroke="#000" stroke-width="1.6"/>
     <ellipse cx="150" cy="78" rx="34" ry="24" fill="#fcbba1" stroke="#000" stroke-width="1"/>
@@ -912,14 +954,14 @@ collection: portfolio
     <line x1="288" y1="44" x2="288" y2="22" stroke="#000" stroke-width="1" marker-end="url(#ar-k)"/>
     <text x="288" y="56" font-size="10" text-anchor="middle">N</text>
   </svg>
-  <figcaption id="fig-39-cap"><span class="jn-figno">Fig. 39.</span> Schematic map of an omega block. Lines are contours of the height of the 500-hPa pressure surface (about 5.5 km above sea level); the winds blow along them from west to east (arrows), with lower heights to the left of the flow. The main contour forms the Ω shape around a closed high (H, red) flanked by two cut-off lows (L, blue). Weather beneath each feature stays nearly the same while the block persists.</figcaption>
+  <figcaption id="fig-41-cap"><span class="jn-figno">Fig. 41.</span> Schematic map of an omega block. Lines are contours of the height of the 500-hPa pressure surface (about 5.5 km above sea level); the winds blow along them from west to east (arrows), with lower heights to the left of the flow. The main contour forms the Ω shape around a closed high (H, red) flanked by two cut-off lows (L, blue). Weather beneath each feature stays nearly the same while the block persists.</figcaption>
 </figure>
-<figure class="jn-fig wx-map" id="fig-40">
+<figure class="jn-fig wx-map" id="fig-42">
   <a href="/images/wx_systems_v3/omegablock_2016.png" title="Open the full-size figure"><img src="/images/wx_systems_v3/omegablock_2016.png" alt="ERA5 maps for the omega block case, 1200 UTC 15, 16 and 17 April 2016" loading="lazy"></a>
-  <figcaption><span class="jn-figno">Fig. 40.</span> Omega block, 15–17 Apr 2016 (ERA5). 500-hPa height, about 5.5 km up (contours every 6 dam), and its departure from the 1991–2020 mid-April average (shading, dam) at 1200 UTC on (a) 15, (b) 16 and (c) 17 Apr. A high over the Great Lakes (H) with a closed low on each side bends the contours into the Greek letter Ω (thick 570-dam line), and the pattern barely moves over the three days. Over the high, heights are up to about 30 dam above average.</figcaption>
+  <figcaption><span class="jn-figno">Fig. 42.</span> Omega block, 15–17 Apr 2016 (ERA5). 500-hPa height, about 5.5 km up (contours every 6 dam), and its departure from the 1991–2020 mid-April average (shading, dam) at 1200 UTC on (a) 15, (b) 16 and (c) 17 Apr. A high over the Great Lakes (H) with a closed low on each side bends the contours into the Greek letter Ω (thick 570-dam line), and the pattern barely moves over the three days. Over the high, heights are up to about 30 dam above average.</figcaption>
 </figure>
 <p><i>How forecasters identify it.</i> On 500-hPa maps a block appears as a high that has stopped moving, flanked by closed lows. Normally the height of the 500-hPa surface decreases toward the pole. The index of <a href="#ref-tibaldi1990">Tibaldi and Molteni (1990)</a> flags a block where, near 60°N, the height increases toward the pole instead; they used it to test how well a forecast model predicted blocks.</p>
-<p>In April 2016 a closed high sat over the Great Lakes from 15 to 18 April, flanked from 16 April by cut-off lows over the southern Rockies and the western Atlantic (Fig. 40). The block had broken down by 19&ndash;20 April.</p>
+<p>In April 2016 a closed high sat over the Great Lakes from 15 to 18 April, flanked from 16 April by cut-off lows over the southern Rockies and the western Atlantic (Fig. 42). The block had broken down by 19&ndash;20 April.</p>
 <blockquote class="wx-afd"><p>“Quiet weather continues as an omega blocking pattern aloft remains in place, with the ridge across the eastern half of the country, and high pressure at the surface remaining in control as well.”</p>
 <footer>NWS Philadelphia/Mount Holly (PHI) Area Forecast Discussion, issued 12:26 a.m. EDT 18 Apr 2016 (0426 UTC) (<a href="https://mesonet.agron.iastate.edu/p.php?pid=201604180426-KPHI-FXUS61-AFDPHI">archived text</a>)</footer></blockquote>
 </section>
@@ -929,9 +971,9 @@ collection: portfolio
 <p class="wx-def">The Santa Ana is a hot, very dry, gusty wind that blows from the interior deserts through mountain passes and canyons to the Southern California coast, mostly from autumn to early spring.</p>
 <p>High pressure over the Great Basin and cold, dense desert air make pressure higher inland than at the coast. <a href="#ref-hughes2010">Hughes and Hall (2010)</a> found that “unless synoptic [large-scale] conditions force strongly onshore winds, the local thermodynamic forcing [the desert–ocean temperature contrast] is the primary control on Santa Ana variability.” As the air descends the mountains to the coast it is compressed and warms about 10 °C per km, and its relative humidity drops, often below 10%, although no water is removed.</p>
 <p><i>Effects.</i> Northeast winds gust to 25–50 mph in passes and canyons, and the coast turns hot with very low humidity. Coming after the dry summer, these winds bring Southern California’s worst fire weather.</p>
-<figure class="jn-fig wx-schem" id="fig-41">
+<figure class="jn-fig wx-schem" id="fig-43">
   <div class="wx-two">
-  <svg viewBox="0 0 300 168" role="img" aria-labelledby="fig-41-cap">
+  <svg viewBox="0 0 300 168" role="img" aria-labelledby="fig-43-cap">
     <rect width="300" height="168" fill="#fff"/>
     <rect x="0" y="142" width="48" height="26" fill="#c6dbef"/>
     <polygon points="48,142 95,122 130,62 168,100 300,100 300,168 48,168" fill="#d9d9d9"/>
@@ -949,13 +991,13 @@ collection: portfolio
   </svg>
   <img src="/images/wx_systems_v2/schematics/santaana_westernwinds.jpg" alt="Hand-drawn map of the western United States with arrows marking the East, North, Mono, Santa Ana and Chinook winds." loading="lazy">
   </div>
-  <figcaption id="fig-41-cap"><span class="jn-figno">Fig. 41.</span> (a) Schematic drawn for this page: a west–east cross-section through Southern California. Cool, dry air from the desert interior (blue arrow) flows toward the coast, crosses the coastal mountains, and descends their western slopes (red arrow), warming by compression; it reaches the coast hot, dry and gusty. (b) The main downslope winds of the western United States, including the Santa Ana. From Schroeder and Buck, <i>Fire Weather</i>, USDA Agriculture Handbook 360 (1970), republished by the National Wildfire Coordinating Group as PMS 425-1. Courtesy USDA Forest Service (public domain).</figcaption>
+  <figcaption id="fig-43-cap"><span class="jn-figno">Fig. 43.</span> (a) Schematic drawn for this page: a west–east cross-section through Southern California. Cool, dry air from the desert interior (blue arrow) flows toward the coast, crosses the coastal mountains, and descends their western slopes (red arrow), warming by compression; it reaches the coast hot, dry and gusty. (b) The main downslope winds of the western United States, including the Santa Ana. From Schroeder and Buck, <i>Fire Weather</i>, USDA Agriculture Handbook 360 (1970), republished by the National Wildfire Coordinating Group as PMS 425-1. Courtesy USDA Forest Service (public domain).</figcaption>
 </figure>
-<figure class="jn-fig wx-map" id="fig-42">
+<figure class="jn-fig wx-map" id="fig-44">
   <a href="/images/wx_systems_v3/santaana_2007.png" title="Open the full-size figure"><img src="/images/wx_systems_v3/santaana_2007.png" alt="ERA5 maps for the Santa Ana wind case, 0900 UTC 22 October 2007" loading="lazy"></a>
-  <figcaption><span class="jn-figno">Fig. 42.</span> High pressure over the Great Basin (H) drives desert air to the coast, where it arrives very dry (yellow in c), warmed by sinking down the mountains rather than by warm air blown in (ERA5, 0900 UTC [2 a.m. PDT] 22 Oct 2007). (a) Sea-level pressure (contours every 2 hPa), 2-m temperature (°C) and 10-m wind (barbs, kt). (b) Warming or cooling by the 850-hPa wind (K h⁻¹; blank: 850 hPa below ground) and 850-hPa temperature (contours every 2 °C). (c) 2-m relative humidity (%). Pressure is 13 hPa higher at Tonopah, Nev., than at Los Angeles.</figcaption>
+  <figcaption><span class="jn-figno">Fig. 44.</span> High pressure over the Great Basin (H) drives desert air to the coast, where it arrives very dry (yellow in c), warmed by sinking down the mountains rather than by warm air blown in (ERA5, 0900 UTC [2 a.m. PDT] 22 Oct 2007). (a) Sea-level pressure (contours every 2 hPa), 2-m temperature (°C) and 10-m wind (barbs, kt). (b) Warming or cooling by the 850-hPa wind (K h⁻¹; blank: 850 hPa below ground) and 850-hPa temperature (contours every 2 °C). (c) 2-m relative humidity (%). Pressure is 13 hPa higher at Tonopah, Nev., than at Los Angeles.</figcaption>
 </figure>
-<p><i>How forecasters identify it.</i> The standard measure is the pressure difference between Los Angeles airport (LAX) and Daggett (DAG), in the Mojave Desert; a negative value means higher pressure inland. The Santa Ana Wildfire Threat Index (<a href="#ref-rolinski2016">Rolinski et al. 2016</a>) combines wind, humidity and vegetation dryness. At 850 hPa (1.5 km) forecasters look for northeast winds carrying cold air over the interior (cold-air advection), the same air that reaches the coast hot after its descent. ERA5 at 0900 UTC 22 October 2007 (2 a.m. PDT; Fig. 42) shows the Great Basin high and this cold-air advection. During the fires that week, LAX reached 84–94 °F (29–34 °C) on 22–24 October, 10–20 °F (6–11 °C) above normal.</p>
+<p><i>How forecasters identify it.</i> The standard measure is the pressure difference between Los Angeles airport (LAX) and Daggett (DAG), in the Mojave Desert; a negative value means higher pressure inland. The Santa Ana Wildfire Threat Index (<a href="#ref-rolinski2016">Rolinski et al. 2016</a>) combines wind, humidity and vegetation dryness. At 850 hPa (1.5 km) forecasters look for northeast winds carrying cold air over the interior (cold-air advection), the same air that reaches the coast hot after its descent. ERA5 at 0900 UTC 22 October 2007 (2 a.m. PDT; Fig. 44) shows the Great Basin high and this cold-air advection. During the fires that week, LAX reached 84–94 °F (29–34 °C) on 22–24 October, 10–20 °F (6–11 °C) above normal.</p>
 <blockquote class="wx-afd"><p>“The big story continues to be the current Santa Ana wind event. The strong offshore flow continues with an incredibly strong LAX-DAG pressure gradient dipping below -10 mb earlier today.”</p>
 <footer>NWS Los Angeles/Oxnard, Calif. (LOX) Area Forecast Discussion, issued 3:15 p.m. PDT 22 Oct 2007 (<a href="https://mesonet.agron.iastate.edu/p.php?pid=200710222224-KLOX-FXUS66-AFDLOX">archived text</a>)</footer></blockquote>
 </section>
@@ -973,13 +1015,14 @@ collection: portfolio
 <h2 id="references">References</h2>
 <ol class="wx-refs">
 <li id="ref-adler2023">Adler, B., J. M. Wilczak, J. Kenyon, L. Bianco, I. V. Djalalova, J. B. Olson, and D. D. Turner, 2023: Evaluation of a cloudy cold-air pool in the Columbia River basin in different versions of the High-Resolution Rapid Refresh (HRRR) model. <i>Geosci. Model Dev.</i>, <b>16</b>, 597–619, <a href="https://doi.org/10.5194/gmd-16-597-2023">https://doi.org/10.5194/gmd-16-597-2023</a>.</li>
-<li id="ref-ams2026">AMS, 2026: <i>Glossary of Meteorology</i>. Amer. Meteor. Soc., entries &ldquo;Backdoor cold front,&rdquo; &ldquo;Coastal front&rdquo; and &ldquo;Sea fog,&rdquo; accessed 8 October 2026, <a href="https://glossary.ametsoc.org/wiki/Welcome">https://glossary.ametsoc.org/wiki/Welcome</a>.</li>
+<li id="ref-ams2026">AMS, 2026: <i>Glossary of Meteorology</i>. Amer. Meteor. Soc., entries &ldquo;Backdoor cold front,&rdquo; &ldquo;Coastal front&rdquo; and &ldquo;Sea fog,&rdquo; accessed 8 October 2026, and &ldquo;Inverted trough,&rdquo; accessed 26 October 2026, <a href="https://glossary.ametsoc.org/wiki/Welcome">https://glossary.ametsoc.org/wiki/Welcome</a>.</li>
 <li id="ref-atkins1995">Atkins, N. T., R. M. Wakimoto, and T. M. Weckwerth, 1995: Observations of the sea-breeze front during CaPE. Part II: Dual-Doppler and aircraft analysis. <i>Mon. Wea. Rev.</i>, <b>123</b>, 944&ndash;969, <a href="https://doi.org/10.1175/1520-0493(1995)123&lt;0944:OOTSBF&gt;2.0.CO;2">https://doi.org/10.1175/1520-0493(1995)123&lt;0944:OOTSBF&gt;2.0.CO;2</a>.</li>
 <li id="ref-bell1988">Bell, G. D., and L. F. Bosart, 1988: Appalachian cold-air damming. <i>Mon. Wea. Rev.</i>, <b>116</b>, 137–161, <a href="https://doi.org/10.1175/1520-0493(1988)116&lt;0137:ACAD&gt;2.0.CO;2">https://doi.org/10.1175/1520-0493(1988)116&lt;0137:ACAD&gt;2.0.CO;2</a>.</li>
 <li id="ref-birk2021">Birk, K., E. Lenning, K. Donofrio, and M. T. Friedlein, 2021: A revised Bourgouin precipitation-type algorithm. <i>Wea. Forecasting</i>, <b>36</b>, 425–438, <a href="https://doi.org/10.1175/WAF-D-20-0118.1">https://doi.org/10.1175/WAF-D-20-0118.1</a>.</li>
 <li id="ref-blackadar1957">Blackadar, A. K., 1957: Boundary layer wind maxima and their significance for the growth of nocturnal inversions. <i>Bull. Amer. Meteor. Soc.</i>, <b>38</b>, 283–290, <a href="https://doi.org/10.1175/1520-0477-38.5.283">https://doi.org/10.1175/1520-0477-38.5.283</a>.</li>
 <li id="ref-bosart1975">Bosart, L. F., 1975: New England coastal frontogenesis. <i>Quart. J. Roy. Meteor. Soc.</i>, <b>101</b>, 957&ndash;978, <a href="https://doi.org/10.1002/qj.49710143016">https://doi.org/10.1002/qj.49710143016</a>.</li>
 <li id="ref-bourgouin2000">Bourgouin, P., 2000: A method to determine precipitation types. <i>Wea. Forecasting</i>, <b>15</b>, 583–592, <a href="https://doi.org/10.1175/1520-0434(2000)015&lt;0583:AMTDPT&gt;2.0.CO;2">https://doi.org/10.1175/1520-0434(2000)015&lt;0583:AMTDPT&gt;2.0.CO;2</a>.</li>
+<li id="ref-cebulko2016">Cebulko, J. E., 2016: Climatology of inverted troughs over the Gulf of Maine. M.S. thesis, Dept. of Atmospheric Sciences and Chemistry, Plymouth State University, 116 pp. Thesis; not peer reviewed. <a href="https://hdl.handle.net/20.500.12774/230">https://hdl.handle.net/20.500.12774/230</a>.</li>
 <li id="ref-charba1974">Charba, J., 1974: Application of gravity current model to analysis of squall-line gust front. <i>Mon. Wea. Rev.</i>, <b>102</b>, 140–156, <a href="https://doi.org/10.1175/1520-0493(1974)102&lt;0140:AOGCMT&gt;2.0.CO;2">https://doi.org/10.1175/1520-0493(1974)102&lt;0140:AOGCMT&gt;2.0.CO;2</a>.</li>
 <li id="ref-coniglio2013">Coniglio, M. C., J. Correia Jr., P. T. Marsh, and F. Kong, 2013: Verification of convection-allowing WRF model forecasts of the planetary boundary layer using sounding observations. <i>Wea. Forecasting</i>, <b>28</b>, 842–862, <a href="https://doi.org/10.1175/WAF-D-12-00103.1">https://doi.org/10.1175/WAF-D-12-00103.1</a>.</li>
 <li id="ref-corfidi2016">Corfidi, S. F., M. C. Coniglio, A. E. Cohen, and C. M. Mead, 2016: A proposed revision to the definition of “derecho.” <i>Bull. Amer. Meteor. Soc.</i>, <b>97</b>, 935–949, <a href="https://doi.org/10.1175/BAMS-D-14-00254.1">https://doi.org/10.1175/BAMS-D-14-00254.1</a>.</li>
@@ -991,6 +1034,7 @@ collection: portfolio
 <li id="ref-keshishian1987">Keshishian, L. G., and L. F. Bosart, 1987: A case study of extended East Coast frontogenesis. <i>Mon. Wea. Rev.</i>, <b>115</b>, 100&ndash;117, <a href="https://doi.org/10.1175/1520-0493(1987)115&lt;0100:ACSOEE&gt;2.0.CO;2">https://doi.org/10.1175/1520-0493(1987)115&lt;0100:ACSOEE&gt;2.0.CO;2</a>.</li>
 <li id="ref-kocin2004">Kocin, P. J., and L. W. Uccellini, 2004: <i>Northeast Snowstorms</i>. Meteor. Monogr., No. 54, Amer. Meteor. Soc., <a href="https://doi.org/10.1007/978-1-878220-32-5">https://doi.org/10.1007/978-1-878220-32-5</a>.</li>
 <li id="ref-koracin2014">Kora&#269;in, D., C. E. Dorman, J. M. Lewis, J. G. Hudson, E. M. Wilcox, and A. Torregrosa, 2014: Marine fog: A review. <i>Atmos. Res.</i>, <b>143</b>, 142&ndash;175, <a href="https://doi.org/10.1016/j.atmosres.2013.12.012">https://doi.org/10.1016/j.atmosres.2013.12.012</a>.</li>
+<li id="ref-lundstedtnd">Lundstedt, W., n.d.: &ldquo;Norlun instability trough&rdquo;: An explanation of two coastal New England unexpected snowstorms which produced over a foot of snow. National Weather Service Center Weather Service Unit, Nashua, N.H., 17 pp. Undated manuscript, written in or after 1993; not peer reviewed. <a href="http://www.weatheranswer.com/public/NORLUN2.pdf">http://www.weatheranswer.com/public/NORLUN2.pdf</a>.</li>
 <li id="ref-miller1946">Miller, J. E., 1946: Cyclogenesis in the Atlantic coastal region of the United States. <i>J. Meteor.</i>, <b>3</b>, 31&ndash;44, <a href="https://doi.org/10.1175/1520-0469(1946)003&lt;0031:CITACR&gt;2.0.CO;2">https://doi.org/10.1175/1520-0469(1946)003&lt;0031:CITACR&gt;2.0.CO;2</a>.</li>
 <li id="ref-miller2003">Miller, S. T. K., B. D. Keim, R. W. Talbot, and H. Mao, 2003: Sea breeze: Structure, forecasting, and impacts. <i>Rev. Geophys.</i>, <b>41</b>, 1011, <a href="https://doi.org/10.1029/2003RG000124">https://doi.org/10.1029/2003RG000124</a>.</li>
 <li id="ref-nielsen1989">Nielsen, J. W., 1989: The formation of New England coastal fronts. <i>Mon. Wea. Rev.</i>, <b>117</b>, 1380&ndash;1401, <a href="https://doi.org/10.1175/1520-0493(1989)117&lt;1380:TFONEC&gt;2.0.CO;2">https://doi.org/10.1175/1520-0493(1989)117&lt;1380:TFONEC&gt;2.0.CO;2</a>.</li>
@@ -1010,6 +1054,7 @@ collection: portfolio
 <li id="ref-tibaldi1990">Tibaldi, S., and F. Molteni, 1990: On the operational predictability of blocking. <i>Tellus</i>, <b>42A</b>, 343–365, <a href="https://doi.org/10.3402/tellusa.v42i3.11882">https://doi.org/10.3402/tellusa.v42i3.11882</a>.</li>
 <li id="ref-vandewiel2010">Van de Wiel, B. J. H., A. F. Moene, G. J. Steeneveld, P. Baas, F. C. Bosveld, and A. A. M. Holtslag, 2010: A conceptual view on inertial oscillations and nocturnal low-level jets. <i>J. Atmos. Sci.</i>, <b>67</b>, 2679–2689, <a href="https://doi.org/10.1175/2010JAS3289.1">https://doi.org/10.1175/2010JAS3289.1</a>.</li>
 <li id="ref-wakimoto1982">Wakimoto, R. M., 1982: The life cycle of thunderstorm gust fronts as viewed with Doppler radar and rawinsonde data. <i>Mon. Wea. Rev.</i>, <b>110</b>, 1060–1082, <a href="https://doi.org/10.1175/1520-0493(1982)110&lt;1060:TLCOTG&gt;2.0.CO;2">https://doi.org/10.1175/1520-0493(1982)110&lt;1060:TLCOTG&gt;2.0.CO;2</a>.</li>
+<li id="ref-weisman2002">Weisman, R. A., K. G. McGregor, D. R. Novak, J. L. Selzler, M. L. Spinar, B. C. Thomas, and P. N. Schumacher, 2002: Precipitation regimes during cold-season central U.S. inverted trough cases. Part I: Synoptic climatology and composite study. <i>Wea. Forecasting</i>, <b>17</b>, 1173&ndash;1193, <a href="https://doi.org/10.1175/1520-0434(2002)017&lt;1173:PRDCSC&gt;2.0.CO;2">https://doi.org/10.1175/1520-0434(2002)017&lt;1173:PRDCSC&gt;2.0.CO;2</a>.</li>
 </ol>
 
 </div>
