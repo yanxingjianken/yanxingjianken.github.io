@@ -33,7 +33,9 @@ UC_LON_STEP = 15.0               # |U - c| every 15 deg of longitude along each 
 UC_WINDOW_DEG = 30.0             # phase speed from the lagged correlation within +-30 deg
 UC_BUFFER_KM = 500.0             # alarm region: within this distance of the matching contour segment
 
-# predictor: Opus model
+# predictor: Opus model (computed on theta on 2 PVU, which air parcels conserve in adiabatic, frictionless flow;
+# the same alarm regions are scored against the onsets of every surface)
+OPUS_SURFACE = "th2pvu"
 OPUS_N_PARCELS = 20000
 OPUS_SEED_BAND = (15.0, 80.0)
 OPUS_DT_S = 900.0

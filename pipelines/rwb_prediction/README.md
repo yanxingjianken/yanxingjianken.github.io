@@ -10,8 +10,9 @@ surfaces (PV on 330 K, PV on 350 K, θ on 2 PVU):
 - **U − c matching**: on contours at fixed equivalent latitudes, every 15° of longitude, the phase speed c of the
   contour's undulation over the past 24 h against the wind U along it; the region lies within 500 km of the pieces
   where |U − c| ≤ 2 m s⁻¹.
-- **Opus model**: a predictor variable computed from the analysed flow of the past 60 h in local cells; the region
-  covers the cells where it has fallen to 0.1 of its value 1.5–2.5 days earlier.
+- **Opus model**: a predictor variable computed from the analysed winds and θ on 2 PVU of the past 60 h in local
+  cells; the region covers the cells where it has fallen to 0.1 of its value 1.5–2.5 days earlier. One set of alarm
+  regions per issue time, scored against the breakings of all three surfaces.
 - **GFS 24-h forecast**: the NOAA GFS run from the issue time; the region lies within 500 km of the new breakings it
   forecasts at 6–24 h.
 

@@ -5,7 +5,8 @@ uc_alarm     U - c matching: on contours at fixed equivalent latitudes, every UC
              speed c of the contour's undulation over the past 24 h (lagged correlation within +-UC_WINDOW_DEG) against
              the wind U along that piece of contour now; the alarm region lies within UC_BUFFER_KM of the pieces where
              |U - c| <= UC_THRESHOLD_MS.
-opus_alarm   Opus model: a predictor variable computed from passive parcels advected over the 60 h before t, in local
+opus_alarm   Opus model: a predictor variable computed from passive parcels advected over the 60 h before t on the
+             surface OPUS_SURFACE (theta on 2 PVU, the parcels' label), in local
              cells (3-deg bands of the label's equivalent latitude x OPUS_LON_BIN deg); the alarm region is the set of
              grid points in cells where it falls to OPUS_RATIO of its value in a reference window 36-59 h earlier.
 gfs_alarm    GFS forecast from t: the alarm region lies within GFS_BUFFER_KM of the forecast's new breakings (same
