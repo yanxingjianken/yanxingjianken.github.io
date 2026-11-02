@@ -1,0 +1,300 @@
+---
+layout: archive
+title: "Can We Predict Rossby Wave Breakings Without Running Weather Forecasts?"
+permalink: /blocking-plots/rwb-prediction/
+author_profile: false
+---
+
+{% include base_path %}
+<link rel="stylesheet" href="{{ base_path }}/assets/css/journal.css?v={{ site.time | date: "%s" }}">
+<style>.page__title { font-family: "STIX Two Text", "Times New Roman", Times, serif; font-weight: 700; }</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+
+<style>
+  .rp .rp-map { width: 100%; border: 1px solid #000; background: #fff; display: block; }
+  .rp .rp-legend { font-family: Helvetica, Arial, sans-serif; font-size: 8.5pt; margin: 4px 0; }
+  .rp .rp-legend span { display: inline-block; margin-right: 14px; white-space: nowrap; }
+  .rp .rp-legend i { display: inline-block; width: 18px; height: 10px; vertical-align: middle; margin-right: 4px; border: 1px solid #262626; }
+  .rp .rp-legend i.ok { background: rgba(26,152,80,0.35); }
+  .rp .rp-legend i.fa { background: rgba(215,48,39,0.35); }
+  .rp .rp-legend i.line { width: 22px; height: 0; border: 0; border-top: 2px solid #000; }
+  .rp .rp-legend i.jet { width: 22px; height: 0; border: 0; border-top: 2px solid #1b3a6b; }
+  .rp .rp-legend i.dot { width: 9px; height: 9px; border-radius: 50%; border: 1.5px solid #000; background: #1a9850; }
+  .rp .rp-legend i.ring { width: 9px; height: 9px; border-radius: 50%; border: 1.5px solid #f46d43; background: #fff; }
+  .rp .rp-hov svg { display: block; }
+  .rp .rp-hov .row { cursor: pointer; }
+  .rp .rp-hov .row:hover .bg { fill: #f2f2f2; }
+  .rp .rp-hov .row.sel .bg { fill: #e6e6e6; }
+  .rp .rp-scroll { max-height: 420px; overflow-y: auto; border-bottom: 1px solid #000; }
+  .rp table.jn-table tbody tr.ev { cursor: pointer; }
+  .rp table.jn-table tbody tr.ev:hover td { background: #f2f2f2; }
+  .rp table.jn-table td.hit { color: #1a7a40; }
+  .rp table.jn-table td.miss { color: #b03a1a; }
+  .rp .rp-modal { position: fixed; inset: 0; background: rgba(255,255,255,0.92); z-index: 50; display: none; overflow-y: auto; }
+  .rp .rp-modal.on { display: block; }
+  .rp .rp-modal .rp-box { max-width: 900px; margin: 24px auto; background: #fff; border: 1px solid #000; padding: 12px 16px; }
+  .rp .rp-modal .jn-pop-close { float: right; }
+</style>
+
+<div class="jn rp" id="rp-app">
+  <p class="jn-small"><a href="{{ base_path }}/blocking-plots/">&larr; Blocking Plots</a> &nbsp;|&nbsp; <a href="{{ base_path }}/blocking-plots/nh-forecast/">Northern Hemisphere forecast viewer</a> &nbsp;|&nbsp; <a href="{{ base_path }}/blocking-plots/beta-plane/">Interactive &beta;-plane model</a></p>
+  <div class="jn-runhead"><span>Verification &middot; Rossby wave breaking, one day ahead</span><span id="rp-runinfo">loading index&hellip;</span></div>
+
+  <p class="jn-abstract"><b>Question.</b> When a large-scale wave on the jet stream &ldquo;breaks&rdquo;, the contours of potential vorticity (PV, a measure of the rotation and stability of the air that each air parcel carries with it; unit PVU) fold over like a breaking ocean wave. Rossby wave breaking builds blocking highs (highs that stall for days) and cut-off lows (lows detached from the jet) and steers storms. A breaking is <i>anticyclonic</i> when the fold rolls up clockwise (a trough leaning from south-west to north-east) and <i>cyclonic</i> when it rolls up anticlockwise. Can a new breaking be predicted a day ahead from the analysed flow alone, that is, from the observed state of the atmosphere up to now, without running a weather forecast? Every day this page scores three methods against ERA5, the European Centre for Medium-Range Weather Forecasts&rsquo; reanalysis (a reconstruction of past weather from observations).</p>
+  <p class="jn-abstract" id="rp-sofar"></p>
+  <p class="jn-abstract"><b>Methods compared.</b> At 00 and 12 UTC each method marks <i>alarm regions</i> on the map, where it expects a new breaking to start within the next 24 h. (1) <i>U&nbsp;&minus;&nbsp;c matching</i>: the classical criterion that a wave breaks where the eastward speed <i>c</i> of its crests and troughs (the phase speed) equals the eastward wind <i>U</i> carrying the air (a critical line); the region lies within 500 km of the pieces of contour where |<i>U</i>&nbsp;&minus;&nbsp;<i>c</i>| &le; 2&nbsp;m&nbsp;s<sup>&minus;1</sup>. (2) <i>Opus model</i>: a predictor variable computed from the analysed winds and PV of the past 60 h, with no forecast; the region covers the places where it has dropped to a tenth of its value 1.5&ndash;2.5 days earlier (method unpublished). (3) <i>GFS 24-h forecast</i>: the run of the Global Forecast System of the US National Oceanic and Atmospheric Administration (NOAA) started at the issue time, the benchmark that does run a weather model; the region lies within 500 km of the new breakings it forecasts.</p>
+  <p class="jn-abstract"><b>Truth and scoring.</b> Breaking is found every 6 h in ERA5 (about five days behind real time) from contours at fixed values on three surfaces near the jet stream, 8&ndash;14 km up: PV every 0.5 PVU on the 330-K and 350-K isentropes (surfaces of constant potential temperature, the temperature air would have if brought adiabatically to 1000 hPa, along which air moves when it neither heats nor cools) and potential temperature every 5 K on the dynamical tropopause (the 2-PVU surface that separates the troposphere below from the stratosphere above). The <i>onset</i> of a breaking is the first 6-hourly time it is detected. Its <i>flank</i> is the side of the jet axis it lies on, equatorward or poleward; the jet axis is the latitude of the strongest wind on the surface. A breaking is a <i>hit</i> when an alarm region issued 0&ndash;24 h before its onset lies within 1000 km of it, and a <i>miss</i> otherwise; the <i>hit rate</i> is hits divided by breakings. An alarm region with no breaking within 1000 km in its 24 h is a <i>false alarm</i>; the <i>false alarm ratio</i> is false alarm regions divided by alarm regions. For a fair comparison with random guessing, the hemisphere north of 10&deg;N is also divided into about 210 boxes of equal area (about 1000 km across): the <i>false positive rate</i> is the share of the boxes without a breaking that an alarm region touched, and the box hit rate minus the false positive rate is zero for alarms placed at random with the same coverage and positive for alarms with skill.</p>
+
+  <div class="jn-controls">
+    <div class="jn-ctl"><label for="rp-surf">Surface</label>
+      <select id="rp-surf"><option value="pv330">PV on 330 K</option><option value="pv350">PV on 350 K</option><option value="th2pvu">&theta; on 2 PVU</option></select></div>
+    <div class="jn-ctl"><label for="rp-period">Period (Table 1, Fig. 1)</label>
+      <select id="rp-period"><option value="7">last 7 days</option><option value="30">last 30 days</option><option value="all" selected>since the start</option></select></div>
+    <div class="jn-ctl"><label for="rp-issue">Issue time (Fig. 2)</label>
+      <select id="rp-issue"></select></div>
+  </div>
+  <div class="jn-status" id="rp-status"></div>
+
+  <p class="jn-tabcap" id="rp-tab1cap"></p>
+  <table class="jn-table" id="rp-tab1"></table>
+
+  <figure class="jn-fig">
+    <div class="jn-fig-title" id="rp-fig1title"></div>
+    <div class="rp-hov" id="rp-hov"></div>
+    <div class="rp-legend"><span><i class="ok"></i>alarm region with a breaking within 1000 km</span><span><i class="fa"></i>alarm region without (false alarm)</span><span><i class="dot"></i>breaking, hit</span><span><i class="ring"></i>breaking, missed</span></div>
+    <figcaption id="rp-fig1cap"></figcaption>
+  </figure>
+
+  <figure class="jn-fig">
+    <div class="jn-fig-title" id="rp-fig2title"></div>
+    <img class="rp-map" id="rp-map" alt="">
+    <div class="rp-legend" id="rp-legend2"></div>
+    <figcaption id="rp-fig2cap"></figcaption>
+  </figure>
+
+  <div class="jn-controls">
+    <div class="jn-ctl"><label for="rp-year">Year (Table 2)</label><select id="rp-year"></select></div>
+    <div class="jn-ctl"><label for="rp-month">Month</label><select id="rp-month"></select></div>
+    <div class="jn-ctl"><label for="rp-week">Week</label><select id="rp-week"></select></div>
+  </div>
+  <p class="jn-tabcap" id="rp-tab2cap"></p>
+  <div class="rp-scroll"><table class="jn-table" id="rp-tab2" style="margin:0"></table></div>
+
+  <div class="rp-modal" id="rp-modal" role="dialog" aria-modal="true">
+    <div class="rp-box">
+      <button class="jn-pop-close" id="rp-close" title="close">&times;</button>
+      <div class="jn-fig-title" id="rp-mtitle"></div>
+      <img class="rp-map" id="rp-mmap" alt="">
+      <div class="rp-legend" id="rp-mlegend"></div>
+      <p style="font-size:9.5pt;margin-top:6px" id="rp-mcap"></p>
+    </div>
+  </div>
+
+  <details style="margin-top:14px">
+    <summary class="jn-small">Method notes</summary>
+    <div class="jn-note">
+      <p><b>Fields.</b> Hourly ERA5T winds and temperature on ten pressure levels (70&ndash;500 hPa) on a 1&deg; grid, 0&ndash;90&deg;N, from the Copernicus Climate Data Store; GFS 1&deg; forecasts (00&ndash;24 h, every 6 h) of the same variables from the NOAA Open Data bucket. Ertel PV is computed from the pressure-level fields with the same code for both sources and interpolated to 330 K and 350 K; potential temperature is taken where PV first falls below 2 PVU going down from the stratosphere.</p>
+      <p><b>Breaking.</b> The field is smoothed with a 3&deg; Gaussian (wider in longitude toward the pole). Contours that circle the pole are traced at the fixed values; a meridian that crosses a contour three or more times lies in a fold; folds whose envelope covers at least 300 square degrees are kept and called anticyclonic or cyclonic from the order in which the contour visits its highest and lowest crossings (after the method of the <i>pvtend</i> package). Folds within 1000 km of each other form one breaking. A breaking is new when no breaking of the same type lay within 1500 km 6 h and 12 h earlier. Its flank is set by the jet axis, the latitude of the strongest wind on the surface (20&ndash;70&deg;N), smoothed over &plusmn;30&deg; of longitude.</p>
+      <p><b>U&nbsp;&minus;&nbsp;c matching.</b> Contours at ten equivalent latitudes (25&ndash;70&deg;N; an equivalent latitude encloses the same area as the contour). Every 15&deg; of longitude the phase speed is the eastward shift, within &plusmn;30&deg;, that best matches the contour&rsquo;s undulation 24 h earlier (used only where the correlation reaches 0.5); <i>U</i> is the zonal wind along the contour.</p>
+      <p><b>Opus model.</b> The predictor variable is computed in local cells 3&deg; of equivalent latitude by 15&deg; of longitude from the analysed winds and PV of the past 60 h; the method is not yet published and is not described here.</p>
+      <p><b>Tolerance.</b> Alarm regions extend 500 km around what triggered them (except for the Opus model, whose regions are its cells), and a hit needs an alarm region within 1000 km, so a hit only requires the right part of the hemisphere. Large alarm regions are penalised by the false positive rate and by the box score, which is why both are shown.</p>
+      <p><b>Scores.</b> Hit rate = hits / breakings; false alarm ratio = false alarm regions / alarm regions; false positive rate = alarmed boxes without breaking / boxes without breaking. Large alarm regions catch more breakings but also raise the false positive rate, so the alarmed area is listed too. The pipeline code is in the site repository (<span class="jn-mono">pipelines/rwb_prediction</span>); results are published to the Hugging Face dataset <span class="jn-mono">yanxingjianken/rwb-prediction</span>.</p>
+      <p><b>Data credits.</b> Contains modified Copernicus Climate Change Service information (ERA5). GFS data from NOAA.</p>
+    </div>
+  </details>
+</div>
+
+<script>
+(function () {
+  const BASE = 'https://huggingface.co/datasets/yanxingjianken/rwb-prediction/resolve/main/';
+  const $ = id => document.getElementById(id);
+  const METHODS = [['uc', 'U − c matching'], ['opus', 'Opus model'], ['gfs', 'GFS 24-h forecast']];
+  const SURF = {pv330: 'PV on 330 K', pv350: 'PV on 350 K', th2pvu: 'θ on 2 PVU'};
+  const C_OK = '#7fc49a', C_FA = '#ec8f87', C_HIT = '#1a9850', C_MISS = '#f46d43';
+  const MON = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  let S = null, IDX = null, sel = null;
+
+  const utc = s => Date.UTC(+s.slice(0, 4), +s.slice(4, 6) - 1, +s.slice(6, 8), +s.slice(8, 10));
+  const fmt = s => new Date(utc(s)).toUTCString().slice(5, 16) + ' ' + s.slice(8, 10) + ' UTC';
+  const pct = (a, b) => b > 0 ? (100 * a / b).toFixed(0) + '%' : '–';
+  const lonTxt = x => x <= 180 ? x.toFixed(0) + '°E' : (360 - x).toFixed(0) + '°W';
+
+  function issuesInPeriod() {
+    const p = $('rp-period').value;
+    if (p === 'all') return S.issues.slice();
+    const t1 = utc(S.issues[S.issues.length - 1]);
+    return S.issues.filter(s => t1 - utc(s) < (+p) * 864e5);
+  }
+
+  function legendMap() {
+    return '<span><i class="line"></i>folded contours of a new breaking</span><span><i class="line" style="border-top:1px solid #404040"></i>other folds at the end of the window</span><span><i class="jet"></i>jet axis</span>' +
+      '<span><i class="ok"></i>alarm region, breaking within 1000 km</span><span><i class="fa"></i>alarm region, no breaking</span>' +
+      '<span><i class="dot"></i>new breaking, hit</span><span><i class="ring"></i>new breaking, missed</span>' +
+      '<span>&#9651; anticyclonic, &#9675; cyclonic</span>';
+  }
+
+  function capMap(surf, t) {
+    const end = new Date(utc(t) + 864e5).toISOString();
+    const e = end.slice(0, 4) + end.slice(5, 7) + end.slice(8, 10) + end.slice(11, 13);
+    return SURF[surf] + ' in ERA5 at ' + fmt(e) + ', the end of the 24-h window that starts at the issue time ' + fmt(t) +
+      ' (shaded, with thin contours every ' + (surf === 'th2pvu' ? '5 K' : '0.5 PVU') + ' after 3&deg; smoothing). Bold black: for each new breaking of the window, its folded contour (the one with the largest fold), drawn at the breaking&rsquo;s onset time, so it need not lie on the shaded contours of the window&rsquo;s end; thin dark grey: folds still present at the end of the window; blue: the jet axis. ' +
+      'Shaded regions: the alarm regions issued at ' + fmt(t) + ' by (a) U&nbsp;&minus;&nbsp;c matching, (b) the Opus model (predictor variable) and (c) the GFS 24-h forecast; green where a new breaking followed within 1000 km, red where none did. ' +
+      'Symbols: the new breakings of the window (triangles anticyclonic, circles cyclonic), filled green when the panel&rsquo;s method hit them and open orange when it missed them; the counts are above each panel.';
+  }
+
+  function table1() {
+    const surf = $('rp-surf').value, iss = issuesInPeriod(), first = iss[0];
+    const evs = S.events.filter(e => e.surface === surf && e.time > first);
+    const rows = METHODS.map(([m, name]) => {
+      const c = {n: 0, reg: 0, fa: 0, TP: 0, FP: 0, FN: 0, TN: 0, area: 0};
+      iss.forEach(t => {
+        const x = S.cells[t][surf][m]; if (!x) return;
+        c.n++; c.reg += x.regions.length; c.fa += x.regions.filter(r => !r[2]).length; c.area += x.area;
+        ['TP', 'FP', 'FN', 'TN'].forEach(k => c[k] += x.boxes[k]);
+      });
+      c.ev = evs.length; c.hit = evs.filter(e => e.lead_h[m] !== null).length;
+      return [m, name, c];
+    });
+    const skill = c => (c.TP + c.FN) && (c.FP + c.TN) ? (c.TP / (c.TP + c.FN) - c.FP / (c.FP + c.TN)) : NaN;
+    $('rp-tab1cap').innerHTML = '<b>Table 1.</b> Scores on ' + SURF[surf] + ' for ' + iss.length + ' issue times, ' +
+      fmt(iss[0]) + ' to ' + fmt(iss[iss.length - 1]) + '. Breakings: new breakings after the first issue time (each counted once, as in Table 2); a breaking is hit when any alarm region issued 0&ndash;24 h before its onset lies within 1000 km. Alarmed area: mean share of the hemisphere north of 10&deg;N inside alarm regions. Box columns: about 210 equal-area boxes per issue time; box skill = box hit rate &minus; false positive rate (0 for random alarms of the same coverage).';
+    $('rp-tab1').innerHTML = '<thead><tr><th>Method</th><th class="num">Breakings</th><th class="num">Hits</th><th class="num">Hit rate</th>' +
+      '<th class="num">Alarm regions</th><th class="num">False alarm ratio</th><th class="num">Alarmed area</th><th class="num">Box hit rate</th><th class="num">False positive rate</th><th class="num">Box skill</th></tr></thead><tbody>' +
+      rows.map(([m, name, c]) => '<tr><td>' + name + '</td><td class="num">' + c.ev + '</td><td class="num">' + c.hit + '</td><td class="num">' + pct(c.hit, c.ev) +
+        '</td><td class="num">' + c.reg + '</td><td class="num">' + pct(c.fa, c.reg) + '</td><td class="num">' + (c.n ? (100 * c.area / c.n).toFixed(1) + '%' : '–') +
+        '</td><td class="num">' + pct(c.TP, c.TP + c.FN) + '</td><td class="num">' + pct(c.FP, c.FP + c.TN) + '</td><td class="num">' + (isNaN(skill(c)) ? '–' : skill(c).toFixed(2)) + '</td></tr>').join('') + '</tbody>';
+    const by = Object.fromEntries(rows.map(([m, name, c]) => [m, [name, skill(c), c]]));
+    const order = METHODS.map(([m]) => m).filter(m => !isNaN(by[m][1])).sort((p, q) => by[q][1] - by[p][1]);
+    $('rp-sofar').innerHTML = '<b>So far</b> (' + SURF[surf] + ', ' + iss.length + ' issue times). ' + order.map(m => by[m][0] + ': hit rate ' +
+      pct(by[m][2].hit, by[m][2].ev) + ', alarmed area ' + (100 * by[m][2].area / Math.max(by[m][2].n, 1)).toFixed(1) + '%, box skill ' + by[m][1].toFixed(2)).join('; ') +
+      '. A box skill near zero means the hits come from covering a large area rather than from knowing where breaking will start.';
+  }
+
+  function hovmoller() {
+    const surf = $('rp-surf').value, iss = issuesInPeriod().slice().reverse();
+    const box = $('rp-hov'); box.innerHTML = '';
+    const W = Math.max(320, box.clientWidth), gap = 16, left = 112, top = 30, bottom = 22;
+    const pw = (W - left - 2 * gap) / 3, rh = Math.max(6, Math.min(12, 560 / Math.max(iss.length, 1)));
+    const H = top + rh * iss.length + bottom;
+    const svg = d3.select(box).append('svg').attr('width', W).attr('height', H);
+    METHODS.forEach(([m, name], k) => {
+      const x0 = left + k * (pw + gap), x = lon => x0 + pw * lon / 360;
+      svg.append('text').attr('x', x0).attr('y', 12).attr('class', 'fig-label').attr('font-weight', 700).text('(' + 'abc'[k] + ') ' + name);
+      iss.forEach((t, i) => {
+        const y = top + i * rh, g = svg.append('g').attr('class', 'row' + (t === sel ? ' sel' : '')).on('click', () => pick(t));
+        g.append('rect').attr('class', 'bg').attr('x', x0).attr('y', y).attr('width', pw).attr('height', rh).attr('fill', '#fff');
+        const c = S.cells[t][surf][m];
+        if (t === sel) g.append('rect').attr('x', x0).attr('y', y).attr('width', pw).attr('height', rh).attr('fill', 'none').attr('stroke', '#000').attr('stroke-width', 1);
+        if (!c) { g.append('text').attr('x', x0 + pw / 2).attr('y', y + rh - 1.5).attr('text-anchor', 'middle').attr('class', 'fig-annot').attr('fill', '#777').text('no run'); return; }
+        c.regions.slice().sort((p, q) => p[2] - q[2]).forEach(([a, b, ok]) => {
+          [[a, Math.min(b, 360)], [0, b - 360]].forEach(([p, q]) => { if (q > p) g.append('rect').attr('x', x(p)).attr('y', y + 1)
+            .attr('width', Math.max(1, x(q) - x(p))).attr('height', rh - 2).attr('fill', ok ? C_OK : C_FA); });
+        });
+        S.cells[t][surf].onsets.forEach(([lon], j) => {
+          const hit = c.hits[j];
+          g.append('circle').attr('cx', x(lon)).attr('cy', y + rh / 2).attr('r', Math.min(3.2, rh / 2 - 0.5))
+            .attr('fill', hit ? C_HIT : '#fff').attr('stroke', hit ? '#000' : C_MISS).attr('stroke-width', 1.2);
+        });
+        g.append('title').text(fmt(t) + ': ' + c.hits.length + ' breakings, ' + c.hits.reduce((a, b) => a + b, 0) + ' hit; ' +
+          c.regions.length + ' alarm regions, ' + c.regions.filter(r => !r[2]).length + ' false');
+      });
+      svg.append('rect').attr('x', x0).attr('y', top).attr('width', pw).attr('height', rh * iss.length).attr('fill', 'none').attr('stroke', '#000').attr('stroke-width', 0.6);
+      [0, 90, 180, 270, 360].forEach(l => svg.append('text').attr('x', x(l)).attr('y', H - 8).attr('text-anchor', 'middle').attr('class', 'fig-annot')
+        .text(l === 0 || l === 360 ? '0°' : l === 180 ? '180°' : l === 90 ? '90°E' : '90°W'));
+    });
+    const step = Math.max(1, Math.ceil(13 / rh));
+    iss.forEach((t, i) => { if (i % step === 0 || t === sel) svg.append('text').attr('x', left - 6).attr('y', top + i * rh + rh - 1)
+      .attr('text-anchor', 'end').attr('class', 'fig-annot').attr('font-weight', t === sel ? 700 : 400).text(fmt(t)); });
+    $('rp-fig1title').textContent = 'Alarm regions and new breakings by longitude and issue time, ' + SURF[surf];
+    $('rp-fig1cap').innerHTML = '<span class="jn-figno">Fig. 1.</span> Longitude&ndash;time diagram for ' + SURF[surf] + ': one row per issue time (newest at the top). Bars: the longitude span of each alarm region issued at that time by (a) U&nbsp;&minus;&nbsp;c matching, (b) the Opus model (predictor variable) and (c) the GFS 24-h forecast; green when a new breaking followed within 1000 km in the next 24 h, red when none did. Dots: the new breakings of the next 24 h at their longitude, filled green when the method hit them and open orange when it missed them. &ldquo;No run&rdquo; marks an issue time without a GFS run; an empty row means no alarm region. Row labels are shown every ' + (Math.max(1, Math.ceil(13 / Math.max(6, Math.min(12, 560 / Math.max(iss.length, 1))))) === 1 ? 'issue time' : Math.max(1, Math.ceil(13 / Math.max(6, Math.min(12, 560 / Math.max(iss.length, 1))))) + ' issue times') + '; the outlined row (bold label) is the one shown in Fig. 2. Click a row to show its maps.';
+  }
+
+  function figure2() {
+    const surf = $('rp-surf').value, t = sel;
+    $('rp-map').src = BASE + 'maps/' + t + '_' + surf + '.png';
+    $('rp-map').alt = SURF[surf] + ': alarms issued ' + fmt(t) + ' and breakings of the following 24 h';
+    $('rp-fig2title').textContent = SURF[surf] + ', alarms issued ' + fmt(t) + ' and what followed';
+    $('rp-legend2').innerHTML = legendMap();
+    $('rp-fig2cap').innerHTML = '<span class="jn-figno">Fig. 2.</span> ' + capMap(surf, t);
+  }
+
+  function weeksOf(y, mo) {
+    const out = [], d = new Date(Date.UTC(y, mo, 1));
+    while (d.getUTCMonth() === mo) {
+      const a = new Date(d), b = new Date(d); b.setUTCDate(b.getUTCDate() + 6);
+      out.push([a, b < new Date(Date.UTC(y, mo + 1, 1)) ? b : new Date(Date.UTC(y, mo + 1, 0))]);
+      d.setUTCDate(d.getUTCDate() + 7);
+    }
+    return out;
+  }
+
+  function fillYM() {
+    const ys = [...new Set(S.events.map(e => e.time.slice(0, 4)))].sort().reverse();
+    const yv = $('rp-year').value || ys[0];
+    $('rp-year').innerHTML = ys.map(y => '<option>' + y + '</option>').join('');
+    $('rp-year').value = ys.includes(yv) ? yv : ys[0];
+    const ms = [...new Set(S.events.filter(e => e.time.slice(0, 4) === $('rp-year').value).map(e => e.time.slice(4, 6)))].sort().reverse();
+    const mv = $('rp-month').value;
+    $('rp-month').innerHTML = ms.map(m => '<option value="' + m + '">' + MON[+m - 1] + '</option>').join('');
+    $('rp-month').value = ms.includes(mv) ? mv : ms[0];
+    const ws = weeksOf(+$('rp-year').value, +$('rp-month').value - 1), wv = $('rp-week').value;
+    $('rp-week').innerHTML = '<option value="all">whole month</option>' + ws.map(([a, b], k) => '<option value="' + k + '">' +
+      a.getUTCDate() + '&ndash;' + b.getUTCDate() + ' ' + MON[a.getUTCMonth()].slice(0, 3) + '</option>').join('');
+    $('rp-week').value = [...$('rp-week').options].some(o => o.value === wv) ? wv : 'all';
+  }
+
+  function table2() {
+    fillYM();
+    const surf = $('rp-surf').value, y = $('rp-year').value, mo = $('rp-month').value, wk = $('rp-week').value;
+    let ev = S.events.filter(e => e.surface === surf && e.time.slice(0, 4) === y && e.time.slice(4, 6) === mo);
+    if (wk !== 'all') {
+      const [a, b] = weeksOf(+y, +mo - 1)[+wk];
+      ev = ev.filter(e => { const d = +e.time.slice(6, 8); return d >= a.getUTCDate() && d <= b.getUTCDate(); });
+    }
+    ev = ev.slice().reverse();
+    const cell = v => v === null ? '<td class="miss">missed</td>' : '<td class="hit">' + v + ' h ahead</td>';
+    $('rp-tab2cap').innerHTML = '<b>Table 2.</b> New breakings on ' + SURF[surf] + ' in ' + MON[+mo - 1] + ' ' + y + (wk === 'all' ? '' : ', ' + $('rp-week').selectedOptions[0].textContent) +
+      ' (' + ev.length + ', newest first) and, for each method, how long before the onset its earliest alarm region within 1000 km was issued. An onset lies in the 24-h windows of up to two issue times, 12 h apart; either can hit it. Click a row for the maps of the earlier of the two issue times (12&ndash;24 h before the onset): its alarms and what followed.';
+    $('rp-tab2').innerHTML = '<thead><tr><th>Onset (ERA5)</th><th>Location</th><th>Type</th><th>Flank</th><th>U&nbsp;&minus;&nbsp;c matching</th><th>Opus model</th><th>GFS 24-h</th></tr></thead><tbody>' +
+      ev.map((e, k) => '<tr class="ev" data-k="' + k + '"><td>' + fmt(e.time) + '</td><td>' + e.lat.toFixed(0) + '&deg;N, ' + lonTxt(e.lon) + '</td><td>' +
+        (e.type === 'AWB' ? 'anticyclonic' : 'cyclonic') + '</td><td>' + (e.flank === 'eq' ? 'equatorward' : 'poleward') + '</td>' +
+        cell(e.lead_h.uc) + cell(e.lead_h.opus) + cell(e.lead_h.gfs) + '</tr>').join('') + '</tbody>';
+    [...$('rp-tab2').querySelectorAll('tr.ev')].forEach(tr => tr.addEventListener('click', () => popup(ev[+tr.dataset.k])));
+  }
+
+  function popup(e) {
+    const t = e.issue;
+    $('rp-mtitle').textContent = 'Breaking at ' + e.lat.toFixed(0) + '°N, ' + lonTxt(e.lon) + ' on ' + fmt(e.time) + ': alarms issued ' + fmt(t);
+    $('rp-mmap').src = BASE + 'maps/' + t + '_' + e.surface + '.png';
+    $('rp-mmap').alt = 'Alarms issued ' + fmt(t) + ' and the breakings that followed';
+    $('rp-mlegend').innerHTML = legendMap();
+    $('rp-mcap').innerHTML = capMap(e.surface, t) + ' This map shows the issue time 12&ndash;24 h before the onset; Table 2 also counts an alarm from the issue time 12 h later, so a breaking shown as missed here can be listed as hit there.';
+    $('rp-modal').classList.add('on');
+  }
+
+  function pick(t) { sel = t; $('rp-issue').value = t; hovmoller(); figure2(); }
+
+  function redraw() {
+    const iss = issuesInPeriod();
+    if (!iss.includes(sel)) sel = iss[iss.length - 1];
+    $('rp-issue').innerHTML = S.issues.slice().reverse().map(t => '<option value="' + t + '">' + fmt(t) + '</option>').join('');
+    $('rp-issue').value = sel;
+    table1(); hovmoller(); figure2(); table2();
+  }
+
+  Promise.all([fetch(BASE + 'index.json').then(r => r.json()), fetch(BASE + 'summary.json').then(r => r.json())])
+    .then(([idx, sum]) => {
+      IDX = idx; S = sum; sel = S.issues[S.issues.length - 1];
+      $('rp-runinfo').textContent = 'updated ' + IDX.updated.replace('T', ' ').replace('Z', ' UTC') + (IDX.era5_last_day ? ' · ERA5 to ' + IDX.era5_last_day : '');
+      ['rp-surf', 'rp-period'].forEach(id => $(id).addEventListener('change', redraw));
+      $('rp-issue').addEventListener('change', ev => pick(ev.target.value));
+      ['rp-year', 'rp-month', 'rp-week'].forEach(id => $(id).addEventListener('change', table2));
+      $('rp-close').addEventListener('click', () => $('rp-modal').classList.remove('on'));
+      $('rp-modal').addEventListener('click', ev => { if (ev.target.id === 'rp-modal') $('rp-modal').classList.remove('on'); });
+      document.addEventListener('keydown', ev => { if (ev.key === 'Escape') $('rp-modal').classList.remove('on'); });
+      window.addEventListener('resize', () => hovmoller());
+      redraw();
+    })
+    .catch(err => { $('rp-status').innerHTML = '<span class="jn-err">Could not load the results (' + err + ').</span>'; });
+})();
+</script>

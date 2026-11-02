@@ -13,7 +13,7 @@ author_profile: false
   <div class="jn-runhead"><span>Interactive figures</span><span>X. Yan &middot; MIT EAPS</span></div>
 
   <p class="jn-abstract"><b>Atmospheric blocking</b> is a large, persistent high-pressure system that stalls the usual west-to-east progression of weather for days to weeks, often bringing heat waves, cold spells or drought. These pages show how blocks form and decay, and what the weather pattern looks like now.</p>
-  <p class="jn-abstract"><b>Contents.</b> Two viewers and a model. The first viewer shows composite fields of Northern Hemisphere blocking and propagating anticyclones from the PV-tendency analysis (ERA5). The second shows the latest operational forecast over the Northern Hemisphere at 850, 500 and 250 hPa, updated every 6 h, with 500-hPa cyclone and anticyclone centres tracked over the preceding five days. The third item is a live model you can play with: a jet on a rotating planet that you can stir and disturb with the mouse.</p>
+  <p class="jn-abstract"><b>Contents.</b> Two viewers, a daily prediction check and a model. The first viewer shows composite fields of Northern Hemisphere blocking and propagating anticyclones from the PV-tendency analysis (ERA5). The second shows the latest operational forecast over the Northern Hemisphere at 850, 500 and 250 hPa, updated every 6 h, with 500-hPa cyclone and anticyclone centres tracked over the preceding five days. The third item checks every day whether Rossby wave breaking can be predicted a day ahead without running a weather forecast. The fourth is a live model you can play with: a jet on a rotating planet that you can stir and disturb with the mouse.</p>
 
   <ul class="jn-contents">
     <li>
@@ -28,6 +28,11 @@ author_profile: false
     </li>
     <li>
       <span class="jn-item-no">3</span>
+      <a class="jn-item-title" href="{{ base_path }}/blocking-plots/rwb-prediction/">Can we predict Rossby wave breakings without running weather forecasts?</a>
+      <p class="jn-item-desc">A daily scorecard. When a large wave on the jet stream breaks, the contours of potential vorticity fold over; such breaking builds blocks and cut-off lows. At 00 and 12 UTC three methods say where a new breaking will start within 24 h: the classical criterion that the wave&rsquo;s phase speed matches the wind (<i>U</i>&nbsp;&minus;&nbsp;<i>c</i>), a predictor variable from the analysed flow alone (Opus model), and the NOAA GFS forecast. The ERA5 reanalysis decides who was right, on three upper-level surfaces (PV on 330 K and 350 K, potential temperature on the 2-PVU tropopause), with hits, misses, false alarms, false positive rates, maps of every issue time and a log of every breaking.</p>
+    </li>
+    <li>
+      <span class="jn-item-no">4</span>
       <a class="jn-item-title" href="{{ base_path }}/blocking-plots/beta-plane/">Interactive &beta;-plane model</a>
       <p class="jn-item-desc">A two-dimensional model of the upper-level flow on a doubly periodic &beta;-plane (the Coriolis parameter increasing northward), running live in your browser. Switch on a jet (centre latitude, width, strength) and random stirring in a storm-track band (centre latitude, zonal wavenumber, strength); drag the mouse to push the flow or click to drop highs and lows, and watch Rossby waves, wave breaking and stalled highs develop. Side panels show the zonal-mean wind, a Hovm&ouml;ller diagram and the energy spectrum.</p>
     </li>
