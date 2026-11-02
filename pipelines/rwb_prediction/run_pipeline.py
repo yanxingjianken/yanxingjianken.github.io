@@ -41,6 +41,21 @@ def log(msg):
     print(f"[{datetime.now(timezone.utc):%H:%M:%S}] {msg}", flush=True)
 
 
+def step_summary(lines):
+    """Append lines to the GitHub Actions run summary (shown on the run page); no-op elsewhere."""
+    path = os.environ.get("GITHUB_STEP_SUMMARY")
+    if path:
+        with open(path, "a") as fh:
+            fh.write("\n".join(lines) + "\n")
+
+
+def not_released(e):
+    """True for the Climate Data Store's answers that a day is not (completely) available yet; anything else, such as
+    a rejected API key or a network failure, is an error that must fail the run."""
+    return isinstance(e, era5.Incomplete) or "None of the data you have requested is available" in str(e) \
+        or "is not available yet" in str(e)
+
+
 # ------------------------------------------------------------------------------------------------ surfaces per day
 def day_surfaces(path):
     times, F = era5.read_day(path)
@@ -246,8 +261,12 @@ def daily(make_store, era5_dir=None):
             path = f"{era5_dir or tmp}/era5_{d:%Y%m%d}.nc"
             try:
                 era5.fetch_day(d, path)
-            except Exception as e:                                 # not released, or not complete yet
+            except Exception as e:
+                if not not_released(e):
+                    step_summary([f"ERA5 {d}: request failed ({type(e).__name__}); see the log."])
+                    raise
                 log(f"ERA5 {d} not available yet: {type(e).__name__}: {str(e)[:120]}")
+                step_summary([f"ERA5 {d}: not complete in the Climate Data Store yet ({str(e)[:80]})."])
                 break
             times, surf = day_surfaces(path)
             for h, tt in enumerate(times):
@@ -266,6 +285,8 @@ def daily(make_store, era5_dir=None):
         out = f"{tmp}/out"
         tags = [run_issue(t, out, H) for t in ts]
         log(f"processed {len(tags)} issue times")
+        step_summary([f"ERA5 days added: {', '.join(n[11:19] for n, _ in new_cache) or 'none'}; "
+                      f"issue times scored: {', '.join(tags) or 'none'}."])
         if not tags and not new_cache:
             return
         os.makedirs(f"{out}/issues", exist_ok=True)
