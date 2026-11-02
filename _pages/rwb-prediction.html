@@ -199,8 +199,8 @@ author_profile: false
           c.regions.length + ' alarm regions, ' + c.regions.filter(r => !r[2]).length + ' false');
       });
       svg.append('rect').attr('x', x0).attr('y', top).attr('width', pw).attr('height', rh * iss.length).attr('fill', 'none').attr('stroke', '#000').attr('stroke-width', 0.6);
-      [0, 90, 180, 270, 360].forEach(l => svg.append('text').attr('x', x(l)).attr('y', H - 8).attr('text-anchor', 'middle').attr('class', 'fig-annot')
-        .text(l === 0 || l === 360 ? '0°' : l === 180 ? '180°' : l === 90 ? '90°E' : '90°W'));
+      [[0, 'start', '0°'], [90, 'middle', '90°E'], [180, 'middle', '180°'], [270, 'middle', '90°W']].forEach(([l, an, txt]) =>
+        svg.append('text').attr('x', x(l)).attr('y', H - 8).attr('text-anchor', an).attr('class', 'fig-annot').text(txt));
     });
     const step = Math.max(1, Math.ceil(13 / rh));
     iss.forEach((t, i) => { if (i % step === 0 || t === sel) svg.append('text').attr('x', left - 6).attr('y', top + i * rh + rh - 1)
