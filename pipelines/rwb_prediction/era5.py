@@ -1,6 +1,6 @@
 """ERA5 (ERA5T near real time) hourly u, v, T on the pipeline's pressure levels, 0-90 N on a 1-degree grid, from the
-Copernicus Climate Data Store (dataset reanalysis-era5-pressure-levels). Needs a CDS API key (~/.cdsapirc or the
-CDSAPI_URL / CDSAPI_KEY environment variables)."""
+Copernicus Climate Data Store (dataset reanalysis-era5-pressure-levels). Needs a personal access token of the ECMWF
+data stores (~/.cdsapirc, or CDSAPI_KEY holding the token or the text of such a file)."""
 from __future__ import annotations
 
 import os
@@ -11,6 +11,21 @@ import numpy as np
 from config import GRID_DEG, LEVELS_HPA
 
 VARS = {"u": "u_component_of_wind", "v": "v_component_of_wind", "t": "temperature"}
+CDS_URL = "https://cds.climate.copernicus.eu/api"          # ERA5 is served by the Climate Data Store only
+
+
+def credentials():
+    """(url, key) for the Climate Data Store from CDSAPI_KEY, which may hold the key itself or the whole text of an
+    API configuration file ('url: ...' and 'key: ...' lines, for any ECMWF data store: the personal access token is
+    the same for all of them). (None, None) when unset, so that cdsapi reads ~/.cdsapirc."""
+    raw = (os.environ.get("CDSAPI_KEY") or "").strip()
+    if not raw:
+        return None, None
+    key = raw
+    for line in raw.splitlines():
+        if line.strip().lower().startswith("key:"):
+            key = line.split(":", 1)[1].strip()
+    return CDS_URL, key
 
 
 class Incomplete(Exception):
@@ -23,7 +38,8 @@ def fetch_day(day: date, path: str) -> str:
     if os.path.exists(path):
         return path
     import cdsapi
-    c = cdsapi.Client(quiet=True, progress=False)
+    url, key = credentials()
+    c = cdsapi.Client(url=url, key=key, quiet=True, progress=False) if key else cdsapi.Client(quiet=True, progress=False)
     tmp = path + ".part"
     c.retrieve("reanalysis-era5-pressure-levels", {
         "product_type": ["reanalysis"], "variable": list(VARS.values()),

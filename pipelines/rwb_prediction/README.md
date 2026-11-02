@@ -57,4 +57,4 @@ Local backfill (run once by hand; nothing recurring):
 
     python run_pipeline.py --backfill 2026093012 2026102612 --era5-dir era5 --out out --workers 8
 
-The daily job needs the repository secrets `HF_TOKEN` and a Climate Data Store API key (`CDSAPI_KEY`, or `ECDS_API`).
+The daily job needs the repository secrets `HF_TOKEN` and a personal access token of the ECMWF data stores (`CDSAPI_KEY` or `ECDS_API`; the token itself or the text of an API configuration file, any data-store URL — ERA5 is always requested from the Climate Data Store).
