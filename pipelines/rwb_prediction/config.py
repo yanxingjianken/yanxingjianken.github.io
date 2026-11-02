@@ -1,4 +1,5 @@
-"""Settings shared by every step. Fixed before any score was computed."""
+"""Settings shared by every step. Fixed before any score was computed, except the wave-amplitude threshold, which
+was chosen on the issue times of October 2026 (AMP_FIT_LAST_ISSUE) and is fixed for every later issue time."""
 from __future__ import annotations
 
 LEVELS_HPA = (70, 100, 150, 200, 250, 300, 350, 400, 450, 500)   # pressure levels used for ERA5 and GFS alike
@@ -48,6 +49,15 @@ OPUS_MIN_SAMPLES = 60
 OPUS_MIN_SPREAD_DEG = 0.3
 OPUS_MIN_REF_D2 = 0.3
 OPUS_RATIO = 0.1                 # alarm when the predictor variable falls to this fraction of its reference value
+
+# predictor: wave amplitude (no forecast), on theta on 2 PVU at the issue time only; the same alarm regions are scored
+# against the onsets of every surface
+AMP_SURFACE = "th2pvu"
+AMP_BOX_DEG = (3, 15)            # local amplitude: rms displacement over 3 deg of latitude x 15 deg of longitude
+AMP_THRESHOLD_DEG = 8.5          # alarm where the local amplitude reaches this (deg of latitude); set 2026-11-02 as
+                                 # the best box skill on theta on 2 PVU over the issue times 2026-09-30 12 UTC to
+                                 # 2026-10-26 12 UTC (sweep 1-15 deg in steps of 0.5 deg)
+AMP_FIT_LAST_ISSUE = "2026102612"    # threshold chosen on the issue times up to here; later ones are out of sample
 
 # baseline forecast
 GFS_STEPS_H = (0, 6, 12, 18, 24)

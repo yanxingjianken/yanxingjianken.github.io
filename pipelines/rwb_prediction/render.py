@@ -1,5 +1,5 @@
 """Map of one issue time and surface, in the style of a journal figure (sans-serif annotations, thin frames, panel
-letters, no title; the page supplies the title, key and caption): three stacked Northern-Hemisphere panels (10-90 N,
+letters, no title; the page supplies the title, key and caption): four stacked Northern-Hemisphere panels (10-90 N,
 rectangular), one per method. Each shows the smoothed analysis at the end of the 24-h window with contours at the
 fixed values used for the events (PV every 0.5 PVU, theta every 5 K), the folds present at that time (thin),
 the jet axis, the onsets of the window with their own folded contours (bold, drawn at their onset times), and the
@@ -17,7 +17,8 @@ import core  # noqa: E402
 import events as E  # noqa: E402
 from config import PV_LEVELS, TH_LEVELS  # noqa: E402
 
-METHODS = (("uc", "U − c matching"), ("opus", "Opus model"), ("gfs", "GFS 24-h forecast"))
+METHODS = (("uc", "U − c matching"), ("opus", "Opus model"), ("amp", "Wave amplitude (no forecast)"),
+           ("gfs", "GFS 24-h forecast"))
 C_HIT, C_FALSE, C_MISS, C_JET = "#1a9850", "#d73027", "#f46d43", "#1b3a6b"
 LAT_LO = 10.0
 plt.rcParams.update({"font.family": "sans-serif",
@@ -57,7 +58,7 @@ def draw(rec, name, q_end, objs_end, onset_objs, masks, path):
     field = E.smooth(q_end) if pv else -E.smooth(q_end)
     levels = np.array(PV_LEVELS if pv else TH_LEVELS, float)
     lab = "PV (PVU)" if pv else "θ (K)"
-    fig, axs = plt.subplots(3, 1, figsize=(6.5, 5.4), sharex=True)
+    fig, axs = plt.subplots(len(METHODS), 1, figsize=(6.5, 7.1), sharex=True)
     for n, (ax, (m, title)) in enumerate(zip(axs, METHODS)):
         im = ax.contourf(E.LON, E.LAT, field, levels=levels, cmap="Greys" if pv else "Greys_r", extend="both",
                          alpha=0.55, zorder=1)
@@ -87,7 +88,7 @@ def draw(rec, name, q_end, objs_end, onset_objs, masks, path):
             nf = sum(not r["confirmed"] for r in res["regions"])
             ax.text(1.0, 1.03, f"onsets hit {nh} of {len(res['onset_hits'])}   alarm regions {len(res['regions'])},"
                     f" false {nf}", transform=ax.transAxes, ha="right", va="bottom", fontsize=7)
-        ax.text(0.0, 1.03, f"({'abc'[n]}) {title}", transform=ax.transAxes, ha="left", va="bottom", fontsize=8.5,
+        ax.text(0.0, 1.03, f"({'abcd'[n]}) {title}", transform=ax.transAxes, ha="left", va="bottom", fontsize=8.5,
                 fontweight="bold")
         ax.set_ylim(LAT_LO, 90)
         ax.set_xlim(0, 360)
@@ -95,7 +96,7 @@ def draw(rec, name, q_end, objs_end, onset_objs, masks, path):
         ax.set_yticklabels(["30°N", "60°N"])
     axs[-1].set_xticks(np.arange(0, 361, 60))
     axs[-1].set_xticklabels(["0°", "60°E", "120°E", "180°", "120°W", "60°W", "0°"])
-    fig.subplots_adjust(left=0.07, right=0.9, top=0.95, bottom=0.05, hspace=0.3)
+    fig.subplots_adjust(left=0.07, right=0.9, top=0.96, bottom=0.04, hspace=0.3)
     cax = fig.add_axes([0.915, 0.3, 0.015, 0.4])
     cb = fig.colorbar(im, cax=cax, orientation="vertical", ticks=levels[1::4] if pv else levels[::4])
     cb.set_label(lab)

@@ -16,9 +16,10 @@ from scipy.ndimage import label as nd_label
 
 import events as E
 import predictors as PR
-from config import BOX_DEG, EVENT_STEP_H, GFS_STEPS_H, MATCH_ALARM_KM, OPUS_SPAN_H, OPUS_SURFACE, SURFACES, WINDOW_H
+from config import (AMP_SURFACE, AMP_THRESHOLD_DEG, BOX_DEG, EVENT_STEP_H, GFS_STEPS_H, MATCH_ALARM_KM, OPUS_SPAN_H,
+                    OPUS_SURFACE, SURFACES, WINDOW_H)
 
-METHODS = ("uc", "opus", "gfs")
+METHODS = ("uc", "opus", "amp", "gfs")
 
 
 def _boxes():
@@ -137,16 +138,18 @@ def score_method(mask, onsets):
 
 def issue(H, t, gfs_surfaces):
     """Everything for issue time t: (record for JSON, {surface: {method: alarm mask}})."""
-    out = dict(issue=t.strftime("%Y%m%d%H"), opus_surface=OPUS_SURFACE, surfaces={})
+    out = dict(issue=t.strftime("%Y%m%d%H"), opus_surface=OPUS_SURFACE, amp_surface=AMP_SURFACE,
+               amp_threshold_deg=AMP_THRESHOLD_DEG, surfaces={})
     masks = {}
     qs, us, vs = H.stack(OPUS_SURFACE, t - timedelta(hours=OPUS_SPAN_H), t)
-    m_op, _ = PR.opus_alarm(qs, us, vs)            # one alarm map, scored against the onsets of every surface
+    m_op, _ = PR.opus_alarm(qs, us, vs)            # one alarm map each, scored against the onsets of every surface
+    m_amp, _ = PR.amp_alarm(H.d[t][AMP_SURFACE][0])
     for name in SURFACES:
         on = truth_onsets(H, name, t)
         q, u, v = H.d[t][name]
         qb = H.d[t - timedelta(hours=24)][name]
         m_uc, uc_pts = PR.uc_alarm((E.smooth(q), u, v), (E.smooth(qb[0]), qb[1], qb[2]))
-        mm = {"uc": m_uc, "opus": m_op}
+        mm = {"uc": m_uc, "opus": m_op, "amp": m_amp}
         rec = dict(onsets=[dict(time=w.strftime("%Y%m%d%H"), **lean(o)) for w, o in on],
                    jet_axis=[round(float(x), 1) for x in E.jet_axis(u, v)], methods={})
         if gfs_surfaces is not None:

@@ -1,4 +1,4 @@
-"""The three ways of saying, at an issue time t, where on one surface a new breaking will start within the next 24 h.
+"""The four ways of saying, at an issue time t, where on one surface a new breaking will start within the next 24 h.
 Each returns an alarm mask on the 1-degree grid (True inside alarm regions) and the numbers drawn on the maps.
 
 uc_alarm     U - c matching: on contours at fixed equivalent latitudes, every UC_LON_STEP deg of longitude, the phase
@@ -9,15 +9,20 @@ opus_alarm   Opus model: a predictor variable computed from passive parcels adve
              surface OPUS_SURFACE (theta on 2 PVU, the parcels' label), in local
              cells (3-deg bands of the label's equivalent latitude x OPUS_LON_BIN deg); the alarm region is the set of
              grid points in cells where it falls to OPUS_RATIO of its value in a reference window 36-59 h earlier.
+amp_alarm    wave amplitude, from the field at t alone: each point of the smoothed theta on 2 PVU is displaced from the
+             equivalent latitude of its value (the latitude of a circle round the pole enclosing the same area) by
+             d = latitude - equivalent latitude; the local amplitude is the rms of d over AMP_BOX_DEG centred on the
+             point, and the alarm region is where it reaches AMP_THRESHOLD_DEG.
 gfs_alarm    GFS forecast from t: the alarm region lies within GFS_BUFFER_KM of the forecast's new breakings (same
              onset rule as the analysis) at 6-24 h.
 """
 from __future__ import annotations
 
 import numpy as np
+from scipy.ndimage import uniform_filter
 
 import events as E
-from config import (A_EARTH, ALARM_LAT, GFS_BUFFER_KM, OPUS_BAND_DEG, OPUS_DT_S, OPUS_LON_BIN, OPUS_MIN_REF_D2,
+from config import (A_EARTH, ALARM_LAT, AMP_BOX_DEG, AMP_THRESHOLD_DEG, GFS_BUFFER_KM, OPUS_BAND_DEG, OPUS_DT_S, OPUS_LON_BIN, OPUS_MIN_REF_D2,
                     OPUS_MIN_SAMPLES, OPUS_MIN_SPREAD_DEG, OPUS_N_PARCELS, OPUS_NOW_H, OPUS_RATIO, OPUS_REF_H,
                     OPUS_SEED_BAND, UC_BUFFER_KM, UC_LEVEL_LATS, UC_LON_STEP, UC_MIN_CORR, UC_THRESHOLD_MS,
                     UC_WINDOW_DEG)
@@ -27,6 +32,8 @@ LA, LO = np.meshgrid(LAT, LON, indexing="ij")
 IN_BAND = (LA >= ALARM_LAT[0]) & (LA <= ALARM_LAT[1])
 W_ROW = np.cos(np.deg2rad(LAT))
 W_ROW[-1] = np.cos(np.deg2rad(89.75))
+CELL_AREA = (np.sin(np.deg2rad(np.minimum(LAT + 0.5, 90.0)))       # area of each 1-degree row north of the equator
+             - np.sin(np.deg2rad(np.maximum(LAT - 0.5, 0.0))))
 
 
 def fill_nan(a):
@@ -47,6 +54,16 @@ def eq_lat(q, levels):
     cw = np.cumsum(w.ravel()[order]) / w.sum()
     frac = np.interp(-np.asarray(levels), -qs, cw)          # qs descending
     return np.rad2deg(np.arcsin(np.clip(1 - frac, -1, 1)))
+
+
+def eq_lat_points(q):
+    """Equivalent latitude [deg] of every grid point's value: from the area of the points with a larger value plus half
+    the area of the points with the same value (midpoint rule, so that a zonally symmetric field maps onto itself)."""
+    w = np.broadcast_to(CELL_AREA[:, None], q.shape).ravel()
+    vals, inv = np.unique(-q.ravel(), return_inverse=True)        # ascending in -q: largest q first
+    area = np.bincount(inv, w, minlength=len(vals))
+    frac = (np.cumsum(area) - 0.5 * area) / w.sum()
+    return np.rad2deg(np.arcsin(np.clip(1 - frac[inv], -1, 1))).reshape(q.shape)
 
 
 def buffer_mask(lats, lons, km):
@@ -238,6 +255,21 @@ def opus_alarm(qs, us, vs):
     r_grid = ratio[b, lb]
     mask = np.isfinite(r_grid) & (r_grid <= OPUS_RATIO) & IN_BAND
     return mask, ratio
+
+
+# ---------------------------------------------------------------------------------------------------- wave amplitude
+def amp_field(q):
+    """q at the issue time -> local amplitude [deg]: the rms, over AMP_BOX_DEG (latitude, longitude) centred on each
+    point, of the displacement of the smoothed field from the equivalent latitude of its value."""
+    qs = E.smooth(fill_nan(q))
+    d = LA - eq_lat_points(qs)
+    return np.sqrt(uniform_filter(d * d, size=AMP_BOX_DEG, mode=("nearest", "wrap")))
+
+
+def amp_alarm(q, threshold=AMP_THRESHOLD_DEG):
+    """Alarm mask where the local amplitude reaches the threshold, and the local amplitude."""
+    a = amp_field(q)
+    return (a >= threshold) & IN_BAND, a
 
 
 # ---------------------------------------------------------------------------------------------------- GFS

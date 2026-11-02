@@ -1,4 +1,4 @@
-"""Daily RWB prediction check: ERA5T breaking onsets against three predictors, published to a Hugging Face dataset.
+"""Daily RWB prediction check: ERA5T breaking onsets against four methods, published to a Hugging Face dataset.
 
 Daily mode (GitHub Actions): fetch the ERA5T days not yet cached (the newest is about 5 days behind real time),
 process every 00/12 UTC issue time whose 24-h verification window is now covered, render the maps, and upload the
@@ -31,7 +31,7 @@ import events as E
 import gfs
 import render
 import surfaces as S
-from config import GFS_STEPS_H, OPUS_SPAN_H, SURFACES, WINDOW_H
+from config import AMP_FIT_LAST_ISSUE, AMP_THRESHOLD_DEG, GFS_STEPS_H, OPUS_SPAN_H, SURFACES, WINDOW_H
 
 CACHE_DAYS = 5          # an issue at 00 UTC needs fields from 84 h before: five whole days plus the new one
 H_GLOBAL = None
@@ -184,7 +184,8 @@ def finish(outdir, tags, era5_last):
     with open(f"{outdir}/summary.json", "w") as fh:
         json.dump(summary, fh, separators=(",", ":"))
     index = dict(updated=datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%MZ"), issues=summary["issues"],
-                 surfaces=list(SURFACES), era5_last_day=era5_last)
+                 surfaces=list(SURFACES), era5_last_day=era5_last, amp_threshold_deg=AMP_THRESHOLD_DEG,
+                 amp_fit_last_issue=AMP_FIT_LAST_ISSUE)
     with open(f"{outdir}/index.json", "w") as fh:
         json.dump(index, fh, indent=1)
     log(f"summary: {len(summary['issues'])} issue times, {len(summary['events'])} onsets")
