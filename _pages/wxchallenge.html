@@ -1248,6 +1248,12 @@ author_profile: false
       if (seq !== mapSeq) return;
       var cnSrc = null; if (cn) { cnSrc = {}; for (var n2 in names) cnSrc[n2] = cn.fields[storeKey(n2, lev)]; }
       var nhS = fieldFrom(nh, vr), nhC = contVar ? fieldFrom(nh, contVar) : null;
+      var hasData = function (f) { if (!f) return false; var d = f.data; for (var q = 0; q < d.length; q += 7) if (!isNaN(d[q])) return true; return false; };
+      if (!hasData(nhS)) {   /* a field of missing values: the upstream data were incomplete when this run was processed */
+        clearMaps(); showCornerTable(false); $('wx-maptitle').textContent = ''; $('wx-mapcap').innerHTML = '';
+        status('wx-mapstatus', MAPVARS[vr].label.charAt(0).toUpperCase() + MAPVARS[vr].label.slice(1) + ' is missing at f' + pad(step, 3) + ' in the published ' + (m.label || S.mapModel) + ' run (its source data were incomplete when it was processed). Try another forecast hour or variable; the next update replaces it.', true);
+        return;
+      }
       var cnS = cnSrc ? fieldFrom(cnSrc, vr) : null, cnC = (cnSrc && contVar) ? fieldFrom(cnSrc, contVar) : null;
       var sc = mapScale(vr, lev);
       if (S.showElev) await ensureElevation(st);

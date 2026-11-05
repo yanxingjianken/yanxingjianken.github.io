@@ -114,6 +114,10 @@ TS_SERIES = {
 CLOUD = ("tcc", "lcc", "mcc", "hcc")
 
 
+class IncompleteRun(RuntimeError):
+    """The run is still being written upstream (some chunks are missing): try again later."""
+
+
 def log(msg):
     print(f"[{datetime.now(timezone.utc):%H:%M:%S}] {msg}", flush=True)
 
@@ -168,11 +172,28 @@ class Source:
         return sorted(out.items(), reverse=True)
 
     def complete(self, name, last_lead=360):
-        """The run is complete when the chunk of the last lead exists for a late-written variable."""
+        """Quick first test: the chunk of the last lead exists for a late-written variable (chunks are not
+        written in order, so process() also checks every chunk it needs with missing_chunks())."""
         if not self.gcs:
             return True
         p = f"{self.root}/{name}/predictions.zarr/station_head_temperature_2m_p90/c/{last_lead - 1}/0/0"
         return self.fs.exists(p)
+
+    def missing_chunks(self, name, wanted):
+        """wanted: {variable name: set of lead indices}.  Returns [(variable, lead index)] whose chunk object
+        does not exist yet (zarr would silently return NaN for them).  One listing per variable."""
+        if not self.gcs:
+            return []
+        store = f"{self.root}/{name}/predictions.zarr"
+        out = []
+        for var, leads in wanted.items():
+            have = set()
+            for k in self.fs.find(f"{store}/{var}/c"):
+                m = re.search(r"/c/(\d+)/", k)
+                if m:
+                    have.add(int(m.group(1)))
+            out += [(var, k) for k in sorted(leads) if k not in have]
+        return out
 
     def open(self, name):
         path = f"{self.root}/{name}/predictions.zarr"
@@ -258,6 +279,12 @@ def process(src, name, init, args, key, tmp, stations):
         need.setdefault(ls, set()).update(range(1, max(args.map_steps) + 1))
     tasks = [(ls, h) for ls, hs in sorted(need.items()) for h in sorted(hs) if float(h) in lead_index]
     log(f"  {len(tasks)} fields to read ({sum(1 for (l, _s), _h in tasks if VARS[l][1] == '0p05')} at 0.05 deg)")
+    wanted = {}
+    for (logical, stat), h in tasks:
+        wanted.setdefault(f"{VARS[logical][0]}_{stat}", set()).add(lead_index[float(h)])
+    miss = src.missing_chunks(name, wanted)
+    if miss:
+        raise IncompleteRun(f"{len(miss)} of {len(tasks)} needed chunks not written yet, e.g. {miss[0][0]} lead {miss[0][1] + 1} h")
 
     wins = {}
     for g, probe in (("0p1", ("t2m", "mean")), ("0p05", ("t_st", "mean"))):
@@ -271,6 +298,8 @@ def process(src, name, init, args, key, tmp, stations):
         (logical, stat), h = task
         win = wins[VARS[logical][1]]
         a = win.read(da_of(logical, stat), lead_index[float(h)])
+        if not np.isfinite(a).any():   # chunk missing or empty upstream: never publish a field of fill values
+            raise IncompleteRun(f"{VARS[logical][0]}_{stat} at {h} h holds no data")
         if (logical, stat) in series and h <= args.ts_hours:
             series[(logical, stat)][:, h - 1] = win.at_stations(a)
         if (logical, stat) in MAP_INST and h in maps:
@@ -489,7 +518,12 @@ def main():
                 log(f"wn3: run {rid} not complete yet")
                 continue
             log(f"wn3: run {rid} ({name})")
-            res = process(src, name, init, args, key, tmp, stations)
+            try:
+                res = process(src, name, init, args, key, tmp, stations)
+            except IncompleteRun as e:
+                log(f"wn3: run {rid} not complete upstream yet ({e}); will try again next hour")
+                shutil.rmtree(os.path.join(tmp, "publish"), ignore_errors=True)
+                continue
             break
         if res is None:
             log("wn3: no complete new run")
