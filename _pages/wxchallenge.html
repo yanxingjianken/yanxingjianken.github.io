@@ -76,7 +76,7 @@ author_profile: false
 
   <p class="jn-abstract"><b>Purpose.</b> Model guidance and observations for the <a href="https://www.wxchallenge.com/">WxChallenge</a>, a forecasting contest in which students predict, for one US airport, the maximum and minimum temperature, the maximum sustained wind and the precipitation over a 24-h &ldquo;forecast day&rdquo; that runs from 06 UTC to 06 UTC (in US Eastern time, 2 am to 2 am in summer and 1 am to 1 am in winter). The page works for any US airport weather station and opens on the current contest city. The layout follows <a href="https://wxchallenge.yolandgao.com/">Yoland Gao&rsquo;s meteogram site</a>.</p>
   <p class="jn-abstract"><b>How to use.</b> Type a 4-letter station code (for example KBOS) and press Go, or press Competition city. The latest model run loads automatically. Table 2 summarises each forecast day; Fig. 2 shows the hour-by-hour forecast with observations; Fig. 1 shows the weather pattern around the station, and its slider steps through forecast (or, for satellite and radar, past) times; Fig. 3 shows the vertical structure above the station.</p>
-  <details class="jn-small"><summary>Abbreviations</summary><p class="jn-abstract jn-small"> GFS: NOAA Global Forecast System. HRRR and RRFS: NOAA 3-km models for the US (RRFS is replacing the NAM, the older NOAA regional model). GDPS: the Canadian (ECCC) global model. NBM: National Blend of Models, NOAA&rsquo;s calibrated blend of many models; NBS and NBE are its short-range (3-hourly, to 72 h) and extended text guidance. IFS: the ECMWF (European Centre) global model. AIFS: ECMWF&rsquo;s machine-learning global model. MOS: Model Output Statistics, a statistically corrected station forecast. METAR: the routine hourly airport weather report. ASOS: Automated Surface Observing System, the US airport stations. BUFKIT: model vertical profiles at a station. UTC: Coordinated Universal Time (Z). WeatherNext 3: Google DeepMind&rsquo;s experimental machine-learning ensemble forecast (64 members), shown to WxChallenge team members who enter the team passcode.</p></details>
+  <details class="jn-small"><summary>Abbreviations</summary><p class="jn-abstract jn-small"> GFS: NOAA Global Forecast System. HRRR and RRFS: NOAA 3-km models for the US (RRFS replaced the older NAM model on 3 Nov 2026). GDPS: the Canadian (ECCC) global model. NBM: National Blend of Models, NOAA&rsquo;s calibrated blend of many models; NBS and NBE are its short-range (3-hourly, to 72 h) and extended text guidance. IFS: the ECMWF (European Centre) global model. AIFS: ECMWF&rsquo;s machine-learning global model. MOS: Model Output Statistics, a statistically corrected station forecast. METAR: the routine hourly airport weather report. ASOS: Automated Surface Observing System, the US airport stations. BUFKIT: model vertical profiles at a station. UTC: Coordinated Universal Time (Z). WeatherNext 3: Google DeepMind&rsquo;s experimental machine-learning ensemble forecast (64 members), shown to WxChallenge team members who enter the team passcode.</p></details>
 
   <div class="jn-controls">
     <div class="jn-ctl"><label for="wx-station">Station (ICAO)</label>
@@ -87,7 +87,6 @@ author_profile: false
         <option value="GFS">GFS (BUFKIT)</option>
         <option value="HRRR">HRRR (BUFKIT)</option>
         <option value="RRFS">RRFS (BUFKIT)</option>
-        <option value="NAM">NAM (BUFKIT; being replaced by RRFS)</option>
         <option value="IFS">ECMWF IFS 0.25&deg; (Open-Meteo)</option>
         <option value="AIFS">ECMWF AIFS-single (Open-Meteo)</option>
         <option value="NBM">NBM 2.5 km (National Blend; Open-Meteo, 3-hourly runs)</option>
@@ -149,13 +148,14 @@ author_profile: false
       <button data-chart="t2m" aria-pressed="true">2-m T &amp; T<sub>d</sub></button><button data-chart="wind">10-m wind</button><button data-chart="precip">Accumulated precipitation</button>
       <button data-chart="cape">CAPE</button><button data-chart="lik">LI &amp; K index</button><button data-chart="pwat">Precipitable water</button><button data-chart="cloud">Cloud cover</button>
     </div>
+    <div class="jn-small jn-muted" id="wx-tsnote"></div>
     <figure class="jn-fig">
       <div class="jn-fig-title" id="wx-tstitle"></div>
       <div class="wx-plot" id="wx-ts"><svg></svg></div>
       <div class="wx-legend" id="wx-tslegend"></div>
       <figcaption id="wx-tscap"></figcaption>
     </figure>
-    <div class="jn-tabcap"><b>Table 2.</b> Forecast-day summary (06&ndash;06 UTC). Model values come from the hourly series of the selected run; guidance values from the statistical guidance that matches the model automatically (GFS MOS for GFS runs, NAM MOS for NAM runs, NBM short range otherwise; all products are compared in Table 3) (maximum and minimum from its daily max/min, wind from its highest sustained wind at its 3- or 6-hourly times, with * where only part of the day is covered, precipitation from its 6- or 12-h amounts, where \u2020 marks NBE 12-h amounts that cover 00\u201300 UTC instead; GFS and NAM MOS give no amounts); observations to date from METARs. Note that MOS and NBM maxima and minima are for daytime (about 7 am&ndash;7 pm local standard time) and night-time (about 7 pm&ndash;8 am) periods, not the 06&ndash;06 UTC contest day: when temperatures fall after a front, the day&rsquo;s highest value can occur near 06 UTC and exceed the guidance maximum. For WeatherNext 3, the range in brackets runs from the highest (for minima, lowest) value of its hourly 10th-percentile series to that of its 90th-percentile series, a guide to the ensemble spread. Bold: the day covered by the next 00 UTC deadline.<span class="wx-scrollcue"> Scroll sideways for more columns.</span></div>
+    <div class="jn-tabcap"><b>Table 2.</b> Forecast-day summary (06&ndash;06 UTC). Model values come from the hourly series of the selected run; guidance values from the statistical guidance that matches the model automatically (GFS MOS for GFS runs, NBM short range otherwise; all products are compared in Table 3) (maximum and minimum from its daily max/min, wind from its highest sustained wind at its 3- or 6-hourly times, with * where only part of the day is covered, precipitation from its 6- or 12-h amounts, where \u2020 marks NBE 12-h amounts that cover 00\u201300 UTC instead; GFS MOS gives no amounts); observations to date from METARs. Note that MOS and NBM maxima and minima are for daytime (about 7 am&ndash;7 pm local standard time) and night-time (about 7 pm&ndash;8 am) periods, not the 06&ndash;06 UTC contest day: when temperatures fall after a front, the day&rsquo;s highest value can occur near 06 UTC and exceed the guidance maximum. For WeatherNext 3, the range in brackets runs from the highest (for minima, lowest) value of its hourly 10th-percentile series to that of its 90th-percentile series, a guide to the ensemble spread. Bold: the day covered by the next 00 UTC deadline.<span class="wx-scrollcue"> Scroll sideways for more columns.</span></div>
     <div class="jn-tablewrap"><table class="jn-table" id="wx-daytab"><thead><tr><th>Forecast day</th><th class="num">Max T (&deg;F)</th><th class="num">Min T (&deg;F)</th><th class="num">Max wind (kt)</th><th class="num">Precip (in)</th><th class="num" id="wx-g-max">Guidance max (&deg;F)</th><th class="num" id="wx-g-min">Guidance min (&deg;F)</th><th class="num" id="wx-g-wind">Guidance wind (kt)</th><th class="num" id="wx-g-pr">Guidance precip (in)</th><th class="num">Observed so far: max / min / wind / precip</th></tr></thead><tbody></tbody></table></div>
   </div>
 
@@ -182,9 +182,9 @@ author_profile: false
   <details>
     <summary class="jn-small">Method notes and sources</summary>
     <div class="jn-note">
-      <p><b>BUFKIT models</b> (GFS, HRRR, RRFS, NAM): Iowa Environmental Mesonet <code>api/1/nws/bufkit.json</code>. Surface series: T2MS, TD2M (&deg;C&rarr;&deg;F), UWND/VWND (m s<sup>&minus;1</sup>&rarr;kt), P01M/C01M (mm&rarr;in), CAPE, LIFT, KINX, PWAT (mm&rarr;in), precipitation type from the WXTR/WXTS/WXTZ/WXTP flags. Boundary-layer wind: maximum and pressure-weighted mean of the profile wind from the surface to the level where &theta; first exceeds the surface value by 0.4 K. Profiles are interpolated in ln&nbsp;<i>p</i> to a fixed 60-level grid (1000&ndash;100 hPa); levels below the model surface are masked.</p>
+      <p><b>BUFKIT models</b> (GFS, HRRR, RRFS): Iowa Environmental Mesonet <code>api/1/nws/bufkit.json</code>. Surface series: T2MS, TD2M (&deg;C&rarr;&deg;F), UWND/VWND (m s<sup>&minus;1</sup>&rarr;kt), P01M/C01M (mm&rarr;in), CAPE, LIFT, KINX, PWAT (mm&rarr;in), precipitation type from the WXTR/WXTS/WXTZ/WXTP flags. Boundary-layer wind: maximum and pressure-weighted mean of the profile wind from the surface to the level where &theta; first exceeds the surface value by 0.4 K. Profiles are interpolated in ln&nbsp;<i>p</i> to a fixed 60-level grid (1000&ndash;100 hPa); levels below the model surface are masked.</p>
       <p><b>Open-Meteo models</b> (ECMWF IFS 0.25&deg;, AIFS-single): hourly 2-m temperature and dew point, 10-m wind, precipitation, CAPE (IFS only) and 12 pressure levels (1000&ndash;100 hPa) of temperature, relative humidity, wind, geopotential height, vertical velocity (converted to &omega; = &minus;<i>w p g</i>/(<i>R<sub>d</sub> T</i>)) and cloud cover; &theta; and &theta;<sub>e</sub> (Bolton 1980) are computed here. Specific runs come from the Open-Meteo single-runs API. Lifted and K indices are not available for these models.</p>
-      <p><b>Statistical guidance</b> from the IEM MOS archive (<code>api/1/mos.json</code>): GFS MOS (MAV, 00/06/12/18 UTC), NAM MOS (MET, 00/12 UTC), and the National Blend of Models text bulletins NBS (short range, 3-hourly to 72 h, 00/06/12/18 UTC) and NBE (extended, 00/12 UTC). The page uses the bulletin issued at or before the selected model run. Red diamonds mark the daily maximum and minimum (MOS N/X, NBM TXN); NBM precipitation amounts (6-h Q06, 12-h Q12, hundredths of an inch) are summed over each 06&ndash;06 UTC day. <b>NBM gridded</b> forecasts (2.5 km; hourly output from the runs at 00, 03, &hellip;, 21 UTC that Open-Meteo archives; surface variables only, so no time&ndash;height sections) come from Open-Meteo. <b>Observations:</b> IEM ASOS/METAR archive (routine and special reports). The stochastic-wind ensemble of the original site is server-side and is not reproduced.</p>
+      <p><b>Statistical guidance</b> from the IEM MOS archive (<code>api/1/mos.json</code>): GFS MOS (MAV, 00/06/12/18 UTC) and the National Blend of Models text bulletins NBS (short range, 3-hourly to 72 h, 00/06/12/18 UTC) and NBE (extended, 00/12 UTC). The page uses the bulletin issued at or before the selected model run. Red diamonds mark the daily maximum and minimum (MOS N/X, NBM TXN); NBM precipitation amounts (6-h Q06, 12-h Q12, hundredths of an inch) are summed over each 06&ndash;06 UTC day. <b>NBM gridded</b> forecasts (2.5 km; hourly output from the runs at 00, 03, &hellip;, 21 UTC that Open-Meteo archives; surface variables only, so no time&ndash;height sections) come from Open-Meteo. <b>Observations:</b> IEM ASOS/METAR archive (routine and special reports). The stochastic-wind ensemble of the original site is server-side and is not reproduced. The NAM model and NAM MOS (MET) were discontinued on 3 Nov 2026 (RRFS replaced the NAM) and have been removed.</p>
       <p><b>Observed imagery</b> (past only; satellites provide no forecasts): GOES-East or GOES-West Advanced Baseline Imager (whichever views the station better; clean infrared band 13, red visible band 2, GeoColor and air-mass RGB) and the GPM IMERG Early Run 30-min precipitation rate, both served by NASA GIBS, whose time domains decide which frames the slider offers; and the NEXRAD base-reflectivity composite over the contiguous US from the Iowa Environmental Mesonet. Images are requested in latitude&ndash;longitude coordinates for exactly the map box, so they overlay the coastlines without resampling. Colour bars use the providers&rsquo; own colour tables.</p>
       <p><b>WeatherNext 3</b> (Google DeepMind; team members only): an experimental machine-learning ensemble of 64 members, run every 6 h to 15 days. The page uses Google&rsquo;s precomputed ensemble statistics (mean, 10th and 90th percentiles): station-calibrated 2-m temperature and dew point (0.05&deg;), and 10-m wind, hourly precipitation (the model&rsquo;s own and a version calibrated to NASA&rsquo;s IMERG satellite estimate), sea-level pressure and cloud cover (0.1&deg;), interpolated bilinearly to the station hourly to 48 h; and maps every 6 h to 240 h on a 0.1&deg; window over the US. Google&rsquo;s terms allow live forecasts to be shared only with named people, so every file is encrypted (AES-256-GCM, key derived from the team passcode) and decrypted in your browser. Pressure levels are not used because Google charges the downloader for that part of the dataset. WeatherNext 3 forecasts weather variables, not satellite images; its cloud-cover fields are the closest it comes to a satellite view. Not an official forecast.</p>
       <p><b>Surface level:</b> 2-m temperature and dew point (&deg;F), 10-m wind (kt), mean-sea-level pressure (hPa) and precipitation accumulated over the 6 h ending at the valid time (in; GFS 6-h bucket, ECMWF difference of run totals).</p>
@@ -215,7 +215,6 @@ author_profile: false
     GFS:  {label: 'GFS', src: 'bufkit', bufkit: 'GFS',  cycles: [0, 6, 12, 18], stepH: 6, guide: 'mav', hasCloud: false, hasCape: true},
     HRRR: {label: 'HRRR', src: 'bufkit', bufkit: 'HRRR', cycles: null, stepH: 1, mos: null, hasCloud: true, hasCape: true},
     RRFS: {label: 'RRFS', src: 'bufkit', bufkit: 'RRFS', cycles: null, stepH: 1, mos: null, hasCloud: true, hasCape: true},
-    NAM:  {label: 'NAM', src: 'bufkit', bufkit: 'NAM',  cycles: [0, 6, 12, 18], stepH: 6, guide: 'met', hasCloud: true, hasCape: true},
     IFS:  {label: 'ECMWF IFS 0.25°', src: 'openmeteo', om: 'ecmwf_ifs025', cycles: [0, 6, 12, 18], stepH: 6, mos: null, hasCloud: true, hasCape: true},
     AIFS: {label: 'ECMWF AIFS-single', src: 'openmeteo', om: 'ecmwf_aifs025_single', cycles: [0, 6, 12, 18], stepH: 6, mos: null, hasCloud: true, hasCape: false},
     NBM:  {label: 'NBM', src: 'openmeteo', om: 'ncep_nbm_conus', cycles: [0, 3, 6, 9, 12, 15, 18, 21], stepH: 3, mos: null, hasCloud: false, hasCape: true, noLevels: true},
@@ -483,7 +482,13 @@ author_profile: false
     var runs = (I.ts && I.ts.runs) || [I.latest_run], rid = I.latest_run, note = '';
     if (init) { var want = init.toISOString().slice(0, 13).replace(/[-T]/g, ''); if (runs.indexOf(want) >= 0) rid = want; else note = 'run ' + fmtTime(init) + ' is not kept (only the last ' + runs.length + ' runs are); showing the latest'; }
     var url = S.wn3.base + '/' + I.ts.path.replace('{run}', rid).replace('{shard}', pad(wn3Shard(st.icao), 3));
-    var r = await fetch(url); if (!r.ok) throw new Error('HTTP ' + r.status + ' for the WeatherNext 3 station file');
+    var r = await fetch(url);
+    if (r.status === 404) {   /* the pinned dataset version is gone (daily history squash): reload the index and try again */
+      await loadWN3Index(); I = S.wn3.idx; if (!I) throw new Error('WeatherNext 3 files are not published yet');
+      if ((I.ts.runs || []).indexOf(rid) < 0) rid = I.latest_run;
+      url = S.wn3.base + '/' + I.ts.path.replace('{run}', rid).replace('{shard}', pad(wn3Shard(st.icao), 3)); r = await fetch(url);
+    }
+    if (!r.ok) throw new Error('HTTP ' + r.status + ' for the WeatherNext 3 station file');
     var gz = await wn3Decrypt(await r.arrayBuffer());
     var obj = JSON.parse(await new Response(new Blob([gz]).stream().pipeThrough(new DecompressionStream('gzip'))).text());
     var rec = obj.stations[st.icao]; if (!rec) throw new Error(st.icao + ' is not in the WeatherNext 3 station extract');
@@ -520,14 +525,13 @@ author_profile: false
     return out;
   }
 
-  /* statistical guidance from the IEM MOS archive: GFS MOS (MAV), NAM MOS (MET), NBM short-range (NBS) and extended (NBE) text */
+  /* statistical guidance from the IEM MOS archive: GFS MOS (MAV), NBM short-range (NBS) and extended (NBE) text (NAM MOS ended 3 Nov 2026) */
   var GUIDE = {
     mav: {label: 'GFS MOS (MAV)', short: 'GFS MOS', iem: 'GFS', cycles: [0, 6, 12, 18]},
-    met: {label: 'NAM MOS (MET)', short: 'NAM MOS', iem: 'NAM', cycles: [0, 12]},
     nbs: {label: 'NBM short-range text (NBS)', short: 'NBM NBS', iem: 'NBS', cycles: [0, 6, 12, 18], qpf: 'q06'},
     nbe: {label: 'NBM extended text (NBE)', short: 'NBM NBE', iem: 'NBE', cycles: [0, 12], qpf: 'q12'}
   };
-  function guideKey() { return MODELS[S.model].guide || 'nbs'; }   /* MOS of the GFS/NAM run, otherwise NBM short range */
+  function guideKey() { return MODELS[S.model].guide || 'nbs'; }   /* GFS MOS for GFS runs, otherwise NBM short range */
   async function loadGuidance(key, station, init) {
     var G = GUIDE[key]; if (!G) return null;
     var rt = new Date(init); rt.setUTCMinutes(0, 0, 0);
@@ -541,7 +545,7 @@ author_profile: false
         });
         if (rows.length) return {key: key, label: G.label, short: G.short, runtime: rt, rows: rows, qpfHours: G.qpf === 'q12' ? 12 : 6};
       } catch (e) { /* try the previous cycle */ }
-      rt = new Date(rt.getTime() - 3.6e6 * (key === 'met' || key === 'nbe' ? 12 : 6));
+      rt = new Date(rt.getTime() - 3.6e6 * (key === 'nbe' ? 12 : 6));
     }
     return null;
   }
@@ -616,7 +620,7 @@ author_profile: false
         (res[0].status !== 'fulfilled' ? ' · <span class="jn-err">observations unavailable (' + res[0].reason.message + ')</span>' : ' · ' + S.obs.length + ' METAR reports');
       status('wx-status', '');
       history.replaceState(null, '', '?station=' + st.icao + '&model=' + S.model + '&run=' + run.init.toISOString().slice(0, 13) + 'Z');
-      drawTS(); drawTH(); drawDayTable(); drawGuideTable(); updateWN3Legal();
+      updateChartButtons(); drawTS(); drawTH(); drawDayTable(); drawGuideTable(); updateWN3Legal();
       loadMap();
     } catch (e) {
       if (seq !== S.seq) return;
@@ -648,7 +652,7 @@ author_profile: false
   async function drawGuideTable() {
     var tb = $('wx-guidetab').querySelector('tbody'); tb.innerHTML = '';
     if (!S.station || !S.run) return;
-    var st = S.station.icao, now = new Date(), keys = ['nbs', 'nbe', 'mav', 'met'];
+    var st = S.station.icao, now = new Date(), keys = ['nbs', 'nbe', 'mav'];
     var res = await Promise.all(keys.map(function (k) { return loadGuidance(k, st, now).catch(function () { return null; }); }));
     if (S.station.icao !== st) return;
     var days = wxDays(S.run).slice(0, 4);
@@ -695,6 +699,16 @@ author_profile: false
   }
 
   /* ================================================================ time series */
+  /* hide the chart buttons for which the selected run has no data (e.g. CAPE for WeatherNext 3) */
+  var CHART_HAS = {t2m: ['t2m'], wind: ['wspd'], precip: ['precip1h', 'accum'], cape: ['cape'], lik: ['lift', 'kidx'], pwat: ['pwat'], cloud: ['tcc']};
+  function updateChartButtons() {
+    var run = S.run, missing = [];
+    var has = function (keys) { return !!run && run.hours.some(function (h) { return keys.some(function (k) { return h[k] != null && isFinite(h[k]); }); }); };
+    Array.from($('wx-tssel').querySelectorAll('button')).forEach(function (b) { var ok = has(CHART_HAS[b.dataset.chart] || []); b.style.display = ok ? '' : 'none'; if (!ok) missing.push(b.textContent); });
+    var cur = $('wx-tssel').querySelector('button[data-chart="' + S.chart + '"]');
+    if (cur && cur.style.display === 'none') { S.chart = 't2m'; Array.from($('wx-tssel').querySelectorAll('button')).forEach(function (o) { o.setAttribute('aria-pressed', o.dataset.chart === 't2m' ? 'true' : 'false'); }); }
+    $('wx-tsnote').textContent = run && missing.length ? 'Not provided by ' + run.label + ': ' + missing.join(', ') + '.' : '';
+  }
   function chartSpec(chart) {
     return {
       t2m: {title: '2-m temperature and dew point', ylab: 'Temperature (°F)'},
@@ -829,8 +843,9 @@ author_profile: false
   };
   function drawTH() {
     var run = S.run, box = $('wx-th'), svg = d3.select(box).select('svg'); svg.selectAll('*').remove(); d3.select('#wx-thcbar').selectAll('*').remove();
+    $('wx-thsel').style.display = (run && run.profiles && run.profiles.times.length) ? '' : 'none';
     if (!run || !run.profiles || !run.profiles.times.length) {
-      if (run) { var W0 = Math.max(320, box.clientWidth - 2); svg.attr('width', W0).attr('height', 60).attr('viewBox', '0 0 ' + W0 + ' 60'); svg.append('text').attr('x', W0 / 2).attr('y', 34).attr('text-anchor', 'middle').style('font-family', 'Helvetica, Arial, sans-serif').style('font-size', '9pt').text('No vertical profiles in the ' + run.label + ' data (surface variables only); choose another model.'); $('wx-thtitle').textContent = ''; $('wx-thcap').innerHTML = '<span class="jn-figno">Fig. 3.</span> Time\u2013height sections need upper-air data, which ' + run.label + ' does not provide.'; }
+      if (run) { var W0 = Math.max(320, box.clientWidth - 2); svg.attr('width', W0).attr('height', 60).attr('viewBox', '0 0 ' + W0 + ' 60'); svg.append('text').attr('x', W0 / 2).attr('y', 34).attr('text-anchor', 'middle').style('font-family', 'Helvetica, Arial, sans-serif').style('font-size', '9pt').text('No vertical profiles: ' + run.label + ' provides surface variables only. Choose GFS, HRRR, RRFS, IFS or AIFS.'); $('wx-thtitle').textContent = ''; $('wx-thcap').innerHTML = '<span class="jn-figno">Fig. 3.</span> Time\u2013height sections need upper-air data, which ' + run.label + ' does not provide' + (run.model === 'WN3' ? ' (WeatherNext 3 pressure levels exist only in Google\u2019s paid full-ensemble data, which this page does not use)' : '') + '.'; }
       return;
     }
     var F = FIELDS[S.field], key = F.key || S.field, pf = run.profiles;
@@ -1168,7 +1183,18 @@ author_profile: false
     sel.value = S.mapModel;
   }
   function mapMeta(id) { return id === 'wn3' ? S.wn3.idx : (S.hfIndex ? S.hfIndex.models[id] : null); }
+  function fillLevels() {   /* grey out the levels the current source does not publish */
+    var mm = S.mapModel === 'obs' ? null : mapMeta(S.mapModel), sel = $('wx-maplev');
+    Array.from(sel.options).forEach(function (o) {
+      if (!o.dataset.label) o.dataset.label = o.textContent;
+      var ok = !mm || !mm.fields || mm.fields.some(function (f) { return o.value === 'sfc' ? /sfc$/.test(f) : f.slice(-o.value.length) === o.value && !/sfc$/.test(f); });
+      o.disabled = !ok; o.textContent = o.dataset.label + (ok ? '' : ' (not provided)');
+    });
+    var cur = sel.querySelector('option[value="' + S.mapLev + '"]');
+    if (cur && cur.disabled) { var first = Array.from(sel.options).find(function (o) { return !o.disabled; }); if (first) { S.mapLev = first.value === 'sfc' ? 'sfc' : +first.value; sel.value = first.value; } }
+  }
   function fillMapVars() {
+    fillLevels();
     var sel = $('wx-mapvar'); sel.innerHTML = '';
     var obs = S.mapModel === 'obs', list = obs ? Object.keys(OBS) : (S.mapLev === 'sfc' ? VARS_SFC : VARS_PL);
     var mm = obs ? null : mapMeta(S.mapModel);   /* offer only the variables this source publishes */
@@ -1190,7 +1216,14 @@ author_profile: false
     if (S.mapModel !== 'obs') { var m = mapMeta(S.mapModel); if (m) S.mapK = Math.min(m.steps.length - 1, 4); }
     fillMapVars();
   }
-  var mapSeq = 0;
+  async function refreshIndexes() {
+    try {
+      var r = await fetch(HF_BASE + '/index.json', {cache: 'no-cache'});
+      if (r.ok) { var sha = r.headers.get('x-repo-commit'); if (sha && !qs.get('base')) HF = HF_BASE.replace(/\/resolve\/main$/, '/resolve/' + sha); S.hfIndex = await r.json(); }
+    } catch (e) { /* keep the old index */ }
+    await loadWN3Index();
+  }
+  var mapSeq = 0, mapRetried = false;
   async function loadMap() {
     if (S.mapModel === 'obs') return loadObsMap();
     var seq = ++mapSeq; if (!S.station) return;
@@ -1232,8 +1265,12 @@ author_profile: false
       if (m.domain === 'regional') $('wx-mapcap').innerHTML += ' Hatched grey areas lie outside the ' + (m.label || S.mapModel) + ' map window (no data).';
       if (S.mapModel === 'wn3') $('wx-mapcap').innerHTML += ' WeatherNext 3 maps show the mean of its 64 ensemble members' + (vr === 't2msp' ? '; the spread map is the 90th minus the 10th percentile of 2-m temperature, a measure of forecast uncertainty' : '') + (vr === 'tp6i' ? '; the IMERG-calibrated amounts come from a version of its precipitation trained to match NASA\u2019s IMERG satellite estimate' : '') + (/cc$/.test(vr) ? '; cloud cover is the closest WeatherNext 3 comes to a satellite view, since it does not forecast satellite images' : '') + '.';
       updateWN3Legal();
-      status('wx-mapstatus', '');
-    } catch (e) { if (seq === mapSeq) status('wx-mapstatus', 'Could not load gridded fields: ' + e.message, true); }
+      status('wx-mapstatus', ''); mapRetried = false;
+    } catch (e) {
+      if (seq !== mapSeq) return;
+      if (/HTTP 404/.test(e.message) && !mapRetried) { mapRetried = true; await refreshIndexes(); fillMapVars(); return loadMap(); }
+      status('wx-mapstatus', 'Could not load gridded fields: ' + e.message, true);
+    }
   }
 
   /* HRRR / RRFS 3-km CONUS Lambert conformal grid (NCEP grid definition) */
