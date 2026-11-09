@@ -1,7 +1,7 @@
 {
  "season": "2026-27",
  "source": "https://www.wxchallenge.com/schedule.php",
- "fetched": "2026-10-26T14:09:01Z",
+ "fetched": "2026-11-09T12:29:29Z",
  "fallback_station": "KBOS",
  "periods": [
   {
@@ -29,9 +29,9 @@
    "tournament": false
   },
   {
-   "city": null,
-   "station": null,
-   "climo": null,
+   "city": "Yakutat, AK",
+   "station": "PAYA",
+   "climo": "40/27/14/0.43",
    "start": "2026-11-09",
    "end": "2026-11-23",
    "tournament": false
