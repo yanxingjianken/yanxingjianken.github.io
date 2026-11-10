@@ -12,7 +12,7 @@ author_profile: false
 <script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
 
 <style>
-  .bt .bt-map { width: 100%; border: 1px solid #000; background: #fff; display: block; cursor: crosshair; }
+  .bt .bt-map { width: 100%; background: #fff; display: block; cursor: crosshair; }
   .bt .bt-p { width: 100%; display: block; }
   .bt .bt-legend { font-family: Helvetica, Arial, sans-serif; font-size: 8.5pt; margin: 4px 0; }
   .bt .bt-legend span { display: inline-block; margin-right: 14px; white-space: nowrap; }
@@ -65,7 +65,7 @@ author_profile: false
   <p><b>Parcels for every place and time.</b> The network needs observed tracks around the point, so each event comes with a dense set of true tracks: groups (<i>patches</i>) of 480 parcels filling a disk of 300&nbsp;km radius, released every 12&nbsp;h from four days before the event to its end, on centres about 1000&nbsp;km apart over the event region and up to 40&deg; of longitude upstream (west), at three start levels: 0.38, 0.285 and 0.2 of the surface pressure (about 380, 285 and 200&nbsp;hPa where the surface pressure is 1000&nbsp;hPa). Each patch is followed for 156&nbsp;h. In total 4,050 patches, 1.9 million parcels.</p>
   <p><b>A launch.</b> For the forecast, among the patches of the chosen level released 48&ndash;132&nbsp;h before the chosen time, the one with the most parcels within 300&nbsp;km of the point is used; its 16 parcels nearest the point are launched, and 192 of its other parcels, observed every 3&nbsp;h over the 48&nbsp;h before the chosen time, are what the network sees. The backcast does the same with a patch released 24&ndash;108&nbsp;h before the chosen time, observed over the 48&nbsp;h after it, so the two directions may use different parcels near the point. The network then integrates position and velocity in steps of 10 minutes.</p>
   <p><b>Accuracy.</b> The network was trained on 25.3 million true tracks from ERA5 releases every 5 days of 2015&ndash;2017 at 20 levels from the surface to about 100&nbsp;hPa. In 2021, a year it never saw, its deterministic 24-h forecast misses the true position by a median of 335&nbsp;km and its backcast by 254&nbsp;km, against 523 and 535&nbsp;km for parcels moving straight on at their starting velocity. The size of the random kicks was chosen on the 2015&ndash;2017 validation parcels so that the 24-h spread matches the error; there the mean of 16-member ensembles misses by a median of 275&nbsp;km at 24&nbsp;h, against 338&nbsp;km for the forecast without kicks. Blocks and their surroundings are not the average case, so errors near a block may differ.</p>
-  <p><b>Speed.</b> The network runs in your browser (onnxruntime-web, on one processor core), stored with 8-bit weights, which changes its 24-h errors by less than their scatter from one set of random kicks to another. The first launch downloads it once (40&nbsp;MB, kept by the browser for later visits); a launch then takes about 29&nbsp;s on a typical computer. The tracks appear hour by hour while it runs.</p>
+  <p><b>Speed.</b> The network runs in your browser (onnxruntime-web, on one processor core), stored with 8-bit weights, which changes its 24-h errors by less than their scatter from one set of random kicks to another. The first launch of a visit downloads it (40&nbsp;MB); nothing is stored on your computer, and it is discarded when you leave the page. A launch then takes about 29&nbsp;s on a typical computer. The tracks appear hour by hour while it runs.</p>
 
   <h3>Events</h3>
   <table class="jn-table">
@@ -124,24 +124,32 @@ function rng(seed) {   /* mulberry32 with Box-Muller normals */
 }
 
 /* ------------------------------------------------------------------ data */
-async function cachedBytes(url, label) {
-  let cache = null;
-  try { cache = await caches.open("blocking-tracks-model"); const hit = await cache.match(url); if (hit) return new Uint8Array(await hit.arrayBuffer()); } catch (e) { cache = null; }
-  const res = await fetch(url);
+const NO_STORE = { cache: "no-store" };          /* nothing downloaded here is kept by the browser after the page closes */
+async function fetchBytes(url, label) {
+  const res = await fetch(url, NO_STORE);
   if (!res.ok) throw new Error(`${label}: HTTP ${res.status}`);
   const total = +res.headers.get("content-length") || 0, reader = res.body.getReader(), parts = [];
   let got = 0;
   for (;;) { const { done, value } = await reader.read(); if (done) break; parts.push(value); got += value.length;
-    $("bt-status").textContent = `Downloading the network (${label}): ${(got / 1e6).toFixed(0)}${total ? " of " + (total / 1e6).toFixed(0) : ""} MB, once …`; }
+    $("bt-status").textContent = `Downloading the network (${label}): ${(got / 1e6).toFixed(0)}${total ? " of " + (total / 1e6).toFixed(0) : ""} MB \u2026`; }
   const buf = new Uint8Array(got); let o = 0; for (const p of parts) { buf.set(p, o); o += p.length; }
-  try { if (cache) await cache.put(url, new Response(buf)); } catch (e) { /* storage full or blocked: fine */ }
   return buf;
+}
+function releaseModel() {
+  if (!S.model) return;
+  try { S.model.enc.release(); S.model.dec.release(); } catch (e) { /* already released */ }
+  S.model = null;
+}
+function leavePage() {
+  /* drop the network and every downloaded event when the page is left; nothing was written to the browser's caches */
+  releaseModel(); S.data = {}; S.result = null;
+  try { caches.delete("blocking-tracks-model"); } catch (e) { /* no Cache Storage */ }
 }
 
 async function loadModel() {
   if (S.model) return S.model;
-  const cfg = await (await fetch(`${MODEL}/config.json`)).json();
-  const encB = await cachedBytes(`${MODEL}/${cfg.graphs.encoder}`, "encoder"), decB = await cachedBytes(`${MODEL}/${cfg.graphs.decoder}`, "decoder");
+  const cfg = await (await fetch(`${MODEL}/config.json`, NO_STORE)).json();
+  const encB = await fetchBytes(`${MODEL}/${cfg.graphs.encoder}`, "encoder"), decB = await fetchBytes(`${MODEL}/${cfg.graphs.decoder}`, "decoder");
   const opt = { executionProviders: ["wasm"] };      /* 8-bit weights: the WebAssembly backend runs every operator */
   const enc = await ort.InferenceSession.create(encB, opt), dec = await ort.InferenceSession.create(decB, opt);
   const sc = cfg.scales;
@@ -155,9 +163,9 @@ async function loadEvent(id) {
   if (!S.data[id]) {
     $("bt-runinfo").textContent = "loading the event…";
     const [index, zmeta, zbuf, cbuf, head] = await Promise.all([
-      fetch(`${DATA}/${id}/index.json`).then((r) => r.json()), fetch(`${DATA}/${id}/z500.json`).then((r) => r.json()),
-      fetch(`${DATA}/${id}/z500.bin`).then((r) => r.arrayBuffer()), fetch(`${DATA}/${id}/centroids.bin`).then((r) => r.arrayBuffer()),
-      fetch(`${DATA}/${id}/tracks.npy`, { headers: { Range: "bytes=0-15" } }).then((r) => r.arrayBuffer())]);
+      fetch(`${DATA}/${id}/index.json`, NO_STORE).then((r) => r.json()), fetch(`${DATA}/${id}/z500.json`, NO_STORE).then((r) => r.json()),
+      fetch(`${DATA}/${id}/z500.bin`, NO_STORE).then((r) => r.arrayBuffer()), fetch(`${DATA}/${id}/centroids.bin`, NO_STORE).then((r) => r.arrayBuffer()),
+      fetch(`${DATA}/${id}/tracks.npy`, { ...NO_STORE, headers: { Range: "bytes=0-15" } }).then((r) => r.arrayBuffer())]);
     const hv = new DataView(head), hlen = 10 + hv.getUint16(8, true);
     S.data[id] = { index, zmeta, z: new Int16Array(zbuf), cen: new Float32Array(cbuf), hlen, rowBytes: index.row_shape.reduce((a, b) => a * b) * 2 };
   }
@@ -171,7 +179,7 @@ async function loadEvent(id) {
 
 async function patchRow(row) {
   const D = S.data[S.ev.id], start = D.hlen + row * D.rowBytes;
-  const buf = await (await fetch(`${DATA}/${S.ev.id}/tracks.npy`, { headers: { Range: `bytes=${start}-${start + D.rowBytes - 1}` } })).arrayBuffer();
+  const buf = await (await fetch(`${DATA}/${S.ev.id}/tracks.npy`, { ...NO_STORE, headers: { Range: `bytes=${start}-${start + D.rowBytes - 1}` } })).arrayBuffer();
   const u = new Uint16Array(buf), out = new Float32Array(u.length);
   for (let i = 0; i < u.length; i++) out[i] = f16(u[i]);
   return out;                                    /* (53 times every 3 h, 480 parcels, x y z u v w) */
@@ -280,19 +288,46 @@ function field(f, t) {
   const D = S.data[S.ev.id], [, T, ny, nx] = D.zmeta.shape, k = D.zmeta.times.indexOf(t);
   return { v: D.z.subarray((f * T + k) * ny * nx, (f * T + k + 1) * ny * nx), nx, ny, lat0: D.zmeta.lat[0], lon0: D.zmeta.lon[0] };
 }
-function projection(w, h) {
-  const m = S.data[S.ev.id].zmeta, lat = m.lat, lon = m.lon;
-  const clat = (S.ev.region_lat[0] + S.ev.region_lat[1]) / 2, clon = lon[0] + (lon.length - 1) / 2, ring = [];
-  for (let i = 0; i < lon.length; i += 4) ring.push([lon[i], lat[0]]);
-  for (let j = 0; j < lat.length; j += 2) ring.push([lon[lon.length - 1], lat[j]]);
-  for (let i = lon.length - 1; i >= 0; i -= 4) ring.push([lon[i], lat[lat.length - 1]]);
-  return d3.geoStereographic().rotate([-clon, -clat]).fitExtent([[4, 4], [w - 4, h - 4]], { type: "MultiPoint", coordinates: ring });
+const MARGIN = { l: 42, r: 20, t: 6, b: 24 };
+function projection(w) {
+  /* rectangular longitude-latitude map of the event's field area, latitude stretched by 1 / cos(mid-latitude) (at most
+     2) so that shapes are right there; centred on the area's middle longitude so that it never wraps */
+  const m = S.data[S.ev.id].zmeta, lat = m.lat;
+  const lon = m.lon.map((v) => m.lon[0] + (((v - m.lon[0]) % 360) + 360) % 360);   /* unwrapped across 0\u00B0 (e.g. 310 \u2026 460) */
+  const clon = (lon[0] + lon[lon.length - 1]) / 2, mid = (lat[0] + lat[lat.length - 1]) / 2;
+  const k = Math.min(1 / Math.cos(mid * Math.PI / 180), 2);
+  const raw = (x, y) => [x, y * k]; raw.invert = (x, y) => [x, y / k];
+  const box = { type: "MultiPoint", coordinates: [[lon[0], lat[0]], [lon[lon.length - 1], lat[lat.length - 1]], [lon[0], lat[lat.length - 1]], [lon[lon.length - 1], lat[0]]] };
+  const P = d3.geoProjection(raw).rotate([-clon, 0]).fitWidth(w - MARGIN.l - MARGIN.r, box);
+  const [[x0, y0], [x1, y1]] = d3.geoPath(P).bounds(box);
+  P.translate([P.translate()[0] + MARGIN.l - x0, P.translate()[1] + MARGIN.t - y0]);
+  return { P, h: Math.ceil(y1 - y0) + MARGIN.t + MARGIN.b, frame: [MARGIN.l, MARGIN.t, x1 - x0, y1 - y0], k, mid, lon, lat };
+}
+function axes(svg, G) {
+  const { P, frame, lon, lat } = G, [fx, fy, fw, fh] = frame, g = svg.append("g").attr("font-size", 9).attr("font-family", "Helvetica, Arial, sans-serif");
+  const span = lon[lon.length - 1] - lon[0], dl = span > 120 ? 20 : 10;
+  const fmtLon = (v) => { const x = ((v % 360) + 360) % 360; return x === 0 ? "0\u00B0" : x <= 180 ? `${x}\u00B0E` : `${360 - x}\u00B0W`; };
+  for (let v = Math.ceil(lon[0] / dl) * dl; v <= lon[lon.length - 1]; v += dl) {
+    const [x] = P([v, lat[0]]);
+    g.append("line").attr("x1", x).attr("x2", x).attr("y1", fy).attr("y2", fy + fh).attr("stroke", "#000").attr("stroke-opacity", 0.12);
+    g.append("line").attr("x1", x).attr("x2", x).attr("y1", fy + fh).attr("y2", fy + fh + 4).attr("stroke", "#000");
+    g.append("text").attr("x", x).attr("y", fy + fh + 15).attr("text-anchor", "middle").text(fmtLon(v));
+  }
+  for (let v = Math.ceil(lat[0] / 10) * 10; v <= lat[lat.length - 1]; v += 10) {
+    const [, y] = P([lon[0], v]);
+    g.append("line").attr("x1", fx).attr("x2", fx + fw).attr("y1", y).attr("y2", y).attr("stroke", "#000").attr("stroke-opacity", 0.12);
+    g.append("line").attr("x1", fx - 4).attr("x2", fx).attr("y1", y).attr("y2", y).attr("stroke", "#000");
+    g.append("text").attr("x", fx - 6).attr("y", y + 3).attr("text-anchor", "end").text(`${v}\u00B0N`);
+  }
+  g.append("rect").attr("x", fx).attr("y", fy).attr("width", fw).attr("height", fh).attr("fill", "none").attr("stroke", "#000");
 }
 function draw() {
   if (!S.ev) return;
-  const w = W(), h = Math.round(w * 0.62), svg = d3.select("#bt-map").attr("viewBox", `0 0 ${w} ${h}`).attr("height", h);
+  const w = W(), G = projection(w), h = G.h, P = G.P, t = S.times[S.ti];
+  const svg = d3.select("#bt-map").attr("viewBox", `0 0 ${w} ${h}`).attr("height", h);
   svg.selectAll("*").remove();
-  const P = projection(w, h), t = S.times[S.ti];
+  svg.append("defs").append("clipPath").attr("id", "bt-clip").append("rect").attr("x", G.frame[0]).attr("y", G.frame[1]).attr("width", G.frame[2]).attr("height", G.frame[3]);
+  const root = svg, inner = svg.append("g").attr("clip-path", "url(#bt-clip)");
   $("bt-tlabel").textContent = fmtT(t);
   const A = field(1, t), Z = field(0, t), line = d3.line();
   const toGeo = (fld) => ([x, y]) => P([fld.lon0 + (x - 0.5), fld.lat0 + (y - 0.5)]);
@@ -300,7 +335,7 @@ function draw() {
   const fill = (vals, thr, sign) => {
     for (const b of d3.contours().size([A.nx, A.ny]).thresholds(thr)(vals)) {
       const pr = toGeo(A);
-      svg.append("path").attr("fill", col(sign * (b.value + 25))).attr("d", b.coordinates.map((poly) => poly.map((r) => line(r.map(pr)) + "Z").join("")).join(""));
+      inner.append("path").attr("fill", col(sign * (b.value + 25))).attr("d", b.coordinates.map((poly) => poly.map((r) => line(r.map(pr)) + "Z").join("")).join(""));
     }
   };
   fill(Array.from(A.v), d3.range(0, 401, 50), 1);
@@ -315,13 +350,18 @@ function draw() {
         const p = toGeo(Z)(r[i]); d += (pen ? "L" : "M") + p[0].toFixed(1) + "," + p[1].toFixed(1); pen = true;
       }
     }
-    svg.append("path").attr("d", d).attr("fill", "none").attr("stroke", "#000").attr("stroke-width", 0.6);
+    inner.append("path").attr("d", d).attr("fill", "none").attr("stroke", "#000").attr("stroke-width", 0.6);
   }
-  if (S.land) svg.append("path").attr("d", d3.geoPath(P)(S.land)).attr("fill", "none").attr("stroke", "#666").attr("stroke-width", 0.6);
-  drawTracks(svg, P);
-  svg.on("click", (e) => { const ll = P.invert(d3.pointer(e)); if (ll) launch(ll[1], ((ll[0] % 360) + 360) % 360); });
+  if (S.land) inner.append("path").attr("d", d3.geoPath(P)(S.land)).attr("fill", "none").attr("stroke", "#666").attr("stroke-width", 0.6);
+  drawTracks(inner, P);
+  axes(root, G);
+  svg.on("click", (e) => {
+    const [x, y] = d3.pointer(e), [fx, fy, fw, fh] = G.frame;
+    if (x < fx || y < fy || x > fx + fw || y > fy + fh) return;
+    const ll = P.invert([x, y]); if (ll) launch(ll[1], ((ll[0] % 360) + 360) % 360);
+  });
   $("bt-figtitle").textContent = `${S.ev.label}: ${fmtT(t)}, start level sigma ${S.ev.sigma[S.level]}`;
-  $("bt-caption").textContent = "Shading: 500-hPa height minus its average around the latitude circle (red: ridges and blocks, blue: troughs; every 50 m from −400 to 400 m). Contours: 500-hPa height every 80 m. Grey lines: coastlines. Click to launch parcels; tracks then show 24 h after (red) and before (blue) the chosen time.";
+  $("bt-caption").textContent = `Shading: 500-hPa height minus its average around the latitude circle (red: ridges and blocks, blue: troughs; every 50 m from −400 to 400 m). Contours: 500-hPa height every 80 m. Grey lines: coastlines. Longitude\u2013latitude map, latitude stretched \u00D7${G.k.toFixed(1)} so that shapes are about right near ${G.mid.toFixed(0)}\u00B0N. Click to launch parcels; tracks then show 24 h after (red) and before (blue) the chosen time.`;
 }
 function drawTracks(svg, P) {
   const r = S.result; if (!r) return;
@@ -362,6 +402,9 @@ function drawPressure() {
 
 /* ------------------------------------------------------------------ start */
 async function init() {
+  try { await caches.delete("blocking-tracks-model"); } catch (e) { /* no Cache Storage */ }
+  window.addEventListener("pagehide", leavePage);
+  window.addEventListener("pageshow", (e) => { if (e.persisted) location.reload(); });   /* back button: the dropped data is fetched again */
   const es = $("bt-event"), ls = $("bt-level");
   for (const e of EVENTS) es.add(new Option(e.label, e.id));
   EVENTS[0].sigma.forEach((s, k) => ls.add(new Option(`sigma ${s} (about ${Math.round(s * 1000)} hPa)`, k)));
@@ -370,7 +413,7 @@ async function init() {
   ls.onchange = () => { S.level = +ls.value; S.result = null; draw(); drawPressure(); $("bt-result").textContent = ""; };
   $("bt-t").oninput = (e) => { S.ti = +e.target.value; S.result = null; draw(); drawPressure(); $("bt-result").textContent = ""; };
   window.addEventListener("resize", () => { draw(); drawPressure(); });
-  for (const u of LAND_URLS) { try { const topo = await (await fetch(u)).json(); S.land = topojson.mesh(topo, topo.objects.land); break; } catch (e) { S.land = null; } }
+  for (const u of LAND_URLS) { try { const topo = await (await fetch(u, NO_STORE)).json(); S.land = topojson.mesh(topo, topo.objects.land); break; } catch (e) { S.land = null; } }
   await loadEvent(EVENTS[0].id);
 }
 init().catch((e) => { $("bt-runinfo").textContent = "could not load the data"; $("bt-status").textContent = String(e); });
