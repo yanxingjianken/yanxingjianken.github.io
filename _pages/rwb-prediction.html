@@ -19,7 +19,6 @@ author_profile: false
   .bt .bt-legend i { display: inline-block; width: 22px; height: 0; border-top: 2px solid #000; vertical-align: middle; margin-right: 4px; }
   .bt .bt-legend i.fm { border-color: #b2182b; } .bt .bt-legend i.fe { border-color: rgba(178,24,43,0.35); border-top-width: 1px; }
   .bt .bt-legend i.bm { border-color: #2166ac; } .bt .bt-legend i.be { border-color: rgba(33,102,172,0.35); border-top-width: 1px; }
-  .bt .bt-legend i.tr { border-color: #000; border-top-style: dashed; }
   .bt .bt-time { font-family: Helvetica, Arial, sans-serif; font-size: 9pt; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin: 6px 0; }
   .bt .bt-time input[type=range] { flex: 1 1 260px; }
   .bt .bt-time .bt-tlabel { min-width: 170px; font-variant-numeric: tabular-nums; }
@@ -30,8 +29,8 @@ author_profile: false
   <p class="bp-backlink jn-small"><a href="{{ base_path }}/blocking-plots/">&larr; Blocking Plots</a></p>
   <div class="jn-runhead"><span>Interactive &middot; ERA5 blocking events</span><span id="bt-runinfo">loading&hellip;</span></div>
 
-  <p class="jn-abstract"><b>Purpose.</b> A <i>block</i> is a large high-pressure system in the middle and upper troposphere that stays in place for days to weeks and diverts the usual west-to-east procession of weather around itself. This page follows the air that moves through five blocks at about 380, 285 and 200&nbsp;hPa (roughly 7&ndash;12&nbsp;km above sea level). Choose an event, a time in its life cycle and a start level, then click on the map: a neural network continues the paths of the 16 air parcels nearest that point for 24&nbsp;h into the future (<i>forecast</i>) and 24&nbsp;h into the past (<i>backcast</i>), as a set of possible paths, and draws their true paths for comparison.</p>
-  <p class="jn-abstract"><b>Terms.</b> An <i>air parcel</i> is a small volume of air followed as it moves with the wind, in three dimensions; its <i>track</i> is the sequence of its positions. The <i>true tracks</i> are computed by the trajectory model LAGRANTO from the hourly winds of ERA5, the European reanalysis (a reconstruction of past weather from observations and a weather model). The network is a <i>conditional Kinematic Interpolant</i> (Jiang, Marzouk, Bose &amp; Pooladian, 2026): it is never given a wind field; instead it predicts how a parcel accelerates from how 192 other parcels of the same group moved during the 48&nbsp;h before (for a forecast) or after (for a backcast) the chosen time. Adding small random kicks to the predicted motion gives an <i>ensemble</i> of 16 possible tracks per parcel; their scatter, the <i>spread</i>, shows how uncertain the model is. Pressure is given in hectopascals (hPa); lower pressure means higher altitude.</p>
+  <p class="jn-abstract"><b>Purpose.</b> A <i>block</i> is a large high-pressure system in the middle and upper troposphere that stays in place for days to weeks and diverts the usual west-to-east procession of weather around itself. This page follows the air that moves through five blocks, from about 380 to 200&nbsp;hPa (roughly 8&ndash;12&nbsp;km above sea level). Choose an event, a time in its life cycle and a start level, then click on the map: a neural network continues the paths of the 16 tracked air parcels nearest that point for 24&nbsp;h into the future (<i>forecast</i>) and 24&nbsp;h into the past (<i>backcast</i>), as a set of possible paths.</p>
+  <p class="jn-abstract"><b>Terms.</b> An <i>air parcel</i> is a small volume of air followed as it moves with the wind, in three dimensions; its <i>track</i> is the sequence of its positions. The <i>true tracks</i> of each event are computed by the trajectory model LAGRANTO from the hourly winds of ERA5, the European reanalysis (a reconstruction of past weather from observations and a weather model). The network is a <i>conditional Kinematic Interpolant</i> (Jiang, Marzouk, Bose &amp; Pooladian, 2026): it is never given a wind field; instead it predicts how a parcel accelerates from how 192 other parcels of the same group moved during the 48&nbsp;h before (for a forecast) or after (for a backcast) the chosen time. Adding small random kicks to the predicted motion gives an <i>ensemble</i> of 16 possible tracks per parcel; their scatter, the <i>spread</i>, shows how uncertain the model is. Pressure is given in hectopascals (hPa); lower pressure means higher altitude.</p>
 
   <div class="jn-controls">
     <div class="jn-ctl"><label for="bt-event">Event</label><select id="bt-event"></select></div>
@@ -47,7 +46,6 @@ author_profile: false
     <div class="jn-fig-title" id="bt-figtitle"></div>
     <svg class="bt-map" id="bt-map"></svg>
     <div class="bt-legend">
-      <span><i class="tr"></i>true tracks (ERA5, every 3 h)</span>
       <span><i class="fm"></i>forecast, ensemble mean</span><span><i class="fe"></i>forecast members</span>
       <span><i class="bm"></i>backcast, ensemble mean</span><span><i class="be"></i>backcast members</span>
     </div>
@@ -57,20 +55,23 @@ author_profile: false
   <figure class="jn-fig">
     <div class="jn-fig-title">Pressure of the launched parcels against time</div>
     <svg class="bt-p" id="bt-p"></svg>
-    <figcaption>Pressure along the tracks of the 16 parcels from 24&nbsp;h before to 24&nbsp;h after the chosen time (hour 0): true tracks (black, dashed), ensemble means of the forecast (red, right) and of the backcast (blue, left). Rising air moves to lower pressure (up in the panel).</figcaption>
+    <figcaption>Pressure along the tracks of the 16 parcels from 24&nbsp;h before to 24&nbsp;h after the chosen time (hour 0): ensemble means (thick) and members (thin, every 3&nbsp;h) of the forecast (red, right) and of the backcast (blue, left). Rising air moves to lower pressure (up in the panel).</figcaption>
   </figure>
   <div class="bt-result" id="bt-result"></div>
 
   <h3>How it works</h3>
-  <p><b>Parcels for every place and time.</b> The network needs observed tracks around the point, so each event comes with a dense set of true tracks: groups (<i>patches</i>) of 480 parcels filling a disk of 300&nbsp;km radius, released every 12&nbsp;h from four days before the event to its end, on centres about 1000&nbsp;km apart over the event region and up to 40&deg; of longitude upstream (west), at three start levels: 0.38, 0.285 and 0.2 of the surface pressure (about 380, 285 and 200&nbsp;hPa where the surface pressure is 1000&nbsp;hPa). Each patch is followed for 156&nbsp;h. In total 4,050 patches, 1.9 million parcels.</p>
-  <p><b>A launch.</b> For the forecast, among the patches of the chosen level released 48&ndash;132&nbsp;h before the chosen time, the one with the most parcels within 300&nbsp;km of the point is used; its 16 parcels nearest the point are launched, and 192 of its other parcels, observed every 3&nbsp;h over the 48&nbsp;h before the chosen time, are what the network sees. The backcast does the same with a patch released 24&ndash;108&nbsp;h before the chosen time, observed over the 48&nbsp;h after it, so the two directions may use different parcels near the point. The network then integrates position and velocity in steps of 10 minutes.</p>
+  <p><b>Parcels for every place and time.</b> The network needs observed tracks around the point, so each event comes with a dense set of true tracks: groups (<i>patches</i>) of 480 parcels filling a disk of 300&nbsp;km radius, released every 12&nbsp;h from four days before the event to its end, on centres about 1000&nbsp;km apart over the event region and up to 40&deg; of longitude upstream (west), at three start levels: 0.38, 0.285 and 0.2 of the surface pressure (about 380, 285 and 200&nbsp;hPa where the surface pressure is 1000&nbsp;hPa; the parcels then move up and down with the air). Each patch is followed for 156&nbsp;h. In total 6,786 patches, 3.3 million parcels.</p>
+  <p><b>A launch.</b> For the forecast, among the patches of the chosen level released 48&ndash;132&nbsp;h before the chosen time, the one whose 16 parcels nearest the point are closest to it is used (among the six patches whose centres are nearest the point); these 16 parcels are launched, and 192 of its other parcels, observed every 3&nbsp;h over the 48&nbsp;h before the chosen time, are what the network sees. The backcast does the same with a patch released 24&ndash;108&nbsp;h before the chosen time, observed over the 48&nbsp;h after it, so the two directions may use different parcels near the point. The network then integrates position and velocity in steps of 10 minutes. A point on the map is rarely where a tracked parcel is at that moment, which is why the launch uses the nearest tracked parcels: their positions and velocities at the chosen time are known from LAGRANTO. The line under the figures gives how far from the point they start. Only the network&rsquo;s tracks are drawn.</p>
+  <p><b>Training.</b> The network has 32.2&nbsp;million weights. An encoder (a Perceiver: 96 learned vectors of width 512 that read all observed positions and velocities by attention) condenses the observed tracks of a patch; a decoder takes the time, position and velocity of a parcel, reads the condensed tracks and returns the parcel&rsquo;s acceleration and its <i>velocity score</i>, the direction back towards a likely track, which the Kinematic Interpolant needs for its random kicks. Each training example is a random patch at a random time, in a random direction: the tracks of 192 of its parcels observed every 3&nbsp;h over the 48&nbsp;h before (forecast) or after (backcast) that time, and 256 other parcels of the patch at random hours up to 24&nbsp;h later (or earlier), each shifted off its true track by a small random amount (about 5&nbsp;km horizontally). The network learns, by least squares, the acceleration and score of each of these parcels given by its true track and its shift. Training ran for 200,000 steps of 64 patches on two GPUs (learning rate 0.0003 after 2,000 warm-up steps, with an exponential moving average of the weights); the weights kept are those of step 158,000, which had the smallest 24-h error on validation patches.</p>
+  <p><b>Notebooks.</b> Three self-contained notebooks follow the method step by step, each from winds to tracks to forecasts and backcasts: <a href="https://github.com/yanxingjianken/ki-lagrangian-tracks/blob/main/01_bve/ki_bve.ipynb">two-dimensional tracks in stirred jets on the sphere</a> (flows, model, minibatches, training, evaluation); <a href="https://github.com/yanxingjianken/ki-lagrangian-tracks/blob/main/02_dinosaur/ki_dinosaur.ipynb">three-dimensional tracks in idealized life cycles of mid-latitude storms</a> (the dynamical core Dinosaur); and <a href="https://github.com/yanxingjianken/ki-lagrangian-tracks/blob/main/03_era5/ki_era5.ipynb">ERA5</a>, which downloads three days of winds of the 2021 Pacific Northwest heat dome, computes tracks with LAGRANTO and forecasts and backcasts them with the network used on this page.</p>
   <p><b>Accuracy.</b> The network was trained on 25.3 million true tracks from ERA5 releases every 5 days of 2015&ndash;2017 at 20 levels from the surface to about 100&nbsp;hPa. In 2021, a year it never saw, its deterministic 24-h forecast misses the true position by a median of 335&nbsp;km and its backcast by 254&nbsp;km, against 523 and 535&nbsp;km for parcels moving straight on at their starting velocity. The size of the random kicks was chosen on the 2015&ndash;2017 validation parcels so that the 24-h spread matches the error; there the mean of 16-member ensembles misses by a median of 275&nbsp;km at 24&nbsp;h, against 338&nbsp;km for the forecast without kicks. Blocks and their surroundings are not the average case, so errors near a block may differ.</p>
   <p><b>Speed.</b> The network runs in your browser (onnxruntime-web, on one processor core), stored with 8-bit weights, which changes its 24-h errors by less than their scatter from one set of random kicks to another. The first launch of a visit downloads it (40&nbsp;MB); nothing is stored on your computer, and it is discarded when you leave the page. A launch then takes about 29&nbsp;s on a typical computer. The tracks appear hour by hour while it runs.</p>
 
   <h3>Events</h3>
   <table class="jn-table">
     <thead><tr><th>Event</th><th>Life cycle shown (UTC)</th><th>How the dates and region were chosen</th></tr></thead>
-    <tbody><tr><td>Russia, summer 2010</td><td>2010-07-20 00 to 2010-08-18 00</td><td>ERA5 TempestExtremes catalogue block 881 (2010-07-22 03 UTC to 08-13 19 UTC); Z500 minus zonal mean up to 302 m near 60N 46E on 2010-08-06</td></tr></tbody>
+    <tbody><tr><td>Russia, summer 2010</td><td>2010-07-20 00 to 2010-08-18 00</td><td>ERA5 TempestExtremes catalogue block 881 (2010-07-22 03 UTC to 08-13 19 UTC); Z500 minus zonal mean up to 302 m near 60N 46E on 2010-08-06</td></tr>
+      <tr><td>North Atlantic, summer 2019</td><td>2019-07-19 18 to 2019-08-09 18</td><td>ERA5 TempestExtremes catalogue block 1312 (2019-07-21 19 UTC to 08-05 08 UTC); Z500 minus zonal mean up to 348 m near 67N 17E on 2019-07-27, then near 73N 15W</td></tr></tbody>
   </table>
   <p class="jn-tabcap">Map shading: the 500-hPa height minus its average around the latitude circle at the same time (positive: ridges and blocks); contours: the 500-hPa height every 80&nbsp;m. Both from ERA5 every 6&nbsp;h at 1&deg;.</p>
 
@@ -92,13 +93,19 @@ ort.env.wasm.wasmPaths = "https://cdn.jsdelivr.net/npm/onnxruntime-web@1.30.0/di
 ort.env.wasm.numThreads = 1;
 const DATA = "https://huggingface.co/datasets/yanxingjianken/blocking-tracks/resolve/main";
 const MODEL = "https://huggingface.co/yanxingjianken/ki-era5-tracks/resolve/main/onnx";
-const EVENTS = [{"id": "russia_2010", "label": "Russia, summer 2010", "region_lat": [40, 75], "region_lon": [330, 80], "sigma": [0.38, 0.285, 0.2], "tmin": "2010-07-20T00", "tmax": "2010-08-18T00"}];
+const EVENTS = [{"id": "russia_2010", "label": "Russia, summer 2010", "region_lat": [40, 75], "region_lon": [330, 80], "sigma": [0.38, 0.285, 0.2], "tmin": "2010-07-20T00", "tmax": "2010-08-18T00"}, {"id": "atlantic_2019", "label": "North Atlantic, summer 2019", "region_lat": [50, 85], "region_lon": [260, 40], "sigma": [0.38, 0.285, 0.2], "tmin": "2019-07-19T18", "tmax": "2019-08-09T18"}];
 const LAND_URLS = ["https://cdn.jsdelivr.net/npm/world-atlas@2/land-50m.json", "https://unpkg.com/world-atlas@2/land-50m.json"];
 const NEAR_KM = 300, A_KM = 6371, H_KM = 7;
-const S = { ev: null, level: 1, ti: 0, data: {}, land: null, result: null, model: null, busy: false };
+const S = { ev: null, sigma: 0.285, ti: 0, data: {}, land: null, result: null, model: null, busy: false };
 const $ = (id) => document.getElementById(id);
 const W = () => $("bt-map").clientWidth || 800;
 const fmtT = (t) => t.slice(0, 10) + " " + t.slice(11, 13) + " UTC";
+const levelLabel = (s) => s > 0.95 ? `sigma ${s} (near the surface)` : `sigma ${s} (about ${Math.round(s * 1000)} hPa)`;
+function levelIndex() {           /* the event's start level nearest the chosen sigma */
+  const sg = S.data[S.ev.id].index.sigma; let k = 0;
+  sg.forEach((s, i) => { if (Math.abs(s - S.sigma) < Math.abs(sg[k] - S.sigma)) k = i; });
+  return k;
+}
 const hoursBetween = (a, b) => Math.round((Date.parse(a + ":00:00Z") - Date.parse(b + ":00:00Z")) / 3.6e6);
 
 /* ------------------------------------------------------------------ geometry */
@@ -170,6 +177,10 @@ async function loadEvent(id) {
     S.data[id] = { index, zmeta, z: new Int16Array(zbuf), cen: new Float32Array(cbuf), hlen, rowBytes: index.row_shape.reduce((a, b) => a * b) * 2 };
   }
   S.ev = ev;
+  const ls = $("bt-level"), sg = S.data[id].index.sigma;
+  ls.innerHTML = "";
+  for (const s of [...sg].sort((a, b) => a - b)) ls.add(new Option(levelLabel(s), s));    /* top level first */
+  S.sigma = sg[levelIndex()]; ls.value = S.sigma;
   const m = S.data[id].zmeta;
   S.times = m.times.filter((t) => t >= ev.tmin && t <= ev.tmax);
   const r = $("bt-t"); r.max = S.times.length - 1; S.ti = Math.min(S.ti, S.times.length - 1); r.value = S.ti;
@@ -186,11 +197,11 @@ async function patchRow(row) {
 }
 
 /* ------------------------------------------------------------------ model */
-async function choosePatch(t, d, a0, a1, lat, lon) {
+async function choosePatch(t, d, a0, a1, lat, lon, nLaunch) {
   const D = S.data[S.ev.id], nh = D.index.row_shape[0], np_ = D.index.row_shape[1];
-  const cand = [];
+  const cand = [], lk = levelIndex();
   for (const p of D.index.patches) {
-    if (p.level !== S.level) continue;
+    if (p.level !== lk) continue;
     const age = hoursBetween(t, p.release_time);
     if (age < a0 || age > a1 || age % 3) continue;
     const k = (p.row * nh + age / 3) * 2;
@@ -198,11 +209,11 @@ async function choosePatch(t, d, a0, a1, lat, lon) {
   }
   cand.sort((x, y) => x.dist - y.dist);
   let best = null;
-  for (const c of cand.slice(0, 3)) {
+  for (const c of cand.slice(0, 6)) {      /* nearest patch centroids; keep the one whose nLaunch-th nearest parcel is closest */
     const P = await patchRow(c.p.row), hi = c.age / 3, dist = new Float64Array(np_);
     for (let i = 0; i < np_; i++) { const o = (hi * np_ + i) * 6, [lo, la] = toLonLat(P[o], P[o + 1]); dist[i] = gcKm(la, lo, lat, lon); }
-    const n = dist.reduce((s, x) => s + (x < NEAR_KM), 0);
-    if (!best || n > best.n) best = { ...c, P, dist, n, hi };
+    const n = dist.reduce((s, x) => s + (x < NEAR_KM), 0), reach = Float64Array.from(dist).sort()[nLaunch - 1];
+    if (!best || reach < best.reach) best = { ...c, P, dist, n, hi, reach };
   }
   return best;
 }
@@ -243,14 +254,12 @@ async function runDirection(M, B, d, nLaunch, onHour) {
     }
     if ((k + 1) % sph === 0) { hourly.push(Float32Array.from(x)); await onHour(hourly.length - 1); }
   }
-  /* to [lon, lat, p] lists: members every 3 h, mean hourly, truth every 3 h (as the Python reference) */
+  /* to [lon, lat, p] lists: members every 3 h, mean hourly */
   const llp = (X, o) => { const [lo, la] = toLonLat(X[o], X[o + 1]); return [lo, la, 1000 * Math.exp(-X[o + 2] / H_KM)]; };
   const members = hourly.filter((_, h) => h % 3 === 0).map((X) => Array.from({ length: mem }, (_, m) => tgt.map((_, j) => llp(X, (m * nLaunch + j) * 3))));
   const mean = hourly.map((X) => tgt.map((_, j) => { const mx = [0, 0, 0]; for (let m = 0; m < mem; m++) for (let c = 0; c < 3; c++) mx[c] += X[(m * nLaunch + j) * 3 + c] / mem; return llp(mx, 0); }));
-  const truth = Array.from({ length: 9 }, (_, k) => tgt.map((i) => llp(P, ((hi + d * k) * np_ + i) * 6)));
-  const err = tgt.map((_, j) => gcKm(mean[24][j][1], mean[24][j][0], truth[8][j][1], truth[8][j][0])).sort((p, q) => p - q);
-  return { release_time: B.p.release_time, parcels_within_km: B.n, near_km: NEAR_KM, hours: Array.from({ length: hourly.length }, (_, h) => d * h),
-           truth_hours: Array.from({ length: 9 }, (_, k) => d * 3 * k), members, mean, truth, median_error_24h_km: err[Math.floor(err.length / 2)].toFixed(0), done: hourly.length - 1 };
+  return { release_time: B.p.release_time, start_km: B.dist[tgt[tgt.length - 1]], hours: Array.from({ length: hourly.length }, (_, h) => d * h),
+           member_hours: Array.from({ length: members.length }, (_, k) => d * 3 * k), members, mean, done: hourly.length - 1 };
 }
 
 async function launch(lat, lon) {
@@ -262,7 +271,7 @@ async function launch(lat, lon) {
     S.result = { lat, lon, directions: {} };
     for (const [name, d, a0, a1] of [["forecast", 1, 48, 132], ["backcast", -1, 24, 108]]) {
       $("bt-status").textContent = `${name}: finding tracked parcels near ${lat.toFixed(1)}°N, ${lon.toFixed(1)}°E …`;
-      const B = await choosePatch(t, d, a0, a1, lat, lon);
+      const B = await choosePatch(t, d, a0, a1, lat, lon, nLaunch);
       if (!B || B.n < nLaunch) { S.result.directions[name] = { error: `fewer than ${nLaunch} tracked parcels within ${NEAR_KM} km of this point at this time and level` }; continue; }
       S.result.directions[name] = await runDirection(M, B, d, nLaunch, async (h) => {
         $("bt-status").textContent = `${name}: hour ${h} of 24 (${M.backend}) …`;
@@ -273,7 +282,7 @@ async function launch(lat, lon) {
     const parts = [];
     for (const n of ["forecast", "backcast"]) {
       const d = S.result.directions[n];
-      parts.push(d.error ? `${n}: ${d.error}.` : `${n}: ${d.parcels_within_km} parcels of a patch released ${fmtT(d.release_time)} lay within ${d.near_km} km; after 24 h the ensemble mean is a median ${d.median_error_24h_km} km from the true positions of the ${nLaunch} launched parcels.`);
+      parts.push(d.error ? `${n}: ${d.error}.` : `${n}: the ${nLaunch} tracked parcels nearest the point (all within ${d.start_km.toFixed(0)} km of it), of a patch released ${fmtT(d.release_time)}.`);
     }
     $("bt-result").textContent = parts.join(" ");
     $("bt-status").textContent = `Done in ${((performance.now() - t0) / 1000).toFixed(0)} s. Click elsewhere, or change the time or level and click again.`;
@@ -305,7 +314,8 @@ function projection(w) {
 }
 function axes(svg, G) {
   const { P, frame, lon, lat } = G, [fx, fy, fw, fh] = frame, g = svg.append("g").attr("font-size", 9).attr("font-family", "Helvetica, Arial, sans-serif");
-  const span = lon[lon.length - 1] - lon[0], dl = span > 120 ? 20 : 10;
+  const span = lon[lon.length - 1] - lon[0], pxDeg = fw / span;              /* tick spacing: labels at least ~44 px apart */
+  const dl = [10, 20, 30, 40, 60].find((d) => d * pxDeg >= 44) || 60, dp = [10, 20].find((d) => d * pxDeg * G.k >= 16) || 20;
   const fmtLon = (v) => { const x = ((v % 360) + 360) % 360; return x === 0 ? "0\u00B0" : x <= 180 ? `${x}\u00B0E` : `${360 - x}\u00B0W`; };
   for (let v = Math.ceil(lon[0] / dl) * dl; v <= lon[lon.length - 1]; v += dl) {
     const [x] = P([v, lat[0]]);
@@ -313,7 +323,7 @@ function axes(svg, G) {
     g.append("line").attr("x1", x).attr("x2", x).attr("y1", fy + fh).attr("y2", fy + fh + 4).attr("stroke", "#000");
     g.append("text").attr("x", x).attr("y", fy + fh + 15).attr("text-anchor", "middle").text(fmtLon(v));
   }
-  for (let v = Math.ceil(lat[0] / 10) * 10; v <= lat[lat.length - 1]; v += 10) {
+  for (let v = Math.ceil(lat[0] / dp) * dp; v <= lat[lat.length - 1]; v += dp) {
     const [, y] = P([lon[0], v]);
     g.append("line").attr("x1", fx).attr("x2", fx + fw).attr("y1", y).attr("y2", y).attr("stroke", "#000").attr("stroke-opacity", 0.12);
     g.append("line").attr("x1", fx - 4).attr("x2", fx).attr("y1", y).attr("y2", y).attr("stroke", "#000");
@@ -360,7 +370,7 @@ function draw() {
     if (x < fx || y < fy || x > fx + fw || y > fy + fh) return;
     const ll = P.invert([x, y]); if (ll) launch(ll[1], ((ll[0] % 360) + 360) % 360);
   });
-  $("bt-figtitle").textContent = `${S.ev.label}: ${fmtT(t)}, start level sigma ${S.ev.sigma[S.level]}`;
+  $("bt-figtitle").textContent = `${S.ev.label}: ${fmtT(t)}, start level ${levelLabel(S.sigma)}`;
   $("bt-caption").textContent = `Shading: 500-hPa height minus its average around the latitude circle (red: ridges and blocks, blue: troughs; every 50 m from −400 to 400 m). Contours: 500-hPa height every 80 m. Grey lines: coastlines. Longitude\u2013latitude map, latitude stretched \u00D7${G.k.toFixed(1)} so that shapes are about right near ${G.mid.toFixed(0)}\u00B0N. Click to launch parcels; tracks then show 24 h after (red) and before (blue) the chosen time.`;
 }
 function drawTracks(svg, P) {
@@ -373,17 +383,16 @@ function drawTracks(svg, P) {
       svg.append("path").attr("d", line(d.members.map((hh) => pt(hh[m][q])))).attr("fill", "none").attr("stroke", colE).attr("stroke-width", 0.7);
     for (let q = 0; q < nq; q++) {
       svg.append("path").attr("d", line(d.mean.map((hh) => pt(hh[q])))).attr("fill", "none").attr("stroke", colM).attr("stroke-width", 1.6);
-      svg.append("path").attr("d", line(d.truth.map((hh) => pt(hh[q])))).attr("fill", "none").attr("stroke", "#000").attr("stroke-width", 1.1).attr("stroke-dasharray", "4,2");
     }
   }
-  const p0 = P([r.lon, r.lat]);
-  svg.append("path").attr("d", d3.symbol(d3.symbolStar, 120)()).attr("transform", `translate(${p0[0]},${p0[1]})`).attr("fill", "#ffd400").attr("stroke", "#000");
+  const p0 = P([r.lon, r.lat]), sz = Math.max(0.35, Math.min(1, W() / 800));      /* star scaled with the map */
+  svg.append("path").attr("d", d3.symbol(d3.symbolStar, 120 * sz * sz)()).attr("stroke-width", sz).attr("transform", `translate(${p0[0]},${p0[1]})`).attr("fill", "#ffd400").attr("stroke", "#000");
 }
 function drawPressure() {
   const w = W(), h = 220, m = { l: 48, r: 12, t: 10, b: 30 };
   const svg = d3.select("#bt-p").attr("viewBox", `0 0 ${w} ${h}`).attr("height", h); svg.selectAll("*").remove();
   const r = S.result, all = [];
-  if (r) for (const n of ["forecast", "backcast"]) { const d = r.directions[n]; if (d && !d.error) { d.mean.forEach((hh) => hh.forEach((q) => all.push(q[2]))); d.truth.forEach((hh) => hh.forEach((q) => all.push(q[2]))); } }
+  if (r) for (const n of ["forecast", "backcast"]) { const d = r.directions[n]; if (d && !d.error) { d.mean.forEach((hh) => hh.forEach((q) => all.push(q[2]))); d.members.forEach((hh) => hh.forEach((mm) => mm.forEach((q) => all.push(q[2])))); } }
   if (!all.length) { svg.append("text").attr("x", m.l).attr("y", h / 2).attr("font-size", 11).text("Launch parcels to see their pressure."); return; }
   const x = d3.scaleLinear([-24, 24], [m.l, w - m.r]), y = d3.scaleLinear([d3.max(all) + 10, d3.min(all) - 10], [h - m.b, m.t]);
   svg.append("g").attr("transform", `translate(0,${h - m.b})`).call(d3.axisBottom(x).tickValues(d3.range(-24, 25, 6)));
@@ -391,11 +400,12 @@ function drawPressure() {
   svg.append("text").attr("x", w / 2).attr("y", h - 2).attr("text-anchor", "middle").attr("font-size", 10).text("hours from the chosen time");
   svg.append("text").attr("transform", `translate(12,${h / 2}) rotate(-90)`).attr("text-anchor", "middle").attr("font-size", 10).text("pressure (hPa)");
   const line = d3.line().x((p) => x(p[0])).y((p) => y(p[1]));
-  for (const [n, col] of [["forecast", "#b2182b"], ["backcast", "#2166ac"]]) {
+  for (const [n, col, colE] of [["forecast", "#b2182b", "rgba(178,24,43,0.15)"], ["backcast", "#2166ac", "rgba(33,102,172,0.15)"]]) {
     const d = r.directions[n]; if (!d || d.error) continue;
+    for (let m = 0; m < d.members[0].length; m++) for (let q = 0; q < d.members[0][0].length; q++)
+      svg.append("path").attr("d", line(d.members.map((hh, k) => [d.member_hours[k], hh[m][q][2]]))).attr("fill", "none").attr("stroke", colE).attr("stroke-width", 0.6);
     for (let q = 0; q < d.mean[0].length; q++) {
       svg.append("path").attr("d", line(d.mean.map((hh, k) => [d.hours[k], hh[q][2]]))).attr("fill", "none").attr("stroke", col).attr("stroke-width", 1.1);
-      svg.append("path").attr("d", line(d.truth.map((hh, k) => [d.truth_hours[k], hh[q][2]]))).attr("fill", "none").attr("stroke", "#000").attr("stroke-width", 0.9).attr("stroke-dasharray", "4,2");
     }
   }
 }
@@ -407,10 +417,8 @@ async function init() {
   window.addEventListener("pageshow", (e) => { if (e.persisted) location.reload(); });   /* back button: the dropped data is fetched again */
   const es = $("bt-event"), ls = $("bt-level");
   for (const e of EVENTS) es.add(new Option(e.label, e.id));
-  EVENTS[0].sigma.forEach((s, k) => ls.add(new Option(`sigma ${s} (about ${Math.round(s * 1000)} hPa)`, k)));
-  ls.value = S.level;
   es.onchange = () => { S.ti = 0; loadEvent(es.value); };
-  ls.onchange = () => { S.level = +ls.value; S.result = null; draw(); drawPressure(); $("bt-result").textContent = ""; };
+  ls.onchange = () => { S.sigma = +ls.value; S.result = null; draw(); drawPressure(); $("bt-result").textContent = ""; };
   $("bt-t").oninput = (e) => { S.ti = +e.target.value; S.result = null; draw(); drawPressure(); $("bt-result").textContent = ""; };
   window.addEventListener("resize", () => { draw(); drawPressure(); });
   for (const u of LAND_URLS) { try { const topo = await (await fetch(u, NO_STORE)).json(); S.land = topojson.mesh(topo, topo.objects.land); break; } catch (e) { S.land = null; } }
